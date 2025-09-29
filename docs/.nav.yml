@@ -1,4 +1,11 @@
 nav:
     - index.md
-    - "*"                         # Add all files to beginning. This will include at least index[.*].md
-    - Omega to Alpha: example_dir # You can rename directories in default language here if need be
+    - neuroverkot    # 100
+    - tensorit       # 200
+    - vastavirta     # 300
+    - mallinnus      # 400
+    - konvoluutio    # 500
+    - siirtovaikutus # 600
+    - kieli          # 700
+    - aikasarjat     # 800
+    - "*"
