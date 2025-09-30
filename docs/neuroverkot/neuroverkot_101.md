@@ -52,11 +52,6 @@ $$
 \theta_{20} & \theta_{21} \\
 \theta_{30} & \theta_{31}
 \end{bmatrix}
-= \begin{bmatrix}
-\ 1 & \theta_{11} \\
-\ 1 & \theta_{21} \\
-\ 1 & \theta_{31}
-\end{bmatrix}
 $$
 
 Eli siis $h_1$, $h_2$ ja $h_3$, tai tarkemmin niiden esiasteet (pre-activation), lasketaan seuraavasti:
