@@ -6,7 +6,54 @@ priority: 100
 
 ## Historia
 
-TODO
+### All or nothing
+
+Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1943 **Warren McCulloch** ja **Walter Pitts** julkaisivat artikkelin *"A Logical Calculus of the Ideas Immanent in Nervous Activity"*, jossa he esittivät yksinkertaisen mallin keinotekoisesta neuronista. Malli perustui "all-or-nothing" -periaatteeseen, jossa neuronin aktivaatio tapahtuu, kun syötteiden painotettu summa ylittää tietyn kynnyksen. Kyseessä olivat siis binääriset neuronit, jotka toimivat loogisina portteina. [^fastaibook]
+
+> "Pitts was self-taught, and by age 12, had received an offer to study at Cambridge University with the great Bertrand Russell. He did not take up this invitation, and indeed throughout his life did not accept any offers of advanced degrees or positions of authority. Most of his famous work was done while he was homeless."
+> 
+> — Gugger & Howard, Deep Learning for Coders with fastai and PyTorch [^fastaibook]
+
+### Kissakokeet
+
+50-luvun lopulla **David Hubel** ja **Torsten Wiesel** tutkivat, kuinka aivokuoressa käsitellään visuaalista informaatiota. He havaitsivat, että tietyt neuronit reagoivat spesifisiin visuaalisiin ärsykkeisiin, kuten viivoihin ja reunoihin [^dlillustrated]. He saivat tästä Nobelin fysiologian ja lääketieteen palkinnon vuonna 1981. [^nobel1981] Hubel ja Wiesel suorittivat kokeensa näyttämällä visuaalisia ärsykkeitä anestesioiduille kissoille. Näiden 24 kissaraudan hermosolujen aktivaatiota tarkkailtiin mittalaitteilla aivokuoresta. [^hubelwiesel] Liekkö kirja (ja elokuva) Kellopeliappelsiini ottanut tästä vaikutteita?
+
+Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja yksinkertaisilla muodoilla kuten pisteillä, mutta eivät saaneet mitään vastetta. Sitten sattuma ja vahinko astuivat peliin: *"And then, as with many of the great discoveries, from X-rays to penicillin to the microwave oven, Hubel and Wiesel made a serendipitous observation: As they removed one of their slides from the projector, its straight edge elicited the distinctive crackle of their recording equipment to alert them that a primary visual cortex neuron was firing."* [^dlillustrated] Nämä neuronit, joihin signaali tulee ensimmäisenä silmien suunnasta, saivat nimen "simple cells". Nämä solut kytkeytyvät edelleen monimutkaisempiin "complex cells" -soluihin, jotka reagoivat viivoihin ja reunoihin eri kulmissa. Kun näitä verkkoja kasataan useita kerroksia, meillä on syvä neuroverkko, joka pystyy tunnistamaan monimutkaisia kuvioita, kuten kasvoja, esineitä ja maisemia.
+
+![alt text](../images/100_hubel_wiesel_cat.png)
+
+**Kuva 1:** *Otos Hubelin ja Wieselin tutkimuksesta. Kuva näyttää, miten primaari näköaivokuori (V1) reagoi eri kohtiin verkkokalvon näkökentässä osuvista pistemäisistä valoista reseptiivisen kentän kautta.* [^hubelwiesel]
+
+
+!!! tip
+
+    Aivokuori on evoluution myöhäinen kehitystuote, joka selittää nisäkkäiden monimutkaista käyttäytymistä verrattuna vanhempiin eläinryhmiin. [^dlillustrated]
+    
+    Aivoja kutsutaan "harmaaksi aineeksi", koska ulkopinta (aivokuori) on harmaata. Suurin osa aivoista on kuitenkin valkoista ainetta, joka kuljettaa tietoa pitkiä matkoja. Sen hermosolut on päällystetty valkoisella rasvaisella kalvolla, joka nopeuttaa signaalien johtumista. [^dlillustrated]
+
+### Perceptron
+
+1950-luvun tapahtui samanaikaisesti myös muuta. **Frank Rosenblatt** jalosti McCulloch ja Pittsin ajatusta kehittäen tavan kouluttaa neuroverkkoja. Näin syntyi Mark I Perceptron, joka oli yksi ensimmäisistä neuroverkkopohjaisista malleista. [^fastaibook] Kyseinen malli ei ollut teoriaa vaan se saatiin toteutettua siten, että se tunnisti yksinkertaisia kuvioita, kuten neliön ja ympyrän. Voit tutustua alkuperäiseen artikkeliin lähteiden kautta löytyvästä PDF-tiedostosta. [^researchtrends]
+
+![alt text](../images/100_design_of_intelligent_automaton_research_trends.png)
+
+**Kuva 1:** *Lehtileike Research Trends -lehden kesän 1958 numerosta. Huomaa ingressi: "Introducing the perceptron — A machine which senses, recognizes, remembers, and responds like the human mind."* [^researchtrends]
+
+### AI-talven alku
+
+MIT:n tohtori **Marvin Minsky** ja **Seymour Papert** julkaisivat vuonna 1969 kirjan *Perceptrons*, jossa he osoittivat, että yksittäinen kerros ei pysty ratkaisemaan tiettyjä ongelmia, kuten XOR-ongelmaa. Howard ja Gugger [^fastaibook] toteavat, että samassa Perceptrons-kirjassa esiteltiin myös ratkaisuja ongelmaan, kuten useiden kerrosten käyttö. Heidän mukaansa vain rajoitukset saivat huomiota, ja näin alkoi parin vuosikymmenen "talvi", jolloin neuroverkkojen tutkimus hiipui.
+
+### 80-luvun kevät
+
+AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClelland** ja PDP Research Group julkaisivat moniosaisin artikkelin *Parallel Distributed Processing (PDP)*. Howard ja Gugger nostavat tämän viimeisen 50 vuoden käänteentekevimmäksi julkaisuksi. PDP:n asettamat vaatimusket, kuten "joukko prosessointiyksiköitä" ja "ulostulon funktio", ovat edelleen keskeisiä neuroverkkojen määritelmässä. Skaala on toki kasvanut: 80-luvulla verkoissa oli yleensä 2 kerrosta. Jo tällöin, 80- ja 90-luvuilla, koneoppimisella oli jo oikeita käyttötarkoituksia, mutta AI-tutkimus koki yhä tietynlaista AI-talvea. Vasta äskettäin, 2010-luvun lopulla, alkoi nykyinen AI-kevät. [^fastaibook] Avainsanoja tässä nykyisen kevään alussa ovat esimerkiksi AlexNet, AlphaGo, GAN, GPU.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/v0A8zNek68o?si=btx_I46lSsoSxgGa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+**Video 1:** *Stanfordin tohtori Jay McClelland vastaa Podcastissä kysymykseen "What is Parallel Distributed Processing?" eli PDP. Videolla keskustellaan siitä, miksi ihminen muistaa helpommin hänelle esitetyn kirjaimen, jos esitetyt kirjaimet muodostavat sanan.*
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/H0oEr40YhrQ?si=coHhJ_PINndgwQpu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+**Video 2:** *Yann LeCun esiintyy vuonna 1989 videolla esittelemässä LeNEt 1 -verkkoa (9760 parametria), joka kykenee tunnistamaan käsinkirjoitettuja numeroita. Datasetti tunnetaan nimellä MNIST. Tämä kyseinen video on ConvNet-verkon avulla kuvanlaadultaan paranneltu versio alkuperäisestä. Videolla esiintyy siis konvoluutioverkkojen esi-isä, ja videota on korjailtu vuosikymmeniä myöhemmin sen kunnioittamiseksi.*
 
 ## Matalat neuroverkot
 
@@ -28,7 +75,7 @@ Testaus kuvasta:
 
 ![](../images/100_ShallowTerminology.svg)
 
-**Kuva 1:** Matala neuroverkko koostuu kerroksista: syöte (input), piilotettu (hidden) ja tuloste (output). Kerrokset yhdistävät eteenpäin suunnatut yhteydet (nuolet), joten näitä kutsutaan eteenpäin syöttäviksi verkoiksi (feed-forward networks). Kun jokainen muuttuja yhdistyy kaikkiin seuraavan kerroksen muuttujiin, kyseessä on täysin yhdistetty verkko. Yhteydet edustavat painokertoimia, piilokierroksen muuttujia kutsutaan neuroneiksi tai piiloyksikköiksi (hidden units). (CC-BY-NC-ND) [^udlbook]
+**Kuva 2:** Matala neuroverkko koostuu kerroksista: syöte (input), piilotettu (hidden) ja tuloste (output). Kerrokset yhdistävät eteenpäin suunnatut yhteydet (nuolet), joten näitä kutsutaan eteenpäin syöttäviksi verkoiksi (feed-forward networks). Kun jokainen muuttuja yhdistyy kaikkiin seuraavan kerroksen muuttujiin, kyseessä on täysin yhdistetty verkko. Yhteydet edustavat painokertoimia, piilokierroksen muuttujia kutsutaan neuroneiksi tai piiloyksikköiksi (hidden units). (CC-BY-NC-ND) [^udlbook]
 
 Yllä näkyvän kuvan verkosta ==tekee matalan se, että siinä on vain yksi piilokerros==. Jos kerroksia olisi useita, kyseessä olisi syvä neuroverkko. Näihin tutustumme myöhemmin.
 
@@ -40,7 +87,7 @@ Käsitellään tämän otsikon alla seuraavanlaista verkkoa:
 
 ![](../images/100_ShallowNet.svg)
 
-**Kuva 2:** Yksinkertainen neuroverkko, jossa on vain yksi syöte x, kolme piilotettua neuronia ja yksi tulos. Vasemmanpuoleiseen versioon on lisättynä vakiotermi (intercept, bias), joka yleensä jätetään kuvaajista pois. (CC-BY-NC-ND) [^udlbook]
+**Kuva 3:** Yksinkertainen neuroverkko, jossa on vain yksi syöte x, kolme piilotettua neuronia ja yksi tulos. Vasemmanpuoleiseen versioon on lisättynä vakiotermi (intercept, bias), joka yleensä jätetään kuvaajista pois. (CC-BY-NC-ND) [^udlbook]
 
 Kaikki kuvan nuolet ovat painoja (weights). Lineaarialgebrassa näitä kutsuttaisiin kulmakertoimiksi (slope), mutta neuroverkoissa termi on paino. Koska meillä on 1 sisääntulo ja 3 neuronia, näiden välillä on `1 x 3` eli kolme painoa. Lisäksi kutakin vakiotermiä (bias) kohden on yksi paino, joten niitä on kolme lisää. Yhteensä painoja on siis kuusi. Toivon mukaan tämä alkaa kuulostaa tutulta, kun mietit Johdatus koneoppimiseen kurssin normaaliyhtälön matriisiesitystä, joka käsiteltiin [Hill Climbing](https://sourander.github.io/ml-perusteet/algoritmit/linear/hill_climbing/) osiossa. Kuvaa tutkimalla huomaat, että esimerkiksi $\theta_{10}$ ja $\theta_{11}$ vastaavat painoja, jotka yhdistävät syötteen $x$ ja vakiotermin $1$ piilotetun kerroksen ensimmäiseen neuroniin $h_1$. Theta on siis 3x2 matriisi, joka näyttää tältä:
 
@@ -155,10 +202,46 @@ Tutustu näihin:
 
 ## Tehtävät
 
-!!! question "Tehtävä: Tämä on testi"
+!!! question "Tehtävä: TensorFlow Playground"
 
-    Tämä on tehtäväpaketin testi ja placeholder. Näitä tulee lisää myöhemmin.
+    Tutustu online-työkaluun [TensorFlow Playground](https://playground.tensorflow.org/). Kokeile eri asetuksia ja yritä ymmärtää, miten ne vaikuttavat mallin oppimiseen, ja kuinka tämä liittyy yllä kirjoitettuun teoriaan (ja historiaan). Dokumentoi omat havaintosi oppimispäiväkirjaasi – jatka tätä dokumentointia jatkossa kaikkien tehtävien yhteydessä.
+
+    1. Mallinna työkalulla Perceptron-paperin mukainen malli. Sinulla pitäisi olla siis $x_1$ ja $x_2$ syötteinä, ==ei yhtään piilotettua kerrosta== ja tulos. Käytä ReLU-aktivointifunktiota, vaikka se ei olekaan aivan 1958 ajan mukainen.
+    
+    
+        Tunnista eri datasetit sivustolta. Ne ovat järjestyksessä:
+
+        - `Circle`
+        - `Exclusive or` (XOR)
+        - `Gaussian`
+        - `Spiral`
+    2. **0 piilotettua:** Todista, että on mahdotonta ratkaista XOR-ongelma ilman piilotettua kerrosta. Todista Gauss mahdolliseksi.
+    3. **1 piilotettu:** Kokeile ratkaista XOR-ongelma yhdellä piilotetulla kerroksella, jossa on 2-4 neuronia. Ratkaise myös Gauss ja Circle.
+    4. **4 piilotettua:** Kokeile ratkaista Spiral-ongelma neljällä piilotetulla kerroksella, joissa on kussakin 2-8 neuronia. Aloita pienemmästä mallista ja monimutkaista sitä vähitellen. Voi olla kannattavaa yrittää pitää inputin puolella olevat kerrokset suurempina (neuronimäärän osalta) kuin outputin puolella olevat kerrokset. Eli mallista tulee siis suppilo, joka piennee kohti outputtia.
+
+!!! question "Tehtävä: Quick, Draw!"
+
+    Pelaa erä (tai useampi) Googlen [Quick, Draw!](https://quickdraw.withgoogle.com/) peliä.
+
+    Tutustu tämän jälkeen sen taustalla olevaan dataan [domain/data](https://quickdraw.withgoogle.com/data).
+
+    Tutustu viimeisenä vielä Kaggle-sivultolta löytyvään haasteeseen, jossa datan perusteella tulee pyrkiä tehdä mahdollisimman tarkka luokittelija: [Quick, Draw! Doodle Recognition Challenge](https://www.kaggle.com/competitions/quickdraw-doodle-recognition/overview).
+
+!!! question "Tehtävä: UDLbook Shallow"
+
+    Lataa PDF-muodossa koneellesi [Understanding Deep Learning](https://udlbook.github.io/udlbook/) kirja. Tutustu sen lukuun 2, "Shallow neural networks" ja tee lopulta seuraavat tehtävät:
+
+    * **Problem 3.4** Draw a version of figure 3.3 where the y-intercept and slope of the third hidden unit have changed as in figure 3.14c. Assume that the remaining parameters remain the same.
+    * **Problem 3.11** How many parameters does the model in figure 3.6 have?
+
+    Saat toki ratkaista halutessasi myös muita ongelmia. Kurssilla siirrytään kuitenkin seuraavaksi teoriasta PyTorchin kautta käytäntöön.
 
 ## Lähteet
 
-[^udlbook]: Prince, S. Understanding Deep Learning. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+[^fastaibook]: Gugger, J. & Howard, J. *Deep Learning for Coders with fastai and PyTorch*. O'Reilly Media. 2020.
+[^dlillustrated]: Krohn, J., Beyleveld, G. & Bassens, A. *Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence*. Addison-Wesley Professional. 2019.
+[^researchtrends]: Rosenblatt, F. *The Design of an Intelligent Automaton*. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf
+[^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+
+[^nobel1981]: The Nobel Prize. *Nobel Prize in Physiology or Medicine 1981*. https://www.nobelprize.org/prizes/medicine/1981/summary/
+[^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455

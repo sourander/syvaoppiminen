@@ -14,7 +14,9 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 ```markdown
 ## Neuroverkot 101 (100)
 
-- [ ] Tehtävä: Tämä on testi
+- [ ] Tehtävä: TensorFlow Playground
+- [ ] Tehtävä: Quick, Draw!
+- [ ] Tehtävä: UDLbook Shallow
 
 
 ```

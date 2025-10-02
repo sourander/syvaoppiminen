@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Usage: ./add_bg_and_minify.sh path/to/file.svg
+# Usage: ./optimize_svg.sh docs/images/some_image_from_udlbook.svg
 
 set -e
 
