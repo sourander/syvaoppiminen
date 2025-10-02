@@ -125,10 +125,12 @@ Koulutuksen tulokset eri raudalla:
 
 | Rauta             | Aika/epookki | Aika/koko koulutus | Lopputarkkuus (val) |
 | ----------------- | ------------ | ------------------ | ------------------- |
-| MacBook Pro (CPU) | 2.9s         | 4.8min             | 95.35 %             |
-| MacBook Pro (MPS) | 3.8s         | 6.2min             | 95.18 %             |
-| PC (CPU)          | TODO         | TODO               | TODO                |
-| PC (CUDA)         | TODO         | TODO               | TODO                |
+| MacBook Pro (CPU) | 2.9 s        | 4 min 48 s         | 95.35 %             |
+| MacBook Pro (MPS) | 3.7 s        | 6 min 12 s         | 95.18 %             |
+| PC (CPU)          | 3.2 s        | 5 min 22 s         | 95.21 %             |
+| PC (CUDA)         | 3.3 s        | 5 min 30 s         | 95.14 %             |
+
+Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia.
 
 ![](../images/110_mlp_mnist_training_loss_and_acc.png)
 
