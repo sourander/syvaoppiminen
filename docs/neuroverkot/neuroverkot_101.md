@@ -229,10 +229,12 @@ Tutustu näihin:
 
 !!! question "Tehtävä: UDLbook Shallow"
 
-    Lataa PDF-muodossa koneellesi [Understanding Deep Learning](https://udlbook.github.io/udlbook/) kirja. Tutustu sen lukuun 2, "Shallow neural networks" ja tee lopulta seuraavat tehtävät:
+    Lataa PDF-muodossa koneellesi [Understanding Deep Learning](https://udlbook.github.io/udlbook/) kirja. Tutustu sen lukuun kolme, "Shallow neural networks" ja tee lopulta seuraavat tehtävät:
 
     * **Problem 3.4** Draw a version of figure 3.3 where the y-intercept and slope of the third hidden unit have changed as in figure 3.14c. Assume that the remaining parameters remain the same.
     * **Problem 3.11** How many parameters does the model in figure 3.6 have?
+
+    Voit käyttää ensimmäiseen tehtävään UDL-kirjan [Interactive Figures](https://udlbook.github.io/udlfigures/)-työkalua.
 
     Saat toki ratkaista halutessasi myös muita ongelmia. Kurssilla siirrytään kuitenkin seuraavaksi teoriasta PyTorchin kautta käytäntöön.
 

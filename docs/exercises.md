@@ -18,5 +18,11 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Quick, Draw!
 - [ ] Tehtävä: UDLbook Shallow
 
+## Syväoppiminen ja FC-verkot (110)
+
+- [ ] Tehtävä: UDLbook Deep
+- [ ] Tehtävä: Valitse kehitysympäristösi
+- [ ] Tehtävä: Aja MNIST MLP koodi
+
 
 ```
