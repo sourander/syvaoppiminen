@@ -24,7 +24,6 @@ Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja
 
 **Kuva 1:** *Otos Hubelin ja Wieselin tutkimuksesta. Kuva näyttää, miten primaari näköaivokuori (V1) reagoi eri kohtiin verkkokalvon näkökentässä osuvista pistemäisistä valoista reseptiivisen kentän kautta.* [^hubelwiesel]
 
-
 !!! tip
 
     Aivokuori on evoluution myöhäinen kehitystuote, joka selittää nisäkkäiden monimutkaista käyttäytymistä verrattuna vanhempiin eläinryhmiin. [^dlillustrated]
@@ -237,6 +236,22 @@ Tutustu näihin:
     Voit käyttää ensimmäiseen tehtävään UDL-kirjan [Interactive Figures](https://udlbook.github.io/udlfigures/)-työkalua.
 
     Saat toki ratkaista halutessasi myös muita ongelmia. Kurssilla siirrytään kuitenkin seuraavaksi teoriasta PyTorchin kautta käytäntöön.
+
+!!! question "Tehtävä: ANN ja eläinkunta"
+
+    Kannattaa tutustua Wikipedian [Cerebral cortex](https://en.wikipedia.org/wiki/Cerebral_cortex) sekä [Neuron](https://en.wikipedia.org/wiki/Neuron)-artikkeleihin. Aivokuoren (engl. cerebral cortex) osalta aiheeseen liittyvää sisältöä on ainakin "Layers of neocortex"-otsikkoon liittyvä teksti ja kuvat. Tämä ei ole biologian kurssi, joten silmäily riittää. Neuroverkot (ANN, Artificial Neural Network) perustuvat ideatasolla siihen, kuinka aivojen synapsien ja neuronien verkosto toimii – tai ainakin, kuinka sen kuviteltiin toimivan vielä 1900-luvun puolivälissä.
+
+    Voi olla myös mielenkiintoista verrata nykyisiä koneoppimismalleja [List of animals by number of neurons](https://en.wikipedia.org/wiki/List_of_animals_by_number_of_neurons) -listaan. Jos verrataan melko naiivisti parametrimääriä, niin mitä eläimiä seuraavat mallit vastaavat:
+
+    | Malli                | Vuosi |         desimaali | potenssiesitys |
+    | -------------------- | ----- | ----------------: | -------------- |
+    | LeNet-5              | 1998  |            60 000 | 6.0 x 10^4     |
+    | AlexNet              | 2012  |        60 000 000 | 6.0 x 10^7     |
+    | GPT-3                | 2020  |   175 000 000 000 | 1.75 × 10^11   |
+    | Grok-1 (open source) | 2024  |   314 000 000 000 | 3.14 × 10^11   |
+    | GPT-4 (spekulaatio)  | 2024  | 1 760 000 000 000 | 1.76 × 10^12   |
+
+    Vinkki: mieti tarkkaan, kumpaa "parametrien määrä" vastaa paremmin aivoissa: neuronien vai synapsien määrä?    
 
 ## Lähteet
 

@@ -17,6 +17,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: TensorFlow Playground
 - [ ] Tehtävä: Quick, Draw!
 - [ ] Tehtävä: UDLbook Shallow
+- [ ] Tehtävä: ANN ja eläinkunta
 
 ## Syväoppiminen ja FC-verkot (110)
 
