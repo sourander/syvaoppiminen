@@ -117,9 +117,15 @@ Huomaa, että jos meidän *budjetti* GPU-muistille sallii vain $N = 1000$ painoa
 
 > "A typical neural network for MNIST might have 3 hidden layers, the first with 300 neurons, the second with 200, and the third with 100. However, this practice has been largely abandoned because it seems that using the same number of neurons in all hidden layers performs just as well in most cases, or even better; plus, there is only one hyperparameter to tune, instead of one per layer. That said, depending on the dataset, it can sometimes help to make the first hidden layer bigger than the others." [^handson-tf]
 
-## MNIST ja FC-verkko
+## Case: MLP ja MNIST
+
+### Tehtävän yleiskuvaus
 
 TODO! Selitä tässä MNIST-tehtävään liittyvä ongelma. Tästä on alempana *"Aja koodi ja tutki, mitä tapahtuu"*-tason tehtävä.
+
+### Tulokset
+
+Tulokset heti alkuun, jotta näet, mitä on odotettavissa.
 
 Koulutuksen tulokset eri raudalla:
 
@@ -132,9 +138,102 @@ Koulutuksen tulokset eri raudalla:
 
 Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia.
 
+### Nostoja koodista
+
+#### Mallin määrittely
+
+!!! bug
+
+    Poista nämä myöhemmin. Tässä on muistiinpanoja Sonnet:n avustuksella siitä, mitä pitää muistaa kertoa batch sizestä:
+
+    **Benefits of nn.Module Class**
+    
+    1. Explicit Forward Pass Control Your class defines the forward() method explicitly, giving you full control over data flow:
+
+        * You can add custom preprocessing (like x.view(-1, 784) for flattening)
+        * You can implement conditional logic, skip connections, or branching
+        * You can return multiple outputs or intermediate values for debugging
+    
+    2. Better Code Organization
+
+        * Separates architecture definition (__init__) from computation logic (forward)
+        * Makes it clear what layers exist and how they're connected
+        * Easier to document and understand for complex models
+    
+    3. Flexibility for Complex Architectures
+
+        * Easy to add e.g. dropout, batch norm, or other layers
+        * Can implement custom layers or operations as needed
+
+    4. Custom methods
+
+        * You can add helper methods for weight initialization, saving/loading, etc.
+
+
 ![](../images/110_mlp_mnist_training_loss_and_acc.png)
 
 **Kuva 4:** *MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta.*
+
+!!! bug
+
+    Poista nämä myöhemmin. Tässä on muistiinpanoja Sonnet:n avustuksella siitä, mitä pitää muistaa kertoa batch sizestä:
+
+    **Speed of Training**
+
+    * Batch size 1-16: Very slow. Small batches can't leverage GPU parallelization effectively. You'll be severely underutilizing your M2 Max's MPS capabilities.
+    * Batch size 32-128: Good balance. Your current 128 is in the sweet spot for speed.
+    * Batch size 256-512: Potentially faster per epoch, but with diminishing returns. May actually slow down if batches become too large for efficient memory transfers.
+    
+    Winner: 128-256 typically offer the best training speed per epoch.
+
+    **GPU Memory Requirements**
+    
+    Linear relationship with batch size:
+
+    * Batch size 1: Minimal memory (<few MB)
+    * Batch size 128 (current): Moderate memory
+    * Batch size 512: ~4x more memory than 128
+    
+    Your MLP is small (784→256→128→10), so memory won't be a bottleneck even at 512. However, with larger models (like CNNs or transformers), larger batches could cause OOM errors.
+
+    **Accuracy of Final Model After 100 Epochs**
+
+    This is the most interesting aspect:
+
+    * Batch size 1-8 (Small batches):
+        * Noisy gradients → better exploration of loss landscape
+        * Often generalizes better (acts as regularization)
+        * Might reach ~98-98.5% accuracy
+    * Batch size 128 (Current/Medium):
+        * Good balance between stability and generalization
+        * Expected: ~97-98% accuracy
+    * Batch size 256-512 (Large batches):
+        * Smoother gradients → faster convergence to sharp minima
+        * May generalize slightly worse (~96-97.5%)
+        * Might need learning rate adjustment (typically scale LR with batch size)
+    
+    Important: With your simple architecture and MNIST's easy task, differences will be subtle (maybe 1-2% accuracy variation).
+
+    **Required Steps per Epoch**
+
+    Direct inverse relationship:
+
+    * Batch 1: 60,000 steps/epoch
+    * Batch 8: 7,500 steps/epoch
+    * Batch 16: 3,750 steps/epoch
+    * Batch 32: 1,875 steps/epoch
+    * Batch 64: 937 steps/epoch
+    * Batch 128: 469 steps/epoch (current)
+    * Batch 256: 234 steps/epoch
+    * Batch 512: 117 steps/epoch
+
+    **Required Epochs for Convergence**
+    
+    Inversely related to batch size:
+
+    * Small batches (1-16): Might converge in fewer epochs (50-70) because they see more diverse gradient updates
+    * Medium batches (32-128): Your 100 epochs is reasonable
+    * Large batches (256-512): Might need more epochs (120-150) or higher learning rate to converge to similar performance
 
 ### Termistöä
 
@@ -167,9 +266,22 @@ TODO
 
     Koodi löytyy Notebookista `notebooks/nb/100/110_first_model.ipynb` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen).
 
-    Lataa Notebook koneellesi ja testaa ympäristösi toimivuus.
-    
-    Aja se joko omalla koneellasi tai Google Colabissa. Varmista, että saat mallin koulutettua ja tarkkuuden nousemaan vähintään 97%:iin.
+    1. Lataa Notebook koneellesi.
+    2. Aja Notebook kokonaisuudessaan. Varmista, että saat mallin koulutettua ja kaikki solut ajettua.
+    3. Lue koodi kokonaisuudessaan läpi! Emme ole vielä opiskelleet PyTorchin käyttöä, mutta yritä konseptitasolla ymmärtää, mitä kukin koodirivi tekee.
+
+    Samalla näet benchmarkkia siihen, kuinka sinun rautasi suhtautuu opettajan rautaan (ks. yllä oleva taulukko).
+
+!!! question "Tehtävä: TensorBoard"
+
+    Yllä oleva koodi käyttää TensorBoardia koulutuksen seurantaan. Aja TensorBoard omassa ympäristössäsi. Ohjeita tähän on Notebookin lopussa ja mahdollisisssa kurssivideoissa. Varautu ottamaan myös itsenäisesti selvää: tutki, mitä tiedostoja Notebook loi ja mihin (ks. `runs/`-hakemisto). Lyhyimmillään komento on kuitenkin:
+
+    ```bash
+    cd notebooks/
+    uv run tensorboard --logdir nb/100/runs
+    ```
+
+    Tutustu TensorBoardin käyttöliittymään ja sen tarjoamiin visualisointeihin. Tutki, mikä rivi Notebookissa on vastuussa kunkin metriikan kirjaamisesta TensorBoardiin.
 
 ## Lähteet
 

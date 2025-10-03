@@ -24,6 +24,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: UDLbook Deep
 - [ ] Tehtävä: Valitse kehitysympäristösi
 - [ ] Tehtävä: Aja MNIST MLP koodi
+- [ ] Tehtävä: TensorBoard
 
 
 ```
