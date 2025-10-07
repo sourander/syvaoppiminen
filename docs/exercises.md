@@ -18,6 +18,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Quick, Draw!
 - [ ] Tehtävä: UDLbook Shallow
 - [ ] Tehtävä: ANN ja eläinkunta
+- [ ] Tehtävä: BERT Large
 
 ## Syväoppiminen ja FC-verkot (110)
 

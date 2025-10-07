@@ -36,7 +36,7 @@ Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja
 
 ![alt text](../images/100_design_of_intelligent_automaton_research_trends.png)
 
-**Kuva 1:** *Lehtileike Research Trends -lehden kesän 1958 numerosta. Huomaa ingressi: "Introducing the perceptron — A machine which senses, recognizes, remembers, and responds like the human mind."* [^researchtrends]
+**Kuva 2:** *Lehtileike Research Trends -lehden kesän 1958 numerosta. Huomaa ingressi: "Introducing the perceptron — A machine which senses, recognizes, remembers, and responds like the human mind."* [^researchtrends]
 
 ### AI-talven alku
 
@@ -54,6 +54,12 @@ AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClel
 
 **Video 2:** *Yann LeCun esiintyy vuonna 1989 videolla esittelemässä LeNEt 1 -verkkoa (9760 parametria), joka kykenee tunnistamaan käsinkirjoitettuja numeroita. Datasetti tunnetaan nimellä MNIST. Tämä kyseinen video on ConvNet-verkon avulla kuvanlaadultaan paranneltu versio alkuperäisestä. Videolla esiintyy siis konvoluutioverkkojen esi-isä, ja videota on korjailtu vuosikymmeniä myöhemmin sen kunnioittamiseksi.*
 
+80-luvulla vaikuttivat myös 2024 Nobelilla palkitut John J. Hopfield ja Geoffrey Hinton. [^nobel2024] Daniel Crevier nostaa Hopfieldin työn merkityksen esilleen esiin kirjassaan *AI: The Tumultuous Search for Artificial Intelligence*. Hän kirjoittaa, että AI-talvi loppui osaltaan 80-luvulla Hopfieldin julkaisuun, mainiten myös PDP:n sekä backpropagation-algoritmin, joihin kumpaankin liittyy Rummelhart. [^tumultous]
+
+![](../images/100_nobel_memories_landscape.png)
+
+**Kuva 3:** *Hopfield network -mallin toimintaa graafisesti kuvattuna. Vastaava maisemassa vaeltaminen lienee Johdatus koneoppimiseen -kurssin Gradient Descent -osiosta tuttu. Kuva: ©Johan Jarnestad/The Royal Swedish Academy of Sciences*
+
 ## Matalat neuroverkot
 
 ### Viittaus koneoppimiseen
@@ -70,11 +76,9 @@ Näitä rajoituksia kierrettiin Johdatus koneoppimiseen kurssilla osin käyttäm
 
 ### Määritelmä
 
-Testaus kuvasta:
-
 ![](../images/100_ShallowTerminology.svg)
 
-**Kuva 2:** Matala neuroverkko koostuu kerroksista: syöte (input), piilotettu (hidden) ja tuloste (output). Kerrokset yhdistävät eteenpäin suunnatut yhteydet (nuolet), joten näitä kutsutaan eteenpäin syöttäviksi verkoiksi (feed-forward networks). Kun jokainen muuttuja yhdistyy kaikkiin seuraavan kerroksen muuttujiin, kyseessä on täysin yhdistetty verkko. Yhteydet edustavat painokertoimia, piilokierroksen muuttujia kutsutaan neuroneiksi tai piiloyksikköiksi (hidden units). (CC-BY-NC-ND) [^udlbook]
+**Kuva 4:** Matala neuroverkko koostuu kerroksista: syöte (input), piilotettu (hidden) ja tuloste (output). Kerrokset yhdistävät eteenpäin suunnatut yhteydet (nuolet), joten näitä kutsutaan eteenpäin syöttäviksi verkoiksi (feed-forward networks). Kun jokainen muuttuja yhdistyy kaikkiin seuraavan kerroksen muuttujiin, kyseessä on täysin yhdistetty verkko. Yhteydet edustavat painokertoimia, piilokierroksen muuttujia kutsutaan neuroneiksi tai piiloyksikköiksi (hidden units). (CC-BY-NC-ND) [^udlbook]
 
 Yllä näkyvän kuvan verkosta ==tekee matalan se, että siinä on vain yksi piilokerros==. Jos kerroksia olisi useita, kyseessä olisi syvä neuroverkko. Näihin tutustumme myöhemmin.
 
@@ -86,7 +90,7 @@ Käsitellään tämän otsikon alla seuraavanlaista verkkoa:
 
 ![](../images/100_ShallowNet.svg)
 
-**Kuva 3:** Yksinkertainen neuroverkko, jossa on vain yksi syöte x, kolme piilotettua neuronia ja yksi tulos. Vasemmanpuoleiseen versioon on lisättynä vakiotermi (intercept, bias), joka yleensä jätetään kuvaajista pois. (CC-BY-NC-ND) [^udlbook]
+**Kuva 5:** Yksinkertainen neuroverkko, jossa on vain yksi syöte x, kolme piilotettua neuronia ja yksi tulos. Vasemmanpuoleiseen versioon on lisättynä vakiotermi (intercept, bias), joka yleensä jätetään kuvaajista pois. (CC-BY-NC-ND) [^udlbook]
 
 Kaikki kuvan nuolet ovat painoja (weights). Lineaarialgebrassa näitä kutsuttaisiin kulmakertoimiksi (slope), mutta neuroverkoissa termi on paino. Koska meillä on 1 sisääntulo ja 3 neuronia, näiden välillä on `1 x 3` eli kolme painoa. Lisäksi kutakin vakiotermiä (bias) kohden on yksi paino, joten niitä on kolme lisää. Yhteensä painoja on siis kuusi. Toivon mukaan tämä alkaa kuulostaa tutulta, kun mietit Johdatus koneoppimiseen kurssin normaaliyhtälön matriisiesitystä, joka käsiteltiin [Hill Climbing](https://sourander.github.io/ml-perusteet/algoritmit/linear/hill_climbing/) osiossa. Kuvaa tutkimalla huomaat, että esimerkiksi $\theta_{10}$ ja $\theta_{11}$ vastaavat painoja, jotka yhdistävät syötteen $x$ ja vakiotermin $1$ piilotetun kerroksen ensimmäiseen neuroniin $h_1$. Theta on siis 3x2 matriisi, joka näyttää tältä:
 
@@ -114,7 +118,7 @@ Yllä olevissa lukee pienellä `pre`, koska kyseessä ovat esiasteet (pre-activa
 
 ![](../images/100_ShallowReLU.svg)
 
-**Kuva 3s:** ReLu-aktivointifunktio. (CC-BY-NC-ND) [^udlbook]
+**Kuva 6:** ReLu-aktivointifunktio. (CC-BY-NC-ND) [^udlbook]
 
 Kun tämä aktivointifunktio, $f(z) = max(0, z)$, joka tunnetaan jatkossa a-merkkinä, on otettu huomioon, piilotetun kerroksen arvot ovat siis:
 
@@ -147,7 +151,7 @@ Nämä neljä vaihetta, eli esiasteet, aktivoinnit, piilokerroksen lähtö ja vi
 
 ![](../images/100_ShallowBuildUp.svg)
 
-**Kuva 4:** Neuroverkon laskennan vaiheet `a-j`. Viimeisen kuvaajan varjostetussa alueessa $h_2$ on passiivinen (leikattu), mutta $h_1$ ja $h_3$ ovat molemmat aktiivisia. (CC-BY-NC-ND) [^udlbook]
+**Kuva 7:** Neuroverkon laskennan vaiheet `a-j`. Viimeisen kuvaajan varjostetussa alueessa $h_2$ on passiivinen (leikattu), mutta $h_1$ ja $h_3$ ovat molemmat aktiivisia. (CC-BY-NC-ND) [^udlbook]
 
 
 * **Esiasteet (a-c)**: Syöte x syötetään kolmeen lineaarifunktioon, joista jokaisella on eri y-leikkauspiste ja kulmakerroin.
@@ -159,7 +163,7 @@ Huomaa, että kuvaajassa on kolme "niveltä". Tästä tulee termi *piecewise lin
 
 ![](../images/100_ShallowApproximate.svg)
 
-**Kuva 5:** Katkoviivalla näkyvää todellista ilmiötä voi yrittää mallintaa eri piiloverkon kokoisilla malleilla. Vasemmanpuoleinen malli on selkeästi liian yksinkertainen, oikea on tarkka (joskin kenties liian tarkka.) (CC-BY-NC-ND) [^udlbook]
+**Kuva 8:** Katkoviivalla näkyvää todellista ilmiötä voi yrittää mallintaa eri piiloverkon kokoisilla malleilla. Vasemmanpuoleinen malli on selkeästi liian yksinkertainen, oikea on tarkka (joskin kenties liian tarkka.) (CC-BY-NC-ND) [^udlbook]
 
 Jos haluat tutustua aiheeseen syvemmin, tutustu [Understanding Deep Learning](https://udlbook.github.io/udlbook/) kirjaan, joka on ilmainen ja avoin verkossa. Kirjaan liittyvä Qatarin yliopiston kurssi löytyy myös ilmaiseksi [YouTube: Deep Learning Fall 2024](https://youtube.com/playlist?list=PLRdABJkXXytCz19PsZ1PCQBKoZGV069k3&si=8FY_GMrQn0Pi8FPv).
 
@@ -253,6 +257,10 @@ Tutustu näihin:
 
     Vinkki: mieti tarkkaan, kumpaa "parametrien määrä" vastaa paremmin aivoissa: neuronien vai synapsien määrä?    
 
+!!! question "Tehtävä: BERT Large"
+
+    Yllä on esiteltynä BERT-mallin `base`-versio ja sen kevennetty `distilbert`-versio. Tutustu, kuinka BERT Large liittyy tähän. Kuinka monta parametria siinä on? Kuinka paljon enemmän muistia se vaatii verrattuna `base`-versioon? Miten se tai sen koulutus eroaa `base`-versiosta?
+
 ## Lähteet
 
 [^fastaibook]: Gugger, J. & Howard, J. *Deep Learning for Coders with fastai and PyTorch*. O'Reilly Media. 2020.
@@ -262,3 +270,5 @@ Tutustu näihin:
 
 [^nobel1981]: The Nobel Prize. *Nobel Prize in Physiology or Medicine 1981*. https://www.nobelprize.org/prizes/medicine/1981/summary/
 [^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
+[^nobel2024]: The Nobel Prize. *Nobel Prize in Physics 2024*. https://www.nobelprize.org/prizes/physics/2024/summary/
+[^tumultous]: Crevier, D. *AI: The Tumultuous Search for Artificial Intelligence*. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf
