@@ -11,3 +11,4 @@ TODO! Tähän tulee ainakin seuraavat asiat:
 * Quickdraw -esimerkki
 * Tutustutaan myös generatiivisiin malleihin, esim. GAN ja Diffusion pintapuoleisesti
 * Esimerkkinä ehkä Deep Dream tai Style Transfer?
+* Käydään MNIST + CNN läpi. Tähän löytyy [gh:pytorch/examples/blob/main/mnist/main.py](https://github.com/pytorch/examples/blob/main/mnist/main.py)
