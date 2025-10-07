@@ -20,12 +20,13 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: ANN ja eläinkunta
 - [ ] Tehtävä: BERT Large
 
-## Syväoppiminen ja FC-verkot (110)
+## Syvät neuroverkot (110)
 
 - [ ] Tehtävä: UDLbook Deep
 - [ ] Tehtävä: Valitse kehitysympäristösi
 - [ ] Tehtävä: Aja MNIST MLP koodi
 - [ ] Tehtävä: TensorBoard
+- [ ] Tehtävä: Mallin tarkkuus CPU vs MPS vs CUDA
 
 
 ```

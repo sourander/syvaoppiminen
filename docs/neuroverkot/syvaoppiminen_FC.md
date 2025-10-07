@@ -2,22 +2,7 @@
 priority: 110
 ---
 
-# Syväoppiminen ja FC-verkot
-
-TODO! Tähän tulee ainakin seuraavat asiat:
-
-* Case: Fully Connected -verkko (MLP)
-* Termistö:
-    * Painot (weights)
-    * Bias
-    * Aktivaatiofunktio (activation function)
-    * Loss-funktio (loss function)
-    * Optimointi (optimization)
-    * Epoch
-    * Batch
-    * Learning rate
-    * Tämä kaikki viittaa ML-perusteet kurssilta saatuun pohjaan.
-
+# Syvät neuroverkot
 
 ## Syväoppiminen
 
@@ -121,11 +106,33 @@ Huomaa, että jos meidän *budjetti* GPU-muistille sallii vain $N = 1000$ painoa
 
 ### Tehtävän yleiskuvaus
 
-TODO! Selitä tässä MNIST-tehtävään liittyvä ongelma. Tästä on alempana *"Aja koodi ja tutki, mitä tapahtuu"*-tason tehtävä.
+Aloitamme kurssin tutustumalla yksinkertaiseen syväverkkoon, joka tunnetaan nimellä monikerroksinen perceptroni (MLP, *multi-layer perceptron*). MLP on syväverkko, joka koostuu useista täysin yhdistetyistä kerroksista (FC-kerrokset), joissa on aktivointifunktio kunkin kerroksen jälkeen. Valitsemamme ongelma, tai dataset, on **MNIST**. Lyhenteen **NIST** tulee sanoista *National Institute of Standards and Technology*, joka on Yhdysvaltain hallituksen virasto. Kirjain **M** tulee sanasta *Modified*. Dataa on esiprosessoitu siten, että se on sopivassa muodossa koneoppimiseen, tehden siitä hyvän *Hello World* -esimerkin koneoppimiselle. Tyypillisessä koneoppimistehtävässä saat hyvin harvoin näin valmista dataa käsiisi: kuvat on valmiiksi rajattu, skaalattu, keskitetty ja muunnettu vektoreiksi. MNIST on kuitenkin erinomainen aloitus, koska se on pieni, helppo ymmärtää ja sillä on helppo kokeilla erilaisia malleja.
+
+MNIST-datassa on käsinkirjoitettuja numeroita (0-9), jotka on skaalattu 28x28 pikselin harmaasävykuviksi. Kuvat on esitetty alla olevassa kuvassa. PyTorchin MNNIST tarjoaa 60 000 koulutuskuvaa ja 10 000 testikuvaa. Kuvat ovat tavallisia yksikanavaisia harmaasävykuvia *PIL-formaatissa* eli niiden pikseliarvot ovat välillä `0-255`. Jos kaikki nämä kuvat lataisi yhteen tensoriin, sen koko olisi `[70000, 1, 28, 28]`.
+
+![](../images/110_mnist_grid.png)
+
+**Kuva 3:** *MNIST-datan esimerkkikuvia. Kuvat on poimittu PyTorch:n [torchvision.datasets.MNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.MNIST.html)-luokasta.*
+
+**Tavoite on siis:** kouluttaa moniluokkainen luokittelija, joka pystyy tunnistamaan käsinkirjoitetut numerot. Tämä on 10-luokkainen luokittelutehtävä, jossa jokainen luokka vastaa yhtä numeroa (0-9). Työ on jo tehty sinun puolestasi, koska tämä on kurssin aloitus, ja sinulle ei ole vielä edes opetettu PyTorchin käyttöä. Koodi löytyy Notebookista `notebooks/nb/100/110_first_model.ipynb` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen). Aloitusluennolla sinulle on esitelty, mistä mitäkin materiaalia löytyy, ja kuinka kurssi kannattaa suorittaa.
+
+!!! tip
+
+    MLP:t ovat perusarkkitehtuuri, josta monet muut neuroverkot on johdettu. Huomaa, että arkkitehtuureita on useita erilaisia. Aloitamme yksinkertaisimmasta mahdollisesta, jossa on vain FC-kerroksia, mutta etenemme kurssin aikana monimutkaisempiin arkkitehtuureihin, kuten konvoluutio- ja toistoverkkoihin (RNN). Tulet luomaan kurssin aikana konvoluutioverkon, joka istuu valittuun tehtävään paremmin kuin MLP.
 
 ### Tulokset
 
-Tulokset heti alkuun, jotta näet, mitä on odotettavissa.
+Aloitetaan käänteisesti tulosten esittelemisestä. Kuten on sanottu, MNIST on hyvinkin *Hello World*-tason tehtävä näin 2020-luvulla. Yksinkertainen MLP pystyy saavuttamaan yli 95 % tarkkuuden (accuracy) jo muutamassa minuutissa. Tulet huomaamaan, että vaikeampien tehtävien kanssa koulutusajat kasvavat merkittävästi, ja tarkkuudet jäävät usein vaatimattomaksi, varsinkin jos MLP-arkkitehtuuria käytetään vasarana, joka sopii tehtävään kuin tehtävään. Vasaralla viittaan sanontaan: *"it is tempting, if the only tool you have is a hammer, to treat everything as if it were a nail"* [^maslowshammer]. Tutustu alla olevaan kuvaajaan:
+
+![](../images/110_mlp_mnist_training_loss_and_acc.png)
+
+**Kuva 4:** *MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta.*
+
+Kuvaajassa näkyy neljä käyrää: `train_loss`, `train_acc`, `val_loss` ja `val_acc`. Nämä kuvaavat mallin suoriutumista koulutusdatalla (train) ja validaatiodatalle (val). Koulutusdata on se data, jolla malli on koulutettu, ja validaatiodata on erillinen osajoukko datasta, jota ei ole käytetty mallin kouluttamiseen. Validaatiodataa käytetään mallin arviointiin koulutuksen aikana, jotta nähdään, kuinka hyvin malli yleistyy näkemättömään dataan. Ideaalitilanteessa lopullinen arviointi tehdään testidatalla, joka on täysin erillinen sekä koulutus- että validaatiodatasta. Tässä meidän yksinkertaisessa esimerkissä emme kuitenkaan tee erillistä testidataa. Eli siis kaikki 60 000 kuvaa ovat koulutusdataa ja 10 000 kuvaa ovat validaatiodataa. Hyväksymme validaatiotuloksen lopulliseksi tulokseksi.
+
+Kuvaajan vaakasuuntainen akseli on epookkien määrä. Kuvan koulutuksessa on ajettu 100 epookkia. Yksi epookki tarkoittaa, että koko koulutusdata on käyty läpi kerran. Koska koulutusdata on jaettu pienempiin eriin (batch), yksi epookki koostuu useammasta batchista. Tässä tapauksessa batch-koko on 128, joten yhdessä epookissa on $60000 / 128 \approx 469$ askelta (batches). Malli päivittää painojaan jokaisen batchin jälkeen.
+
+### Koulutuksen suoritusaika
 
 Koulutuksen tulokset eri raudalla:
 
@@ -138,106 +145,138 @@ Koulutuksen tulokset eri raudalla:
 
 Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia.
 
+### Epookkien määrä
+
+Miksikö juuri 100 epookkia? Koska se on mukavan pyöreä summa. Esimerkin mallin rakenne on lainattu Adrian Rosebrockin kirjasta Deep Learning for Computer Vision with Python Volume 1. Kukaan ei luonnollisesti pakota meitä pysähtymään juuri 100 epookkiin, joten tutkitaan, mitä tapahtu, jos jatkamme koulutusta 500 epookkiin asti.
+
+Alla näkyy kuvaajissa, mitä tapahtuu 100-500 epookin aikana. Kuvaajat on otettu työkalusta nimeltään TensorBoard, joka tulee sinulle tutuksi kurssin aikana. Lopputarkkuudet 500. epookin kohdalla ovat **99.79 % (train)** ja **98.15 % (val)**. Alemmasta kuvasta (Kuva 6) näkee, kuinka accuracy ei ole parantunut enää 400. epookin jälkeen laisinkaan validaatiodatalla, mutta koulutusdataa vasten se on edelleen parantunut. Tämä on malliesimerkki ylikoulutumisesta (overfitting).
+
+![](../images/110_mlp_mnist_training_100to500_tensorboard.png)
+
+**Kuva 5:** *TensorBoardissa on mahdollista zoomata kuvaajaan sisään. Tässä kuvaajassa näkyy suunnilleen alue 100-500. Mallin virhe vähenee epookista 100 eteenpäin, mutta `train` ja `val` käyrät alkavat erkaantua toisistaan, mikä viittaa ylikoulutukseen.*
+
+![](../images/110_mlp_mnist_training_400to500_acc_tensorboard.png)
+
+**Kuva 6:** *Tässä kuvaajassa on zoomattu alueelle 400-500 accuracy-käyrässä. Kuten näkyy, validaatiotarkkuus ei ole parantunut 400. epookin jälkeen, mutta koulutustarkkuus jatkaa parantumistaan. Tämä on selkeä merkki ylikoulutumisesta (overfitting). Malli käytännössä oppii ulkoa koulutusdatan.*
+
+
 ### Nostoja koodista
+
+Alempana on tehtävä, jossa sinua käsketään ajaa Notebook, joka kouluttaa mallin. Tämä toimii samalla kertaa sekä "Opi PyTorchia lukemalla" että "Testaa kehitysympäristösi toimivuus" -tehtävänä. Tehtävän lomassa sinun tulee käydä koodi läpi, mutta tässä on joitakin nostoja, jotka kannattaa huomioida.
+
+#### Datan lataus
+
+Mallin data ladataan näin:
+
+```python
+# Define transforms
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))
+])
+
+# Download and load the training data
+print("[INFO] accessing MNIST...")
+trainset = datasets.MNIST(*args, train=True, **kwargs)
+testset = datasets.MNIST(*args, train=False, **kwargs)
+```
+
+Koodisnippetistä on pääteltävissä ainakin, kuinka MNIST-datan voi normalisoida käyttäen `Normalize()`-metodia. Normalisoinnissa annetaan kaksi argumenttia: syötteiden keskiarvo ja keskihajonta. MNIST-tapauksen kohdalla nämä ovat hyvin tunnettuna arvoja ja ne on laskettu nimenomaan training-datalla. Kyseinen [torchvision.transforms.Normalize](https://docs.pytorch.org/vision/main/generated/torchvision.transforms.Normalize.html) itsessään on Johdatus koneoppimiseen -kurssilta tuttu juttu. Se on tarkalleen ottaen sama asia kuin sklearnin `StandardScaler`: *"Normalize a tensor image with mean and standard deviation. This transform does not support PIL Image."*
+
+#### Batchien lataus
+
+Datan lataus tapahtuu `DataLoader`-luokan avulla. Kyseinen luokka on iteraattori-tyylinen olio, joka on *wrapper* datan ympärille. Se mahdollistaa datan käsittelyn erissä (batches) ja se osaa sekoittaa datan (shuffle) sekä ladata dataa rinnakkaisesti useammalla säikeellä (num_workers). Alla on esimerkki koulutusdatan lataamisesta:
+
+```python
+# Create data loaders
+trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True)
+testloader = DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False)
+```
+
+Myöhemmin koulutusloopissa dataa haetaan näin:
+
+```python
+for epoch in range(EPOCHS):
+    model.train()
+    for batch_idx, (inputs, labels) in enumerate(trainloader):
+        # Training code here
+```
+
+#### Batchin koko
+
+Miksi `BATCH_SIZE` on juuri 128? Alla taulukko, josta voit lukea tyypillisiä eri eräkoon vaikutuksia koulutukseen, tulokseen, muistinkäyttöön ja niin edelleen:
+
+|                    | Pienet (1-16)        | Medium (32-128) | Large (256-512)          |
+| ------------------ | -------------------- | --------------- | ------------------------ |
+| **Koulutusnopeus** | Hidas                | Tasapainoinen   | Nopea jos muisti riittää |
+| **Muistinkäyttö**  | Pieni                | Kohtalainen     | Suuri                    |
+| **Lopputarkkuus**  | Hyvä                 | Erittäin hyvä   | Voi heikentyä            |
+| **Konvergenssi**   | Todennäköisesti 100- | 100 oli ok      | Todennäköisesti 100+     |
+
+Palaanne kurssin aikana tähän aiheeseen, mutta on hyvä muistaa, että eräkoon valinta on tärkeä hyperparametri, joka vaikuttaa merkittävästi mallin suorituskykyyn ja koulutusprosessiin. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin, mutta ne voivat myös johtaa huonompaan yleistymiseen.
+
+Selvyyden vuoksi sanottakoon vielä, että:
+
+* Batch on siis N joukko kuvia, jotka syötetään malliin kerralla. Niiden pitää mahtua muistiin.
+* Epookissa on useita askelia (**steps**). Tarkka askelten määrä riippuu kuvien määrästä ja eräkoosta. Eli `60 000 / 128 = 469` askelta per epookki. Tai `60 000 / 1 = 60 000` askelta per epookki, jos batch-koko on 1.
 
 #### Mallin määrittely
 
-!!! bug
+Malli määritellään `MLP`-luokassa, joka perii `nn.Module`-luokan ominaisuudet.
 
-    Poista nämä myöhemmin. Tässä on muistiinpanoja Sonnet:n avustuksella siitä, mitä pitää muistaa kertoa batch sizestä:
-
-    **Benefits of nn.Module Class**
+```python
+class MLP(nn.Module):
+    def __init__(self):
+        super(MLP, self).__init__()
+        self.fc1 = nn.Linear(784, 256)
+        self.fc2 = nn.Linear(256, 128)
+        self.fc3 = nn.Linear(128, 10)
     
-    1. Explicit Forward Pass Control Your class defines the forward() method explicitly, giving you full control over data flow:
+    def forward(self, x):
+        x = x.view(-1, 784)
+        x = torch.sigmoid(self.fc1(x))
+        x = torch.sigmoid(self.fc2(x))
+        x = self.fc3(x)
+        return x
+```
 
-        * You can add custom preprocessing (like x.view(-1, 784) for flattening)
-        * You can implement conditional logic, skip connections, or branching
-        * You can return multiple outputs or intermediate values for debugging
-    
-    2. Better Code Organization
+Mieti, mitä forward-metodi tarkalleen palauttaa. Tuleeko sieltä raakatulokset (logits) vai softmaxin läpi käyneet todennäköisyydet? Jos olet sitä mieltä, että raakatulokset, niin missä kohtaa koodia softmax tehdään? Tulet huomaamaan, että PyTorchissa on useita tapoja tehdä samoja asioita – aivan kuten ohjelmoinnissa yleensäkin.
 
-        * Separates architecture definition (__init__) from computation logic (forward)
-        * Makes it clear what layers exist and how they're connected
-        * Easier to document and understand for complex models
-    
-    3. Flexibility for Complex Architectures
+??? note "Vaihtoehtoinen mallin määrittely ilman luokkaa"
 
-        * Easy to add e.g. dropout, batch norm, or other layers
-        * Can implement custom layers or operations as needed
+    Huomaa, että mallin voisi määritellä myös ilman `nn.Module`-perintää. Tällöin koodi näyttäisi tältä:
 
-    4. Custom methods
+    ```python
+    model = nn.Sequential(
+        nn.Flatten(),
+        nn.Linear(784, 256),
+        nn.Sigmoid(),
+        nn.Linear(256, 128),
+        nn.Sigmoid(),
+        nn.Linear(128, 10),
+        nn.LogSoftmax(dim=1)
+    )
+    ```
 
-        * You can add helper methods for weight initialization, saving/loading, etc.
+    Tämä on kuitenkin PyTorchin kohdalla harvinaisempi tapa. Emme käytä sitä tällä kurssilla.
 
+Huomaa, että MLP on luokka. Tämä mahdollistaa, että sinä voit itse lisätä luokkaan tarpeen mukaan metodeja. Ainoat pakolliset metodit ovat `__init__` ja `forward`. Kukaan ei estä sinua tekemästä esimerkiksi `def initialize_weights(self):` -metodia, joka alustaa painot haluamallasi tavalla. Mallin `super()`-kutsussa saadut metodit ja ominaisuudet selviävät PyTorchin dokumentaatiosta: [https://pytorch.org/docs/stable/generated/torch.nn.Module.html](https://pytorch.org/docs/stable/generated/torch.nn.Module.html).
 
-![](../images/110_mlp_mnist_training_loss_and_acc.png)
-
-**Kuva 4:** *MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta.*
-
-!!! bug
-
-    Poista nämä myöhemmin. Tässä on muistiinpanoja Sonnet:n avustuksella siitä, mitä pitää muistaa kertoa batch sizestä:
-
-    **Speed of Training**
-
-    * Batch size 1-16: Very slow. Small batches can't leverage GPU parallelization effectively. You'll be severely underutilizing your M2 Max's MPS capabilities.
-    * Batch size 32-128: Good balance. Your current 128 is in the sweet spot for speed.
-    * Batch size 256-512: Potentially faster per epoch, but with diminishing returns. May actually slow down if batches become too large for efficient memory transfers.
-    
-    Winner: 128-256 typically offer the best training speed per epoch.
-
-    **GPU Memory Requirements**
-    
-    Linear relationship with batch size:
-
-    * Batch size 1: Minimal memory (<few MB)
-    * Batch size 128 (current): Moderate memory
-    * Batch size 512: ~4x more memory than 128
-    
-    Your MLP is small (784→256→128→10), so memory won't be a bottleneck even at 512. However, with larger models (like CNNs or transformers), larger batches could cause OOM errors.
-
-    **Accuracy of Final Model After 100 Epochs**
-
-    This is the most interesting aspect:
-
-    * Batch size 1-8 (Small batches):
-        * Noisy gradients → better exploration of loss landscape
-        * Often generalizes better (acts as regularization)
-        * Might reach ~98-98.5% accuracy
-    * Batch size 128 (Current/Medium):
-        * Good balance between stability and generalization
-        * Expected: ~97-98% accuracy
-    * Batch size 256-512 (Large batches):
-        * Smoother gradients → faster convergence to sharp minima
-        * May generalize slightly worse (~96-97.5%)
-        * Might need learning rate adjustment (typically scale LR with batch size)
-    
-    Important: With your simple architecture and MNIST's easy task, differences will be subtle (maybe 1-2% accuracy variation).
-
-    **Required Steps per Epoch**
-
-    Direct inverse relationship:
-
-    * Batch 1: 60,000 steps/epoch
-    * Batch 8: 7,500 steps/epoch
-    * Batch 16: 3,750 steps/epoch
-    * Batch 32: 1,875 steps/epoch
-    * Batch 64: 937 steps/epoch
-    * Batch 128: 469 steps/epoch (current)
-    * Batch 256: 234 steps/epoch
-    * Batch 512: 117 steps/epoch
-
-    **Required Epochs for Convergence**
-    
-    Inversely related to batch size:
-
-    * Small batches (1-16): Might converge in fewer epochs (50-70) because they see more diverse gradient updates
-    * Medium batches (32-128): Your 100 epochs is reasonable
-    * Large batches (256-512): Might need more epochs (120-150) or higher learning rate to converge to similar performance
 
 ### Termistöä
 
-TODO
+Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa korvan taakse. HUOM! Tässä lähinnä vain nimetään kurssilla käytäviä asioita. Syvällisempää käsittelyä tulee PyTorchin kautta myöhemmissä luvuissa.
+
+| Termi             | Selitys                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| Painot (weights)  | Mallin parametrit, jotka oppivat datasta. Jokaisella yhteydellä on oma painonsa.                 |
+| Bias              | Mallin parametrit, jotka oppivat datasta. Jokaisella neuronilla on oma bias-termi.               |
+| Aktivaatiofunktio | Funktio, joka lisätään neuronin ulostuloon. Aktivointifunktio tekee mallista ei-lineaarisen.     |
+| Loss-funktio      | Funktio, joka mittaa mallin virheen. Koulutuksen aikana pyritään minimoimaan loss-funktio.       |
+| Optimointi        | Prosessi, jossa mallin painot ja bias-termit päivitetään loss-funktion minimoimiseksi.           |
+| Epoch             | Yksi läpikäynti koko koulutusdatasta.                                                            |
+| Batch             | Pieni osa koulutusdatasta, joka syötetään malliin kerralla.                                      |
+| Learning rate     | Hyperparametri, joka määrittää, kuinka suuria päivityksiä mallin painoihin ja biaseihin tehdään. |
 
 
 ## Tehtävät
@@ -262,6 +301,8 @@ TODO
 
     HUOM! Opettaja ei voi realistisesti kokeilla kaikkia vaihtoehtoja, jotka syntyvät `("Win", "Mac", "Linux") x ("uv", "docker", "jupyterhub", "colab")` -ristikkona. Valitse siis sellainen, joka sinulle on tuttu tai jonka opit helposti. Opettaja tarjoaa tukea, mutta älä odota, että sinulle annetaan tasan yksi koodirimpsu, jolla kaikki toimii. Hallitse omat ympäristösi!
 
+    P.S. **Tarkista aloitusluennon tallenne!** Siellä on mitä varmimmin neuvottu ainakin yksi tapa asentaa tarvittava ympäristö!
+
 !!! question "Tehtävä: Aja MNIST MLP koodi"
 
     Koodi löytyy Notebookista `notebooks/nb/100/110_first_model.ipynb` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen).
@@ -283,7 +324,16 @@ TODO
 
     Tutustu TensorBoardin käyttöliittymään ja sen tarjoamiin visualisointeihin. Tutki, mikä rivi Notebookissa on vastuussa kunkin metriikan kirjaamisesta TensorBoardiin.
 
+!!! question "Tehtävä: Mallin tarkkuus CPU vs MPS vs CUDA"
+
+    Tutustu yllä olevaan "Koulutuksen suoritusaika"-osioon. Osiossa on taulukko, josta selviää, miten eri rauta vaikuttaa koulutuksen suoritusaikaan. Taulukkoon on asetettu esille myös lopputarkkuus validaatiodatalla. Pohdi, että:
+
+    * Miksi Macbook (CPU ja MPS) sekä Linux PC (CPU sekä CUDA) eivät päässeet täysin samaan lopputarkkuuteen?
+    * Vaihteleeko tämä joka kerta kun koulutat mallin uudestaan?
+    * Miten ihmeessä CPU voi olla hitaampi kuin GPU? Huijataanko meitä ostamaan näytönohjaimia turhaan?
+
 ## Lähteet
 
 [^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
 [^handson-tf]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly Media. 2022.
+[^maslowshammer]: Wikipedia. Law of the instrument. https://en.wikipedia.org/wiki/Law_of_the_instrument
