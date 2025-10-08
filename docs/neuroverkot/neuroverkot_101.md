@@ -4,6 +4,43 @@ priority: 100
 
 # Neuroverkot 101
 
+## Määritelmä
+
+### Koneoppimista
+
+Neuroverkot (engl. neural networks) ovat koneoppimisen malleja, jotka on inspiroitu ihmisen aivojen rakenteesta ja toiminnasta. Neuroverkot pystyvät oppimaan monimutkaisia kuvioita datasta, ja niitä käytetään laajalti erilaisissa sovelluksissa, kuten kuvantunnistuksessa, puheentunnistuksessa ja luonnollisen kielen käsittelyssä. Koneoppimisen (mukaan lukien sen alaisuuteen kuuluvan syväoppimisen) voi tiiviisti määritellä seuraavasti:
+
+> "Fit a given set of data points into an appropriate function (mapping an input to an output) that picks up on the important signals in the data and ignores the noise, then make sure this function performs well on new data."
+> 
+> — Hala Nelson [^mathforai]
+
+Kannattaa kerrata omista Johdatus koneoppimiseen -kurssin muistiinpanoista, kuinka tekoäly, koneoppiminen ja syväoppiminen liittyvät toisiinsa. Voit myös kerrata sieltä muita määritelmiä koneoppimisesta.
+
+Se, kuinka neuroverkot eroavat Johdatus koneoppimiseen -kurssin malleista, on:
+
+* Neuroverkot pystyvät oppimaan itse piirteet (feature learning). Tämä ei tarkoita, että *feature engineering* vaihe olisi turha, mutta tätä työtä voi ulkoistaa neuroverkolle.
+* Neuroverkot pystyvät mallintamaan monimutkaisempia, epälineaarisia suhteita datassa.
+
+### Epälineaarista
+
+Varmistetaan jo heti kurssin alussa, että on ymmärrys siitä, mitä lineaarisuus tarkoittaa tässä kontekstissa. Lineaariset kaavat tai funktiot on helppo tunnistaa siitä, että ne on helppo kirjoittaa. Piirteet esiintyvät funktiossa omassa luonnollisessa muodossaan. Funktiossa ei esiinny esimerkiksi: neliöjuuria, potensseja, logaritmisa, siniä, cosinia tai muuta selkeästi ei-lineaarista. [^mathforai] Esimerkki Pythonilla olisi:
+
+```python
+def linear_function(x1, x2, x3):
+    return w1 * x1 + w2 * x2 - w3 * x3 + w0
+```
+
+Ei-lineaariset funktiot ovat monimutkaisempia. Syötteen ja tuloksen välillä on epälineaarinen suhde. [^mathforai] Esimerkki Pythonilla:
+
+```python
+import math
+
+def nonlinear_function(x1, x2, x3):
+    return w1 * math.sqrt(x1) + w2 * (x2 / x3) + w3 * math.sin(x3) + w0
+```
+
+Neuroverkot kykenevät mallintamaan epälineaarisia funktioita, koska ne käyttävät epälineaarisia aktivointifunktioita (kuten ReLU, sigmoid tai tanh) piilotetuissa kerroksissaan. Tämä mahdollistaa monimutkaisten kuvioiden oppimisen datasta.
+
 ## Historia
 
 ### All or nothing
@@ -54,7 +91,7 @@ AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClel
 
 **Video 2:** *Yann LeCun esiintyy vuonna 1989 videolla esittelemässä LeNEt 1 -verkkoa (9760 parametria), joka kykenee tunnistamaan käsinkirjoitettuja numeroita. Datasetti tunnetaan nimellä MNIST. Tämä kyseinen video on ConvNet-verkon avulla kuvanlaadultaan paranneltu versio alkuperäisestä. Videolla esiintyy siis konvoluutioverkkojen esi-isä, ja videota on korjailtu vuosikymmeniä myöhemmin sen kunnioittamiseksi.*
 
-80-luvulla vaikuttivat myös 2024 Nobelilla palkitut John J. Hopfield ja Geoffrey Hinton. [^nobel2024] Daniel Crevier nostaa Hopfieldin työn merkityksen esilleen esiin kirjassaan *AI: The Tumultuous Search for Artificial Intelligence*. Hän kirjoittaa, että AI-talvi loppui osaltaan 80-luvulla Hopfieldin julkaisuun, mainiten myös PDP:n sekä backpropagation-algoritmin, joihin kumpaankin liittyy Rummelhart. [^tumultous]
+80-luvulla vaikuttivat myös 2024 Nobelilla palkitut John J. Hopfield ja Geoffrey Hinton. [^nobel2024] Daniel Crevier nostaa Hopfieldin työn merkityksen esilleen esiin kirjassaan *AI: The Tumultuous Search for Artificial Intelligence*. Hän kirjoittaa, että AI-talvi loppui osaltaan 80-luvulla Hopfieldin julkaisuun, mainiten myös PDP:n sekä backpropagation-algoritmin, joihin kumpaankin liittyy Rummelhart. [^tumultous] Tai siis, tämä on kenties se tunnetuin lähde. Ensimmäinen lienee Seppo Linnainmaa pro gradu -työssään vuonna 1970, joskaan neuroverkon kontekstissa. Tästä huolimatta: *"As of 2020, all modern software packages for NNs (such as Google's Tensorflow) are based on Linnainmaa's method of 1970."* [^juergen]
 
 ![](../images/100_nobel_memories_landscape.png)
 
@@ -263,6 +300,7 @@ Tutustu näihin:
 
 ## Lähteet
 
+[^mathforai]: Nelson, H. *Essential Math for AI*. O'Reilly Media. 2023.
 [^fastaibook]: Gugger, J. & Howard, J. *Deep Learning for Coders with fastai and PyTorch*. O'Reilly Media. 2020.
 [^dlillustrated]: Krohn, J., Beyleveld, G. & Bassens, A. *Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence*. Addison-Wesley Professional. 2019.
 [^researchtrends]: Rosenblatt, F. *The Design of an Intelligent Automaton*. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf
@@ -272,3 +310,4 @@ Tutustu näihin:
 [^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
 [^nobel2024]: The Nobel Prize. *Nobel Prize in Physics 2024*. https://www.nobelprize.org/prizes/physics/2024/summary/
 [^tumultous]: Crevier, D. *AI: The Tumultuous Search for Artificial Intelligence*. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf
+[^juergen]: Schmidhuber, J. *Who Invented Backpropagation?*. 2014 (päivitetty 2025). https://people.idsia.ch/~juergen/who-invented-backpropagation.html

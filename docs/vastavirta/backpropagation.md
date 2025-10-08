@@ -2,7 +2,7 @@
 priority: 300
 ---
 
-# Vastavirta (Backpropagation)
+# Vastavirta (Backprop)
 
 TODO! Tähän tulee ainakin seuraavat asiat:
 
