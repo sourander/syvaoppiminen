@@ -28,5 +28,10 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: TensorBoard
 - [ ] Tehtävä: Mallin tarkkuus CPU vs MPS vs CUDA
 
+## Vektorointi (200)
+
+- [ ] Tehtävä: Tutustu vektorointiin
+- [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
+
 
 ```
