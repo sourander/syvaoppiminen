@@ -51,6 +51,16 @@ Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1
 > 
 > — Gugger & Howard, Deep Learning for Coders with fastai and PyTorch [^fastaibook]
 
+### Dartmouth ja AI:n synty
+
+Vaikka McCulloch ja Pitts olivat jo 1943 luoneet teoreettisen pohjan keinotekoisille neuroneille, AI:n syntymähetki tieteenalana on kesällä 1956 Dartmouth Collegessa järjestetty työpaja *Dartmouth Summer Research Project* – ainakin yliopiston itsensä mukaan [^termcoined]. **John McCarthy** toimi kokoonpanijana ja muita järjestäjiä olivat **Marvin Minsky**, **Claude Shannon** ja **Nathaniel Rochester**.
+
+> "We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire. [...] An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves."
+>
+> — A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence, 1955 [^dartproposal]
+
+Työpajan aivoriihissä käsiteltiin jo tuolloin monia alueita, jotka ovat edelleen keskeisiä. Työpajasta on jo yli 70 vuotta, mutta silti siihen törmää yhä: John K. Thompson esitteli Helsinki Data Week 2025:ssa tämän kesäprojektin AI:n ensimmäisenä askeleena Keynote-puheessaan.
+
 ### Kissakokeet
 
 50-luvun lopulla **David Hubel** ja **Torsten Wiesel** tutkivat, kuinka aivokuoressa käsitellään visuaalista informaatiota. He havaitsivat, että tietyt neuronit reagoivat spesifisiin visuaalisiin ärsykkeisiin, kuten viivoihin ja reunoihin [^dlillustrated]. He saivat tästä Nobelin fysiologian ja lääketieteen palkinnon vuonna 1981. [^nobel1981] Hubel ja Wiesel suorittivat kokeensa näyttämällä visuaalisia ärsykkeitä anestesioiduille kissoille. Näiden 24 kissaraudan hermosolujen aktivaatiota tarkkailtiin mittalaitteilla aivokuoresta. [^hubelwiesel] Lieneekö kirja (ja elokuva) Kellopeliappelsiini ottanut tästä vaikutteita?
@@ -302,6 +312,8 @@ Tutustu näihin:
 
 [^mathforai]: Nelson, H. *Essential Math for AI*. O'Reilly Media. 2023.
 [^fastaibook]: Gugger, J. & Howard, J. *Deep Learning for Coders with fastai and PyTorch*. O'Reilly Media. 2020.
+[^termcoined]: Dartmouth University. *Artificial Intelligence Coined at Dartmouth*. https://home.dartmouth.edu/about/artificial-intelligence-ai-coined-dartmouth
+[^dartproposal]: McCarthy, J., Minsky, M.L., Rochester, N. & Shannon, C.E. *A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence*. 1955. https://raysolomonoff.com/dartmouth/boxa/dart564props.pdf
 [^dlillustrated]: Krohn, J., Beyleveld, G. & Bassens, A. *Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence*. Addison-Wesley Professional. 2019.
 [^nobel1981]: The Nobel Prize. *Nobel Prize in Physiology or Medicine 1981*. https://www.nobelprize.org/prizes/medicine/1981/summary/
 [^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
