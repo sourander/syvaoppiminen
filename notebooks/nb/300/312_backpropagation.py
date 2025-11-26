@@ -76,12 +76,12 @@ def _(mo):
 @app.cell
 def _(torch):
     class SimpleNetwork:
-    
+
         def __init__(self, W0, b0, W1, b1):
             """Initialize with pre-defined weights and biases."""
             self.W0, self.b0 = W0, b0
             self.W1, self.b1 = W1, b1
-        
+
             # Store intermediate values for inspection
             self.z0 = torch.tensor([[.0, .0]])  # Linear output of hidden layer
             self.a0 = torch.tensor([[.0, .0]])  # Activated output of hidden layer (after ReLU)
@@ -91,7 +91,7 @@ def _(torch):
             self.z0 = x @ self.W0.T + self.b0.T
             self.a0 = torch.relu(self.z0)
             self.z1 = self.a0 @ self.W1.T + self.b1.T
-        
+
             return self.z1
     return (SimpleNetwork,)
 
@@ -193,7 +193,7 @@ def _(W0, W1, b0, b1, loss, model, x_sample, y_pred, y_target):
         ('a0', 'z3', {'name': 'w7', 'weight': W1[0, 0].item(), 'grad': 'd_z3_a0'}), # 0.42
         ('a1', 'z3', {'name': 'w8', 'weight': W1[0, 1].item(), 'grad': 'd_z3_a1'}), # 0.7
         # Bias to output
-        ('b3', 'z3', {'weight': None, 'grad': ''}), # 
+        ('b3', 'z3', {'weight': None, 'grad': 'd_z3_b3'}), # 
         # Output to prediction
         ('z3', 'y_pred', {'weight': None, 'grad': 'd_pred_z3'}), # 1
         # Target to loss
@@ -258,8 +258,8 @@ def _(mo):
     **Input to Hidden Layer (W0 weights):**
     - `d_z0_x0`, `d_z0_x1`, `d_z0_x2` - Partial derivatives of hidden neuron 0's linear output w.r.t. first row of W0
     - `d_z1_x0`, `d_z1_x1`, `d_z1_x2` - Partial derivatives of hidden neuron 1's linear output w.r.t. second row of W0
-    - `d_z0_b0` - Partial derivative of hidden neuron 0
-    - `d_z1_b1` - Partial derivative of hidden neuron 1
+    - `d_z0_b0` - Partial derivative of z0 w.r.t. bias b0 (always 1)
+    - `d_z1_b1` - Partial derivative of z1 w.r.t. bias b1 (always 1)
 
     **Hidden Layer Activation (ReLU):**
     - `d_a0_z0` - Derivative of ReLU for hidden neuron 0 (1 if z0_0 > 0, else 0)
@@ -270,6 +270,7 @@ def _(mo):
     - `d_z3_a1` - Partial derivative of output w.r.t. W1[0,1] (equals a0_1)
     - `dz1_da0_0` - Partial derivative of output w.r.t. activated hidden neuron 0 (equals W1[0,0])
     - `dz1_da0_1` - Partial derivative of output w.r.t. activated hidden neuron 1 (equals W1[0,1])
+    - `d_z3_b3` - Partial derivative of output z1 w.r.t. output bias b1 (always 1)
 
     **Output Layer (no activation):**
     - `d_pred_z3` - Derivative of prediction w.r.t. linear output (equals 1, identity function)
@@ -297,38 +298,24 @@ def _(mo):
 
 @app.cell
 def _(W0, b0, x_sample):
-    # For hidden neuron 0 (first row of W0)
-    W0_0 = W0[0].detach().clone()       # is [0.4000, 0.5000, 0.6000]
-    W0_0.requires_grad_(True)
-    z0_0 = W0_0 @ x_sample.T + b0[0]    # is [0.420]
-    z0_0.backward()
+    # Helper function to compute gradient
+    def compute_gradient(weights, x, bias):
+        w = weights.detach().clone().requires_grad_(True)
+        z = w @ x.T + bias.detach()
+        z.backward()
+        return w.grad
 
-    d_z0_x0 = W0_0.grad[0].item()  # Should equal x[0] = 0.1
-    d_z0_x1 = W0_0.grad[1].item()  # Should equal x[1] = 0.2
-    d_z0_x2 = W0_0.grad[2].item()  # Should equal x[2] = 0.3
+    # For hidden neuron 0 (first row of W0)
+    grad_0 = compute_gradient(W0[0], x_sample, b0[0])
+    d_z0_x0, d_z0_x1, d_z0_x2 = grad_0[0].item(), grad_0[1].item(), grad_0[2].item()
 
     # For hidden neuron 1 (second row of W0)
-    W0_1 = W0[1].detach().clone()
-    W0_1.requires_grad_(True)
-    z0_1 = W0_1 @ x_sample.T + b0[1]
-    z0_1.backward()
+    grad_1 = compute_gradient(W0[1], x_sample, b0[1])
+    d_z1_x0, d_z1_x1, d_z1_x2 = grad_1[0].item(), grad_1[1].item(), grad_1[2].item()
 
-    d_z1_x0 = W0_1.grad[0].item()  # Should equal x[0] = 0.1
-    d_z1_x1 = W0_1.grad[1].item()  # Should equal x[1] = 0.2
-    d_z1_x2 = W0_1.grad[2].item()  # Should equal x[2] = 0.3
-
-    # Also the biases in hidden layer
-    b0_0 = b0[0].detach().clone()
-    b0_0.requires_grad_(True)
-    z0_0_b = W0[0] @ x_sample.T + b0_0
-    z0_0_b.backward()
-    d_z0_b0 = b0_0.grad.item()  # Should equal 1
-
-    b0_1 = b0[1].detach().clone()
-    b0_1.requires_grad_(True)
-    z0_1_b = W0[1] @ x_sample.T + b0_1
-    z0_1_b.backward()
-    d_z1_b1 = b0_1.grad.item()  # Should equal 1
+    # Bias gradients (always 1 for linear operations)
+    d_z0_b0 = 1.0
+    d_z1_b1 = 1.0
 
     print("=== Partial Derivatives: Input to Hidden Layer ===")
     print(f"dz0/dx0 = {d_z0_x0:.4f} (expected: {x_sample[0, 0].item():.4f})")
@@ -339,7 +326,16 @@ def _(W0, b0, x_sample):
     print(f"dz1/dx2 = {d_z1_x2:.4f} (expected: {x_sample[0, 2].item():.4f})")
     print(f"dz0/db0 = {d_z0_b0:.4f} (expected: 1.0000)")
     print(f"dz1/db1 = {d_z1_b1:.4f} (expected: 1.0000)")
-    return d_z0_x0, d_z0_x1, d_z0_x2, d_z1_x0, d_z1_x1, d_z1_x2
+    return (
+        d_z0_b0,
+        d_z0_x0,
+        d_z0_x1,
+        d_z0_x2,
+        d_z1_b1,
+        d_z1_x0,
+        d_z1_x1,
+        d_z1_x2,
+    )
 
 
 @app.cell(hide_code=True)
@@ -354,29 +350,20 @@ def _(mo):
 
 @app.cell
 def _(model, torch):
+    def relu_gradient(z_value):
+        z = z_value.detach().clone().requires_grad_(True)
+        a = torch.relu(z)
+        a.backward()
+        return z.grad.item()
+
     # Compute derivatives of ReLU activation
     # ReLU derivative: 1 if input > 0, else 0
-
-    # For hidden neuron 0
-    z0_0_clone = model.z0[0][0].detach().clone()
-    z0_0_clone.requires_grad_(True)
-    a0_0_clone = torch.relu(z0_0_clone)
-    a0_0_clone.backward()
-
-    d_a0_z0 = z0_0_clone.grad.item()  # Should be 1 (since z0_0 > 0)
-
-    # For hidden neuron 1
-    z0_1_clone = model.z0[0][1].detach().clone()
-    z0_1_clone.requires_grad_(True)
-    a0_1_clone = torch.relu(z0_1_clone)
-    a0_1_clone.backward()
-
-    d_a1_z1 = z0_1_clone.grad.item()  # Should be 1 (since z0_1 > 0)
+    d_a0_z0 = relu_gradient(model.z0[0][0])
+    d_a1_z1 = relu_gradient(model.z0[0][1])
 
     print("=== Partial Derivatives: Hidden Layer Activation (ReLU) ===")
     print(f"da0_0/dz0_0 = {d_a0_z0:.4f} (ReLU derivative, 1 if z0_0 > 0)")
     print(f"da0_1/dz0_1 = {d_a1_z1:.4f} (ReLU derivative, 1 if z0_1 > 0)")
-    print(f"\nActual z0 values: z0_0 = {model.z0[0][0].item():.4f}, z0_1 = {model.z0[0][1].item():.4f}")
     return d_a0_z0, d_a1_z1
 
 
@@ -395,35 +382,39 @@ def _(mo):
 
 @app.cell
 def _(W1, b1, model):
-    # Compute partial derivatives for hidden to output layer
-    # We need: dz1/dW1_00, dz1/dW1_01, dz1/da0_0, dz1/da0_1
+    def gradient_wrt_weights(weights, inputs, bias):
+        w = weights.detach().clone().requires_grad_(True)
+        inp = inputs.detach()     # Break connection to the main graph
+        z = inp @ w.T + bias.detach().T
+        z.backward()
+        return w.grad
+
+    def gradient_wrt_inputs(weights, inputs, bias):
+        inp = inputs.detach().clone().requires_grad_(True)
+        w = weights.detach()      # Also detach weights
+        z = inp @ w.T + bias.detach().T
+        z.backward()
+        return inp.grad
 
     # Gradients w.r.t. W1 weights
-    W1_clone = W1.detach().clone()
-    W1_clone.requires_grad_(True)
-    a0_detached = model.a0.detach().clone()
-    z1_clone = a0_detached @ W1_clone.T + b1.T
-    z1_clone.backward()
-
-    d_z3_a0 = W1_clone.grad[0, 0].item()  # Should equal a0_0
-    d_z3_a1 = W1_clone.grad[0, 1].item()  # Should equal a0_1
+    W1_grad = gradient_wrt_weights(W1, model.a0, b1)
+    d_z3_a0 = W1_grad[0, 0].item()  # Should equal a0_0
+    d_z3_a1 = W1_grad[0, 1].item()  # Should equal a0_1
 
     # Gradients w.r.t. activated hidden layer outputs
-    W1_detached = W1.detach().clone()
-    a0_clone = model.a0.detach().clone()
-    a0_clone.requires_grad_(True)
-    z1_from_a0 = a0_clone @ W1_detached.T + b1.T
-    z1_from_a0.backward()
+    a0_grad = gradient_wrt_inputs(W1, model.a0, b1)
+    dz1_da0_0 = a0_grad[0, 0].item()  # Should equal W1[0, 0]
+    dz1_da0_1 = a0_grad[0, 1].item()  # Should equal W1[0, 1]
 
-    dz1_da0_0 = a0_clone.grad[0, 0].item()  # Should equal W1[0, 0]
-    dz1_da0_1 = a0_clone.grad[0, 1].item()  # Should equal W1[0, 1]
+    # Bias gradient is again simply just 1
+    d_z3_b3 = 1.0
 
     print("=== Partial Derivatives: Hidden to Output Layer ===")
     print(f"dz1/dW1_00 = {d_z3_a0:.4f} (expected: {model.a0[0, 0].item():.4f})")
     print(f"dz1/dW1_01 = {d_z3_a1:.4f} (expected: {model.a0[0, 1].item():.4f})")
     print(f"dz1/da0_0 = {dz1_da0_0:.4f} (expected: {W1[0, 0].item():.4f})")
     print(f"dz1/da0_1 = {dz1_da0_1:.4f} (expected: {W1[0, 1].item():.4f})")
-    return d_z3_a0, d_z3_a1, dz1_da0_0, dz1_da0_1
+    return d_z3_a0, d_z3_a1, d_z3_b3, dz1_da0_0, dz1_da0_1
 
 
 @app.cell(hide_code=True)
@@ -450,30 +441,34 @@ def _():
 def _(mo):
     mo.md(r"""
     ### Loss Function (MSE)
+
+    Compute partial derivative for the MSE (Mean Squared Error). Notice that our n is simply 1 in this case.
+
+    * $\text{MSE} = \frac{1}{n=1}(y_{\text{pred}} - y_{\text{target}})^2$
+
+    * $\frac{\partial L}{\partial y_{\text{pred}}} = 2(y_{\text{pred}} - y_{\text{target}})$
     """)
     return
 
 
 @app.cell
 def _(y_pred, y_target):
-    # Compute gradient of MSE loss function
-    # MSE = (y_pred - y_target)^2
-    # dL/dy_pred = 2 * (y_pred - y_target)
+    # Helper function to compute MSE gradient
+    def mse_gradient(pred, target):
+        p = pred.detach().clone().requires_grad_(True)
+        loss = (p - target) ** 2
+        loss.sum().backward()
+        return p.grad.item()
 
-    y_pred_clone = y_pred.detach().clone()
-    y_pred_clone.requires_grad_(True)
-    loss_clone = (y_pred_clone - y_target) ** 2
-    loss_clone.backward()
-
-    dL_dy_pred = y_pred_clone.grad.item()  # Should be 2 * (y_pred - y_target)
+    dL_dy_pred = mse_gradient(y_pred, y_target)
 
     # Manual computation for verification
-    manual_dL_dy_pred = 2 * (y_pred.item() - y_target.item())
+    manual_mse_derivate = 2 * (y_pred.item() - y_target.item())
 
     print("=== Partial Derivative: Loss Function (MSE) ===")
     print(f"dL/dy_pred = {dL_dy_pred:.4f}")
-    print(f"Manual computation: 2 * ({y_pred.item():.4f} - {y_target.item():.4f}) = {manual_dL_dy_pred:.4f}")
-    print(f"Match: {abs(dL_dy_pred - manual_dL_dy_pred) < 1e-6}")
+    print(f"Manual computation: 2 * ({y_pred.item():.4f} - {y_target.item():.4f}) = {manual_mse_derivate:.4f}")
+    print(f"Match: {abs(dL_dy_pred - manual_mse_derivate) < 1e-6}")
     return (dL_dy_pred,)
 
 
@@ -484,22 +479,6 @@ def _(mo):
 
     Now we'll compute the complete gradients by applying the chain rule backwards through the network. We already have all the partial derivatives we need - we just need to multiply them together according to the chain rule.
 
-    **For W1 gradients (output layer weights):**
-    - dL/dW1_00 = dL/dy_pred × dy_pred/dz1 × dz1/dW1_00
-    - dL/dW1_01 = dL/dy_pred × dy_pred/dz1 × dz1/dW1_01
-
-    **For W0 gradients (hidden layer weights):**
-
-    For hidden neuron 0:
-    - dL/dW0_00 = dL/dy_pred × dy_pred/dz1 × dz1/da0_0 × da0_0/dz0_0 × dz0_0/dW0_00
-    - dL/dW0_01 = dL/dy_pred × dy_pred/dz1 × dz1/da0_0 × da0_0/dz0_0 × dz0_0/dW0_01
-    - dL/dW0_02 = dL/dy_pred × dy_pred/dz1 × dz1/da0_0 × da0_0/dz0_0 × dz0_0/dW0_02
-
-    For hidden neuron 1:
-    - dL/dW0_10 = dL/dy_pred × dy_pred/dz1 × dz1/da0_1 × da0_1/dz0_1 × dz0_1/dW0_10
-    - dL/dW0_11 = dL/dy_pred × dy_pred/dz1 × dz1/da0_1 × da0_1/dz0_1 × dz0_1/dW0_11
-    - dL/dW0_12 = dL/dy_pred × dy_pred/dz1 × dz1/da0_1 × da0_1/dz0_1 × dz0_1/dW0_12
-
     These computed gradients should match exactly with PyTorch's W0.grad and W1.grad!
     """)
     return
@@ -509,67 +488,87 @@ def _(mo):
 def _(
     W0,
     W1,
+    b0,
+    b1,
     dL_dy_pred,
     d_a0_z0,
     d_a1_z1,
     d_pred_z3,
+    d_z0_b0,
     d_z0_x0,
     d_z0_x1,
     d_z0_x2,
+    d_z1_b1,
     d_z1_x0,
     d_z1_x1,
     d_z1_x2,
     d_z3_a0,
     d_z3_a1,
+    d_z3_b3,
     dz1_da0_0,
     dz1_da0_1,
     torch,
 ):
     # Apply chain rule to compute final gradients for W1
-    dL_dW1_00 = dL_dy_pred * d_pred_z3 * d_z3_a0
-    dL_dW1_01 = dL_dy_pred * d_pred_z3 * d_z3_a1
+    dL_dW1_00 = dL_dy_pred * d_pred_z3 * d_z3_a0   # for w7
+    dL_dW1_01 = dL_dy_pred * d_pred_z3 * d_z3_a1   # for w8
+    dL_db3 = dL_dy_pred * d_pred_z3 * d_z3_b3      # for b3
 
-    # Apply chain rule to compute final gradients for W0 (hidden neuron 0)
-    dL_dW0_00 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_x0
-    dL_dW0_01 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_x1
-    dL_dW0_02 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_x2
+    # W0_0x (hidden neuron 0, first row of matrix)
+    dL_dW0_00 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_x0 # w1
+    dL_dW0_01 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_x1 # w2
+    dL_dW0_02 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_x2 # w3
+    dL_db0 = dL_dy_pred * d_pred_z3 * dz1_da0_0 * d_a0_z0 * d_z0_b0    # b0
 
-    # Apply chain rule to compute final gradients for W0 (hidden neuron 1)
-    dL_dW0_10 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_x0
-    dL_dW0_11 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_x1
-    dL_dW0_12 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_x2
+    # W0_1x (hidden neuron 1, second row of matrix)
+    dL_dW0_10 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_x0 # w4
+    dL_dW0_11 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_x1 # w5
+    dL_dW0_12 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_x2 # w6
+    dL_db1 = dL_dy_pred * d_pred_z3 * dz1_da0_1 * d_a1_z1 * d_z1_b1    # b1
 
-    print("=== Final Gradients (Manual Backpropagation) ===")
-    print("\nW1 Gradients:")
-    print(f"dL/dW1_00 = {dL_dW1_00:.6f}")
-    print(f"dL/dW1_01 = {dL_dW1_01:.6f}")
-
-    print("\nW0 Gradients (Neuron 0):")
-    print(f"dL/dW0_00 = {dL_dW0_00:.6f}")
-    print(f"dL/dW0_01 = {dL_dW0_01:.6f}")
-    print(f"dL/dW0_02 = {dL_dW0_02:.6f}")
-
-    print("\nW0 Gradients (Neuron 1):")
-    print(f"dL/dW0_10 = {dL_dW0_10:.6f}")
-    print(f"dL/dW0_11 = {dL_dW0_11:.6f}")
-    print(f"dL/dW0_12 = {dL_dW0_12:.6f}")
+    # Gather into Tensors that match the W1, b1, W0 and b0 from PyTorch Model
+    manual_W1_grad = torch.tensor([[dL_dW1_00, dL_dW1_01]])
+    manual_b1_grad = torch.tensor([[dL_db3]])
+    manual_W0_grad = torch.tensor([[dL_dW0_00, dL_dW0_01, dL_dW0_02],
+                                   [dL_dW0_10, dL_dW0_11, dL_dW0_12]])
+    manual_b0_grad = torch.tensor([[dL_db0], [dL_db1]])
 
     print("\n=== Comparison with PyTorch Gradients ===")
     print("\nPyTorch W1.grad:")
     print(W1.grad)
+    print("\nManual W1.grad:")
+    print(manual_W1_grad)
+
+    print("\nPyTorch b1.grad:")
+    print(b1.grad)
+    print("\nManual b1.grad:")
+    print(manual_b1_grad)
+
     print("\nPyTorch W0.grad:")
     print(W0.grad)
+    print("\nManual W0.grad:")
+    print(manual_W0_grad)
+
+    print("\nPyTorch b0.grad:")
+    print(b0.grad)
+    print("\nManual b0.grad:")
+    print(manual_b0_grad)
 
     print("\n=== Verification ===")
-    manual_W1_grad = torch.tensor([[dL_dW1_00, dL_dW1_01]])
-    manual_W0_grad = torch.tensor([[dL_dW0_00, dL_dW0_01, dL_dW0_02],
-                                   [dL_dW0_10, dL_dW0_11, dL_dW0_12]])
-
     W1_match = torch.allclose(W1.grad, manual_W1_grad, atol=1e-6)
+    b1_match = torch.allclose(b1.grad, manual_b1_grad, atol=1e-6)
     W0_match = torch.allclose(W0.grad, manual_W0_grad, atol=1e-6)
+    b0_match = torch.allclose(b0.grad, manual_b0_grad, atol=1e-6)
 
     print(f"W1 gradients match: {W1_match}")
+    print(f"b1 gradients match: {b1_match}")
     print(f"W0 gradients match: {W0_match}")
+    print(f"b0 gradients match: {b0_match}")
+    return
+
+
+@app.cell
+def _():
     return
 
 
