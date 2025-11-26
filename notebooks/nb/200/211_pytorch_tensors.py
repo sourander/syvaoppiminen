@@ -13,6 +13,8 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    # Tensors - Official Tutorial
+
     ## Attribution
 
     This notebook is sourced from PyTorch's official tutorial "Learn the Basics" by Suraj Subramanian, Seth Juarez, Cassie Breviu, Dmitry Soshnikov, and Ari Bornstein.

@@ -13,6 +13,8 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    # Tensors Deeper - Official Tutorial
+
     ## Attribution
 
     This notebook is sourced from PyTorch's official tutorial "Introduction to PyTorch - YouTube Series" by Brad Heintz
