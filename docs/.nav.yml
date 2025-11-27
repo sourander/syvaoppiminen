@@ -1,11 +1,11 @@
 nav:
     - index.md
-    - neuroverkot    # 100
-    - tensorit       # 200
-    - vastavirta     # 300
-    - mallinnus      # 400
-    - konvoluutio    # 500
-    - siirtovaikutus # 600
-    - kieli          # 700
-    - aikasarjat     # 800
+    - "1. Neuroverkot": neuroverkot    # 100
+    - "2. Tensorit": tensorit       # 200
+    - "3. Vastavirta": vastavirta     # 300
+    - "4. Mallinnus": mallinnus      # 400
+    - "5. Konvoluutio": konvoluutio    # 500
+    - "6. Siirtovaikutus": siirtovaikutus # 600
+    - "7. Kieli": kieli          # 700
+    - "8. Aikasarjat": aikasarjat     # 800
     - "*"

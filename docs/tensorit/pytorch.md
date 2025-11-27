@@ -6,9 +6,61 @@ priority: 210
 
 Tässä otetaan PyTorch tutuksi. Perusjuttuja. Muutama harjoitus, kuten Sigmoid ja ReLu implementointi käyttämättä PyTorchin valmiita funktioita.
 
-## TODO
+## AI-sovelluskehysten lyhyt historia
 
-Tähän teoriaa hieman.
+Modernien syväoppimiskehysten historia on kiehtova tarina nopeasta innovaatiosta ja suurten teknologiayritysten sekä avoimen lähdekoodin yhteisön kehittyvistä suhteista.
+
+### Varhainen perusta (2009-2014)
+
+Matka alkaa Theanosta, joka kehitettiin noin vuonna 2009 – tai ehkä olisi mainittava, että Nvidian CUDA syntyi 2006. Ennen tätä neuroverkot kirjoitettiin käsin esimerkiksi C++:lla. François Chollet kuvailee Theanoa: *"the conceptual ancestor of all modern deep learning tools"*. Theano oli ensimmäinen kehys, joka mahdollisti automaattisen differentioinnin ja GPU-laskennan syväoppimismallien kouluttamiseen. Se sai merkittävää jalansijaa vuosina 2013–2014, kun ImageNet 2012 -kilpailu herätti laajan kiinnostuksen syväoppimiseen. [^dlwithpython]
+
+Näihin aikoihin myös Lua-pohjainen Torch 7 ja C++-pohjainen Caffe olivat kovaa huutoa. Kyseistä kirjastoa ei ole päivitetty sitten 2017, jolloin versio 1.0 julkaistiin [^dlwithpython]. Caffe:ta hyödynsi esimerkiksi [bat-country](https://github.com/jrosebr1/bat-country) kirjastossa, joka on Deep Dream -tyylinen kuvageneraattori. Kirjastolla voi generoida unenomaisia kuvia tavallisten valokuvien pohjalta. Miltä näyttää *Pelkoa ja Inhoa Las Vegasissa*–elokuva, jos katsoja näkee silmiä ja kasvoja sielläkin, missä niitä ei ole? Käy toki katsomassa repositoriosta esimerkkejä!
+
+### Keras: Korkean tason pioneeri (2015)
+
+Keras lanseerattiin maaliskuussa 2015 uudenlaisena lähestymistapana syväoppimiseen. Se oli François Cholletin – eli lähteissä olevan kirjan *Deep Learning with Python (3rd ed.)* toisen kirjoittajan – kehittämä. Kuten *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition* -kirjassa kerrotaan, Chollet kehitti alkuperäisen Keras-kirjaston osana tutkimusprojektia, ja se *"quickly gained popularity, owing to its ease of use, flexibility, and beautiful design"*. [^geron3rd]
+
+Alun perin Keras suunniteltiin korkean tason rajapinnaksi Theanon päälle, ja se oli suunnattu niille muutamalle tuhannelle ihmiselle, jotka tuolloin työskentelivät syväoppimisen parissa. Filosofia oli yksinkertainen: tehdä syväoppimisesta saavutettavaa intuitiivisen ja käyttäjäystävällisen API:n avulla. [^dlwithpython]
+
+### TensorFlow:n läpimurto
+
+Googlen julkaisema TensorFlow, 2015, oli käänteentekevä hetki, joka toi syväoppimisen valtavirran kehittäjien tietoisuuteen. Chollet ja Watson kuvailevat, että julkaisu oli: *"watershed moment that precipitated deep learning in the mainstream developer zeitgeist"*. TensorFlow otti keskeisiä ideoita Theanosta ja lisäsi kriittisen tuen laajamittaiselle hajautetulle laskennalle. Vuoden 2016 puoliväliin mennessä puolet TensorFlow-käyttäjistä käyttivät sitä nimenomaan Kerasin avulla. [^dlwithpython]
+
+### PyTorch astuu näyttämölle (2016)
+
+Meta (silloinen Facebook) julkaisi PyTorchin syyskuussa 2016 suorana vastauksena TensorFlow'n menestykselle [^geronpytorch]. PyTorch peri ohjelmointityylinsä Chainer-kehykseltä ja torch-autogradilta. Jos PyTorchin suunnittelun tausta kiinnostaa, suosittelen tutustumaan [PyTorch's design origins](https://soumith.ch/blog/2023-12-17-pytorch-design-origins.md.html)-kirjoitukseen. Sen on kirjoittanut Soumith Chintala, PyTorchin co-founder ja Torch 7:n pääkehittäjä.
+
+> "In contrast, PyTorch was designed from the ground up to provide a more flexible, Pythonic approach to building neural networks". [^geronpytorch]
+
+### Suuri integraatio: Keras osaksi TensorFlow'ta (2017-2019)
+
+Suuri muutos tapahtui, kun Google integroi Kerasin TensorFlow'n korkean tason rajapinnaksi. Keras valittiin virallisesti suositelluksi korkean tason rajapinnaksi, kun TensorFlow 2 julkaistiin. [^geron3rd]
+
+Ennen tätä Keras ja TF tulivat toki jo toimeen keskenään. Tensorflow 1.1.0 julkaisun myötä (elo 2018) Keras ladattiin `tf.keras`-moduulina, mutta se piti yhä asentaa erikseen. Jo vuonna 2019 Adrian Rosebrock totesi blogissaan: *"As you can tell, the history between Keras and TensorFlow is long, complicated, and intertwined"*. [^keras-vs-tf-keras]
+
+TensorFlow 2.0:n julkaisuun mennessä vuonna 2019 integraatio oli valmis. Aurélien Géron toteaa:
+
+> "Installing TensorFlow will automatically install Keras as well, and Keras will not work without TensorFlow installed. In short, Keras and TensorFlow fell in love and got married". [^geron3rd]
+
+Alunperin Keras tuki useita taustajärjestelmiä (PlaidML, Theano, Microsoft Cognitive Toolkit), mutta versiosta 2.4 alkaen vain TensorFlow oli tuettu. [^geron3rd] Tällöin, 2020, minäkin olin yhä aktiivinen Kerasin ja Tensorflow:n käyttäjä. PyTorchin suosio oli kasvussa, mutta en löytänyt aikaa kokeilla sitä.
+
+### Keras itsenäistyy jälleen
+
+Viimeisin kehitys edustaa paluuta Kerasin monen taustajärjestelmän juurille. Kuten *Machine Learning – Modern Computer Vision & Generative AI* -kirjassa kuvataan:
+
+> "Keras will support multiple backends including TensorFlow, JAX, and PyTorch. This is much like the original iteration of Keras which supported the backends which were popular at the time".
+
+Tämä kehitys tarkoittaa, että Keras on kulkenut täyden ympyrän – monen taustajärjestelmän kirjastosta osaksi TensorFlow'ta ja nyt takaisin tukemaan useita kehyksiä, mukaan lukien PyTorch, JAX ja TensorFlow.
+
+### Nykytilanne (2024-)
+
+Keras on itsenäinen ja vapaa, taas. Watson ja Chollet tiivistävät, että Python on voittanut kielikilvan seuraavaksi 15 vuodeksi, vähintään nykyiset neljä kehystä (ks. lainaus alta) tulevat pysymään relevantteina – joskin uusia voi löytyä, kuten Applen MLX. [^dlwithpython]
+
+> "Today, Keras, TensorFlow, PyTorch, and JAX are the top frameworks in the deep learning world." [^dlwithpython]
+
+Tästä nelikosta Keras on ainut, joka ei ole täysin itsenäinen kehys. Se on korkean tason rajapinta, joka käyttää taustajärjestelmänä TensorFlow'ta, PyTorchia tai JAX:ia. Sillä voi siis kirjoittaa helppolukuista koodia, jossa on käytössä esim. Layerit näin: `dense = layers.Dense(64, activation="relu")`, mutta taustalla voi olla mikä tahansa tuettu kehys. Näitä taustakehyksiä yhdistää se, että ne kaikki toteuttavat samankaltaisia matalamman tason toiminnallisuuksia, kuten tensoreita, automaattista differentiointia, GPU-kiihdytystä ja vastavirtausta (backpropagation).
+
+Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttäisimme Kerasia ja vuorottellisimme backendien suhteen. Tällä hetkellä tämä kurssi on kuitenkin vahvasti PyTorch-painotteinen. Saat toki kurssin aikana kokeilla kirjoittaa jonkin tehtävän Keras edellä. Kenties haluat myös kokeilla, miten jokin alkupään low level -tehtävä onnistuisi TensorFlow:n tai JAX:n avulla. Jos kysyt kielimallilta, se kyllä kääntää (ainakin yksinkertaisen) koodin kehyksestä toiseen.
 
 
 ## Tehtävät
@@ -57,3 +109,21 @@ Tähän teoriaa hieman.
     !!! warning
 
         Tämän tehtävän linkillä on vahva deprekoitumisvaroitus. Johdatus Koneoppimiseen -kurssi refaktoroidaan 2026 keväällä. Jos linkit eivät toimi, ota yhteyttä opettajaan. Hän on unohtanut päivittää linkit.
+
+!!! question "Tehtävä: ONXX JAX:ia näkynyt?"
+
+    Yllä olevasta historiasta puuttuu ONXX tyystin ja Jax on vain sivuhuomio. Tutustu Jaxiin ja ONNX:ään itsenäisesti ja kirjoita lyhyt yhteenveto oppimispäiväkirjaasi. ONXX:iin tutustutaan kenties tarkemmin myöhemmin kurssilla – ehkäpä vaikka Syväoppiminen II:ssa.
+
+    On äärimmäisen suositeltavaa lisäksi käyttää Google Trendsiä ja vertailla, miten Worldwide-tasolla kehykset PyTorch, TensorFlow, Keras ja JAX ovat kehittyneet viimeisen viiden vuoden aikana. Huomaa, että tässä on kuitenkin kyse vain hakuhistoriasta. Se ei välttämättä suoraan heijasta todellista käyttöä tuotantoympäristöissä tai tutkimuksessa.
+
+    💪 Jos oikein rohkea olet, ota JAX lyhyelle Hello World -tason koeajolle.
+
+## Lähteet
+
+[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
+
+[^geron3rd]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly. 2022.
+
+[^keras-vs-tf-keras]: Rosebrock, J. *Keras vs. tf.keras: What’s the difference in TensorFlow 2.0?* PyImageSearch Blog. https://pyimagesearch.com/2019/10/21/keras-vs-tf-keras-whats-the-difference-in-tensorflow-2-0/
+
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
