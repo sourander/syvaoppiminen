@@ -269,25 +269,25 @@ Huomaa, että MLP on luokka. Tämä mahdollistaa, että sinä voit itse lisätä
 
 ### Termistöä
 
-Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa korvan taakse. HUOM! Tässä lähinnä vain nimetään kurssilla käytäviä asioita. Syvällisempää käsittelyä tulee PyTorchin kautta myöhemmissä luvuissa.
+Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa korvan taakse. Tässä vaiheessa kurssia lähinnä vain nimeämme kurssilla käytäviä aiheita. Syvällisempää käsittelyä seuraa PyTorchin kautta myöhemmissä luvuissa.
 
-| Termi             | Selitys                                                                                          |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| Painot (weights)  | Mallin parametrit, jotka oppivat datasta. Jokaisella yhteydellä on oma painonsa.                 |
-| Bias              | Mallin parametrit, jotka oppivat datasta. Jokaisella neuronilla on oma bias-termi.               |
-| Aktivaatiofunktio | Funktio, joka lisätään neuronin ulostuloon. Aktivointifunktio tekee mallista ei-lineaarisen.     |
-| Loss-funktio      | Funktio, joka mittaa mallin virheen. Koulutuksen aikana pyritään minimoimaan loss-funktio.       |
-| Optimointi        | Prosessi, jossa mallin painot ja bias-termit päivitetään loss-funktion minimoimiseksi.           |
-| Epoch             | Yksi läpikäynti koko koulutusdatasta.                                                            |
-| Batch             | Pieni osa koulutusdatasta, joka syötetään malliin kerralla.                                      |
-| Learning rate     | Hyperparametri, joka määrittää, kuinka suuria päivityksiä mallin painoihin ja biaseihin tehdään. |
+| Termi             | Selitys                                                                                                                                                                                 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Painot (weights)  | Mallin parametrit, jotka oppivat datasta. Jokaisella yhteydellä on oma painonsa. Tyypillisessä kuvaajassa nämä esitetään viivoina, joiden paksuus tai väri voi kuvata painon suuruutta. |
+| Bias              | Mallin parametrit, jotka oppivat datasta. Jokaisella neuronilla on oma bias-termi.                                                                                                      |
+| Aktivaatiofunktio | Funktio, joka lisätään neuronin ulostuloon. Aktivointifunktio tekee mallista ei-lineaarisen.                                                                                            |
+| Tappiofunktio     | Funktio, joka mittaa mallin virheen. Koulutuksen aikana pyritään minimoimaan valittu *loss function*.                                                                                   |
+| Optimointi        | Prosessi, jossa mallin painot ja bias-termit päivitetään loss-funktion minimoimiseksi.                                                                                                  |
+| Epoch             | Yksi läpikäynti koko koulutusdatasta.                                                                                                                                                   |
+| Batch             | Pieni osa koulutusdatasta, joka syötetään malliin kerralla.                                                                                                                             |
+| Learning rate     | Hyperparametri, joka määrittää, kuinka suuria päivityksiä mallin painoihin ja biaseihin tehdään.                                                                                        |
 
 
 ## Tehtävät
 
 !!! question "Tehtävä: UDLbook Deep"
 
-    Lue Understanding Deep Learning kirjasta vähintään luvu 4.1 *"Composing neural networks"* sekä 4.2 *"From composing networks to deep networks"*. Kirjoita itsellesi lyhyt yhteenveto aiheesta omin sanoinesi, jotta ymmärrät asian.
+    Lue Understanding Deep Learning kirjasta vähintään luvu 4.1 *"Composing neural networks"* sekä 4.2 *"From composing networks to deep networks"*. Kirjoita itsellesi lyhyt yhteenveto aiheesta omin sanoinesi, jotta ymmärrät asian. Huomaa, että aihetta käsitellään myös yllä (ja kurssivideoilla).
 
     Tutustu myös UDL-kirjan kylkiäisenä tuleviin [Interactive Figures](https://udlbook.github.io/udlfigures/)-työkaluihin. Erityisesti *Concatenating networks* sekä *Deep network computation*-kuvaajiin.
 
@@ -303,17 +303,30 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
     * Google Colab
     * Joku muu pilvipalvelu, jossa on GPU
 
-    HUOM! Opettaja ei voi realistisesti kokeilla kaikkia vaihtoehtoja, jotka syntyvät `("Win", "Mac", "Linux") x ("uv", "docker", "jupyterhub", "colab")` -ristikkona. Valitse siis sellainen, joka sinulle on tuttu tai jonka opit helposti. Opettaja tarjoaa tukea, mutta älä odota, että sinulle annetaan tasan yksi koodirimpsu, jolla kaikki toimii. Hallitse omat ympäristösi!
+    HUOM! Opettaja ei voi realistisesti kokeilla kaikkia vaihtoehtoja, jotka syntyvät `("Win", "Mac", "Linux") x ("pip", "uv", "docker") x ("jupyterhub", "colab", "marimo")` -ristikkona. Valitse siis sellainen, joka sinulle on tuttu tai jonka opit helposti. Opettaja tarjoaa tukea, mutta älä odota, että sinulle annetaan tasan yksi koodirimpsu, jolla kaikki toimii. Hallitse omat ympäristösi!
+
+    Esittele valitsemasi kehitysympäristö oppimispäiväkirjassa. Mikäli sen asennus vaatii erityisiä toimenpiteitä, kirjaa ne talteen, jotta voit palata niihin myöhemmin tarvittaessa. Oppimispäiväkirja ei ole pelkästään arvosteltava artefakti, vaan se on myös sinun henkilökohtainen muistikirjasi. Hyödynnä sitä.
 
     P.S. **Tarkista aloitusluennon tallenne!** Siellä on mitä varmimmin neuvottu ainakin yksi tapa asentaa tarvittava ympäristö!
 
 !!! question "Tehtävä: Aja MNIST MLP koodi"
 
-    Koodi löytyy Notebookista `notebooks/nb/100/110_first_model.ipynb` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen).
+    Koodi löytyy Marimo Notebookista `notebooks/nb/100/110_first_model.py` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen).
 
     1. Lataa Notebook koneellesi.
-    2. Aja Notebook kokonaisuudessaan. Varmista, että saat mallin koulutettua ja kaikki solut ajettua.
-    3. Lue koodi kokonaisuudessaan läpi! Emme ole vielä opiskelleet PyTorchin käyttöä, mutta yritä konseptitasolla ymmärtää, mitä kukin koodirivi tekee.
+    2. (Optional:) jos käytät Jupyteriä, käännä Marimo Notebook Jupyter Notebook -muotoon. Alustasta riippuen tämä voi onnistua esimerkiksi näin:
+
+        ```bash
+        # Jos uv
+        uvx marimo export ipynb 110_first_model.py -o 110_first_model.ipynb.ipynb
+
+        # Jos ei uv
+        pip install marimo
+        marimo export ipynb 110_first_model.py -o 110_first_model.ipynb
+        ```
+    
+    3. Aja Notebook kokonaisuudessaan. Varmista, että saat mallin koulutettua ja kaikki solut ajettua.
+    4. Lue koodi kokonaisuudessaan läpi! Emme ole vielä opiskelleet PyTorchin käyttöä, mutta yritä konseptitasolla ymmärtää, mitä kukin koodirivi tekee.
 
     Samalla näet benchmarkkia siihen, kuinka sinun rautasi suhtautuu opettajan rautaan (ks. yllä oleva taulukko).
 

@@ -33,5 +33,13 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Tutustu vektorointiin
 - [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
 
+## PyTorch 101 (210)
+
+- [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
+- [ ] Tehtävä: PyTorch Learn the Basics: Tensors
+- [ ] Tehtävä: PyTorch Introduction to Pytorch Tensors
+- [ ] Tehtävä: Auto MPG
+- [ ] Tehtävä: Kyberviha PyTorch-mallilla
+
 
 ```

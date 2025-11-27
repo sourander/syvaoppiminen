@@ -292,7 +292,7 @@ Tutustu näihin:
 
     Kannattaa tutustua Wikipedian [Cerebral cortex](https://en.wikipedia.org/wiki/Cerebral_cortex) sekä [Neuron](https://en.wikipedia.org/wiki/Neuron)-artikkeleihin. Aivokuoren (engl. cerebral cortex) osalta aiheeseen liittyvää sisältöä on ainakin "Layers of neocortex"-otsikkoon liittyvä teksti ja kuvat. Tämä ei ole biologian kurssi, joten silmäily riittää. Neuroverkot (ANN, Artificial Neural Network) perustuvat ideatasolla siihen, kuinka aivojen synapsien ja neuronien verkosto toimii – tai ainakin, kuinka sen kuviteltiin toimivan vielä 1900-luvun puolivälissä.
 
-    Voi olla myös mielenkiintoista verrata nykyisiä koneoppimismalleja [List of animals by number of neurons](https://en.wikipedia.org/wiki/List_of_animals_by_number_of_neurons) -listaan. Jos verrataan melko naiivisti parametrimääriä, niin mitä eläimiä seuraavat mallit vastaavat:
+    Vertaa nykyisiä koneoppimismalleja eläinkunnan aivoihin. [List of animals by number of neurons](https://en.wikipedia.org/wiki/List_of_animals_by_number_of_neurons) -lista on yksi mahdollinen lähde. Jos verrataan melko naiivisti parametrimääriä, niin mitä eläimiä seuraavat mallit vastaavat:
 
     | Malli                | Vuosi |         desimaali | potenssiesitys |
     | -------------------- | ----- | ----------------: | -------------- |
@@ -302,11 +302,13 @@ Tutustu näihin:
     | Grok-1 (open source) | 2024  |   314 000 000 000 | 3.14 × 10^11   |
     | GPT-4 (spekulaatio)  | 2024  | 1 760 000 000 000 | 1.76 × 10^12   |
 
-    Vinkki: mieti tarkkaan, kumpaa "parametrien määrä" vastaa paremmin aivoissa: neuronien vai synapsien määrä?    
+    **Vinkki**: mieti tarkkaan, kumpaa *"mallin parametrien määrä"* vastaa paremmin aivoissa: neuronien vai synapsien määrä?    
 
 !!! question "Tehtävä: BERT Large"
 
     Yllä on esiteltynä BERT-mallin `base`-versio ja sen kevennetty `distilbert`-versio. Tutustu, kuinka BERT Large liittyy tähän. Kuinka monta parametria siinä on? Kuinka paljon enemmän muistia se vaatii verrattuna `base`-versioon? Miten se tai sen koulutus eroaa `base`-versiosta?
+
+    Tutki samalla [Hugging Face](https://huggingface.co/) -sivustoon, jos se ei ole sinulle ennestään tuttu. Mitä kaikkea sivustolta löytyy? Kuka sinne voi lisätä sisältöä?
 
 ## Lähteet
 

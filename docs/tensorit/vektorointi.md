@@ -83,7 +83,7 @@ Neuroverkkojen kanssa säästö on suuri, koska verkon koulutuksessa tehdään u
 
 Seuraavassa osassa tätä kurssia opit PyTorchin ja siihen liittyvien aputyökalujen kuten Datasetin ja Dataloaderin käytön. Nämä ovat tehokkaita työkaluja: käytä niitä hyväksesi.
 
-## Tehtävä
+## Tehtävät
 
 !!! question "Tehtävä: Tutustu vektorointiin"
 
@@ -91,7 +91,7 @@ Seuraavassa osassa tätä kurssia opit PyTorchin ja siihen liittyvien aputyökal
 
 !!! question "Tehtävä: Tutustu NumpyNNwithBCE -malliin"
 
-    Avaa `200_numpy_nn.ipynb`-tiedosto ja tutustu `NumpyNNwithBCE`-malliin. Aja koodi ja tutki mitä tapahtuu. Varmista, että ymmärrät, kuinka mikäkin rivi koodia liittyy tähän mennessä kurssilla opittuun.
+    Avaa `200_numpy_nn.py`-tiedosto ja tutustu `NumpyNNwithBCE`-malliin. Aja koodi ja tutki mitä tapahtuu. Varmista, että ymmärrät, kuinka mikäkin rivi koodia liittyy tähän mennessä kurssilla opittuun.
 
     P.S. Voit jättää `backward()`-metodin pienemmälle huomiolle. Tutustumme myöhemmällä luennolla vastavirta-algoritmiin (engl. backpropagation), joka on `backward()`-metodin ydin.
 
