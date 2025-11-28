@@ -60,7 +60,7 @@ Käytännössä gradientti voi olla siis muotoa:
 
 ```python
 # Gradient of Loss w.r.t. W
-delta_W = torch.tensor(
+grad_W = torch.tensor(
 #   [[   w00,    w01,   w02 ],
 #    [   w10,    w11,   w12 ]]
     [[0.0980, 0.1960, 0.2940],
