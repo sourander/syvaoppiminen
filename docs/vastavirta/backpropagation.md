@@ -135,7 +135,7 @@ Tämä on se tapa, johon törmäät esimerkiksi Tamer Elsayedin videolla: [Lectu
 2. Laske kunkin muuttujan lokaali derivaatta sen syötteiden suhteen (esim. tulosääntöä hyödyntäen).
 3. Kun tämä on valmis, ja haluat tietää vaikkapa painon $w_{00}$ vaikutuksen lopulliseen häviöön (loss), etsi kaikki polut, jotka yhdistävät $w_{00}$ lopulliseen häviöön. Kerro ne yhteen.
 
-Huomaa, että kohdan 2 voi tehdä käytännössä missä tahansa järjestyksessä, kunhan kaikki tarvittavat lokaalit derivaatit on laskettu.
+Huomaa, että kohdan 2 voi tehdä käytännössä ==missä tahansa järjestyksessä==, kunhan kaikki tarvittavat lokaalit derivaatit on laskettu.
 
 #### Lopusta vaiheittain alkuun
 
@@ -147,7 +147,7 @@ Tämä on se tapa, kuinka backpropagation esitellään usein ohjelmoinnin yhteyd
 4. Käytä tätä edellisen kerroksen gradientin laskemiseen sitä edelliselle kerrokselle.
 5. Toista, kunnes kaikki kerrokset on käsitelty.
 
-Huomaa, että tämä on pakko tehdä järjestyksessä lopusta alkuun, koska jokainen kerros tarvitsee edellisen kerroksen gradientin.
+Huomaa, että tämä on pakko tehdä ==järjestyksessä lopusta alkuun==, koska jokainen kerros tarvitsee edellisen kerroksen gradientin.
 
 Itse operaatio näyttää meidän viime viikona `NumpyNNwithBCE`-mallissamme tältä:
 
