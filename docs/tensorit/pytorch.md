@@ -73,7 +73,7 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
     
     Dokumentoi löydöksesi oppimispäiväkirjaan.
 
-!!! question "Tehtävä: Tutustu NumpyNNwithBCE -malliin"
+!!! question "Tehtävä: From NumPy to PyTorch (PyTorchNN)"
 
     Avaa `210_numpy_to_pytorch.py`-tiedosto ja tutustu `PyTorchNN`-malliin. Malli on sama 2-2-1 kun aiempi `NumpyNNwithBCE`-malli, mutta toteutettu PyTorchilla. 
     

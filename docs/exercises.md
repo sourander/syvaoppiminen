@@ -31,11 +31,11 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 ## Vektorointi (200)
 
 - [ ] Tehtävä: Tutustu vektorointiin
-- [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
+- [ ] Tehtävä: NumPy Neural Network (NumpyNNwithBCE)
 
 ## PyTorch (210)
 
-- [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
+- [ ] Tehtävä: From NumPy to PyTorch (PyTorchNN)
 - [ ] Tehtävä: PyTorch Learn the Basics: Tensors
 - [ ] Tehtävä: PyTorch Introduction to Pytorch Tensors
 - [ ] Tehtävä: Auto MPG

@@ -13,15 +13,18 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # From NumPy to PyTorch
+    # From NumPy to PyTorch (Part 2)
 
-    In the previous notebook, we implemented a 2-2-1 neural network from scratch using NumPy. We had to:
+    In a previous notebook (`200_numpy_nn.py`), we implemented a 2-2-1 neural network from scratch using NumPy. We had to:
 
     1. Manually implement the forward pass
     2. Manually calculate gradients for backpropagation
     3. Manually implement the weight updates
 
-    In this notebook, we'll take a closer look at step 2: calculating gradients for backpropagation. We will use PyTorch to automatically compute these gradients for us, but, we will print out all the intermediate results and compare those to the manual calculations we did in the previous notebook.
+    We have already looked at how to perform the same steps using PyTorch (`211_numpy_to_pytorch.py`). This time, we will use both PyTorch and NumPy side-by-side to investigate backpropagation.
+
+    * We will use PyTorch to automatically compute these gradients for us, but, ...
+    * We will store all the intermediate results and compare those to the manual NumPy calculations.
     """)
     return
 
@@ -50,18 +53,18 @@ def _(mo):
 def _(nn, torch):
     class PyTorchNNInspectable(nn.Module):
         """Same as PyTorchNN but stores intermediate activations. 
-    
+
         We also needed to fiddle with the sigmoid slightly to access the pre-activation values."""
         def __init__(self):
             super().__init__()
             self.fc1 = nn.Linear(2, 2)
             self.fc2 = nn.Linear(2, 1)
-        
+
             # Store intermediate values
             self.Z1 = None
             self.A1 = None
             self.Z2 = None
-    
+
         def forward(self, x):
             self.Z1 = self.fc1(x)
             self.A1 = torch.sigmoid(self.Z1)
