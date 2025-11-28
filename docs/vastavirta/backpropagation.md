@@ -264,7 +264,7 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
 
 !!! question "Tehtävä: Lopusta vaiheittain alkuun"
 
-    Olet aiemmin nähnyt backpropagation-algoritmin tehdyn käsin `NumpyNNwithBCE`-mallissamme, ja tähän viitattiin myös tässä luentomateriaalissa. Tutustu nyt `310_numpy_to_pytorch_pt2.py`-Notebookiin, jossa tehdään syväluotausta aiemmin nähdyn koodin `backward`-metodin toiminnasta. Tässä Notebookissa käytetään **"Lopusta vaiheittain alkuun" -menetelmää**.
+    Olet aiemmin nähnyt backpropagation-algoritmin tehdyn käsin `NumpyNNwithBCE`-mallissamme, ja tähän viitattiin myös tässä luentomateriaalissa. Tutustu nyt `300_numpy_to_pytorch_pt2.py`-Notebookiin, jossa tehdään syväluotausta aiemmin nähdyn koodin `backward`-metodin toiminnasta. Tässä Notebookissa käytetään **"Lopusta vaiheittain alkuun" -menetelmää**.
 
     Notebookin rinnalla on hyvä tutustua myös Matt Mazurin versioon: [A Step by Step Backpropagation Example](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/). Jos haluat todellisen syväluotauksen aiheeseen, katso University of Michiganin Justin Johnsonin luento: [Lecture 6: Backpropagation](https://youtu.be/dB-u77Y5a6A?si=O2s-NbdM2HnKA2UT). Aihetta käsitellään myös kurssilla aiemmin mainitussa [Understanding Deep Learning e-kirjassa](https://udlbook.github.io/udlbook/).
 
@@ -272,11 +272,11 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
 
 !!! question "Tehtävä: PyTorch Learn the Basics: Automatic Differentiation with torch.autograd"
 
-    Tutustu `311_autogradqs_tutorial.py`-tiedostossa olevaan, Marimo-formaattiin käännettyyn PyTorchin tutoriaaliin. Alkuperäinen löytyy tästä osoitteesta: [Automatic Differentiation with torch.autograd](https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
+    Tutustu `301_autogradqs_tutorial.py`-tiedostossa olevaan, Marimo-formaattiin käännettyyn PyTorchin tutoriaaliin. Alkuperäinen löytyy tästä osoitteesta: [Automatic Differentiation with torch.autograd](https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html)
 
 !!! question "Tehtävä: Ensin lokaalit ja sitten kertolasku"
 
-    Tutustu `312_backpropagation.py`-Notebookiin, jossa tehdään syväluotausta backpropagationin toiminnasta **"Ensin lokaalit ja sitten kertolasku" -menetelmällä**. Notebookin rinnalla on hyvä tutustua myös Tamer Elsayedin luentoon: [Lecture 12 | Backpropagation I | CMPS 497 Deep Learning | Fall 2024 (alkaen ajasta 24:56)](https://youtu.be/NHWP339RnAs?t=1496), jossa hän käy läpi Understanding Deep Learning -kirjan luvun 7 asioita nimenomaan tällä menetelmällä. Myös seuraava video, [Lecture 13 | Backpropagation II | CMPS 497 Deep Learning | Fall 2024](https://youtu.be/3pVRMPmqwhc?si=6wwVVLqQonQLjT-c), jatkaa vastavirran parissa.
+    Tutustu `302_backpropagation.py`-Notebookiin, jossa tehdään syväluotausta backpropagationin toiminnasta **"Ensin lokaalit ja sitten kertolasku" -menetelmällä**. Notebookin rinnalla on hyvä tutustua myös Tamer Elsayedin luentoon: [Lecture 12 | Backpropagation I | CMPS 497 Deep Learning | Fall 2024 (alkaen ajasta 24:56)](https://youtu.be/NHWP339RnAs?t=1496), jossa hän käy läpi Understanding Deep Learning -kirjan luvun 7 asioita nimenomaan tällä menetelmällä. Myös seuraava video, [Lecture 13 | Backpropagation II | CMPS 497 Deep Learning | Fall 2024](https://youtu.be/3pVRMPmqwhc?si=6wwVVLqQonQLjT-c), jatkaa vastavirran parissa.
 
 
 ## Lähteet

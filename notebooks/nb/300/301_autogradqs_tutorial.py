@@ -83,7 +83,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.image(src="nb/300/311_comp_graph.png")
+    mo.image(src="nb/300/301_comp_graph.png")
     return
 
 
