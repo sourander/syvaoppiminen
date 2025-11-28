@@ -42,5 +42,12 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Kyberviha PyTorch-mallilla
 - [ ] Tehtävä: ONXX JAX:ia näkynyt?
 
+## Vastavirta (Backprop) (300)
+
+- [ ] Tehtävä: Takaisinvirtaus intuition tasolla
+- [ ] Tehtävä: Lopusta vaiheittain alkuun
+- [ ] Tehtävä: PyTorch Learn the Basics: Automatic Differentiation with torch.autograd
+- [ ] Tehtävä: Ensin lokaalit ja sitten kertolasku
+
 
 ```
