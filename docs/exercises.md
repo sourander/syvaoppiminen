@@ -12,7 +12,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 
 
 ```markdown
-## Neuroverkot 101 (100)
+## Neuroverkot (100)
 
 - [ ] Tehtävä: TensorFlow Playground
 - [ ] Tehtävä: Quick, Draw!
@@ -33,7 +33,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Tutustu vektorointiin
 - [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
 
-## PyTorch 101 (210)
+## PyTorch (210)
 
 - [ ] Tehtävä: Tutustu NumpyNNwithBCE -malliin
 - [ ] Tehtävä: PyTorch Learn the Basics: Tensors

@@ -2,7 +2,7 @@
 priority: 100
 ---
 
-# Neuroverkot 101
+# Neuroverkot
 
 ## Määritelmä
 
