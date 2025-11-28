@@ -158,17 +158,26 @@ def _(mo):
     For reference, the relating functions are:
 
     ```python
-    def backward(self, target):
-        self.dZ2 = self.A2 - target
-        dA1 = self.dZ2.dot(self.W1.T)
-        self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
+        def backward(self, target):
+            # === Layer 2 (Output) ===
+            self.dZ2 = self.A2 - target
+            self.dW1 = self.A1.T.dot(self.dZ2)
+            self.db1 = self.dZ2
 
-    def optimize(self):
-        self.W1 -= self.learning_rate * self.A1.T.dot(self.dZ2)
-        self.b1 -= self.learning_rate * self.dZ2
+            # === Layer 1 (Hidden) ===
+            dA1 = self.dZ2.dot(self.W1.T)
+            self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
+            self.dW0 = self.A0.T.dot(self.dZ1)
+            self.db0 = self.dZ1
 
-        self.W0 -= self.learning_rate * self.A0.T.dot(self.dZ1)
-        self.b0 -= self.learning_rate * self.dZ1
+        def optimize(self):
+            # Update Output Layer
+            self.W1 -= self.learning_rate * self.dW1
+            self.b1 -= self.learning_rate * self.db1
+
+            # Update Hidden Layer
+            self.W0 -= self.learning_rate * self.dW0
+            self.b0 -= self.learning_rate * self.db0
     ```
 
     Let's mimic this as closely as possible. Since we are not using the class, the syntax would end up lacking the `self.` part. We will mock the instance variables with a dataclass.

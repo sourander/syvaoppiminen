@@ -14,7 +14,7 @@ Tämä on kenties kurssin teoreettisin osuus, mutta sisältää yleistietoa, jok
 > "Mitä osaat kertoa algoritmista nimeltään *backpropagation*?" <br>
 > — "Öööh, taisin käyttää sitä yhdessä projektissa, vissiin."
 
-Vastavirta-algoritmi (backpropagation) on keskeinen menetelmä neuroverkkojen kouluttamisessa. Se mahdollistaa virheen tehokkaan laskemisen ja painojen päivittämisen verkon eri kerroksissa. Heti alkuun täytyy sanoa, että backpropagation ei ole sama asia kuin gradient descent, vaikka nämä kaksi usein mainitaankin yhdessä. Backpropagation on menetelmä, jolla lasketaan virheiden gradientit verkon painoille, kun taas gradient descent on optimointialgoritmi, joka käyttää näitä gradientteja painojen päivittämiseen. Optimointialgoritmeja on muitakin, kuten esimerkiksi Adam ja RMSprop.
+Vastavirta-algoritmi (engl. backpropagation) on keskeinen menetelmä neuroverkkojen kouluttamisessa. Se mahdollistaa virheen tehokkaan laskemisen ja painojen päivittämisen verkon eri kerroksissa. Heti alkuun täytyy sanoa, että backpropagation ei ole sama asia kuin gradient descent, vaikka nämä kaksi usein mainitaankin yhdessä. Backpropagation on menetelmä, jolla lasketaan virheiden gradientit verkon painoille, kun taas gradient descent on optimointialgoritmi, joka käyttää näitä gradientteja painojen päivittämiseen. Optimointialgoritmeja on muitakin, kuten esimerkiksi Adam ja RMSprop.
 
 !!! tip
 
@@ -125,11 +125,11 @@ for epoch in range(epochs):
     # ...
 ```
 
-Jos/kun lasket backpropagationin oppimissyistä käsin, ainakin kerran elämässäsi, ymmärrät paremmin, mitä `loss.backward()` tekee. Käytännössä tähän löytyy ainakin kaksi erilaista lähestymistapaa. Esittelen ne lyhyesti alla, ja myöhemmin tutustut näihin tehtävien kautta.
+Jos/kun lasket backpropagationin oppimissyistä käsin, ainakin kerran elämässäsi, ymmärrät paremmin, mitä `loss.backward()` tekee. Käytännössä tähän löytyy ainakin kaksi erilaista keinoa. Esittelen ne lyhyesti alla, ja myöhemmin tutustut näihin tehtävien kautta.
 
-#### Ensin lokaalit ja sitten kertolasku
+#### Keino 1: Ensin lokaalit ja sitten kertolasku
 
-Tämä on se tapa, johon törmäät esimerkiksi Tamer Elsayedin videolla: [Lecture 12 | Backpropagation I | CMPS 497 Deep Learning | Fall 2024 (alkaen ajasta 24:56)](https://youtu.be/NHWP339RnAs?si=Wy8Uh25-MuWNyWOT&t=1496). Toimintatapa on seuraava:
+Tämä on se keino, johon törmäät esimerkiksi Tamer Elsayedin videolla: [Lecture 12 | Backpropagation I | CMPS 497 Deep Learning | Fall 2024 (alkaen ajasta 24:56)](https://youtu.be/NHWP339RnAs?si=Wy8Uh25-MuWNyWOT&t=1496). Toimintatapa on seuraava:
 
 1. Tee ensin forward pass ja tallenna kaikki väliarvot.
 2. Laske kunkin muuttujan lokaali derivaatta sen syötteiden suhteen (esim. tulosääntöä hyödyntäen).
@@ -137,49 +137,67 @@ Tämä on se tapa, johon törmäät esimerkiksi Tamer Elsayedin videolla: [Lectu
 
 Huomaa, että kohdan 2 voi tehdä käytännössä ==missä tahansa järjestyksessä==, kunhan kaikki tarvittavat lokaalit derivaatit on laskettu.
 
-#### Lopusta vaiheittain alkuun
+#### Keino 2: Lopusta vaiheittain alkuun
 
-Tämä on se tapa, kuinka backpropagation esitellään usein ohjelmoinnin yhteydessä kirjallisuudessa. Esimerkiksi Matt Mazurin blogissa: [A Step by Step Backpropagation Example](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/). Tämä on loogista, koska virhe *propagoituu* verkossa taaksepäin. Välivaiheissa tallennetut layerin gradientteja voidaan nimittää *deltoiksi*. Toimintatapa on seuraava:
+Tämä on se keino, kuinka backpropagation esitellään usein ohjelmoinnin yhteydessä kirjallisuudessa. Esimerkiksi Matt Mazurin blogissa: [A Step by Step Backpropagation Example](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/). Tämä on loogista, koska virhe *propagoituu* verkossa taaksepäin. Välivaiheissa tallennetut layerin gradientteja voidaan nimittää *deltoiksi*. Toteutuksemme laskee kunkin kerroksen virheen eli "deltan" ($dZ$). Tätä virhettä käytetään laskemaan painojen gradientit ($dW$ ja $db$).
 
-1. Tee ensin forward pass ja tallenna kaikki väliarvot.
-2. Käsittele lähtötason gradientti (viimeisen kerroksen dZ).
-3. Käytä sitä edellisen kerroksen gradientin (dA/dZ) laskemiseen.
-4. Käytä tätä edellisen kerroksen gradientin laskemiseen sitä edelliselle kerrokselle.
-5. Toista, kunnes kaikki kerrokset on käsitelty.
+1. Tee ensin forward pass ja tallenna kaikki väliarvot (aktivoinnit $A$)
+2. Käsittele lähtötason virhe ($dZ_{out}$) virhe.
+3. Laske tämän kerroksen **painojen gradientit** ($dW$) *(hyödyntäen virhettä ja edellisen tason syötettä)*
+4. Laske **edellisen kerroksen virhe** siirtämällä nykyinen virhe painojen läpi taaksepäin ($dZ_{prev}$)
+5. Toista vaiheet 3 ja 4, kunnes kaikki kerrokset on käsitelty.
 
 Huomaa, että tämä on pakko tehdä ==järjestyksessä lopusta alkuun==, koska jokainen kerros tarvitsee edellisen kerroksen gradientin.
 
 Itse operaatio näyttää meidän viime viikona `NumpyNNwithBCE`-mallissamme tältä:
 
 ```python
-    def backward(self, target):
-        # === Lähtökerros ===
+def backward(self, target):
+        # === Lähtökerros (Layer 2) ===
+        # 1. Laske virhe (dZ2)
         self.dZ2 = self.A2 - target
+        
+        # 2. Laske gradientit painoille (dW1, db1)
+        # Nämä tallennetaan, jotta optimize() voi käyttää niitä
+        self.dW1 = self.A1.T.dot(self.dZ2)
+        self.db1 = self.dZ2
 
-        # === Ainut piilotettu kerros ===
+        # === Piilotettu kerros (Layer 1) ===
+        # 3. Propagoi virhe taaksepäin (dZ1)
         dA1 = self.dZ2.dot(self.W1.T)
         self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
+
+        # 4. Laske gradientit painoille (dW0, db0)
+        self.dW0 = self.A0.T.dot(self.dZ1)
+        self.db0 = self.dZ1
 ```
 
 Huomaa, että jos piilotettuja kerroksia olisi useita, prosessi alkaisi näyttää tältä:
 
 ```python
-    def backward(self, target):
+def backward(self, target):
         # === Lähtökerros ===
-        self.dZ5 = self.A_5 - target  # n = viimeinen kerros
+        self.dZ5 = self.A5 - target
+        self.dW4 = self.A4.T.dot(self.dZ5) # Gradientti W4:lle
 
         # === Piilotetut kerrokset ===
-        dA4 = self.dZ5.dot(self.W5.T)
+        # Layer 4
+        dA4 = self.dZ5.dot(self.W4.T)
         self.dZ4 = dA4 * self.sigmoid_derivative(self.A4)
+        self.dW3 = self.A3.T.dot(self.dZ4) # Gradientti W3:lle
 
-        dA3 = self.dZ4.dot(self.W4.T)
+        # Layer 3
+        dA3 = self.dZ4.dot(self.W3.T)
         self.dZ3 = dA3 * self.sigmoid_derivative(self.A3)
+        self.dW2 = self.A2.T.dot(self.dZ3) # Gradientti W2:lle
 
-        dA2 = self.dZ3.dot(self.W3.T)
-        self.dZ2 = dA2 * self.sigmoid_derivative(self.A2)
+        # Layer 2
+        # ... sama homma ...
 
+        # Layer 1
         dA1 = self.dZ2.dot(self.W2.T)
         self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
+        self.dW0 = self.A0.T.dot(self.dZ1) # Gradientti W0:lle
 ```
 
 Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerroksen, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodi mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]:
@@ -212,6 +230,10 @@ Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, 
         # Nyt niitä voi käyttää painojen päivittämiseen optimointialgoritmissa
         self.deltas = deltas[::-1]
 ```
+
+Huomaa, että Rosebrockin koodi poikkeaa meidän esimerkistä siten, että se laskee tässä vaiheessa ainoastaan kerrosten virhetermit eli deltat ($dZ$), mutta ei vielä varsinaisia painojen gradientteja ($dW$).
+
+Meidän NumpyNNwithBCE-toteutuksessamme laskimme backward-metodissa valmiiksi myös gradientit (esim. self.dW1 = ...), jotta rakenne vastaisi täysin PyTorchin tapaa tallentaa gradientit .grad-muuttujaan. Rosebrockin esimerkissä gradienttien laskeminen (eli aktivaatioiden ja deltojen välinen matriisitulo) on jätetty tehtäväksi vasta myöhemmin, varsinaisen painojen päivityksen yhteyteen.
 
 !!! note "Bias?"
 

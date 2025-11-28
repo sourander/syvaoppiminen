@@ -61,14 +61,19 @@ def _(np):
             self.W1 = np.random.uniform(-0.5, 0.5, size=(2, 1))
             self.b1 = np.zeros((1, 1))
 
-            # Cache for storing intermediate values during forward pass
+            # Cache for storing activations
             self.A0 = np.empty((1, 2))  # Input layer activations
             self.A1 = np.empty((1, 2))  # Hidden layer activations
             self.A2 = np.empty((1, 1))  # Output layer activations
 
-            # Cache for storing gradients during backward pass
-            self.dZ1 = np.empty((1, 1))  # Gradient of loss w.r.t. hidden layer
-            self.dZ2 = np.empty((1, 1))     # Gradient of loss w.r.t. output layer
+            # Cache for gradients.
+            self.dZ2 = np.empty((1, 1))
+            self.dW1 = np.empty((2, 1)) 
+            self.db1 = np.empty((1, 1))
+            
+            self.dZ1 = np.empty((1, 2))
+            self.dW0 = np.empty((2, 2))
+            self.db0 = np.empty((1, 2))
 
             # Counter for manual train_step
             self.manual_epoch: int = 0
@@ -97,30 +102,39 @@ def _(np):
             return self.A2
 
         def backward(self, target):
-            # === Output layer ===
-            # Gradient of loss wrt Z2 (pre-activation of output neuron)
-            # For sigmoid + BCE, this simplifies beautifully to (A2 - y)
+            """
+            Computes gradients for all layers (mimics PyTorch .backward())
+            """
+            # === Layer 2 (Output) ===
+            # 1. Error at output (dZ2)
             self.dZ2 = self.A2 - target
+        
+            # 2. Gradients for W1 and b1
+            self.dW1 = self.A1.T.dot(self.dZ2)
+            self.db1 = self.dZ2 # Sum over batch if batch_size > 1
 
-            # === Hidden layer ===
-            # Gradient of loss wrt Z1 (pre-activation of hidden layer)
-            # Step 1: propagate error back through W1
+            # === Layer 1 (Hidden) ===
+            # 3. Error at hidden layer (dZ1)
+            # Propagate error back through W1
             dA1 = self.dZ2.dot(self.W1.T)
-            # Step 2: apply derivative of activation (sigmoid)
+            # Apply derivative of sigmoid
             self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
+
+            # 4. Gradients for W0 and b0
+            self.dW0 = self.A0.T.dot(self.dZ1)
+            self.db0 = self.dZ1 # Sum over batch if batch_size > 1
 
         def optimize(self):
             """
-            Update weights and biases using computed gradients.
-            Uses the cached activations and deltas from forward and backward passes.
+            Apply gradients to weights (mimics PyTorch optimizer.step())
             """
-            # Update W1 and b1 (hidden to output)
-            self.W1 -= self.learning_rate * self.A1.T.dot(self.dZ2)
-            self.b1 -= self.learning_rate * self.dZ2
+            # Update Output Layer
+            self.W1 -= self.learning_rate * self.dW1
+            self.b1 -= self.learning_rate * self.db1
 
-            # Update W0 and b0 (input to hidden)
-            self.W0 -= self.learning_rate * self.A0.T.dot(self.dZ1)
-            self.b0 -= self.learning_rate * self.dZ1
+            # Update Hidden Layer
+            self.W0 -= self.learning_rate * self.dW0
+            self.b0 -= self.learning_rate * self.db0
 
         def train_step(self, X, y, learning_rate:float|None=None):
             self.learning_rate = learning_rate or self.learning_rate
