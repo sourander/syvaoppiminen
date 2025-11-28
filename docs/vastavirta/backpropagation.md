@@ -31,7 +31,7 @@ Vastavirta-algoritmi (backpropagation) on keskeinen menetelmä neuroverkkojen ko
 Tätä aihetta on käsitelty Johdatus koneoppimiseen -kurssissa Hill Climbing ja Gradient Descent -osioissa. Jos et muista aiheesta mitään, on äärimmäisen suositeltavaa kurkata omaa oppimispäiväkirjaasi ja kerrata lyhyesti. Tarkasti ottaen meidän tulee selvittää kaksi termiä: 
 
 * osittaisderivaatta (engl. *partial derivative*)
-* gradientti (engl. *gradient*
+* gradientti (engl. *gradient*)
 
 ### Osittaisderivaatta
 
@@ -59,7 +59,7 @@ $$
 Käytännössä gradientti voi olla siis muotoa:
 
 ```python
-# Gradient of W w.r.t. Loss
+# Gradient of Loss w.r.t. W
 delta_W = torch.tensor(
 #   [[   w00,    w01,   w02 ],
 #    [   w10,    w11,   w12 ]]
