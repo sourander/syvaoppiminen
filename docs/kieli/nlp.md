@@ -13,10 +13,11 @@ TODO! Tähän tulee ainakin seuraavat asiat:
     * Ehkä otetaan kunnon meta-tason harjoitus ja vibe-koodataan nykyisellä LLM:llä yksinkertainen expert system? Kenties `uv add experta` jne.
 * Luonnollisen kielen käsittelyn perusteet (NLP, Natural Language Processing)
 * Haasteita (eli miksei FC/MLP toimi hyvin)
+    * BPTT (Backpropagation Through Time)
 * Esimerkkejä NLP-malleista
     * RNN
     * Transformers
 * Sanavektorit (word embeddings)
-* Kenties transfer learning siten että fine tunataan Gemma 3 270M tai vastaava pieni malli?
+* Kenties transfer learning siten että fine tunataan Gemma 3 270M tai vastaava pieni malli? BERT?
 
 Työkaluna tutustutaan kirjastoon SpaCy.

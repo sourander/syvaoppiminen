@@ -229,16 +229,19 @@ Käytännössä backpropagation on toteutettu syväoppimiskirjastoissa siten, et
 
 Kun tämä tehdään koko `loss.backward()`-kutsun yhteydessä, PyTorch kävelee taaksepäin koko laskentaverkon läpi, käyttäen ketjusääntöä laskeakseen gradientit kaikille verkon parametreille. Tämä on siis juuri se, mitä backpropagation tekee.
 
+Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttää joitakin kriteereitä:
 
-## Tuleva kontentti
+1. **Derivoitavuus**. Verkon kaikkien osien tulee olla derivoituvia. ReLU ei ole derivoitava pisteessä 0, mutta siitä käytännössä tehdään sellainen subgradientin avulla (lue: fancy tapa sanoa, että `if (x == 0): return 0`). Alkuperäisen Perceptronin askelfunktio ei ole derivoituva, joten se ei sovellu vastavirta-algoritmin käyttöön. [^geronpytorch] Diskeetit ehtolauseet ja satunnaisuus eivät ole myöskään derivoitavia.
 
-Lähteenä tulee olemaan pääasiassa:
+2. **Asyklinen laskentagraafi (DAG)**. Laskennan täytyy muodostaa suunnattu asyklinen verkko. Jos verkossa on silmukoita (esim. RNN), ne "avataan auki" (unrolling), jotta backpropagation voidaan toteuttaa [^geronpytorch].
 
-* [Understanding Deep Learning e-kirja](https://udlbook.github.io/udlbook/)
-    * Videoversio: [Lecture 12 | Backpropagation I | CMPS 497 Deep Learning | Fall 2024 (alkaen ajasta 24:56)](https://youtu.be/NHWP339RnAs?t=1496)
-    * ... ja samalta soittolistalta seuraava video
 
-* **Syväluotaus**: [Michigan Online: Lecture 6: Backpropagation](https://youtu.be/dB-u77Y5a6A)
+!!! info "Monimutkaisemmat arkkitehtuurit"
+
+    Yllä esitelty delta-sääntö ja backward-metodin toteutus toimii suoraviivaisesti tavallisissa, eteenpäin suunnatuissa neuroverkoissa (engl. feedforward, fully connected, dense), joissa jokainen neuroni on yhteydessä jokaiseen edellisen kerroksen neuroniin. Monimutkaisemmissa arkkitehtuureissa, kuten **konvoluutioverkoissa (CNN)**, gradienttien laskeminen on huomattavasti monimutkaisempaa.
+
+    Onneksi autograd hoitaa kaiken tämän puolestamme!
+
 
 ## Tehtävät
 
@@ -281,3 +284,4 @@ Lähteenä tulee olemaan pääasiassa:
 [^essentialmath]: Nield, T. *Essential Math for Data Science*. O'Reilly. 2021.
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^dl4cv]: Rosebrock, A. *Deep Learning for Computer Vision with Python. Starter Bundle. 3rd Edition*. PyImageSearch. 2019.
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
