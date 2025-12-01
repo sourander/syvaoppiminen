@@ -15,8 +15,8 @@ TODO! Tähän tulee ainakin seuraavat asiat:
 * Haasteita (eli miksei FC/MLP toimi hyvin)
     * BPTT (Backpropagation Through Time)
 * Esimerkkejä NLP-malleista
-    * RNN
-    * Transformers
+    * RNN (Geronin luku 13)
+    * Transformers (Geronin luku 14)
 * Sanavektorit (word embeddings)
 * Kenties transfer learning siten että fine tunataan Gemma 3 270M tai vastaava pieni malli? BERT?
 

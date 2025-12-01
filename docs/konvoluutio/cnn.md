@@ -7,6 +7,8 @@ priority: 500
 TODO! Tähän tulee ainakin seuraavat asiat:
 
 * Kuvantunnistuksen perusteet
+    * Lyhyt historia wanhoista feature descriptoreista (SIFT, HOG) nykypäivään
+    * Geronin kirjan luku 11
 * Mikä on konvoluutio ja miten se liittyy kuviin
 * Quickdraw -esimerkki
 * Weight sharing ja paikalliset yhteydet.
