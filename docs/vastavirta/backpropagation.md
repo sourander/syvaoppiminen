@@ -153,51 +153,67 @@ Itse operaatio näyttää meidän viime viikona `NumpyNNwithBCE`-mallissamme tä
 
 ```python
 def backward(self, target):
-        # === Lähtökerros (Layer 2) ===
-        # 1. Laske virhe (dZ2)
-        self.dZ2 = self.A2 - target
-        
-        # 2. Laske gradientit painoille (dW1, db1)
-        # Nämä tallennetaan, jotta optimize() voi käyttää niitä
-        self.dW1 = self.A1.T.dot(self.dZ2)
-        self.db1 = self.dZ2
+    # === Lähtökerros (Layer 2) ===
+    # 1. Laske virhe (dZ2)
+    self.dZ2 = self.A2 - target  # (1)!
+    
+    # 2. Laske gradientit painoille (dW2, db2)
+    # Nämä tallennetaan, jotta optimize() voi käyttää niitä
+    self.dW2 = self.A1.T.dot(self.dZ2)  # (2)!
+    self.db2 = self.dZ2  # (3)!
 
-        # === Piilotettu kerros (Layer 1) ===
-        # 3. Propagoi virhe taaksepäin (dZ1)
-        dA1 = self.dZ2.dot(self.W1.T)
-        self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
+    # === Piilotettu kerros (Layer 1) ===
+    # 3. Propagoi virhe taaksepäin (dZ1)
+    dA1 = self.dZ2.dot(self.W2.T)  # (4)!
+    self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)  # (5)!
 
-        # 4. Laske gradientit painoille (dW0, db0)
-        self.dW0 = self.A0.T.dot(self.dZ1)
-        self.db0 = self.dZ1
+    # 4. Laske gradientit painoille (dW1, db1)
+    self.dW1 = self.A0.T.dot(self.dZ1)  # (6)!
+    self.db1 = self.dZ1  # (7)!
 ```
 
-Huomaa, että jos piilotettuja kerroksia olisi useita, prosessi alkaisi näyttää tältä:
+1. **dZ2** eli **delta** (δ²) on lähtökerroksen virhe. Binary cross-entropy + sigmoid -yhdistelmällä tämä yksinkertaistuu muotoon `ennuste - todellinen`. Tämä on gradientti häviön suhteen pre-aktivaatioon Z².
+
+2. **dW2** on gradientti lähtökerroksen painoille W². Lasketaan kertomalla edellisen kerroksen aktivaatiot (A¹) nykyisen kerroksen virheellä (dZ²). Huomaa transpoosi (`.T`)!
+
+3. **db2** on gradientti lähtökerroksen biaseille b². Bias-gradientti on yksinkertaisesti sama kuin virhe (dZ²), koska biasin derivaatta on 1.
+
+4. **dA1** on gradientti piilotetun kerroksen aktivaatioiden suhteen. Propagoidaan virhe taaksepäin kertomalla nykyisen kerroksen virhe (dZ²) nykyisen kerroksen painojen transpoosin (W².T) kanssa.
+
+5. **dZ1** eli **delta** (δ¹) on piilotetun kerroksen virhe. Lasketaan kertomalla propagoitu aktivaatiovirhe (dA1) sigmoidin derivaatalla pisteessä A¹. Tämä on ketjusäännön sovellus!
+
+6. **dW1** on gradientti piilotetun kerroksen painoille W¹. Lasketaan samalla tavalla kuin dW2: kerrotaan syötteet (A⁰) nykyisen kerroksen virheellä (dZ¹).
+
+7. **db1** on gradientti piilotetun kerroksen biaseille b¹. Sama logiikka kuin db2: bias-gradientti on yksinkertaisesti virhe (dZ¹).
+
+Tutustu yllä olevan koodiblokin annotointeihin; tunnistat ne pienestä plussamerkistä, josta aukeaa lisätietoa. Huomaa, että jos piilotettuja kerroksia olisi useita, prosessi alkaisi näyttää tältä:
 
 ```python
 def backward(self, target):
         # === Lähtökerros ===
         self.dZ5 = self.A5 - target
-        self.dW4 = self.A4.T.dot(self.dZ5) # Gradientti W4:lle
+        self.dW5 = self.A4.T.dot(self.dZ5) # Gradientti W5:lle
 
         # === Piilotetut kerrokset ===
         # Layer 4
-        dA4 = self.dZ5.dot(self.W4.T)
+        dA4 = self.dZ5.dot(self.W5.T)
         self.dZ4 = dA4 * self.sigmoid_derivative(self.A4)
-        self.dW3 = self.A3.T.dot(self.dZ4) # Gradientti W3:lle
+        self.dW4 = self.A3.T.dot(self.dZ4) # Gradientti W4:lle
 
         # Layer 3
-        dA3 = self.dZ4.dot(self.W3.T)
+        dA3 = self.dZ4.dot(self.W4.T)
         self.dZ3 = dA3 * self.sigmoid_derivative(self.A3)
-        self.dW2 = self.A2.T.dot(self.dZ3) # Gradientti W2:lle
+        self.dW3 = self.A2.T.dot(self.dZ3) # Gradientti W3:lle
 
         # Layer 2
-        # ... sama homma ...
+        dA2 = self.dZ3.dot(self.W3.T)
+        self.dZ2 = dA2 * self.sigmoid_derivative(self.A2)
+        self.dW2 = self.A1.T.dot(self.dZ2) # Gradientti W2:lle
 
         # Layer 1
         dA1 = self.dZ2.dot(self.W2.T)
         self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
-        self.dW0 = self.A0.T.dot(self.dZ1) # Gradientti W0:lle
+        self.dW1 = self.A0.T.dot(self.dZ1) # Gradientti W1:lle
 ```
 
 Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerroksen, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodi mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]:
@@ -233,7 +249,7 @@ Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, 
 
 Huomaa, että Rosebrockin koodi poikkeaa meidän esimerkistä siten, että se laskee tässä vaiheessa ainoastaan kerrosten virhetermit eli deltat ($dZ$), mutta ei vielä varsinaisia painojen gradientteja ($dW$).
 
-Meidän NumpyNNwithBCE-toteutuksessamme laskimme backward-metodissa valmiiksi myös gradientit (esim. self.dW1 = ...), jotta rakenne vastaisi täysin PyTorchin tapaa tallentaa gradientit .grad-muuttujaan. Rosebrockin esimerkissä gradienttien laskeminen (eli aktivaatioiden ja deltojen välinen matriisitulo) on jätetty tehtäväksi vasta myöhemmin, varsinaisen painojen päivityksen yhteyteen.
+Meidän NumpyNNwithBCE-toteutuksessamme laskimme backward-metodissa valmiiksi myös gradientit (esim. self.dW2 = ...), jotta rakenne vastaisi täysin PyTorchin tapaa tallentaa gradientit .grad-muuttujaan. Rosebrockin esimerkissä gradienttien laskeminen (eli aktivaatioiden ja deltojen välinen matriisitulo) on jätetty tehtäväksi vasta myöhemmin, varsinaisen painojen päivityksen yhteyteen.
 
 !!! note "Bias?"
 

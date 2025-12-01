@@ -52,14 +52,14 @@ def _(np):
             self.every_nth_to_print = every_nth_to_print # Check print in fit()
 
             # Initialize weights for 2-2-1 architecture
-            # W0: Input layer (2 inputs) to hidden layer (2 neurons)
+            # W1: Input layer (2 inputs) to hidden layer (2 neurons)
             # Shape: (2, 2)
-            self.W0 = np.random.uniform(-0.5, 0.5, size=(2, 2))
-            self.b0 = np.zeros((1, 2))
+            self.W1 = np.random.uniform(-0.5, 0.5, size=(2, 2))
+            self.b1 = np.zeros((1, 2))
 
-            # W1: Hidden layer (2 neurons) to output layer (1 neuron)
-            self.W1 = np.random.uniform(-0.5, 0.5, size=(2, 1))
-            self.b1 = np.zeros((1, 1))
+            # W2: Hidden layer (2 neurons) to output layer (1 neuron)
+            self.W2 = np.random.uniform(-0.5, 0.5, size=(2, 1))
+            self.b2 = np.zeros((1, 1))
 
             # Cache for storing activations
             self.A0 = np.empty((1, 2))  # Input layer activations
@@ -68,12 +68,12 @@ def _(np):
 
             # Cache for gradients.
             self.dZ2 = np.empty((1, 1))
-            self.dW1 = np.empty((2, 1)) 
-            self.db1 = np.empty((1, 1))
+            self.dW2 = np.empty((2, 1)) 
+            self.db2 = np.empty((1, 1))
             
             self.dZ1 = np.empty((1, 2))
-            self.dW0 = np.empty((2, 2))
-            self.db0 = np.empty((1, 2))
+            self.dW1 = np.empty((2, 2))
+            self.db1 = np.empty((1, 2))
 
             # Counter for manual train_step
             self.manual_epoch: int = 0
@@ -92,11 +92,11 @@ def _(np):
             self.A0 = x
 
             # Layer 1 (hidden layer)
-            Z1 = self.A0.dot(self.W0) + self.b0
+            Z1 = self.A0.dot(self.W1) + self.b1
             self.A1 = self.sigmoid(Z1)
 
             # Layer 2 (output layer)
-            Z2 = self.A1.dot(self.W1) + self.b1
+            Z2 = self.A1.dot(self.W2) + self.b2
             self.A2 = self.sigmoid(Z2)
 
             return self.A2
@@ -109,32 +109,32 @@ def _(np):
             # 1. Error at output (dZ2)
             self.dZ2 = self.A2 - target
         
-            # 2. Gradients for W1 and b1
-            self.dW1 = self.A1.T.dot(self.dZ2)
-            self.db1 = self.dZ2 # Sum over batch if batch_size > 1
+            # 2. Gradients for W2 and b2
+            self.dW2 = self.A1.T.dot(self.dZ2)
+            self.db2 = self.dZ2 # Sum over batch if batch_size > 1
 
             # === Layer 1 (Hidden) ===
             # 3. Error at hidden layer (dZ1)
-            # Propagate error back through W1
-            dA1 = self.dZ2.dot(self.W1.T)
+            # Propagate error back through W2
+            dA1 = self.dZ2.dot(self.W2.T)
             # Apply derivative of sigmoid
             self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
 
-            # 4. Gradients for W0 and b0
-            self.dW0 = self.A0.T.dot(self.dZ1)
-            self.db0 = self.dZ1 # Sum over batch if batch_size > 1
+            # 4. Gradients for W1 and b1
+            self.dW1 = self.A0.T.dot(self.dZ1)
+            self.db1 = self.dZ1 # Sum over batch if batch_size > 1
 
         def optimize(self):
             """
             Apply gradients to weights (mimics PyTorch optimizer.step())
             """
             # Update Output Layer
-            self.W1 -= self.learning_rate * self.dW1
-            self.b1 -= self.learning_rate * self.db1
+            self.W2 -= self.learning_rate * self.dW2
+            self.b2 -= self.learning_rate * self.db2
 
             # Update Hidden Layer
-            self.W0 -= self.learning_rate * self.dW0
-            self.b0 -= self.learning_rate * self.db0
+            self.W1 -= self.learning_rate * self.dW1
+            self.b1 -= self.learning_rate * self.db1
 
         def train_step(self, X, y, learning_rate:float|None=None):
             self.learning_rate = learning_rate or self.learning_rate
@@ -166,11 +166,11 @@ def _(np):
 
             p = np.atleast_2d(X)
 
-            # Layer 0 to Layer 1
-            p = self.sigmoid(np.dot(p, self.W0) + self.b0)
+            # Layer 1 (hidden layer)
+            p = self.sigmoid(np.dot(p, self.W1) + self.b1)
 
-            # Layer 1 to Layer 2
-            return self.sigmoid(np.dot(p, self.W1) + self.b1)
+            # Layer 2 (output layer)
+            return self.sigmoid(np.dot(p, self.W2) + self.b2)
 
         def calculate_loss(self, X, targets):
             targets = np.atleast_2d(targets)

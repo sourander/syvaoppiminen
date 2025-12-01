@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.0"
+__generated_with = "0.18.1"
 app = marimo.App(width="medium")
 
 
@@ -70,10 +70,10 @@ def _(nn):
             super(PyTorchNN, self).__init__()
 
             # Define the layers
-            # Layer 0 to Layer 1: 2 inputs -> 2 hidden neurons
+            # Layer 1: 2 inputs -> 2 hidden neurons
             self.fc1 = nn.Linear(2, 2)
 
-            # Layer 1 to Layer 2: 2 hidden neurons -> 1 output
+            # Layer 2: 2 hidden neurons -> 1 output
             self.fc2 = nn.Linear(2, 1)
 
             # Activation function
@@ -101,7 +101,7 @@ def _(mo):
 
     Compare this to our NumPy implementation where we had to manually:
     - Calculate `dZ2 = A2 - target`
-    - Calculate `dA1 = dZ2.dot(W1.T)`
+    - Calculate `dA1 = dZ2.dot(W2.T)`
     - Calculate `dZ1 = dA1 * sigmoid_derivative(A1)`
     - Update all weights manually
 
@@ -251,7 +251,7 @@ def _(PyTorchNN, X_complex, np, plt, torch, train_model, y_complex):
     # Initialize and train a new model
     model_complex = PyTorchNN()
     model_complex = train_model(model_complex, X_complex, y_complex, 
-                                epochs=20_000, learning_rate=0.03, print_every=1_000)
+                                epochs=20_000, learning_rate=0.1, print_every=1_000)
 
     # Create a mesh grid for decision boundary visualization
     x_min, x_max = X_complex[:, 0].min() - 0.5, X_complex[:, 0].max() + 0.5
@@ -291,11 +291,11 @@ def _(mo):
     1. **Manual forward pass**: Matrix multiplications, activations
     2. **Manual backward pass**: Computing all gradients
        - `dZ2 = A2 - target`
-       - `dA1 = dZ2.dot(W1.T)`
+       - `dA1 = dZ2.dot(W2.T)`
        - `dZ1 = dA1 * sigmoid_derivative(A1)`
     3. **Manual weight updates**: Gradient descent
-       - `W1 -= learning_rate * A1.T.dot(dZ2)`
-       - `W0 -= learning_rate * A0.T.dot(dZ1)`
+       - `W2 -= learning_rate * A1.T.dot(dZ2)`
+       - `W1 -= learning_rate * A0.T.dot(dZ1)`
        - Plus biases
 
     ### What PyTorch Provides:

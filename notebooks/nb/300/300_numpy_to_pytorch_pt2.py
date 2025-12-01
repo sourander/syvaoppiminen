@@ -103,7 +103,7 @@ def _(PyTorchNNInspectable, torch):
 
     # Store references to forward pass values for manual gradient calculation 
     A0 = x_sample  # Input layer activations (our input features)
-    W1 = inspect_model.fc2.weight  # Output layer weights (for calculating dA1)
+    W2 = inspect_model.fc2.weight  # Output layer weights (for calculating dA1)
 
     # Forward pass - this populates the intermediate values we'll need
     A2 = inspect_model(x_sample)  # Final output (prediction)
@@ -112,7 +112,7 @@ def _(PyTorchNNInspectable, torch):
     A1 = inspect_model.A1  # Hidden layer activations (after sigmoid)
     Z1 = inspect_model.Z1  # Hidden layer pre-activations (before sigmoid)
     Z2 = inspect_model.Z2  # Output layer pre-activations (before sigmoid)
-    return A0, A1, A2, W1, inspect_model, x_sample, y_sample
+    return A0, A1, A2, W2, inspect_model, x_sample, y_sample
 
 
 @app.cell(hide_code=True)
@@ -161,23 +161,23 @@ def _(mo):
         def backward(self, target):
             # === Layer 2 (Output) ===
             self.dZ2 = self.A2 - target
-            self.dW1 = self.A1.T.dot(self.dZ2)
-            self.db1 = self.dZ2
+            self.dW2 = self.A1.T.dot(self.dZ2)
+            self.db2 = self.dZ2
 
             # === Layer 1 (Hidden) ===
-            dA1 = self.dZ2.dot(self.W1.T)
+            dA1 = self.dZ2.dot(self.W2.T)
             self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
-            self.dW0 = self.A0.T.dot(self.dZ1)
-            self.db0 = self.dZ1
+            self.dW1 = self.A0.T.dot(self.dZ1)
+            self.db1 = self.dZ1
 
         def optimize(self):
             # Update Output Layer
-            self.W1 -= self.learning_rate * self.dW1
-            self.b1 -= self.learning_rate * self.db1
+            self.W2 -= self.learning_rate * self.dW2
+            self.b2 -= self.learning_rate * self.db2
 
             # Update Hidden Layer
-            self.W0 -= self.learning_rate * self.dW0
-            self.b0 -= self.learning_rate * self.db0
+            self.W1 -= self.learning_rate * self.dW1
+            self.b1 -= self.learning_rate * self.db1
     ```
 
     Let's mimic this as closely as possible. Since we are not using the class, the syntax would end up lacking the `self.` part. We will mock the instance variables with a dataclass.
@@ -186,7 +186,7 @@ def _(mo):
 
 
 @app.cell
-def _(A0, A1, A2, W1, dataclass, np, y_sample):
+def _(A0, A1, A2, W2, dataclass, np, y_sample):
     # This cell is just for mockery purposes
     # Focus on understanding the next cell!
     @dataclass
@@ -194,8 +194,8 @@ def _(A0, A1, A2, W1, dataclass, np, y_sample):
         A0: np.ndarray
         A1: np.ndarray
         A2: np.ndarray
-        # W0: np.ndarray  # <- We are calculating gradients w.r.t. these weights
-        W1: np.ndarray
+        # W1: np.ndarray  # <- We are calculating gradients w.r.t. these weights
+        W2: np.ndarray
         dZ1: np.ndarray | None = None
         dZ2: np.ndarray | None = None
 
@@ -206,8 +206,8 @@ def _(A0, A1, A2, W1, dataclass, np, y_sample):
         A0=A0.detach().numpy(),
         A1=A1.detach().numpy(), # type: ignore
         A2=A2.detach().numpy(),
-        # W0=W0.detach().numpy(),
-        W1=W1.detach().numpy()
+        # W1=W1.detach().numpy(),
+        W2=W2.detach().numpy()
     )
 
     # --- This was a given argument for the backward pass ---
@@ -241,7 +241,7 @@ def _(mo):
 
     Propagate the error backward through the network using the chain rule:
 
-    1. First, propagate through the weights: $\frac{\partial L}{\partial A_1} = \frac{\partial L}{\partial Z_2} \cdot W_1$
+    1. First, propagate through the weights: $\frac{\partial L}{\partial A_1} = \frac{\partial L}{\partial Z_2} \cdot W^2$
     2. Then apply the activation derivative: $\frac{\partial L}{\partial Z_1} = \frac{\partial L}{\partial A_1} \odot \sigma'(A_1)$
 
     where $\odot$ denotes element-wise multiplication.
@@ -250,17 +250,17 @@ def _(mo):
 
     Calculate how much each weight and bias in the output layer contributed to the loss:
 
-    $$\frac{\partial L}{\partial W_1} = A_1^T \cdot \frac{\partial L}{\partial Z_2}$$
+    $$\frac{\partial L}{\partial W^2} = A_1^T \cdot \frac{\partial L}{\partial Z_2}$$
 
-    $$\frac{\partial L}{\partial b_1} = \frac{\partial L}{\partial Z_2}$$
+    $$\frac{\partial L}{\partial b^2} = \frac{\partial L}{\partial Z_2}$$
 
     ### Step 4: Compute Hidden Layer Weight Gradients
 
     Calculate how much each weight and bias in the hidden layer contributed to the loss:
 
-    $$\frac{\partial L}{\partial W_0} = A_0^T \cdot \frac{\partial L}{\partial Z_1}$$
+    $$\frac{\partial L}{\partial W^1} = A_0^T \cdot \frac{\partial L}{\partial Z_1}$$
 
-    $$\frac{\partial L}{\partial b_0} = \frac{\partial L}{\partial Z_1}$$
+    $$\frac{\partial L}{\partial b^1} = \frac{\partial L}{\partial Z_1}$$
 
     Note: We transpose the results to match PyTorch's weight matrix shape convention (out_features, in_features).
     """)
@@ -273,29 +273,29 @@ def _(np, self, target):
     self.dZ2 = self.A2 - target
 
     # Step 2
-    dA1 = np.dot(self.dZ2, self.W1)
+    dA1 = np.dot(self.dZ2, self.W2)
     self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
 
     # Step 3
-    dW1_manual = self.A1.T.dot(self.dZ2)
-    dW1_manual = dW1_manual.T # Transpose to match PyTorch shape
-    db1_manual = self.dZ2     # For bias, the partial derivative is just dZ
+    dW2_manual = self.A1.T.dot(self.dZ2)
+    dW2_manual = dW2_manual.T # Transpose to match PyTorch shape
+    db2_manual = self.dZ2     # For bias, the partial derivative is just dZ
 
     # Step 4
-    dW0_manual = self.A0.T.dot(self.dZ1) # type: ignore
-    dW0_manual = dW0_manual.T
-    db0_manual = self.dZ1
+    dW1_manual = self.A0.T.dot(self.dZ1) # type: ignore
+    dW1_manual = dW1_manual.T
+    db1_manual = self.dZ1
 
     # Step N
     # If we had more layers, we would continue propagating dZ backwards
     # through the network.
 
     print("\n=== MANUAL GRADIENTS (should match PyTorch) ===")
+    print(f"\ndW2 (dL/dW2): \n{dW2_manual}")
+    print(f"\ndb2 (dL/db2): \n{db2_manual}")
     print(f"\ndW1 (dL/dW1): \n{dW1_manual}")
     print(f"\ndb1 (dL/db1): \n{db1_manual}")
-    print(f"\ndW0 (dL/dW0): \n{dW0_manual}")
-    print(f"\ndb0 (dL/db0): \n{db0_manual}")
-    return dW0_manual, dW1_manual, db0_manual, db1_manual
+    return dW1_manual, dW2_manual, db1_manual, db2_manual
 
 
 @app.cell(hide_code=True)
@@ -309,34 +309,34 @@ def _(mo):
 
 
 @app.cell
-def _(dW0_manual, dW1_manual, db0_manual, db1_manual, inspect_model, np):
-    # Compare fc2 (W1, b1)
-    pytorch_dW1 = inspect_model.fc2.weight.grad.numpy()
-    pytorch_db1 = inspect_model.fc2.bias.grad.numpy()
+def _(dW1_manual, dW2_manual, db1_manual, db2_manual, inspect_model, np):
+    # Compare fc2 (W2, b2)
+    pytorch_dW2 = inspect_model.fc2.weight.grad.numpy()
+    pytorch_db2 = inspect_model.fc2.bias.grad.numpy()
 
     print("fc2.weight gradient:")
-    print(f"  PyTorch:  {pytorch_dW1}")
-    print(f"  Manual:   {dW1_manual}")
-    print(f"  Match: {np.allclose(pytorch_dW1, dW1_manual)}")
+    print(f"  PyTorch:  {pytorch_dW2}")
+    print(f"  Manual:   {dW2_manual}")
+    print(f"  Match: {np.allclose(pytorch_dW2, dW2_manual)}")
 
     print("\nfc2.bias gradient:")
-    print(f"  PyTorch:  {pytorch_db1}")
-    print(f"  Manual:   {db1_manual.flatten()}")
-    print(f"  Match: {np.allclose(pytorch_db1, db1_manual.flatten())}")
+    print(f"  PyTorch:  {pytorch_db2}")
+    print(f"  Manual:   {db2_manual.flatten()}")
+    print(f"  Match: {np.allclose(pytorch_db2, db2_manual.flatten())}")
 
-    # Compare fc1 (W0, b0)
-    pytorch_dW0 = inspect_model.fc1.weight.grad.numpy()
-    pytorch_db0 = inspect_model.fc1.bias.grad.numpy()
+    # Compare fc1 (W1, b1)
+    pytorch_dW1 = inspect_model.fc1.weight.grad.numpy()
+    pytorch_db1 = inspect_model.fc1.bias.grad.numpy()
 
     print("\nfc1.weight gradient (flatted for readability):")
-    print(f"  PyTorch:  {pytorch_dW0.flatten()}")
-    print(f"  Manual:   {dW0_manual.flatten()}")
-    print(f"  Match: {np.allclose(pytorch_dW0, dW0_manual)}")
+    print(f"  PyTorch:  {pytorch_dW1.flatten()}")
+    print(f"  Manual:   {dW1_manual.flatten()}")
+    print(f"  Match: {np.allclose(pytorch_dW1, dW1_manual)}")
 
     print("\nfc1.bias gradient:")
-    print(f"  PyTorch:  {pytorch_db0}")
-    print(f"  Manual:   {db0_manual}")
-    print(f"  Match: {np.allclose(pytorch_db0, db0_manual.flatten())}")
+    print(f"  PyTorch:  {pytorch_db1}")
+    print(f"  Manual:   {db1_manual}")
+    print(f"  Match: {np.allclose(pytorch_db1, db1_manual.flatten())}")
     return
 
 
@@ -352,10 +352,10 @@ def _(mo):
     1. **Capturing intermediate activations**: By storing values (Z1, A1, Z2) as instance variables in our custom `forward()` method, we can inspect what happens during PyTorch's forward pass without manual computation.
 
     2. **Accessing gradients**: After calling `loss.backward()`, PyTorch stores gradients in each parameter's `.grad` attribute:
-       - `model.fc1.weight.grad` → gradient with respect to W0
-       - `model.fc1.bias.grad` → gradient with respect to b0
-       - `model.fc2.weight.grad` → gradient with respect to W1
-       - `model.fc2.bias.grad` → gradient with respect to b1
+       - `model.fc1.weight.grad` → gradient with respect to W¹
+       - `model.fc1.bias.grad` → gradient with respect to b¹
+       - `model.fc2.weight.grad` → gradient with respect to W²
+       - `model.fc2.bias.grad` → gradient with respect to b²
 
     3. **Verification**: We manually computed the same gradients using NumPy (exactly like our previous implementation) and confirmed PyTorch's automatic gradients match perfectly.
 
