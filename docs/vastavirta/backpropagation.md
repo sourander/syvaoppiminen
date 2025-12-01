@@ -263,7 +263,7 @@ Meidän NumpyNNwithBCE-toteutuksessamme laskimme backward-metodissa valmiiksi my
     X = np.c_[X, np.ones((X.shape[0]))]
     ```
 
-    Minun koodiesimerkeissäni bias-termit on käsitelty erikseen, jotta koodi olisi selkeämpää oppimisen kannalta. Tämä löytyy Notebookeista: yllä olevilla esimerkeissä on murehdittu vain varsinaisista painoista.
+    Minun koodiesimerkeissäni bias-termit on käsitelty erikseen, jotta koodi olisi selkeämpää oppimisen kannalta, ja kenties täsmäisi paremmin PyTorchin tapaan.
 
 ### Autograd
 
