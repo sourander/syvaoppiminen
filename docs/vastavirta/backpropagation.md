@@ -186,6 +186,10 @@ def backward(self, target):
 
 7. **db1** on gradientti piilotetun kerroksen biaseille b¹. Sama logiikka kuin db2: bias-gradientti on yksinkertaisesti virhe (dZ¹).
 
+!!! note 
+
+    Yllä olevassa koodiesimerkissä, kuten muutenkin NumpyNN:n suhteen, on oletus, että meillä on stokastinen gradientti, jossa batzh size on tasan 1. Muuten dB2 ja dB1 pitäisi laskea ottamalla keskiarvo rivien yli (esim. `np.sum(self.dZ2, axis=0) / m`, missä m on batch size).
+
 Tutustu yllä olevan koodiblokin annotointeihin; tunnistat ne pienestä plussamerkistä, josta aukeaa lisätietoa. Huomaa, että jos piilotettuja kerroksia olisi useita, prosessi alkaisi näyttää tältä:
 
 ```python
@@ -216,7 +220,7 @@ def backward(self, target):
         self.dW1 = self.A0.T.dot(self.dZ1) # Gradientti W1:lle
 ```
 
-Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerroksen, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodi mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]:
+Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerroksen, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodiblokki mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]. Esimerkissä käytetään yleistä ketjusääntöä, joka lasketaan myös lähtökerrokselle (output layer). Siksi output_delta sisältää myös aktivaatiofunktion derivaatan. Tämä tarvitaan, koska käytössä on MSE-virhefunktio – aiemmassa BCE-esimerkissä tätä vaihetta ei tarvittu Sigmoid+BCE-yhdistelmän vuoksi.
 
 ```python
     def backprop(self, X, y):
