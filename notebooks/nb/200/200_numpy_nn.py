@@ -62,7 +62,7 @@ def _(np):
             self.b2 = np.zeros((1, 1))
 
             # Cache for storing activations
-            self.A0 = np.empty((1, 2))  # Input layer activations
+            self.A0 = np.empty((1, 2))  # Input layer activations (= input data, it doesn't really "activate")
             self.A1 = np.empty((1, 2))  # Hidden layer activations
             self.A2 = np.empty((1, 1))  # Output layer activations
 
