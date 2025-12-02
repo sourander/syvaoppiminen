@@ -89,6 +89,8 @@ Seuraavassa osassa tätä kurssia opit PyTorchin ja siihen liittyvien aputyökal
 
     Katso [Vectorization in PYTHON by Prof. Andrew NG](https://youtu.be/ylkC33LWRjo) -video. Videolla AI-kontekstissa hyvinkin tunnettu tekijä selittää vektoroinnin perusteet ja havainnollistaa, miten vektorointi nopeuttaa laskentaa. Kaikki 8 minuutissa.
 
+    Jos aihe jäi yhtään epäselväksi, katso myös toinen 8-minuuttinen video samalta tekijältä: [Explanation For Vectorized Implementation (C1W3L05)](https://youtu.be/kkWRbIb42Ms).
+
 !!! question "Tehtävä: NumPy Neural Network (NumpyNNwithBCE)"
 
     Avaa `200_numpy_nn.py`-tiedosto ja tutustu `NumpyNNwithBCE`-malliin. Kyseessä on neuroverkko, joka on toteutettu NumPy-kirjastolla (eli ilman PyTorchia). Aja koodi ja tutki mitä tapahtuu. Varmista, että ymmärrät, kuinka mikäkin rivi koodia liittyy tähän mennessä kurssilla opittuun.
