@@ -12,7 +12,7 @@ Kurssinmateriaalin kirjoittanut opettaja ei ole matematiikan opettaja, mutta kur
 
 Kurssi sisältää tehtäviä, jotka on tarkoitettu tehtäviksi kurssin aikana. Tehtävät löytyvät kunkin osion lopusta. Lisäksi **kaikki** tehtävät ovat koostettuna [Tehtäväkooste](exercises.md)-sivulle. Tehtävät palautetaan [Oppimispäiväkirja 101](https://sourander.github.io/oat/) -ohjeistuksen mukaisesti eli Gitlab Pages:ssa hostattuna staattisena sivustona.
 
-Useat tehtävät viittaavat [Marimo]-työkalulla tehtyihin notebookeihin. Kyseessä on Jupyter Notebook -työkalun seuraaja. Löydät notebookit [gh:sourander/syvaopiminen/notebooks](https://github.com/sourander/syvaoppiminen/tree/main/notebooks) -polusta *tämän kurssin* repositoriosta. Notebookien käyttö neuvotaan kurssivideoilla ja tukisessioissa.
+Useat tehtävät viittaavat [Marimo](https://marimo.io/)-työkalulla tehtyihin notebookeihin. Kyseessä on Jupyter Notebook -työkalun seuraaja. Löydät notebookit [gh:sourander/syvaopiminen/notebooks](https://github.com/sourander/syvaoppiminen/tree/main/notebooks) -polusta *tämän kurssin* repositoriosta. Notebookien käyttö neuvotaan kurssivideoilla ja tukisessioissa.
 
 ## Koodin ajaminen
 
