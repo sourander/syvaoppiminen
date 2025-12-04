@@ -265,6 +265,49 @@ Meidän NumpyNNwithBCE-toteutuksessamme laskimme backward-metodissa valmiiksi my
 
     Minun koodiesimerkeissäni bias-termit on käsitelty erikseen, jotta koodi olisi selkeämpää oppimisen kannalta, ja kenties täsmäisi paremmin PyTorchin tapaan.
 
+### PyTorchissa
+
+Tätä kannattaa harjoitella itsenäisesti PyTorchin avulla. Alla on kuitenkin yksinkertainen esimerkki siitä, kuinka simppeli funktio ja sen derivointi onnistuu. Tavoitteenamme on funktio:
+
+$$
+f = \frac{1}{n} \sum_{i,j} x_{ij}^2
+$$
+
+Tämän voi derivoida muotoon `1/n * 2x`. Kun `n = 4`, niin saamme:
+
+$$
+\nabla f = \frac{X}{2}
+$$
+
+Tehdään sama PyTorchissa.
+
+```python
+x = torch.tensor([
+    [0.1, 0.2],
+    [0.3, 0.4]
+], requires_grad=True) # <- hox!
+
+# Pow
+y = x ** 2
+
+# 1/n * y
+f = y.mean()
+```
+
+Tässä vaiheessa `f` on skaalari arvolstaan `0.0750`. Jos tässä vaiheessa tulostat eri arvoja, tulet huomaamaan, että `x.grad==None`, koska emme ole vielä tehneet takaisinvirtausta. Sen sijaan `y.grad_fn` ja `f.grad_fn` kertovat, miten nämä arvot on laskettu: ne sisältävät arvot `<PowBackward0>` ja `<MeanBackward0>`, jotka viittaavat `y`- ja `f`-muuttujien laskentaan. Nyt voimme kutsua takaisinvirtausta, mikä antaa `x.grad`-muuttujaan halutun gradientin:
+
+```python
+f.backward()
+```
+
+Jatkossa `x.grad` sisältää gradientin `f` suhteen `x`:ään. Tulostamalla `x.grad` saamme:
+
+```
+tensor([[0.0500, 0.1000],
+        [0.1500, 0.2000]])
+```
+
+
 ### Autograd
 
 Käytännössä backpropagation on toteutettu syväoppimiskirjastoissa siten, että sinun ei tarvitse kirjoittaa backpropagation-koodia itse muuta kuin opiskelusyistä. Kukin Tensor huolehtii itseensä kohdistuneista operaatioista. PyTorch:n oma dokumentaatio esittelee sitä kattavasti, joten kannattaa tutustua, jos aihe kiinnostaa: [Automatic differentiation package - torch.autograd](https://docs.pytorch.org/docs/stable/autograd.html). Etsi sivulta sanaa `grad_fn`. Kun esimerkiksi teet tensorioperaation `y = a * b`, PyTorch kiinnittää tensoriin `grad_fn=<MulBackward0>`:n. Kun myöhemmin kutsut `y.backward()`, PyTorch käyttää tätä tietoa laskeakseen gradientit `a` ja `b` suhteen. Tässä tapauksessa kyseessä olisi kertolaskuun pätevä sääntö eli $\frac{d}{da}(a \cdot b) = b$ ja $\frac{d}{db}(a \cdot b) = a$.
@@ -320,7 +363,46 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
 
     Tutustu `302_backpropagation.py`-Notebookiin, jossa tehdään syväluotausta backpropagationin toiminnasta **"Ensin lokaalit ja sitten kertolasku" -menetelmällä**. Notebookin rinnalla on hyvä tutustua myös Tamer Elsayedin luentoon: [Lecture 12 | Backpropagation I | CMPS 497 Deep Learning | Fall 2024 (alkaen ajasta 24:56)](https://youtu.be/NHWP339RnAs?t=1496), jossa hän käy läpi Understanding Deep Learning -kirjan luvun 7 asioita nimenomaan tällä menetelmällä. Myös seuraava video, [Lecture 13 | Backpropagation II | CMPS 497 Deep Learning | Fall 2024](https://youtu.be/3pVRMPmqwhc?si=6wwVVLqQonQLjT-c), jatkaa vastavirran parissa.
 
+!!! question "Tehtävä: Laskentaketju PyTorchissa"
 
+    Tee yllä olevan `f = (1/n) * sum(x)` -esimerkin kaltainen laskentaketju PyTorchissa, jossa selvität muuttujien $x$, $y$ ja $z$ gradientit. Funktion $f$ tulee noudattaa seuraavaa matemaattista funktioiden ketjua:
+
+    $$
+    \begin{aligned}
+    a &= x^3 \\
+    b &= y^2 \\
+    c &= a \odot b \quad \text{(elementwise-tulo)} \\
+    d &= |\sin(\frac{c}{b})| \quad \text{(itseisarvo)} \\
+    e &= \sqrt{\frac{d}{z}} \\
+    f &= \frac{1}{n}\sum_i e_i \quad \text{(keskiarvo)}
+    \end{aligned}
+    $$
+
+    Käytä näitä alkuarvoja:
+
+    * $x = [1.0, 2.0, 3.0]$
+    * $y = [0.5, 1.0, 1.5]$
+    * $z = 0.5$
+
+    Tunnistat oikeat tulokset seuraavista arvoista:
+
+    ```
+    f = 1.362325
+    x.grad = tensor([ 0.4165, -0.4137, -1.9011])
+    y.grad = tensor([0.0000e+00, 0.0000e+00, 1.7881e-07])
+    z.grad = -1.362325
+    ```
+
+    !!! note
+
+        Muista pohtia, mitä gradientti oikeastaan tarkoittaa. Jos käärit toteutuksesi funktioon, joka ottaa `x`:n parametrina, niin voit laskea kaksi arvoa seuraavasti:
+
+        ```python
+        f1 = compute([1.0, 2.0, 3.0])
+        f2 = compute([1.0, 2.0, 3.00001])
+        ```
+
+        Tulet huomaamaan, että `f2 - f1` on hyvin lähellä `x.grad[2] * 0.00001`. Eli jos kasvatat `x[2]`:ta pikkiriikkisen verran, niin `f`:n arvo muuttuu suunnilleen `x.grad[2]` kertaa tuo pieni muutos. Huomaa kuitenkin, että lukema ei tule olemaan niin sama, että voisit verrata sitä `==`-operaattorilla.
 ## Lähteet
 
 [^essentialmath]: Nield, T. *Essential Math for Data Science*. O'Reilly. 2021.
