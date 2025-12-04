@@ -142,6 +142,8 @@ Koulutuksen tulokset eri raudalla:
 | MacBook Pro (MPS)       | 3.7 s        | 6 min 12 s         | 95.18 %             |
 | PC (CPU)                | 3.2 s        | 5 min 22 s         | 95.21 %             |
 | PC (CUDA)               | 3.3 s        | 5 min 30 s         | 95.14 %             |
+| Disco (CUDA)            | 4.0 s        | 8 min 38 s         | 95.37 %             |
+| Disco (CPU)             | 4.1 s        | 8 min 50 s         | 95.27 %             |
 | Google Colab (CPU)      | 10.8 s       | 18 min 00 s        | 95.35 %             |
 | Google Colab (CUDA)     | 13.8 s       | 23 min 00 s        | 95.19 %             |
 | Jupyter Hub (CPU)       | 20.4 s       | 33 min 24 s        | 95.35 %             |
