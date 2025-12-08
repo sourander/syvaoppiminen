@@ -6,11 +6,6 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
-    return
-
-
-@app.cell
-def _():
     import marimo as mo
     return (mo,)
 
@@ -248,13 +243,13 @@ def _(loss_fn, model, optimizer, x_train, y_train):
     for epoch in range(1000):
         # Zero gradients
         optimizer.zero_grad()
-    
+
         # Forward pass
         outputs = model(x_train).flatten()
 
         # Compute loss
         loss = loss_fn(outputs, y_train)
-    
+
         # Backward pass and optimize
         loss.backward()
         optimizer.step()

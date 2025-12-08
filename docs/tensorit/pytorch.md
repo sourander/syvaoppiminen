@@ -102,13 +102,15 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
 
     Johdatus Koneoppimiseen -kurssin logistisen regression tehtävänä oli tunnistaa, onko henkilö kokenut kybervihaa viimeisen vuoden aikana.
 
-    Alkuperäinen datasetti löytyy Data in Brief [Digital skills among youth: A dataset from a three-wave longitudinal survey in six European countries](https://www.sciencedirect.com/science/article/pii/S2352340924003652)-data-artikkelista. Käytämme kuitenkin vertailun vuoksi `ySKILLS_longitudinal_dataset_teacher_processed.csv`-tiedostoa, joka on esiprosessoitu versio alkuperäisestä datasta. Esikäsitellyn datan voi ladata [gh:sourander/ml-perusteet-code](https://github.com/sourander/ml-perusteet-code)-repositoriosta `data/yskills`-hakemistosta.
+    Alkuperäinen datasetti löytyy Data in Brief [Digital skills among youth: A dataset from a three-wave longitudinal survey in six European countries](https://www.sciencedirect.com/science/article/pii/S2352340924003652)-data-artikkelista. Käytämme kuitenkin vertailun vuoksi edelliseltä kurssilta tuttua, esikäsiteltyä datasettiä. Se on ladattavissa [hf:sourander/yskills](https://huggingface.co/datasets/sourander/yskills)-reposta.
 
-    Muistanet, että tulos oli kohtalaisen heikko. Tämän harjoituksen motiviina on tutkia, ovatko neuroverkot hopealuoti, joka parantaa tuloksia merkittävästi – vai käykö kenties niin, että joudut taistella hyperparametrien kanssa saadaksesi edes jossain määrin vertailukelpoisen tuloksen.
+    Muistanet, että tulos oli kohtalaisen heikko. Tämän harjoituksen motiviina on tutkia, ovatko neuroverkot hopealuoti, joka parantaa tuloksia merkittävästi – ==vai käykö kenties niin==, että joudut taistella hyperparametrien kanssa saadaksesi edes jossain määrin vertailukelpoisen tuloksen.
+
+    Tehtävään löytyy `214_cyberhate.py` -notebook, jota voit käyttää pohjana. Vaihtoehtoisesti voit kirjoittaa koodin alusta asti itse. Tärkeintä on, että dokumentoit oppimispäiväkirjaasi, mitä teit ja mitä opit.
 
     !!! warning
 
-        Tämän tehtävän linkillä on vahva deprekoitumisvaroitus. Johdatus Koneoppimiseen -kurssi refaktoroidaan 2026 keväällä. Jos linkit eivät toimi, ota yhteyttä opettajaan. Hän on unohtanut päivittää linkit.
+        Älä sukella liian syvälle hyperparametrien virittämiseen. Tässä voisi käyttää uskomattoman määrän aikaa. Jos vibe-koodaat ratkaisua, joka alkaa sisältää termejä kuten Dropout, Early Stopping, Optuna, kannattaa huomioida, että nämä tulevat tutuksi kurssin Mallinnus-osiossa myöhemmin.
 
 !!! question "Tehtävä: ONXX JAX:ia näkynyt?"
 

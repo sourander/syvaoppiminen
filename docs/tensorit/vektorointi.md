@@ -22,11 +22,9 @@ Tutustumme ensin siihen, miltä malli näyttäisi, jos ==emme käyttäisi Numpy-
 
 ![](../images/200_2-2-1-init-and-forward-code.png)
 
-**Kuva 2:** *Kuvassa on `PythonNN`-verkon `__init__`- ja `forward`-metodit ilman vektorointia. Koodissa on paljon rautakoodattua toistoa.*
+**Kuva 2:** *Kuvassa on `PythonNN`-verkon `__init__`- ja `forward`-metodit ilman vektorointia. Koodissa on paljon rautakoodattua toistoa. Huomaa, että tätä mallia ei ole meidän kurssillamme toteutettuna missään Notebookissa. Kaikki sinun ajamasi koodi sisältää jossain määrin vektoroidun toteutuksen.*
 
 Esimerkki on tarkoituksella jätetty täysin rautakoodatuksi. Ongelmaa voisi koodin ylläpidettävyyden ja uudelleenkäytettävyyden kannalta parantaa käyttämällä silmukoita ja listoja. Koodista tulisi *rakenteeltaan* dynaamisempaa, mutta se suoritettaisiin yhä yksi kerta per syöte, yksi paino kerrallaan - eli siis sekventiaalisesti.
-
-Tätä ongelmaa ratkaistaan vektoroinnilla. Numpy
 
 ### Silmukka toisen perään
 
@@ -65,7 +63,7 @@ Numpy ei kuitenkaan pelkästään typistä syntaksia lyhyemmäksi. Se myös suor
 
 Myöhemmin kurssilla käytettävät TensorFlow ja PyTorch vievät tämän vielä askeleen pidemmälle hyödyntämällä GPU:ita, jotka on suunniteltu erityisesti rinnakkaislaskentaan. Esimerkiksi CUDA on SIMT (Single Instruction, Multiple Threads) -arkkitehtuuri, joka mahdollistaa tuhansien säikeiden samanaikaisen suorittamisen. Jos käsitteet SISD, MDSI, SIMD ja MIMD eivät ole entuudestaan tuttuja, kannattaa pikaisesti tutustus [Flynnin luokittelu](https://fi.wikipedia.org/wiki/Flynnin_luokittelu)-Wiki-artikkeliin. SIMT on lisäys tähän luokitteluun.
 
-Neuroverkkojen kanssa säästö on suuri, koska verkon koulutuksessa tehdään useita kertoja $ W \cdot X + b $ -tyyppisiä laskuja. Nämä ovat juuri niitä laskuja, jotka hyötyvät vektoroinnista ja rinnakkaislaskennasta. Pelkässä `forward()`-metodissa on yksi tällainen operaatio per kerros. Ilman SIMD-laskentaa tämä pistetulo suoritettaisiin yksi parametri kerrallaan. Kuinka monta kertaa siis? Tässä meidän 2-2-1 verkossamme koulutettavia parametreja on yhteensä 9 (6 painoa ja 3 biasia). Muistellaan vertaiun vuoksi meidän aiempaa MNIST-malliamme, jossa oli 784 syötettä, 128 piilotettua solmua ja 10 ulostuloa. Yhteensä parametreja on:
+Neuroverkkojen kanssa säästö on suuri, koska verkon koulutuksessa tehdään useita kertoja $W \cdot X + b$ -tyyppisiä laskuja. Nämä ovat juuri niitä laskuja, jotka hyötyvät vektoroinnista ja rinnakkaislaskennasta. Pelkässä `forward()`-metodissa on yksi tällainen operaatio per kerros. Ilman SIMD-laskentaa tämä pistetulo suoritettaisiin yksi parametri kerrallaan. Kuinka monta kertaa siis? Tässä meidän 2-2-1 verkossamme koulutettavia parametreja on yhteensä 9 (6 painoa ja 3 biasia). Muistellaan vertailun vuoksi meidän aiempaa MNIST-malliamme, jossa oli 784 syötettä, kahdessa piilotetussa kerroksessa 256 ja 128 piilotettua solmua ja 10 ulostuloa. Yhteensä parametreja on:
 
 | Layer item | Shape      |       Count |
 | ---------- | ---------- | ----------: |

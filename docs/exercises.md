@@ -50,5 +50,15 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Ensin lokaalit ja sitten kertolasku
 - [ ] Tehtävä: Laskentaketju PyTorchissa
 
+## Yleiskatsaus (400)
+
+- [ ] Tehtävä: Mallinna Fashion MNIST
+- [ ] Tehtävä: Lataa Fashion MNIST -malli
+
+## Datan lataus (410)
+
+- [ ] Tehtävä: CIFAR10 Datasetin plärääminen
+- [ ] Tehtävä: CIFAR10 Malli
+
 
 ```
