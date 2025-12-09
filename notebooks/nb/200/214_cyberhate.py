@@ -114,7 +114,7 @@ def _(mo):
     D = mo.ui.dropdown(
         options={"4": 4, "8": 8, "16": 16, "32": 32},
         value="4",
-        label="\# of neurons per hidden layer",
+        label="no.  of neurons per hidden layer",
     )
 
     batch_size = mo.ui.dropdown(

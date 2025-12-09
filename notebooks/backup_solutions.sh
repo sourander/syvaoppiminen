@@ -31,8 +31,8 @@ DEST_PATH="${BACKUP_DIR}/${FILENAME}"
 mkdir -p "${BACKUP_DIR}"
 
 # --- Step 5: Create the tar.gz archive ---
-echo "📦 Creating backup of 'notebooks/solutions/' ..."
-tar -czf "${DEST_PATH}" notebooks/solutions
+echo "📦 Creating backup of 'nb/solutions/' ..."
+tar -czf "${DEST_PATH}" nb/solutions
 
 echo "✅ Backup created successfully:"
 echo "    ${DEST_PATH}"

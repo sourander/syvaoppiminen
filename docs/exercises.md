@@ -57,8 +57,10 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 
 ## Datan lataus (410)
 
+- [ ] Tehtävä: MNIST MLP Revisited
 - [ ] Tehtävä: CIFAR10 Datasetin plärääminen
 - [ ] Tehtävä: CIFAR10 Malli
+- [ ] Tehtävä: ImageFolderin käyttö
 
 
 ```

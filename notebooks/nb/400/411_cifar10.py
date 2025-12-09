@@ -13,18 +13,12 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Naive MLP for MNIST with PyTorch
+    # Naive MLP for CIFAR10 with PyTorch
 
-    This notebook implements a simple MLP for MNIST digit classification using PyTorch. The architecture mirrors the reference implementation (784-256-128-10) from PyImageSearch's Adrian Rosebrock (Deep Learning 4 Computer Vision with Python Volume 1). Key difference is that this uses PyTorch, not the old TensorFlow + Keras kombo. Also, this implementation uses both two different ways to visualize training progress:
+    This notebook implements a simple MLP for CIFAR10 image classification using PyTorch. The architecture is adapted from the MNIST implementation (3072-??-??-10) to handle color images. This implementation uses both two different ways to visualize training progress:
 
     * Option A: Plot training history using matplotlib (stored in local variables)
     * Option B: Log training progress to TensorBoard (stored in files in `runs/` folder)
-
-    This is nowhere near a state-of-the-art model, but serves as a good starting point for learning PyTorch basics.
-
-    ## Imports
-
-    Note that it is a good idea to keep code organized even if you work with Notebook Cells. Instead of importing libraries all over the place, keep all imports in one cell at the top of the notebook.
     """)
     return
 
@@ -35,6 +29,7 @@ def _():
     import numpy as np
     import torch.optim as optim
     import matplotlib.pyplot as plt
+    import os
     import torch.nn as nn
 
     from datetime import datetime
@@ -43,8 +38,11 @@ def _():
     from torch.utils.data import DataLoader
     from sklearn.metrics import classification_report
     from torch.utils.tensorboard import SummaryWriter
+
+    NUM_CPU = os.cpu_count()
     return (
         DataLoader,
+        NUM_CPU,
         Path,
         SummaryWriter,
         classification_report,
@@ -62,23 +60,6 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Teacher's setup
-
-    This Notebook has been initially run with a Macbook Pro with M2 Max chip. The code should support MPS, CUDA and CPU execution. If you have some other backend, adjust the code accordingly.
-    """)
-    return
-
-
-@app.cell
-def _(torch):
-    print("PyTorch version:", torch.__version__)
-    print("MPS available:", torch.backends.mps.is_available())
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
     ## Configuration
     """)
     return
@@ -87,12 +68,12 @@ def _(mo):
 @app.cell
 def _(SummaryWriter, datetime, torch):
     # Configuration
-    USE_GPU = True  # Toggle this to False to use CPU instead
+    USE_GPU = False  # Toggle this to False to use CPU instead
 
     # Hyperparameters
     LEARNING_RATE = 0.01
     EPOCHS = 100
-    BATCH_SIZE = 128
+    BATCH_SIZE = 32
 
     # Device selection
     if USE_GPU and torch.backends.mps.is_available():
@@ -107,7 +88,7 @@ def _(SummaryWriter, datetime, torch):
 
     # Option B: TensorBoard setup for logging metrics to disk
     device_name = str(device)
-    run_name = f"mnist_mlp_{device_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    run_name = f"cifar10_mlp_{device_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     writer = SummaryWriter(f'runs/{run_name}')
     print(f"TensorBoard logging to: runs/{run_name}")
 
@@ -135,35 +116,22 @@ def _(mo):
 
 
 @app.cell
-def _(BATCH_SIZE, DataLoader, datasets, transforms):
+def _(BATCH_SIZE, DataLoader, NUM_CPU, datasets, transforms):
     # Define transforms
     transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))  # MNIST mean and std
+        transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))  # CIFAR10 mean and std
     ])
 
     # Download and load the training data
-    print("[INFO] accessing MNIST...")
-    trainset = datasets.MNIST('./data', download=True, train=True, transform=transform)
-    testset = datasets.MNIST('./data', download=True, train=False, transform=transform)
+    print("[INFO] accessing CIFAR10...")
+    trainset = datasets.CIFAR10('./data', download=True, train=True, transform=transform)
+    testset = datasets.CIFAR10('./data', download=True, train=False, transform=transform)
 
     # Create data loaders
-    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True)
-    testloader = DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False)
-
-    print(f"Training samples: {len(trainset)}")
-    print(f"Test samples: {len(testset)}")
+    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, persistent_workers=True, num_workers=NUM_CPU)
+    testloader = DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False, persistent_workers=True, num_workers=NUM_CPU)
     return testloader, trainloader, trainset
-
-
-@app.cell
-def _(trainset):
-    # Verify class labels
-    # MNIST labels are digits 0-9, where the label directly corresponds to the digit
-    print("MNIST classes:", trainset.classes)
-    print("Class to index mapping:", trainset.class_to_idx)
-    print("\nVerification: Labels are digits 0-9 in order")
-    return
 
 
 @app.cell(hide_code=True)
@@ -171,7 +139,7 @@ def _(mo):
     mo.md(r"""
     ### Define the Model
 
-    The model architecture is 784-256-128-10, matching the reference implementation.
+    Choose your architecture here.
     """)
     return
 
@@ -181,14 +149,13 @@ def _(device, nn, torch, writer):
     class MLP(nn.Module):
         def __init__(self):
             super(MLP, self).__init__()
-            # 784-256-128-10 architecture
-            self.fc1 = nn.Linear(784, 256)
-            self.fc2 = nn.Linear(256, 128)
-            self.fc3 = nn.Linear(128, 10)
+            self.fc1 = nn.Linear(..., ...)
+            self.fc2 = nn.Linear(..., ...)
+            self.fc3 = nn.Linear(..., ...)
 
         def forward(self, x):
             # Flatten the input
-            x = x.view(-1, 784)
+            x = x.view(-1, ...)
             # First layer with sigmoid activation
             x = torch.sigmoid(self.fc1(x))
             # Second layer with sigmoid activation
@@ -202,10 +169,77 @@ def _(device, nn, torch, writer):
     print(model)
 
     # Option B: Log model architecture graph to TensorBoard
-    dummy_input = torch.randn(1, 1, 28, 28).to(device)
+    dummy_input = torch.randn(1, 3, 32, 32).to(device)
     writer.add_graph(model, dummy_input)
     print("Model graph logged to TensorBoard")
     return (model,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Helper functions
+    """)
+    return
+
+
+@app.cell
+def _(torch):
+    def train_epoch(model, train_loader, criterion, optimizer, device):
+        """Train the model for one epoch."""
+        model.train()
+        running_loss = 0.0
+        correct = 0
+        total = 0
+
+        for X_batch, y_batch in train_loader:
+            # Move data to device
+            X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+
+            # Forward pass
+            outputs = model(X_batch)
+            loss = criterion(outputs, y_batch)
+
+            # Backward pass and optimization
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            # Track metrics
+            running_loss += loss.item() * X_batch.size(0)
+            _, predicted = torch.max(outputs.data, dim=1)
+            total += y_batch.size(0)
+            correct += (predicted == y_batch).sum().item()
+
+        epoch_loss = running_loss / total
+        epoch_acc = correct / total
+        return epoch_loss, epoch_acc
+
+
+    def evaluate(model, data_loader, criterion, device):
+        """Evaluate the model on validation/test data."""
+        model.eval()
+        running_loss = 0.0
+        correct = 0
+        total = 0
+
+        with torch.no_grad():
+            for X_batch, y_batch in data_loader:
+                # Move data to device
+                X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+
+                outputs = model(X_batch)
+                loss = criterion(outputs, y_batch)
+
+                running_loss += loss.item() * X_batch.size(0)
+                _, predicted = torch.max(outputs.data, dim=1)
+                total += y_batch.size(0)
+                correct += (predicted == y_batch).sum().item()
+
+        epoch_loss = running_loss / total
+        epoch_acc = correct / total
+        return epoch_loss, epoch_acc
+    return evaluate, train_epoch
 
 
 @app.cell(hide_code=True)
@@ -226,20 +260,27 @@ def _(
     datetime,
     device,
     device_name,
+    evaluate,
     model,
     nn,
     optim,
     testloader,
-    torch,
+    train_epoch,
     trainloader,
     writer,
 ):
-    # For printing run duration
     start = datetime.now()
 
     # Loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE)
+
+    # Add scheduler - reduces LR when test loss plateaus
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, 
+        factor=0.2,          # reduce by multiplying LR with this
+        patience=5,          # wait 5 epochs before reducing
+    )
 
     # Option A: Initialize local history dictionary to store metrics in memory
     history = {
@@ -251,60 +292,14 @@ def _(
 
     print("[INFO] training network...")
     for epoch in range(EPOCHS):
-        # Training phase
-        model.train()
-        train_loss = 0.0
-        train_correct = 0
-        train_total = 0
+        # Training phase using helper function
+        train_loss, train_acc = train_epoch(model, trainloader, criterion, optimizer, device)
 
-        for batch_idx, (inputs, labels) in enumerate(trainloader):
-            # Move data to device
-            inputs, labels = inputs.to(device), labels.to(device)
+        # Validation phase using helper function
+        val_loss, val_acc = evaluate(model, testloader, criterion, device)
 
-            # Zero the parameter gradients
-            optimizer.zero_grad()
-
-            # Forward pass
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
-
-            # Backward pass and optimize
-            loss.backward()
-            optimizer.step()
-
-            # Statistics
-            train_loss += loss.item()
-            _, predicted = torch.max(outputs.data, dim=1)
-            train_total += labels.size(0)
-            train_correct += (predicted == labels).sum().item()
-
-            # Option B: Log batch-level loss to TensorBoard every 50 batches
-            if batch_idx % 50 == 0:
-                global_step = epoch * len(trainloader) + batch_idx
-                writer.add_scalar('Loss/train_batch', loss.item(), global_step)
-
-        # Validation phase
-        model.eval()
-        val_loss = 0.0
-        val_correct = 0
-        val_total = 0
-
-        with torch.no_grad():
-            for inputs, labels in testloader:
-                inputs, labels = inputs.to(device), labels.to(device)
-                outputs = model(inputs)
-                loss = criterion(outputs, labels)
-
-                val_loss += loss.item()
-                _, predicted = torch.max(outputs.data, dim=1)
-                val_total += labels.size(0)
-                val_correct += (predicted == labels).sum().item()
-
-        # Calculate averages
-        train_loss = train_loss / len(trainloader)
-        train_acc = train_correct / train_total
-        val_loss = val_loss / len(testloader)
-        val_acc = val_correct / val_total
+        # Learning rate scheduling
+        scheduler.step(val_loss)
 
         # Option A: Append epoch metrics to local history lists
         history['train_loss'].append(train_loss)
@@ -377,7 +372,7 @@ def _(mo):
 
 
 @app.cell
-def _(classification_report, device, model, np, testloader, torch):
+def _(classification_report, device, model, np, testloader, torch, trainset):
     print("[INFO] evaluating network...")
     model.eval()
 
@@ -397,9 +392,9 @@ def _(classification_report, device, model, np, testloader, torch):
     all_predictions = np.array(all_predictions)
     all_labels = np.array(all_labels)
 
-    # Print classification report
+    # Print classification report using class names from the dataset
     print(classification_report(all_labels, all_predictions,
-                              target_names=[str(x) for x in range(10)]))
+                              target_names=trainset.classes))
     return all_labels, all_predictions
 
 
@@ -412,23 +407,20 @@ def _(mo):
 
 
 @app.cell
-def _(all_labels, all_predictions):
+def _(all_labels, all_predictions, trainset):
     from sklearn.metrics import confusion_matrix
 
-    # Define class names (MNIST digits 0-9)
-    # In MNIST, the class labels are the actual digit values (0-9)
-    # and they are already in the correct order
-    class_names = [str(i) for i in range(10)]
+    # Get class names from dataset
+    class_names = trainset.classes
 
     # Create confusion matrix
     cm = confusion_matrix(all_labels, all_predictions)
 
-    # Option 1: Text-based confusion matrix (most compact)
-    print("Confusion Matrix (rows=true, cols=predicted):")
-    print("     ", "  ".join(f"{i:4}" for i in range(10)))
-    print("    " + "-" * 65)
+    # Confusion Matrix
+    print("             ", "  ".join(f"{i:4}" for i in range(10)))
+    print("          " + "-" * 65)
     for i, row in enumerate(cm):
-        print(f"{i:2} | ", "  ".join(f"{val:4}" for val in row))
+        print(f"{class_names[i]:10} | ", "  ".join(f"{val:4}" for val in row))
     return
 
 
@@ -455,30 +447,6 @@ def _(EPOCHS, history, np, plt):
     plt.legend()
     plt.tight_layout()
     plt.show()
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ### View TensorBoard
-
-    **Option B: View TensorBoard logs in your browser**
-
-    To view the training results in TensorBoard, run the following command in a terminal:
-
-    ```bash
-    tensorboard --logdir=runs
-    ```
-
-    Then open your browser to [http://localhost:6006](http://localhost:6006)
-
-    TensorBoard will show:
-    - **Scalars**: Training and validation loss/accuracy over time
-    - **Graphs**: Model architecture visualization
-    - **HParams**: Comparison of different runs with different hyperparameters
-    - **Text**: Configuration information
-    """)
     return
 
 

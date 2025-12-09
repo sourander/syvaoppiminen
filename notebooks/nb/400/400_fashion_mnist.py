@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.18.3"
 app = marimo.App(width="medium")
 
 
@@ -118,14 +118,24 @@ def _(BATCH_SIZE, DataLoader, datasets, transforms):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Visualize labels
+    ## Get Labels from Dataset
     """)
     return
 
 
 @app.cell
-def _(mosaic):
-    {idx: mos for idx, mos in zip(range(10), sum(mosaic, []))}
+def _(train_dataset):
+    print("Labels", train_dataset.classes)
+    print()
+    print("Also look up table available: ", train_dataset.class_to_idx)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Visualize labels
+    """)
     return
 
 
@@ -133,19 +143,6 @@ def _(mosaic):
 def _(plt, train_dataset):
     def flatten(x: list):
         return sum(x, [])
-
-    labels_map = {
-        0: "T-Shirt",
-        1: "Trouser",
-        2: "Pullover",
-        3: "Dress",
-        4: "Coat",
-        5: "Sandal",
-        6: "Shirt",
-        7: "Sneaker",
-        8: "Bag",
-        9: "Ankle Boot",
-    }
 
     # Find first occurrence of each class
     class_examples = {}
@@ -170,16 +167,11 @@ def _(plt, train_dataset):
         class_idx = letter_to_class[letter]
         img = class_examples[class_idx]
         ax.imshow(img.squeeze(), cmap="gray")
-        ax.set_title(labels_map[class_idx])
+        ax.set_title(train_dataset.classes[class_idx])
         ax.axis("off")
 
     plt.tight_layout()
     plt.show()
-    return (mosaic,)
-
-
-@app.cell
-def _():
     return
 
 

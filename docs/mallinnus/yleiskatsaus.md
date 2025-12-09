@@ -109,17 +109,13 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
 
 !!! question "Tehtävä: Mallinna Fashion MNIST"
 
-    Kouluta yksinkertainen neuroverkko [FashionMNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.FashionMNIST.html) -datasetillä. Datasetti on siitä tuttu, että se noudattaa MNIST:n tavoin samaista rakennetta: 28x28 pikselin harmaasävykuvat, joissa on vaatekappaleita luokiteltavana. Luokkia on 10 ja kyseessä on *multi-class, single-label classification* -ongelma. Datasetti löytyy suoraan `torchvision.datasets`-moduulista jaettuna koulutus- ja testidataseteiksi. Niissä on yhteensä 70 000 kuvaa (60 000 koulutukseen, 10 000 testaukseen). Tämä kaikki on hyvin, hyvin tuttua MNIST:stä. Se, mikä muuttuu, on että kuvat ovat vaikeampia tulkita kuin numerot (sandaali vs. lenkkari on vaikeampi erottaa kuin 3 vs. 7).
+    Kouluta yksinkertainen neuroverkko [FashionMNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.FashionMNIST.html) -datasetillä. Datasetti on siitä tuttu, että se noudattaa MNIST:n tavoin samaista rakennetta: 28x28 pikselin harmaasävykuvat, joissa on vaatekappaleita luokiteltavana. Luokkia on 10 ja kyseessä on *multi-class, single-label classification* -ongelma. Datasetti löytyy suoraan `torchvision.datasets`-moduulista jaettuna koulutus- ja testidataseteiksi. Niissä on yhteensä 70 000 kuvaa (60 000 koulutukseen, 10 000 testaukseen). Tämä kaikki on hyvin, hyvin tuttua MNIST:stä. Se, mikä muuttuu, on että kuvat ovat vaikeampia tulkita kuin numerot (sandaali vs. lenkkari on vaikeampi erottaa kuin 3 vs. 7). Jos käytät samaa 784-256-128-10 -arkkitehtuuria kuin aiempi MLP, ja Sigmoid-kerroksia, koulutus kestää jotakuinkin yhtä kauan kuin edellinenkin. Saavutettu tarkkuus tulee olemaan heikompi (n. 85 %) sadalla epookilla. 
 
-    Huomaa, että *"oikea vastaus"* on vähemmän merkityksellinen kuin sinun oppimismatka ja ymmärryksen syventyminen. Kokeile erilaisia arkkitehtuureita, optimointimenetelmiä ja hyperparametreja. Dokumentoi oppimiskokemuksesi. Oikean vastauksen sinulle antaa tuore kielimalli hetkessä, tai voit jopa kaivaa sen netistä, kuten:
+    Huomaa, että *"oikea vastaus"* on vähemmän merkityksellinen kuin sinun oppimismatka ja ymmärryksen syventyminen. Kokeile erilaisia arkkitehtuureita, optimointimenetelmiä ja hyperparametreja. Dokumentoi oppimiskokemuksesi. Oikean vastauksen sinulle antaa tuore kielimalli hetkessä, tai voit jopa kaivaa sen netistä, kuten [PyTorch Learn the Basics: Datasets & Dataloaders](https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html) tai AI and ML for Coders in PyTorch -kirjan [repositoriosta](https://github.com/lmoroney/PyTorch-Book-FIles/blob/main/Chapter02/PyTorchChapter2.ipynb). Huijaamalla huijaat lähinnä vain itseäsi.
 
-    * Datan penkominen ja siihen tutustuminen: [PyTorch Learn the Basics: Datasets & Dataloaders](https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html)
-    * Mallin kouluttaminen AI and ML for Coders in PyTorch -kirjan [repositoriosta](https://github.com/lmoroney/PyTorch-Book-FIles/blob/main/Chapter02/PyTorchChapter2.ipynb)
-
-    Älä siis huijaa vaan ota ensimmäisen viikon `110_first_model.py`-tiedosto esimerkiksi ja kirjoita sen pohjalta oma. Voit käyttää pohjana `400_fashion_mnist.py`-tiedostoa tai luoda kokonaan oman Notebookisi. 
+    Älä siis huijaa vaan ota ensimmäisen viikon `110_first_model.py`-tiedosto esimerkiksi. Voit käyttää pohjana `400_fashion_mnist.py`-tiedostoa tai luoda kokonaan oman Notebookisi. 
     
     * Aloita pienestä mallista ja kasvata sitä, kunnes löydät ylisovittamisen rajan.
-    * Evaluaoi mallisi käyttäen sopivia mittareita (kuten top-k accuracy).
     * Käytä Tensorboardia prosessin seurantaan ja dokumentointiin.
     * Tallenna malli seuraavaa tehtävää varten!
 
@@ -142,7 +138,7 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
 
     !!! tip "Relu vs. Sigmoid"
 
-        Jos käytät samaa 784-256-128-10 -arkkitehtuuria kuin aiempi MLP, ja Sigmoid-kerroksia, koulutus kestää jotakuinkin yhtä kauan kuin edellinenkin. Saavutettu tarkkuus tulee olemaan heikompi (n. 85 %) sadalla epookilla. Kannattaa kokeilla ainakin ReLU-aktivointia Sigmoidin sijasta, minkä jo itsessään pitäisi nostaa tarkkuutta muutaman prosenttiyksikön verran.
+        Kannattaa kokeilla ainakin ReLU-aktivointia Sigmoidin sijasta, minkä jo itsessään pitäisi nostaa tarkkuutta muutaman prosenttiyksikön verran.
 
 !!! question "Tehtävä: Lataa Fashion MNIST -malli"
 
@@ -154,6 +150,8 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
     * Output-kerroksen numeroiden tutkiminen
         * Aktivaatio on None, joten ulostulo on raakaa logit-arvoa.
         * Tulosta arvot sinällään ja todennäköisyydet (softmaxin avulla).
+
+    Voit käyttää pohjana `401_fashion_mnist_eval.py`-tiedostoa tai luoda kokonaan oman Notebookisi.
 
 
 ## Lähteet
