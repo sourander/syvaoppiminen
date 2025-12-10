@@ -378,7 +378,7 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
     \end{aligned}
     $$
 
-    Käytä näitä alkuarvoja:
+    Voit joko aloittaa tyhjästä tai hyödyntää `303_chained_funcs.py`-Notebookin runkoa. Käytä näitä alkuarvoja, jotta voit tarkistaa laskelmat alla olevia tuloksia vasten:
 
     * $x = [1.0, 2.0, 3.0]$
     * $y = [0.5, 1.0, 1.5]$
