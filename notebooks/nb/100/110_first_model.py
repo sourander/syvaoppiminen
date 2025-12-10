@@ -43,8 +43,10 @@ def _():
     from torch.utils.data import DataLoader
     from sklearn.metrics import classification_report
     from torch.utils.tensorboard import SummaryWriter
+    from torchmetrics.classification import MulticlassAccuracy
     return (
         DataLoader,
+        MulticlassAccuracy,
         Path,
         SummaryWriter,
         classification_report,
@@ -211,6 +213,82 @@ def _(device, nn, torch, writer):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    ### Helper Function for Training
+    """)
+    return
+
+
+@app.cell
+def _(torch):
+    def train_epoch(model, train_loader, criterion, optimizer, metric, device, writer=None, epoch=None):
+        """Train the model for one epoch.
+
+        Args:
+            metric: A torchmetrics metric instance (e.g., MulticlassAccuracy)
+
+        Returns:
+            tuple: (average_loss, accuracy)
+        """
+        model.train()
+        metric.reset()
+        total_loss = 0.0
+
+        for batch_idx, (inputs, labels) in enumerate(train_loader):
+            inputs, labels = inputs.to(device), labels.to(device)
+
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item()
+
+            # Update metric with predictions
+            metric.update(outputs, labels)
+
+            # Optional: Log batch-level loss to TensorBoard
+            if writer and epoch is not None and batch_idx % 50 == 0:
+                global_step = epoch * len(train_loader) + batch_idx
+                writer.add_scalar('Loss/train_batch', loss.item(), global_step)
+
+        avg_loss = total_loss / len(train_loader)
+        accuracy = metric.compute().item()
+        return avg_loss, accuracy
+
+    def evaluate(model, data_loader, criterion, metric, device):
+        """Evaluate the model on the given data loader.
+
+        Args:
+            metric: A torchmetrics metric instance (e.g., MulticlassAccuracy)
+
+        Returns:
+            tuple: (average_loss, accuracy)
+        """
+        model.eval()
+        metric.reset()
+        total_loss = 0.0
+
+        with torch.no_grad():
+            for inputs, labels in data_loader:
+                inputs, labels = inputs.to(device), labels.to(device)
+                outputs = model(inputs)
+                loss = criterion(outputs, labels)
+
+                total_loss += loss.item()
+
+                # Update metric with predictions
+                metric.update(outputs, labels)
+
+        avg_loss = total_loss / len(data_loader)
+        accuracy = metric.compute().item()
+        return avg_loss, accuracy
+    return evaluate, train_epoch
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
     ### Train the Model
 
     The loss function is Cross Entropy Loss. You may see some materials using `NLLLoss` instead. Difference is that `NLLLoss` expects log-probabilities as input, while `CrossEntropyLoss` expects raw logits. Since our model outputs raw logits, we use `CrossEntropyLoss`. If we swapped to `NLLLoss`, we would need to add a `LogSoftmax` layer at the end of the model.
@@ -223,14 +301,16 @@ def _(
     BATCH_SIZE,
     EPOCHS,
     LEARNING_RATE,
+    MulticlassAccuracy,
     datetime,
     device,
     device_name,
+    evaluate,
     model,
     nn,
     optim,
     testloader,
-    torch,
+    train_epoch,
     trainloader,
     writer,
 ):
@@ -240,6 +320,9 @@ def _(
     # Loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=LEARNING_RATE)
+
+    # Initialize torchmetrics accuracy metric for 10 classes (MNIST digits)
+    accuracy_metric = MulticlassAccuracy(num_classes=10).to(device)
 
     # Option A: Initialize local history dictionary to store metrics in memory
     history = {
@@ -252,59 +335,12 @@ def _(
     print("[INFO] training network...")
     for epoch in range(EPOCHS):
         # Training phase
-        model.train()
-        train_loss = 0.0
-        train_correct = 0
-        train_total = 0
-
-        for batch_idx, (inputs, labels) in enumerate(trainloader):
-            # Move data to device
-            inputs, labels = inputs.to(device), labels.to(device)
-
-            # Zero the parameter gradients
-            optimizer.zero_grad()
-
-            # Forward pass
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
-
-            # Backward pass and optimize
-            loss.backward()
-            optimizer.step()
-
-            # Statistics
-            train_loss += loss.item()
-            _, predicted = torch.max(outputs.data, dim=1)
-            train_total += labels.size(0)
-            train_correct += (predicted == labels).sum().item()
-
-            # Option B: Log batch-level loss to TensorBoard every 50 batches
-            if batch_idx % 50 == 0:
-                global_step = epoch * len(trainloader) + batch_idx
-                writer.add_scalar('Loss/train_batch', loss.item(), global_step)
+        train_loss, train_acc = train_epoch(
+            model, trainloader, criterion, optimizer, accuracy_metric, device, writer, epoch
+        )
 
         # Validation phase
-        model.eval()
-        val_loss = 0.0
-        val_correct = 0
-        val_total = 0
-
-        with torch.no_grad():
-            for inputs, labels in testloader:
-                inputs, labels = inputs.to(device), labels.to(device)
-                outputs = model(inputs)
-                loss = criterion(outputs, labels)
-
-                val_loss += loss.item()
-                _, predicted = torch.max(outputs.data, dim=1)
-                val_total += labels.size(0)
-                val_correct += (predicted == labels).sum().item()
-
-        # Calculate averages
-        train_loss = train_loss / len(trainloader)
-        train_acc = train_correct / train_total
-        val_loss = val_loss / len(testloader)
-        val_acc = val_correct / val_total
+        val_loss, val_acc = evaluate(model, testloader, criterion, accuracy_metric, device)
 
         # Option A: Append epoch metrics to local history lists
         history['train_loss'].append(train_loss)
