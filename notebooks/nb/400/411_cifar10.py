@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.3"
+__generated_with = "0.18.4"
 app = marimo.App(width="medium")
 
 
@@ -157,9 +157,9 @@ def _(device, nn, torch, writer):
             # Flatten the input
             x = x.view(-1, ...)
             # First layer with sigmoid activation
-            x = torch.sigmoid(self.fc1(x))
+            x = torch.relu(self.fc1(x))
             # Second layer with sigmoid activation
-            x = torch.sigmoid(self.fc2(x))
+            x = torch.relu(self.fc2(x))
             # Output layer with softmax (will use cross entropy loss which includes softmax)
             x = self.fc3(x)
             return x

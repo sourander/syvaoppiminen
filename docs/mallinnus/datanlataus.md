@@ -324,10 +324,10 @@ Tämä on hieman hankalampi tapa edetä kuin suora CSV:n lukeminen Pandasilla, m
     | ...                                                                        | ...        | ...      | ...  |
     | An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale | 0.5 %      | 99.5%    | 2021 |
 
-    Kannattaa tutkia myös, kauan mallin koulutus kestää. Data sekä malli ovat aiempaa suurempia. Opettajan valitsemalla arkkitehtuurilla saatiin 51 % testitarkkuus (joka ei juuri parantunut epookin nro 50 jälkeen). Tällä arkkitehtuurilla koulutus kesti, kun `persistent_workers=True` ja `num_workers=NUM_CPU` asetukset olivat paikoillaan:
+    Kannattaa tutkia myös, kauan mallin koulutus kestää. Data sekä malli ovat aiempaa suurempia. Opettajan valitsemalla arkkitehtuurilla saatiin 57 % testitarkkuus (joka ei juuri parantunut epookin nro 30 jälkeen). Tällä arkkitehtuurilla koulutus kesti, kun `persistent_workers=True` ja `num_workers=NUM_CPU` asetukset olivat paikoillaan:
 
     * CPU 100 epookkia: 10 min 5 s
-    * GPU 100 epookkia: 8 min 38 s
+    * GPU 100 epookkia: 8 min 20 s
 
     Taulukon lähde: [Wikipedia: CIFAR-10](https://en.wikipedia.org/wiki/CIFAR-10)
 
