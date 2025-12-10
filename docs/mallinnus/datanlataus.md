@@ -4,10 +4,6 @@ priority: 410
 
 # Datan lataus
 
-## IDEAS
-
-*  🚧 Tarkista luku 10 (Implementing Mini-Batch Gradient Descent Using DataLoaders) kirjasta Hands-On Machine Laerning with Scikit-Learn and PyTorch.
-
 ## Datan lataus PyTorchissa
 
 PyTorch tarjoaa `torch.utils.data`-moduulissa kaksi luokkaa, jotka helpottavat datan käsittelyä: `Dataset` ja `DataLoader`. Lisäksi löytyy esimerkiksi `TensorDataset`-luokka, josta voi olla apua harjoitellessa.

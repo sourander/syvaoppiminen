@@ -98,7 +98,6 @@ Lisäksi voit muuttaa esimerkiksi aktivointifunktioita, optimointimenetelmiä ja
 
 Tähän palataan [Kouluttamisen käytännöt](kaytannot.md)-luvussa.
 
-
 ### Koulutus
 
 Mallin varsinainen koulutus tapahtuu optimointimenetelmällä, joka minimoi virhefunktion arvon. Yleisin menetelmä on gradienttimenetelmä (engl. gradient descent). Gradienttimenetelmä perustuu virhefunktion derivaatan laskemiseen ja sen hyödyntämiseen mallin painojen päivittämisessä siten, että virhe pienenee jokaisella askeleella. Tämän pitäisi olla sinulle jo tuttua.
@@ -136,9 +135,11 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
         torch.save(model_checkpoint, 'mnist_mlp_checkpoint.pth')
         ```
 
-    !!! tip "Relu vs. Sigmoid"
+        Jos haluat haastaa itseäsi, kokeile kääntää malli TorchScript-muotoon `torch.jit.script()`-funktiolla. Löydät tähän hyvän esimerkin **Hands-On Machine Learning with Scikit-Learn and PyTorch** -kirjan luvun 10 lopusta otsikon *"Compiling and Optimizing a PyTorch Model"* alta.
 
-        Kannattaa kokeilla ainakin ReLU-aktivointia Sigmoidin sijasta, minkä jo itsessään pitäisi nostaa tarkkuutta muutaman prosenttiyksikön verran.
+        !!! tip "Relu vs. Sigmoid"
+
+            Kannattaa kokeilla ainakin ReLU-aktivointia Sigmoidin sijasta, minkä jo itsessään pitäisi nostaa tarkkuutta muutaman prosenttiyksikön verran.
 
 !!! question "Tehtävä: Lataa Fashion MNIST -malli"
 
@@ -153,6 +154,9 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
 
     Voit käyttää pohjana `401_fashion_mnist_eval.py`-tiedostoa tai luoda kokonaan oman Notebookisi.
 
+!!! question "Tehtävä: Tutustu aktivointifunktioihin"
+
+    Aja Marimo Notebook `413_activation_functions.ipynb` ja tutustu eri aktivointifunktioihin.
 
 ## Lähteet
 

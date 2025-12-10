@@ -54,6 +54,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 
 - [ ] Tehtävä: Mallinna Fashion MNIST
 - [ ] Tehtävä: Lataa Fashion MNIST -malli
+- [ ] Tehtävä: Tutustu aktivointifunktioihin
 
 ## Datan lataus (410)
 
@@ -61,6 +62,11 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: CIFAR10 Datasetin plärääminen
 - [ ] Tehtävä: CIFAR10 Malli
 - [ ] Tehtävä: ImageFolderin käyttö
+
+## Kouluttamisen käytännöt (420)
+
+- [ ] Tehtävä: Kouluttamisen käytännöt
+- [ ] Tehtävä: Piirrä multihead malli (Gaussian)
 
 
 ```
