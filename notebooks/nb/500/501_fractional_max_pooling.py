@@ -29,6 +29,8 @@ def _():
     import os
     import torchvision.transforms.v2 as transforms
     import matplotlib.pyplot as plt
+    import torch.nn.functional as F
+    import math
 
     from pathlib import Path
     from datetime import datetime
@@ -38,7 +40,9 @@ def _():
     from torchmetrics.classification import MulticlassAccuracy
     return (
         DataLoader,
+        F,
         MulticlassAccuracy,
+        Path,
         SummaryWriter,
         datasets,
         datetime,
@@ -77,6 +81,50 @@ def _(os, torch):
     return NUM_CPU, device
 
 
+@app.cell
+def _(mo):
+    mo.md(r"""
+    ## Calculate sizes
+    """)
+    return
+
+
+@app.cell
+def _():
+    def get_fmp_sizes(alpha=2**(1/3), layers=12):
+        """
+        Calculates the target spatial sizes for each FMP layer by walking 
+        backwards from the network output to the input.
+        """
+        # Start: The paper ends with C2-C1-Output. 
+        # C2 (2x2 Conv) reduces a 2x2 volume to 1x1. 
+        # Therefore, the input to the 'Tail' must be 2x2.
+        size = 2 
+
+        sizes = []
+
+        # Walk backwards through the 12 blocks
+        for _ in range(layers):
+            # This 'size' is the target output for the current FMP layer
+            sizes.append(size)
+
+            # Inverse FMP: Increase size by factor alpha, round to nearest integer 
+            size = int(round(size * alpha))
+
+            # Inverse C2 Conv: Add 1 (because 2x2 conv with valid padding reduces size by 1)
+            size = size + 1
+
+        # 'sizes' is currently [Tail_Input, Block12_Input, ..., Block2_Input]
+        # We need to reverse it to get [Block1_Output, Block2_Output, ...]
+        return size, sizes[::-1]
+
+    # Generate the list
+    input_dim, fmp_targets = get_fmp_sizes()
+    print(f"Calculated Input Size: {input_dim}")
+    print(f"Target Sizes: {fmp_targets}")
+    return (fmp_targets,)
+
+
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -86,56 +134,58 @@ def _(mo):
 
 
 @app.cell
-def _():
-    1 / 2**(1/3)
-    return
-
-
-@app.cell
-def _(device, nn, torch):
+def _(F, device, fmp_targets, nn):
     class FMPNet(nn.Module):
-        def __init__(self, num_classes=10):
+        def __init__(self, target_sizes, filter_growth_rate, num_classes=10):
             super().__init__()
             self.blocks = nn.ModuleList()
-            in_channels = 3  # RGB input
+            in_channels = 3
 
-            # 12 repeated blocks of (160nC2 - FMP √3 2)
-            # Use padding=1 with kernel=3 to preserve spatial dims, let FMP do downsampling
-            # Adjust output_ratio to ~0.85 so we don't shrink too fast over 12 layers
-            for _ in range(12):
-                # The convolutional layer
-                conv = nn.Conv2d(in_channels, 160, kernel_size=3, padding=1, bias=True)
-            
-                # FMP with output_ratio = 1 / 2^(1/3) ≈ 0.794
-                fmp = nn.FractionalMaxPool2d(kernel_size=2, output_ratio=(0.83, 0.83))
-                self.blocks.append(nn.Sequential(conv, fmp))
-                in_channels = 160  # output of conv
+            # We iterate 1..12 and zip with the pre-calculated target sizes
+            # n determines filters, target_size determines FMP output
+            for n, target_size in zip(range(1, 13), target_sizes):
+                out_channels = filter_growth_rate * n 
+                p_dropout = ((n - 1) / 11) * 0.5
 
-            # Additional conv layers
-            self.convC2 = nn.Conv2d(160, 160, kernel_size=1, bias=True)
-            self.convC1 = nn.Conv2d(160, 50, kernel_size=1, bias=True)  # final conv before FC
+                block = nn.Sequential(
+                    # C2: 2x2 Conv, Valid Padding
+                    nn.Conv2d(in_channels, out_channels, kernel_size=2, padding=0),
+                    nn.LeakyReLU(0.2, inplace=True),
+                    nn.Dropout2d(p=p_dropout),
 
-            # Activation and pooling modules
-            self.relu = nn.ReLU()
-            self.global_avg_pool = nn.AdaptiveAvgPool2d((1, 1))
+                    # FMP: Explicitly enforce the output size
+                    nn.FractionalMaxPool2d(kernel_size=2, output_size=target_size)
+                )
+                self.blocks.append(block)
+                in_channels = out_channels
 
-            # Classifier (global average pool → linear)
-            self.fc = nn.Linear(50, num_classes)
+            # "Tail" of the network
+            # Input here is guaranteed to be 2x2 because the last FMP target was 2
+            self.convC2 = nn.Conv2d(in_channels, in_channels, kernel_size=2) # 2x2 -> 1x1
+            self.convC1 = nn.Conv2d(in_channels, num_classes, kernel_size=1) 
 
         def forward(self, x):
+            # 1. Pad Input dynamically to match the calculated input_dim (94)
+            # CIFAR is 32x32, so we need 62 padding total (31 per side)
+            # This calculation makes it robust to different input sizes
+            pad_total = 94 - x.size(2)
+            if pad_total > 0:
+                pad_val = pad_total // 2
+                x = F.pad(x, (pad_val, pad_val, pad_val, pad_val), "constant", 0)
+
             for block in self.blocks:
-                x = self.relu(block(x))
-            x = self.relu(self.convC2(x))
-            x = self.relu(self.convC1(x))
-            # Global average pool to 1x1
-            x = self.global_avg_pool(x)
-            x = torch.flatten(x, 1)
-            x = self.fc(x)
+                x = block(x)
+
+            # Tail: C2 -> Relu -> C1 -> Relu -> Flat -> Output
+            x = F.leaky_relu(self.convC2(x), 0.2)
+            x = F.leaky_relu(self.convC1(x), 0.2)
+
+            x = x.view(x.size(0), -1)
             return x
 
-    # Instantiate model
-    model = FMPNet(num_classes=10)
-    model = model.to(device)
+    filter_growth_rate = 64
+    model = FMPNet(fmp_targets, filter_growth_rate, num_classes=10)
+    model = model.to(device) # If using GPU
     return (model,)
 
 
@@ -147,33 +197,65 @@ def _(model):
 
 
 @app.cell
-def _(device, model, torch):
-    def print_layer_sizes(model, input_size=(1, 3, 32, 32)):
-        """Print spatial dimensions through the network."""
-        x = torch.randn(input_size).to(device)
-        print(f"Input: {x.shape}")
-    
+def _(F, model, nn, torch):
+    def debug_forward_pass(model, input_size=(1, 3, 32, 32)):
+        # 1. Detect device
+        device = next(model.parameters()).device
+        print(f"--- Debugging Forward Pass on {device} (Input: {input_size}) ---")
+
+        # 2. Create input
+        x = torch.randn(*input_size).to(device)
+
+        # 3. Dynamic Padding (matches the model's logic)
+        # The model expects 94x94.
+        pad_total = 94 - x.size(2)
+        if pad_total > 0:
+            pad_val = pad_total // 2
+            x = F.pad(x, (pad_val, pad_val, pad_val, pad_val), "constant", 0)
+        print(f"After Padding: {x.shape}")
+
+        # 4. Iterate Blocks
         for i, block in enumerate(model.blocks):
-            x = model.relu(block(x))
-            print(f"Block {i+1}: {x.shape}")
-    
-        x = model.relu(model.convC2(x))
-        print(f"ConvC2: {x.shape}")
-    
-        x = model.relu(model.convC1(x))
-        print(f"ConvC1: {x.shape}")
-    
-        x = model.global_avg_pool(x)
-        print(f"Global Avg Pool: {x.shape}")
-    
-        x = torch.flatten(x, 1)
-        x = model.fc(x)
-        print(f"Output: {x.shape}")
+            print(f"\n[Block {i+1}] Input: {x.shape}")
+
+            # Breakdown the block to see inside
+            for layer in block:
+                try:
+                    x = layer(x)
+                    # If it's FMP, we can print the target size it was aiming for
+                    if isinstance(layer, nn.FractionalMaxPool2d):
+                        print(f"   -> FMP (Target {layer.output_size}): {x.shape}")
+                    else:
+                        print(f"   -> {layer.__class__.__name__}: {x.shape}")
+                except RuntimeError as e:
+                    print(f"   !!! CRASH at {layer.__class__.__name__} !!!")
+                    print(f"   Error: {e}")
+                    return 
+
+        # 5. Tail (The "Fully Convolutional" Classifier)
+        print(f"\n[Tail] Input: {x.shape} (Expected 2x2)")
+
+        try:
+            # C2: 2x2 Conv -> Reduces 2x2 input to 1x1
+            x = model.convC2(x)
+            x = F.leaky_relu(x, 0.2)
+            print(f"   -> ConvC2 (2x2 kernel): {x.shape} (Should be 1x1)")
+
+            # C1: 1x1 Conv -> Projects to Num_Classes
+            x = model.convC1(x)
+            x = F.leaky_relu(x, 0.2)
+            print(f"   -> ConvC1 (1x1 kernel): {x.shape} (Channels = Num Classes)")
+
+            # Flatten (This is the final output)
+            x = x.view(x.size(0), -1)
+            print(f"   -> Final Output (Flattened): {x.shape}")
+
+        except Exception as e:
+            print(f"   !!! CRASH in Tail !!!")
+            print(f"   Error: {e}")
 
     # Run it
-    print("[INFO] Investigating layer sizes")
-    print("=" * 42)
-    print_layer_sizes(model)
+    debug_forward_pass(model)
     return
 
 
@@ -187,7 +269,7 @@ def _(mo):
 
 @app.cell
 def _(SummaryWriter, datetime, device):
-    LEARNING_RATE = 0.01
+    LEARNING_RATE = 0.001
     EPOCHS = 100
     BATCH_SIZE = 32
 
@@ -240,8 +322,8 @@ def _(BATCH_SIZE, DataLoader, NUM_CPU, datasets, torch, transforms):
     testset = datasets.CIFAR10('./data', download=True, train=False, transform=test_transform)
 
     # Create data loaders
-    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, persistent_workers=True, num_workers=NUM_CPU)
-    testloader = DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False, persistent_workers=True, num_workers=NUM_CPU)
+    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_CPU)
+    testloader = DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_CPU)
     return testloader, trainloader
 
 
@@ -425,9 +507,7 @@ def _(mo):
 
 
 @app.cell
-def _(model, run_name, torch):
-    from pathlib import Path
-
+def _(Path, model, run_name, torch):
     # Create models directory if it doesn't exist
     Path('models').mkdir(parents=True, exist_ok=True)
 
