@@ -68,5 +68,11 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Kouluttamisen käytännöt
 - [ ] Tehtävä: Piirrä multihead malli (Gaussian)
 
+## Konvoluutioverkot (CNN) (500)
+
+- [ ] Tehtävä: Tutustuminen Fractional Max-Pooling -toteutukseen
+- [ ] Tehtävä: FMP ja MNIST
+- [ ] Tehtävä: LeNet ja MNIST
+
 
 ```
