@@ -17,7 +17,7 @@ def _(mo):
 
     See: https://arxiv.org/abs/1412.6071
 
-    This replicates the model in "4.4 CIFAR-10 with dropout and training data augmentation", but without training data augmentation.
+    This replicates the model in "4.4 CIFAR-10 with dropout and training data augmentation", but without training data augmentation. Also, BatchNormalization has been added.
     """)
     return
 
@@ -42,7 +42,6 @@ def _():
         DataLoader,
         F,
         MulticlassAccuracy,
-        Path,
         SummaryWriter,
         datasets,
         datetime,
@@ -129,6 +128,19 @@ def _():
 def _(mo):
     mo.md(r"""
     ## Define Model
+
+    Before dropping the learning rate to 0.0001 and adding the Batch Normalization, the learning process was an absolute mess. Analyse what this kind of learning pattern means:
+
+    ```
+    [INFO] training network...
+    Epoch [10/100] - Train Loss: 24982.7228, Train Acc: 0.1024, Val Loss: 1398.8729, Val Acc: 0.0940
+    Epoch [20/100] - Train Loss: 32.5940, Train Acc: 0.1048, Val Loss: 3.1006, Val Acc: 0.1376
+    Epoch [30/100] - Train Loss: 883.8111, Train Acc: 0.1005, Val Loss: 93.8354, Val Acc: 0.1001
+    Epoch [40/100] - Train Loss: 142335.4038, Train Acc: 0.1001, Val Loss: 8272.5112, Val Acc: 0.0999
+    Epoch [50/100] - Train Loss: 131.5608, Train Acc: 0.1080, Val Loss: 16.9567, Val Acc: 0.1003
+    Epoch [60/100] - Train Loss: 472.5742, Train Acc: 0.1016, Val Loss: 388.8641, Val Acc: 0.1000
+    Stopped training here
+    ```
     """)
     return
 
@@ -150,6 +162,8 @@ def _(F, device, fmp_targets, nn):
                 block = nn.Sequential(
                     # C2: 2x2 Conv, Valid Padding
                     nn.Conv2d(in_channels, out_channels, kernel_size=2, padding=0),
+                    # This is potentially my own addition
+                    nn.BatchNorm2d(out_channels),
                     nn.LeakyReLU(0.2, inplace=True),
                     nn.Dropout2d(p=p_dropout),
 
@@ -162,6 +176,7 @@ def _(F, device, fmp_targets, nn):
             # "Tail" of the network
             # Input here is guaranteed to be 2x2 because the last FMP target was 2
             self.convC2 = nn.Conv2d(in_channels, in_channels, kernel_size=2) # 2x2 -> 1x1
+            self.bnC2 = nn.BatchNorm2d(in_channels) # My own addition
             self.convC1 = nn.Conv2d(in_channels, num_classes, kernel_size=1) 
 
         def forward(self, x):
@@ -176,9 +191,13 @@ def _(F, device, fmp_targets, nn):
             for block in self.blocks:
                 x = block(x)
 
-            # Tail: C2 -> Relu -> C1 -> Relu -> Flat -> Output
-            x = F.leaky_relu(self.convC2(x), 0.2)
-            x = F.leaky_relu(self.convC1(x), 0.2)
+            # Tail Forward Pass
+            x = self.convC2(x)
+            x = self.bnC2(x) # Apply BN
+            x = F.leaky_relu(x, 0.2)
+
+            x = self.convC1(x)
+            x = F.leaky_relu(x, 0.2)
 
             x = x.view(x.size(0), -1)
             return x
@@ -186,13 +205,17 @@ def _(F, device, fmp_targets, nn):
     filter_growth_rate = 64
     model = FMPNet(fmp_targets, filter_growth_rate, num_classes=10)
     model = model.to(device) # If using GPU
+
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Total trainable parameters: {total_params:,}")
     return (model,)
 
 
-@app.cell
-def _(model):
-    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"Total trainable parameters: {total_params:,}")
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Visualize Model Insides
+    """)
     return
 
 
@@ -269,7 +292,7 @@ def _(mo):
 
 @app.cell
 def _(SummaryWriter, datetime, device):
-    LEARNING_RATE = 0.001
+    LEARNING_RATE = 0.0001
     EPOCHS = 100
     BATCH_SIZE = 32
 
@@ -298,32 +321,54 @@ def _(mo):
 def _(BATCH_SIZE, DataLoader, NUM_CPU, datasets, torch, transforms):
     # CIFAR-10 stats
     CIFAR10_MEAN = (0.4914, 0.4822, 0.4465)
-    CIFAR10_STD  = (0.2470, 0.2435, 0.2616)
+    CIFAR10_STD = (0.2470, 0.2435, 0.2616)
 
-    train_transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomCrop(32, padding=4),
-        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
-        transforms.ToImage(),  # convert PIL/ndarray -> v2 image
-        transforms.ToDtype(torch.float32, scale=True),
-        transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD)
-    ])
+    train_transform = transforms.Compose(
+        [
+            transforms.RandomHorizontalFlip(),
+            transforms.RandomCrop(32, padding=4),
+            transforms.ColorJitter(
+                brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1
+            ),
+            transforms.ToImage(),  # convert PIL/ndarray -> v2 image
+            transforms.ToDtype(torch.float32, scale=True),
+            transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD),
+        ]
+    )
 
-    test_transform = transforms.Compose([
-        transforms.ToImage(),
-        transforms.ToDtype(torch.float32, scale=True),
-        transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD)
-    ])
+    test_transform = transforms.Compose(
+        [
+            transforms.ToImage(),
+            transforms.ToDtype(torch.float32, scale=True),
+            transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD),
+        ]
+    )
 
 
     # Download and load the training data
     print("[INFO] accessing CIFAR10...")
-    trainset = datasets.CIFAR10('./data', download=True, train=True, transform=train_transform)
-    testset = datasets.CIFAR10('./data', download=True, train=False, transform=test_transform)
+    trainset = datasets.CIFAR10(
+        "./data", download=True, train=True, transform=train_transform
+    )
+    testset = datasets.CIFAR10(
+        "./data", download=True, train=False, transform=test_transform
+    )
 
     # Create data loaders
-    trainloader = DataLoader(trainset, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_CPU)
-    testloader = DataLoader(testset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_CPU)
+    trainloader = DataLoader(
+        trainset,
+        batch_size=BATCH_SIZE,
+        shuffle=True,
+        persistent_workers=True,
+        num_workers=NUM_CPU,
+    )
+    testloader = DataLoader(
+        testset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        persistent_workers=True,
+        num_workers=NUM_CPU,
+    )
     return testloader, trainloader
 
 
@@ -495,28 +540,7 @@ def _(
     end = datetime.now()
     delta = end - start
     print("The duration of the training:", delta)
-    return (history,)
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ## Save the Model
-    """)
-    return
-
-
-@app.cell
-def _(Path, model, run_name, torch):
-    # Create models directory if it doesn't exist
-    Path('models').mkdir(parents=True, exist_ok=True)
-
-    # Save the model as state dict only. 
-    # We will use the runname to differentiate models.
-    model_path = f'models/{run_name}_model.pth'
-    torch.save(model.state_dict(), model_path)
-    print(f"Model saved to {model_path}")
-    return
+    return history, optimizer
 
 
 @app.cell(hide_code=True)
@@ -528,13 +552,65 @@ def _(mo):
 
 
 @app.cell
-def _(EPOCHS, history, np, plt):
+def _(EPOCHS, history, plt):
+    import numpy as np
+
     plt.style.use("ggplot")
     plt.figure(figsize=(10, 6))
     plt.plot(np.arange(0, EPOCHS), history["train_loss"], label="train_loss")
     plt.plot(np.arange(0, EPOCHS), history["val_loss"], label="val_loss")
     plt.plot(np.arange(0, EPOCHS), history["train_acc"], label="train_acc")
     plt.plot(np.arange(0, EPOCHS), history["val_acc"], label="val_acc")
+    plt.title("Training Loss and Accuracy")
+    plt.xlabel("Epoch #")
+    plt.ylabel("Loss/Accuracy")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+    return (np,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Save the Last Epoch
+    """)
+    return
+
+
+@app.cell
+def _(EPOCHS, history, model, optimizer, run_name, torch):
+    # Define a path for the full checkpoint
+    checkpoint_path = f'models/{run_name}_checkpoint_epoch{EPOCHS}.pth'
+
+    # Save a dictionary containing all necessary state
+    torch.save({
+        'epoch': EPOCHS,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': history['train_loss'][-1], # Optional: save the last loss
+    }, checkpoint_path)
+
+    print(f"Full checkpoint saved to: {checkpoint_path}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Visualize Training Curves
+    """)
+    return
+
+
+@app.cell
+def _(TOTAL_EPOCHS, history, np, plt):
+    plt.style.use("ggplot")
+    plt.figure(figsize=(10, 6))
+    plt.plot(np.arange(0, TOTAL_EPOCHS), history["train_loss"], label="train_loss")
+    plt.plot(np.arange(0, TOTAL_EPOCHS), history["val_loss"], label="val_loss")
+    plt.plot(np.arange(0, TOTAL_EPOCHS), history["train_acc"], label="train_acc")
+    plt.plot(np.arange(0, TOTAL_EPOCHS), history["val_acc"], label="val_acc")
     plt.title("Training Loss and Accuracy")
     plt.xlabel("Epoch #")
     plt.ylabel("Loss/Accuracy")
