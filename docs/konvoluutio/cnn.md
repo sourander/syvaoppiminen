@@ -8,7 +8,7 @@ priority: 500
 
 ### Motivaatio
 
-Olet tutustunut kurssilla FCNN-verkkoihin, ja niiden rajat alkoivat löytyä Cifar10-datasetin kohdalla. Edellisen luvun tehtävässä koulutit FCNN-verkon – kenties arkkitehtuurilla `3072-1024-512-10` –, ja pääsit noin 55% tarkkuuteen. Tutustuessasi wikipedian [Cifar10](https://en.wikipedia.org/wiki/CIFAR-10)-sivuun huomasit, että jo 2010-luvun alkupuolella verkot kykenivät yli 95 % tarkkuuteen. On hyvä muistaa, että 95 % on jo merkittävän suuri tarkkuus. Graham lainaa Karpathyä, että: *"For comparison, human performance on CIFAR-10 is estimated to be 6%."* [^fractionalmp] Lukema on siis *error rate*, ei *accuracy*. Ihmiseen kun vertaa, niin jo vuonna 2014 Grahamin **Fractional Max-Pooling** -malli saavutti huimat tulokset: *"we obtained test errors of 4.50% (1 test), 3.67% (12 tests) and 3.47% (100 tests)"* [^fractionalmp]. Konvoluutioverkot mahdollistavat siis huomattavasti tehokkaamman tavan käsitellä kuvia. Ja mikä oli Grahamin mallin parametrien määrä? **74 miljoonaa** parametria, jos laskin oikein (jos `filter_growth_rate = 160`). Tosin paperissa mainitaan myös 12M parametria käyttänyt malli (`filter_growth_rate = 64`).
+Olet tutustunut kurssilla FCNN-verkkoihin, ja niiden rajat alkoivat löytyä Cifar10-datasetin kohdalla. Edellisen luvun tehtävässä koulutit FCNN-verkon – kenties arkkitehtuurilla `3072-1024-512-10` –, ja pääsit noin 55% tarkkuuteen. Tutustuessasi wikipedian [Cifar10](https://en.wikipedia.org/wiki/CIFAR-10)-sivuun huomasit, että jo 2010-luvun alkupuolella verkot kykenivät yli 95 % tarkkuuteen. On hyvä muistaa, että 95 % on jo merkittävän suuri tarkkuus. Graham lainaa Karpathyä, että: *"For comparison, human performance on CIFAR-10 is estimated to be 6%."* [^fractionalmp] Lukema on siis *error rate*, ei *accuracy*.
 
 Miten tämä on mahdollista? Lienee selvää, että 2010-luvun alussa ratkaisu tuskin oli kasvattaa verkkoa ilman arkkitehtuurimuutoksia. Alla on taulukossa esiteltynä `3072-1024-512-10` FCNN-verkon parametrien lukumäärä. 
 
@@ -23,13 +23,39 @@ Miten tämä on mahdollista? Lienee selvää, että 2010-luvun alussa ratkaisu t
 | fc3.bias   | torch.Size([10])         | 10            |
 | **Total**  |                          | **3,676,682** |
 
-Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -korttia, jossa on 6 GB muistia. Muistiin mahtuisi $\frac{6 \times 1024^3}{4} \approx 1600 \text{M}$ parametria (per BATCH). Jos *batch size* on 32, niin silloin käytössä on $\frac{1600}{32} \approx 50 \text{M}$ parametria. Tämä on yhä reilusti enemmän kuin edellä esitellyssä verkossa. Koulutusvaiheessa muistiin pitää mahtua myös aktivoinnit, gradientit ja optimointiin liittyvät muuttujat. Muistiin mahtuisi joka tapauksessa jo 2014 vuoden raudalla hyvinkin suuri malli, mutta olet varmasti kokeillut tätä ratkaisua itsekin: verkon kokoa kasvattamalla ei päästä kovin pitkälle. Mikä siis avuksi? Historiasta löytyy vastaus: konvoluutioverkot (Convolutional Neural Networks, CNN). Kuten yllä on todettu, noin $74 \text{M}$ parametria riitti Grahamin mallissa jo 3,47 % virheeseen CIFAR-10 datasetin kanssa.
+Olet varmasti kokeillut tätä ratkaisua itsekin: verkon kokoa kasvattamalla ei päästä kovin pitkälle. Mikä siis avuksi? Historiasta löytyy vastaus: konvoluutioverkot (Convolutional Neural Networks, CNN).
 
-!!! note "Entä suurempi input?"
+Ihmiseen kun vertaa, niin jo vuonna 2014 Grahamin **Fractional Max-Pooling** -malli saavutti huimat tulokset: *"we obtained test errors of 4.50% (1 test), 3.67% (12 tests) and 3.47% (100 tests)"* [^fractionalmp]. Konvoluutioverkot mahdollistavat siis huomattavan tehokkaan tavan käsitellä kuvia. Ja mikä oli Grahamin mallin parametrien määrä? **74 miljoonaa** parametria (jos `filter_growth_rate = 160`). Tosin paperissa mainitaan myös 12M parametria käyttänyt malli (`filter_growth_rate = 64`). Tämä pienempi malli on se, mikä on toteutettu kurssin koodissa.
 
-    VGG-16-konvoluutioverkossa käytetään tyypillisesti kuvia koossa 224×224×3 (RGB, 3 kanavaa). Dataset on nimeltään ImageNet, jossa on 1000 eri luokkaa ja miljoonia kuvia. Koko verkossa on pelkästään 138M parametria.
+$74 \text{M}$ parametrin malli ylsi Grahamin paperin mukaan $3.47 \%$ virheeseen CIFAR-10 datasetin kanssa. Opettajan kouluttamalla, pienemmällä $12 \text{M}$ parametrin mallilla päästiin noin $92 \%$ tarkkuuteen eli $8 \%$ virheeseen. Tutustut tähän toteutukseen myöhemmin tehtäväosiossa, ja tähän tutustutaan myös [Case Study: Fractional Max-Pooling (Graham, 2014)](#case-study-fractional-max-pooling-graham-2014)-otsikon alla hieman tarkemmin.
 
-    Kuinka olisi FCNN-verkon laita, jos input on `224x224x3` ja ensimmäinen piilotettu kerros `4096` neuronia? Input olisi siis `150,528`-ulotteinen vektori. Tällöin ==pelkästään ensimmäisen== piilotetun kerrokset olisivat parametrimäärältään:
+![](../images/500_fmp_training_curves.png)
+
+**Kuva 1:** *300 epookin koulutuksen aikaiset tarkkuus- ja virhekäyrät Grahamin Fractional Max-Pooling -mallille (12M parametria).*
+
+### Rautavaatimukset
+
+Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -korttia, jossa on 6 GB muistia. Muistiin mahtuisi $\frac{6 \times 1024^3}{4} \approx 1600 \text{M}$ parametria (per BATCH). Jos *batch size* on 32, niin silloin käytössä on $\frac{1600}{32} \approx 50 \text{M}$ parametria. Tämä on yhä reilusti enemmän kuin edellä esitellyssä pienemmässä 14 miljoonan parametrin verkossa. Koulutusvaiheessa muistiin pitää mahtua myös aktivoinnit, gradientit ja optimointiin liittyvät muuttujat. Näitä lukemia voi laskea, mutta sen voi myös selvittää kokeilemalla. Alla on typistetty `nvidia-smi`-komennon tulos koulutuksen aikana (GeForce RTX 3060 Ti, 8 GB muistia):
+
+```
++-------------------------------------------------------------------+
+| Processes:                                                        |
+|  GPU   GI   Type   Process name                        GPU Memory |
+|        ID                                              Usage      |
+|===================================================================|
+|    0   N/A     C   ...n/notebooks/.venv/bin/python3       2650MiB |
++-------------------------------------------------------------------+
+```
+
+Jos 12M parametria vie 32-kokoisella erällä `2650 MiB` muistia, niin suuremman mallin (`filter_growth_rate = 160`) huimat 74M parametria veisi noin `74/12 * 2650 ≈ 16342 MiB`, eli noin 16 GB muistia. Jos mallin halutaan mahtuvan 6 GB VRAM:iin, niin batch-kokoa pitäisi pienentää. Jos batch-koko lasketaan neljännekseen (`32/4 = 8`), niin tällöin muistia tarvittaisiin enää `16342 / 4 ≈ 4085 MiB`, eli noin 4 GB.
+
+12M mallin kouluttamiseen kului opettajan GeForce RTX 3060 Ti:llä ==yli 11 tuntia== (300 epookkia, noin 2 min 17 sek per epookki).
+
+!!! note "Syötekuva ja parametrien määrä"
+
+    VGG-16-konvoluutioverkossa käytetään tyypillisesti kuvia koossa 224×224×3 (RGB, 3 kanavaa). Dataset on nimeltään ImageNet, jossa on 1000 eri luokkaa ja miljoonia kuvia. Konvoluutioverkossa VGG-16 on tästä huolimatta kokonaisuudessaan vain 138M parametria.
+
+    Kuinka olisi FCNN-verkon laita, jos input on `224x224x3` ja ensimmäinen piilotettu kerros `4096` neuronia? Input olisi siis `150,528`-pituinen vektori. Tällöin ==pelkästään ensimmäisen== piilotetun kerrokset olisivat parametrimäärältään:
 
     $$
     150,528 \times 4096 \approx 617 \text{M}
@@ -49,7 +75,59 @@ Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -ko
 
 ### Visual Feature Descriptors
 
-TODO: Lyhyt katsaus vanhoihin feature descriptor -menetelmiin, kuten SIFT ja HOG.
+On hyödyksi pohtia, miten kuvia käsitellään perinteisissä tietokonenäön sovelluksissa ennen konvoluutioverkkojen aikakautta. Yksi keskeinen käsite on **feature vector** eli piirrevektori, joka tiivistää kuvan olennaiset piirteet matemaattiseen muotoon. Piirrevektori voi näytää vaikka tältä:
+
+```python
+# Piirrevektoreita
+features = [
+    [0.1, 0.5, 0.3, ..., 0.7], # kuva 1
+    [0.3, 0.6, 0.1, ..., 0.4], # kuva 2
+    ...,
+]
+
+# Nyt voisimme kouluttaa esimerkiksi binääriluokittelijan
+labels = [0, 1, ..., 0]  # 1 = kissa, 0 = koira
+model.fit(features, labels)
+```
+
+Vektoreita voi etsiä monin eri tavoin, ja nämä tavat voidaan jakaa kahteen pääkategoriaan:
+
+* **Image descriptor**: Koko kuva-alueen värijakauma histogrammina, mediaaniväri tai jokin/jotkin muut globaalit ominaisuudet.
+    * 1 kuva sisään, 1 vektori ulos.
+* **Feature descriptor**: Kuvaa kuvan ==paikallisia== piirteitä, kuten reunat, kulmat tai tekstuurit.
+    * 1 kuva sisään, N vektoria ulos (N on paikallisten alueiden määrä).
+
+Koko kuvan pinta-alaa kuvaavat piirteet voivat olla harvoissa tapauksissa hyödyllisiä, mutta usein paikalliset piirteet tarjoavat enemmän informaatiota. Kuvan voi myös jakaa pienempiin osiin (esim. 100x100 pikselin kuva -> 10x10 pikselin ruudukko) ja laskea kullekin osalle (engl *cell*) piirrevektori.
+
+Muista, että tämän kurssin aiheena eivät ole perinteiset tietokonenäön menetelmät, vaan konvoluutioverkot. ==Ethän siis käytät tähän osioon useita tunteja==: riittää, että tunnistat perusidean, mikä tarjoaa mahdollisuuden ymmärtää konvoluutioverkkojen hyötyjä paremmin.
+
+Tutustutaan alla lyhyesti kahteen globaaliin *image descriptor* -menetelmään: LBP ja HOG.
+
+#### LBP
+
+Tekstuureita voi kuvastaa esimerkiksi Local Binary Patterns (LBP) -menetelmällä, jonka esittelivät Ojala et al. vuonna 2002 Oulun yliopiston julkaisussa "Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns" [^lbp]. Paperi on ladattavissa kirjautumatta [Stanfordin CS216B kurssin linkistä](http://vision.stanford.edu/teaching/cs231b_spring1415/papers/lbp.pdf). LBP perustuu pikselin vertailuun sitä ympäröivien pikseleiden kanssa. Naiivi toteutus vertailee 3x3 alueen keskustaa muihin. Jos ympäröivä pikseli on kirkkaampi tai yhtä kirkas kuin keskuspikseli, sille annetaan arvo 1, muuten 0. Näin muodostuu 8-bittinen binaariluku, joka voidaan muuntaa desimaaliluvuksi. Kellonvastaisesti oletetaan siis, että ympäröivät pikselit ovat arvoltaan $1 x 2^0 + 0 + 2^1 + ... + 1 x 2^7$. Tämä luku kuvaa kyseisen pikselin tekstuuria. Monimutkaisemmassa esimerkissä voidaan valita säde, jolloin ympäröivät pisteet eivät olekaan välittömästi keskuspikselin vieressä, vaan kauempana. Katso Kuva 2, jossa tämä toteutus on havainnollistettu.
+
+![](../images/500_LBP_neighbors.svg)
+
+**Kuva 2:** *Local Binary Patterns (LBP) -menetelmä vertailee keskuspikseliä sitä ympäröiviin pikseleihin. Kuva: By Xiawi - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=11743214*
+
+!!! tip "Käytännössä?"
+
+    Jos haluat kokeilla LBP:tä Pythonissa, niin `skimage`-kirjasto tarjoaa valmiin toteutuksen: [Local Binary Pattern for texture classification](https://scikit-image.org/docs/0.25.x/auto_examples/features_detection/plot_local_binary_pattern.html). Jos haluat nähdä kokonaisemman esimerkin, Adrian Rosebrockin blogipostaus [Face Recognition with Local Binary Patterns (LBPs) and OpenCV](https://pyimagesearch.com/2021/05/03/face-recognition-with-local-binary-patterns-lbps-and-opencv/) on hyvä paikka aloittaa. Huomaa, että näissäkin tapauksissa on vahva oletus, että sinulla on jokin tapa rajata kiinnostava alue kuvasta (esim. kasvot). Tähän voi käyttää perinteisiä tietokonenäön menetelmiä, kuten Haar-cascade -luokittelijoita tai HOG+SVM -yhdistelmää.
+
+#### HOG
+
+HOG (Histogram of Oriented Gradients) on toinen suosittu piirrevektorin muodostamismenetelmä, joka keskittyy kuvan reunojen ja kulmien suuntiin. HOG jakaa kuvan pienempiin alueisiin (soluihin, *cells*), ja laskee kullekin solulle histogrammin gradienttien suunnista. Gradientti kuvaa pikselin kirkkauden muutosta, ja HOG käyttää tätä tietoa tunnistaakseen kuvioita, kuten reunat ja kulmat. Dalal ja Triggs esittelivät HOG:n vuonna 2005 julkaistussa artikkelissaan "Histograms of Oriented Gradients for Human Detection". Artikkeli on ladattavissa [Inria:n sivuilta](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf).
+
+Voi olla hyödyllistä silmäillä läpi myös: [Medium.com | Katthik Mittal: A Gentle Introduction Into The Histogram Of Oriented Gradients](https://medium.com/analytics-vidhya/a-gentle-introduction-into-the-histogram-of-oriented-gradients-fdee9ed8f2aa)
+
+![alt text](../images/500_hog_cat_loop_nanobanana.png)
+
+**Kuva 3:** *HOG-piirteiden visualisointi. Kuva: 400x400 pikseliä, soluja 40x40. HOG-featuren pituus on `54756`. Kuva: Nanobanana.*
+
+#### Interest Point Detector and Feature Descriptor
+
+TODO: Selitä tässä lyhyesti, kuinka tunnistaa tärkeät pisteet kuvasta ja laskea niille piirrevektori (esim. SIFT, SURF, ORB).
 
 ### Konvoluutioverkkojen rakenne
 
@@ -58,6 +136,8 @@ Aiemmasta opitusta on hyötyä, sillä konvoluutioverkkojen *head* eli viimeiset
 #### Konvoluutiokerros
 
 Lue tämä: [A Comprehensive Guide to Convolutional Neural Networks — the ELI5 way](https://medium.com/data-science/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53)
+
+Konvoluutiokerros suorittaa syötteelle konvoluution, joka on matemaattinen operaatio, jossa pieni suodin (kernel/filter) liukuu syötteen yli ja laskee pistetulon (dot product) suotimen ja syötteen vastaavien osien välillä. Tämä prosessi mahdollistaa paikallisten piirteiden, kuten reunojen, kulmien ja tekstuurien, tunnistamisen kuvasta. Aiheeseen tutustumiseen auttaa, jos tutkit, kuinka erilaiset suotimet (esim. reunojen tunnistamiseen tarkoitetut Sobel-suotimet) toimivat. Tähän on mainio apusivusto: [Setosa.io | Image Kernels explained visually](https://setosa.io/ev/image-kernels/).
 
 #### Koontikerros
 
@@ -102,7 +182,7 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 
 !!! question "Tehtävä: Tutustuminen Fractional Max-Pooling -toteutukseen"
 
-    Avaa tiedosto `notebooks/nb/500/501_fractional_max_pooling.py`. Tämä on teknisesti haastava toteutus, joka poikkeaa kurssin aiemmista malleista. Tutki koodia ja pohdi oppimispäiväkirjassasi seuraavia kysymyksiä:
+    Avaa tiedosto `notebooks/nb/500/501_fractional_max_pooling.py`. Tutki koodia ja pohdi oppimispäiväkirjassasi seuraavia kysymyksiä:
 
     *   **Käänteinen koon laskenta:** Miten `get_fmp_sizes`-funktio toimii? Miksi verkon kerrosten koot lasketaan "lopusta alkuun" (output $\to$ input)?
     *   **Dynaaminen padding:** Toteutuksessa käytetään dynaamista paddingia (`pad_total`). Miksi tämä on välttämätöntä juuri tässä arkkitehtuurissa, kun taas esimerkiksi VGG-verkossa pärjätään kiinteällä paddingilla?
@@ -110,11 +190,11 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
     *   **Ensemble-ennustaminen:** Miten mallin ennusteet lasketaan testausvaiheessa? Miksi sama kuva syötetään verkolle useita kertoja? Eikö neuroverkko olekaan deterministinen? Miksi minun toteutus toimii, vaikka siinä ei syötetä kuin kerran?
     *   **Suotimien kasvu:** Miksi `filter_growth_rate` on toteutettu siten, että kanavien määrä kasvaa lineaarisesti ($k \times n$)? Tähän vastataan alkuperäisessä paperissa.
   
-    P.S. En voi suositella tämän mallin ajamista CPU-raudalla.
+    Mallin kouluttamiseen meni opettajan GeForce RTX 3060 Ti:llä ==yli 11 tuntia== (300 epookkia, noin 2 min 17 sek per epookki). Saat kouluttaa mallin itse tai voit käyttää valmista mallia, joka on tallennettu tiedostoon `notebooks/gitlfs-store/502_cifar10_fractionalmaxp.pth`. Huomaa, että repositorio tulee kloonata Git LFS -tuen kanssa, jotta malli löytyy koneeltasi. Jos tämä on täysin vieras konsepti, lue: [How to Git | GitLab: LFS](https://sourander.github.io/how-to-git/kaytto/lfs/)
 
 !!! question "Tehtävä: FMP ja MNIST"
 
-    Toteuta tiedostoon `notebooks/nb/500/502_fractional_max_pool_MNIST.py` versio Grahamin mallista, joka on sovitettu MNIST-datasetille.
+    Toteuta tiedostoon `notebooks/nb/500/503_fractional_max_pool_MNIST.py` versio Grahamin mallista, joka on sovitettu MNIST-datasetille.
 
     Alkuperäisessä paperissa (Graham, 2014) on määritelty MNIST:lle kevyempi arkkitehtuuri kuin CIFAR-10:lle. Etsi paperista (tai kokeile itse) sopivat parametrit ja muokkaa koodia seuraavasti:
 
@@ -129,13 +209,13 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 
 !!! question "Tehtävä: LeNet ja MNIST"
 
-    Toteuta tiedostoon `notebooks/nb/500/503_lenet_MNIST.py` LeNet-5 -arkkitehtuuri MNIST-datasetille. Vertaile sen suorituskykyä toteuttamaasi  Grahamin Fractional Max-Pooling -malliin. Saat itse valita, toteutatko mahdollisimman orjallisesti alkuperäisen mallin vai Adrian Rosebrockin tulkitseman modernisoidun version. 
+    Toteuta tiedostoon `notebooks/nb/500/504_lenet_MNIST.py` LeNet-5 -arkkitehtuuri MNIST-datasetille. Vertaile sen suorituskykyä toteuttamaasi  Grahamin Fractional Max-Pooling -malliin. Saat itse valita, toteutatko mahdollisimman orjallisesti alkuperäisen mallin vai Adrian Rosebrockin tulkitseman modernisoidun version. 
     
     **Vaihtoehto 1: Orjallinen LeNet-5**
     
-    Mallin arkkitehtuuri löytyy LeCunin alkuperäisestä paperista [^lenet5]. Jos haluat olla uskollisempi alkuperäiselle arkkitehtuurille, voit käyttää Sigmoid-aktivointia. Tarkempi toteutus on $1.7159 \times \tanh(\frac{2}{3}x)$.
+    Mallin arkkitehtuuri löytyy LeCunin alkuperäisestä paperista [^lenet5]. Jos haluat olla uskollinenalkuperäiselle arkkitehtuurille, voit käyttää LeCunin tanh-aktivointifunktiota, jonka toteutus on $1.7159 \times \tanh(\frac{2}{3}x)$.
 
-    Jos sinua hämmentää 32x32 syötekoko MNIST:lle, voit lisätä kuviin 2 pikselin pehmusteen (padding) joka reunalle, jolloin kuvat ovat 32x32-kokoisia. Se liittyy paperin lauseeseen: *"In the first version, the images were centered in a 28 x 28 image by computing the center of mass of the pixels, and translating the image so as to position this point at the center of the 28x28 field In some instances, this 28x28 field was ex tended to 32x32 with background pixels"*.
+    Alkuperäisessä paperissa mainitaan 32x32 syötekoko. MNIST on 28x28, joten voit lisätä kuviin 2 pikselin pehmusteen (padding) joka reunalle, jolloin kuvat ovat 32x32-kokoisia. Tämä prosessi liittyy paperin lauseeseen: *"In the first version, the images were centered in a 28 x 28 image by computing the center of mass of the pixels, and translating the image so as to position this point at the center of the 28x28 field In some instances, this 28x28 field was ex tended to 32x32 with background pixels"*.
 
     **Vaihtoehto 2: Modernisoitu LeNet-5**
 
@@ -161,7 +241,9 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 
 [^neocognition]: Fukushima, K. *Neocognitron: A Self-organizing Neural Network Model for a Mechanism of Pattern Recognition Unaffected by Shift in Position*. Princeton. https://www.cs.princeton.edu/courses/archive/spr08/cos598B/Readings/Fukushima1980.pdf
 
-[^fractionalmp]: Graham, B. *Fractional Max-Pooling*. University of Warwick. https://doi.org/10.48550/arXiv.1412.6071
+[^lbp]: Ojala, T., Pietikäinen, M., & Mäenpää, T. *Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 24(7), 971-987. 2002. https://doi.org/10.1109/34.1000236
+
+[^fractionalmp]: Graham, B. *Fractional Max-Pooling*. University of Warwick. 2014 (version 4: 2015). https://doi.org/10.48550/arXiv.1412.6071
 
 [^lenet5]: LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. *Gradient-Based Learning Applied to Document Recognition*. Proceedings of the IEEE, 86(11). http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf
 

@@ -4,9 +4,13 @@
 
 set -e
 
-# --- Check if running on macOS ---
-if [[ "$OSTYPE" != "darwin"* ]]; then
-  echo "This script is only intended to be run on macOS (BSD sed syntax)."
+# --- Detect OS ---
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  SED_INPLACE=(-i '')
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  SED_INPLACE=(-i)
+else
+  echo "Unsupported OS: $OSTYPE"
   exit 1
 fi
 
@@ -32,7 +36,7 @@ fi
 
 # --- Add background rect ---
 # Insert the <rect> line immediately after the opening <svg ...> tag
-sed -i '' '/<svg/,/>/{
+sed "${SED_INPLACE[@]}" '/<svg/,/>/{
 />/s/>/>\
 <rect width="100%" height="100%" fill="rgb(245,245,245)"\/>/
 }' "$SVG_FILE"
