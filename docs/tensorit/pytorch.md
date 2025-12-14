@@ -4,43 +4,13 @@ priority: 210
 
 # PyTorch
 
-Tässä otetaan PyTorch tutuksi. Perusjuttuja. Muutama harjoitus, kuten Sigmoid ja ReLu implementointi käyttämättä PyTorchin valmiita funktioita.
-
 ## AI-sovelluskehysten lyhyt historia
 
-Modernien syväoppimiskehysten historia on kiehtova tarina nopeasta innovaatiosta ja suurten teknologiayritysten sekä avoimen lähdekoodin yhteisön kehittyvistä suhteista. Alla on taulukko tunnetuimmista edesmenneistä kehyksistä ja niiden elinkaaresta ja toinen yhä elossa olevista kehyksistä. Taulukot ovat koostettu alla mainittujen lähteiden, GitHub-releasejen ja Wikipedia-sivujen perusteella.
+Modernien syväoppimiskehysten historia koostuu nopeasta innovaatiosta ja suurten teknologiayritysten sekä avoimen lähdekoodin yhteisön kehittyvistä suhteista.
 
-| Framework / Version | Start | End / Status | Description                          |
-| ------------------- | ----- | ------------ | ------------------------------------ |
-| **THEANO**          |       |              |                                      |
-| Theano (MILA)       | 2007  | 2017 🔴       | The pioneer by MILA                  |
-| **TORCH (LUA)**     |       |              |                                      |
-| Torch 7             | 2002  | 2017 🔴       | Lua. Superseded by PyTorch.          |
-| **CAFFE**           |       |              |                                      |
-| Caffe (Berkeley)    | 2013  | 2017 🔴       | Computer vision. Merged into Caffe2. |
-| Caffe2 (Facebook)   | 2017  | 2018 🔴       | Merged into PyTorch codebase.        |
-| **MXNET**           |
-| Apache MXNet        | 2015  | 2022 🔴       | Backed by Amazon. Scalable.          |
+![](../images/210_framework_timeline.png)
 
-Tällä hetkellä elinvoimaisia kehyksiä ovat TensorFlow, PyTorch, JAX ja Keras (joka on korkean tason rajapinta muiden päällä). Alla on 2025 joulukuussa päivitetty taulukko, joka kattaa merkittävät kehykset ja niiden elinkaaren:
-
-| Framework / Version     | Start Date | End / Status | One-liner                                              |
-| ----------------------- | ---------- | ------------ | ------------------------------------------------------ |
-| **KERAS (INDEPENDENT)** |            |              |                                                        |
-| Keras 1.x / 2.x         | 2015       | 2019 🔴       | Original multi-backend wrapper (Theano/TF/CNTK).       |
-| Keras 3 (Core)          | 2023       | Active 🟢     | Return to multi-backend (JAX, Torch, TF) independence. |
-| **TENSORFLOW**          |            |              |                                                        |
-| TensorFlow 1.x (Google) | 2015       | 2019 🔴       | Static graph approach.                                 |
-| TensorFlow 2.x (Google) | 2019       | Active 🟢     | Eager execution default.                               |
-| Keras Integrated        | 2019       | 2023 🟡       | Exclusive to TensorFlow.                               |
-| **PYTORCH**             |            |              |                                                        |
-| PyTorch (Meta)          | 2016       | Active 🟢     | Dynamic computation graph.                             |
-| PyTorch Lightning       | 2019       | Active 🟢     | High-level wrapper for training loops.                 |
-| DeepSpeed (Microsoft)   | 2020       | Active 🟢     | Optimization.                                          |
-| **JAX**                 |            |              |                                                        |
-| JAX (Google)            | 2018       | Active 🟢     | Diff and compile native Python.                        |
-| Flax (Google)           | 2020       | Active 🟢     | Neural network library                                 |
-| Rlax (DeepMind)         | 2020       | Active 🟢     | Reinforcement learning library.                        |
+**Kuva 1:** *Syväoppimiskehysten aikajana. Kuvaaja on koostettu alla olevan tekstin lähteiden pohjalta ja Githubin release-historiasta. Toisiinsa liittyvät kirjastot on yhdistetty väreillä: esimerkiksi JAX on sininen, kuten myös sen kirjastot Flax ja Rlax. Torch7 kattaa kaikki versiot alkuperäisestä Torchista alkaen.*
 
 
 ### Varhainen perusta (2009-2014)
@@ -87,7 +57,7 @@ Tämä kehitys tarkoittaa, että Keras on kulkenut täyden ympyrän – monen ta
 
 ### Nykytilanne (2024-)
 
-Keras on itsenäinen ja vapaa, taas. Watson ja Chollet tiivistävät, että Python on voittanut kielikilvan seuraavaksi 15 vuodeksi, vähintään nykyiset neljä kehystä (ks. lainaus alta) tulevat pysymään relevantteina – joskin uusia voi löytyä, kuten Applen MLX. [^dlwithpython]
+Keras on itsenäinen ja vapaa, taas. Watson ja Chollet tiivistävät, että Python on voittanut kielikilvan seuraavaksi 15 vuodeksi. Vähintään nykyiset neljä kehystä (ks. lainaus alta) tulevat pysymään relevantteina – joskin uusia voi löytyä, kuten Applen MLX. [^dlwithpython]
 
 > "Today, Keras, TensorFlow, PyTorch, and JAX are the top frameworks in the deep learning world." [^dlwithpython]
 
@@ -97,7 +67,7 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
 
 ![](../images/210-star-history-tf-jax-pytorch.png)
 
-**Kuva 1:** TensorFlow, PyTorch ja JAX:n GitHub-tähtien kehitys. Kuva kaapattu joulukuussa 2025. Jos haluat nähdä ajantasaisen version, käy [Star History Chart](https://www.star-history.com/#jax-ml/jax&pytorch/pytorch&tensorflow/tensorflow&keras-team/keras&type=date&legend=top-left)-sivulla.
+**Kuva 2:** *TensorFlow, PyTorch ja JAX:n GitHub-tähtien kehitys. Kuva kaapattu joulukuussa 2025. Jos haluat nähdä ajantasaisen version, käy [Star History Chart](https://www.star-history.com/#jax-ml/jax&pytorch/pytorch&tensorflow/tensorflow&keras-team/keras&type=date&legend=top-left)-sivulla.*
 
 
 ## Tehtävät
