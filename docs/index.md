@@ -12,7 +12,7 @@ Tervetuloa kurssille! Tämä kurssi on jatkoa Johdatus koneoppimiseen -kursille.
 * Olet luonut oppimispäiväkirjan, joka mahdollistaa kertauksen ja jatko-opiskelun.
 
 
-Tutustut kurssin aikana kirjoihin [Understanding Machine Learning](https://udlbook.github.io/udlbook/) ja [Hands-On Machine Learning with Scikit-Learn and PyTorch](https://learning.oreilly.com/library/view/hands-on-machine-learning/9798341607972/). Kurssi jälkeen sinulla on valmiudet käyttää syväoppimista projektikursseilla ja työelämässä.
+Tutustut kurssin aikana kirjoihin [Understanding Machine Learning](https://udlbook.github.io/udlbook/) ja [Hands-On Machine Learning with Scikit-Learn and PyTorch](https://learning.oreilly.com/library/view/hands-on-machine-learning/9798341607972/). Kurssin jälkeen sinulla on valmiudet käyttää syväoppimista projektikursseilla ja työelämässä.
 
 ## Tehtävät
 
