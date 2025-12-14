@@ -8,19 +8,52 @@ Tässä otetaan PyTorch tutuksi. Perusjuttuja. Muutama harjoitus, kuten Sigmoid 
 
 ## AI-sovelluskehysten lyhyt historia
 
-Modernien syväoppimiskehysten historia on kiehtova tarina nopeasta innovaatiosta ja suurten teknologiayritysten sekä avoimen lähdekoodin yhteisön kehittyvistä suhteista.
+Modernien syväoppimiskehysten historia on kiehtova tarina nopeasta innovaatiosta ja suurten teknologiayritysten sekä avoimen lähdekoodin yhteisön kehittyvistä suhteista. Alla on taulukko tunnetuimmista edesmenneistä kehyksistä ja niiden elinkaaresta ja toinen yhä elossa olevista kehyksistä. Taulukot ovat koostettu alla mainittujen lähteiden, GitHub-releasejen ja Wikipedia-sivujen perusteella.
+
+| Framework / Version | Start | End / Status | Description                          |
+| ------------------- | ----- | ------------ | ------------------------------------ |
+| **THEANO**          |       |              |                                      |
+| Theano (MILA)       | 2007  | 2017 🔴       | The pioneer by MILA                  |
+| **TORCH (LUA)**     |       |              |                                      |
+| Torch 7             | 2002  | 2017 🔴       | Lua. Superseded by PyTorch.          |
+| **CAFFE**           |       |              |                                      |
+| Caffe (Berkeley)    | 2013  | 2017 🔴       | Computer vision. Merged into Caffe2. |
+| Caffe2 (Facebook)   | 2017  | 2018 🔴       | Merged into PyTorch codebase.        |
+| **MXNET**           |
+| Apache MXNet        | 2015  | 2022 🔴       | Backed by Amazon. Scalable.          |
+
+Tällä hetkellä elinvoimaisia kehyksiä ovat TensorFlow, PyTorch, JAX ja Keras (joka on korkean tason rajapinta muiden päällä). Alla on 2025 joulukuussa päivitetty taulukko, joka kattaa merkittävät kehykset ja niiden elinkaaren:
+
+| Framework / Version     | Start Date | End / Status | One-liner                                              |
+| ----------------------- | ---------- | ------------ | ------------------------------------------------------ |
+| **KERAS (INDEPENDENT)** |            |              |                                                        |
+| Keras 1.x / 2.x         | 2015       | 2019 🔴       | Original multi-backend wrapper (Theano/TF/CNTK).       |
+| Keras 3 (Core)          | 2023       | Active 🟢     | Return to multi-backend (JAX, Torch, TF) independence. |
+| **TENSORFLOW**          |            |              |                                                        |
+| TensorFlow 1.x (Google) | 2015       | 2019 🔴       | Static graph approach.                                 |
+| TensorFlow 2.x (Google) | 2019       | Active 🟢     | Eager execution default.                               |
+| Keras Integrated        | 2019       | 2023 🟡       | Exclusive to TensorFlow.                               |
+| **PYTORCH**             |            |              |                                                        |
+| PyTorch (Meta)          | 2016       | Active 🟢     | Dynamic computation graph.                             |
+| PyTorch Lightning       | 2019       | Active 🟢     | High-level wrapper for training loops.                 |
+| DeepSpeed (Microsoft)   | 2020       | Active 🟢     | Optimization.                                          |
+| **JAX**                 |            |              |                                                        |
+| JAX (Google)            | 2018       | Active 🟢     | Diff and compile native Python.                        |
+| Flax (Google)           | 2020       | Active 🟢     | Neural network library                                 |
+| Rlax (DeepMind)         | 2020       | Active 🟢     | Reinforcement learning library.                        |
+
 
 ### Varhainen perusta (2009-2014)
 
 Matka alkaa Theanosta, joka kehitettiin noin vuonna 2009 – tai ehkä olisi mainittava, että Nvidian CUDA syntyi 2006. Ennen tätä neuroverkot kirjoitettiin käsin esimerkiksi C++:lla. François Chollet kuvailee Theanoa: *"the conceptual ancestor of all modern deep learning tools"*. Theano oli ensimmäinen kehys, joka mahdollisti automaattisen differentioinnin ja GPU-laskennan syväoppimismallien kouluttamiseen. Se sai merkittävää jalansijaa vuosina 2013–2014, kun ImageNet 2012 -kilpailu herätti laajan kiinnostuksen syväoppimiseen. [^dlwithpython]
 
-Näihin aikoihin myös Lua-pohjainen Torch 7 ja C++-pohjainen Caffe olivat kovaa huutoa. Kyseistä kirjastoa ei ole päivitetty sitten 2017, jolloin versio 1.0 julkaistiin [^dlwithpython]. Caffe:ta hyödynsi esimerkiksi [bat-country](https://github.com/jrosebr1/bat-country) kirjastossa, joka on Deep Dream -tyylinen kuvageneraattori. Kirjastolla voi generoida unenomaisia kuvia tavallisten valokuvien pohjalta. Miltä näyttää *Pelkoa ja Inhoa Las Vegasissa*–elokuva, jos katsoja näkee silmiä ja kasvoja sielläkin, missä niitä ei ole? Käy toki katsomassa repositoriosta esimerkkejä!
+Näihin aikoihin myös Lua-pohjainen Torch 7 ja C++-pohjainen Caffe olivat kovaa huutoa. Kyseistä kirjastoa ei ole päivitetty sitten 2017, jolloin versio 1.0 julkaistiin [^dlwithpython]. Caffe:ta hyödynsi esimerkiksi [bat-country](https://github.com/jrosebr1/bat-country) kirjastossa, joka on Deep Dream -tyylinen kuvageneraattori. Kirjastolla voi generoida unenomaisia kuvia tavallisten valokuvien pohjalta. Miltä näyttää *Pelkoa ja Inhoa Las Vegasissa*–elokuva, jos katsoja näkee silmiä ja kasvoja sielläkin, missä niitä ei ole? Käy toki katsomassa repositoriosta esimerkkejä! Caffe2 julkaistiin Facebookin toimesta vuonna 2017, mutta se yhdistettiin myöhemmin PyTorchiin [^pytorchhistory]. 
 
 ### Keras: Korkean tason pioneeri (2015)
 
 Keras lanseerattiin maaliskuussa 2015 uudenlaisena lähestymistapana syväoppimiseen. Se oli François Cholletin – eli lähteissä olevan kirjan *Deep Learning with Python (3rd ed.)* toisen kirjoittajan – kehittämä. Kuten *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition* -kirjassa kerrotaan, Chollet kehitti alkuperäisen Keras-kirjaston osana tutkimusprojektia, ja se *"quickly gained popularity, owing to its ease of use, flexibility, and beautiful design"*. [^geron3rd]
 
-Alun perin Keras suunniteltiin korkean tason rajapinnaksi Theanon päälle, ja se oli suunnattu niille muutamalle tuhannelle ihmiselle, jotka tuolloin työskentelivät syväoppimisen parissa. Filosofia oli yksinkertainen: tehdä syväoppimisesta saavutettavaa intuitiivisen ja käyttäjäystävällisen API:n avulla. [^dlwithpython]
+Alun perin Keras suunniteltiin korkean tason rajapinnaksi Theanon päälle, ja se oli suunnattu niille muutamalle tuhannelle ihmiselle, jotka tuolloin työskentelivät syväoppimisen parissa. Filosofia oli yksinkertainen: tehdä syväoppimisesta saavutettavaa intuitiivisen ja käyttäjäystävällisen API:n avulla. [^dlwithpython] Kerasin kilpailijaina toimi tuolloin Lasagne, joka oli myös Theano-pohjainen korkean tason kirjasto [^dlwithpytorch].
 
 ### TensorFlow:n läpimurto
 
@@ -61,6 +94,10 @@ Keras on itsenäinen ja vapaa, taas. Watson ja Chollet tiivistävät, että Pyth
 Tästä nelikosta Keras on ainut, joka ei ole täysin itsenäinen kehys. Se on korkean tason rajapinta, joka käyttää taustajärjestelmänä TensorFlow'ta, PyTorchia tai JAX:ia. Sillä voi siis kirjoittaa helppolukuista koodia, jossa on käytössä esim. Layerit näin: `dense = layers.Dense(64, activation="relu")`, mutta taustalla voi olla mikä tahansa tuettu kehys. Näitä taustakehyksiä yhdistää se, että ne kaikki toteuttavat samankaltaisia matalamman tason toiminnallisuuksia, kuten tensoreita, automaattista differentiointia, GPU-kiihdytystä ja vastavirtausta (backpropagation).
 
 Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttäisimme Kerasia ja vuorottellisimme backendien suhteen. Tällä hetkellä tämä kurssi on kuitenkin vahvasti PyTorch-painotteinen. Saat toki kurssin aikana kokeilla kirjoittaa jonkin tehtävän Keras edellä. Kenties haluat myös kokeilla, miten jokin alkupään low level -tehtävä onnistuisi TensorFlow:n tai JAX:n avulla. Jos kysyt kielimallilta, se kyllä kääntää (ainakin yksinkertaisen) koodin kehyksestä toiseen.
+
+![](../images/210-star-history-tf-jax-pytorch.png)
+
+**Kuva 1:** TensorFlow, PyTorch ja JAX:n GitHub-tähtien kehitys. Kuva kaapattu joulukuussa 2025. Jos haluat nähdä ajantasaisen version, käy [Star History Chart](https://www.star-history.com/#jax-ml/jax&pytorch/pytorch&tensorflow/tensorflow&keras-team/keras&type=date&legend=top-left)-sivulla.
 
 
 ## Tehtävät
@@ -123,6 +160,10 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
 ## Lähteet
 
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
+
+[^dlwithpytorch]: Stevens, E, Antiga, L & Viehmann, T. *Deep Learning with PyTorch*. Manning. 2020.
+
+[^pytorchhistory]: TensorGym. *The Complete History and Evolution of PyTorch | Deep Learning Framework Timeline*. n.d. https://tensorgym.com/blog/pytorch-history
 
 [^geron3rd]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly. 2022.
 
