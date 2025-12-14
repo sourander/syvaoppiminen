@@ -113,7 +113,7 @@ Yllä olevassa kaavassa $\sigma$ on aktivointifunktio, esimerkiksi sigmoid tai R
 
 > "Backpropagation is simply the application of the chain rule to a computation graph. There’s nothing more to it." [^dlwithpython]
 
-Tämä ei ole matematiikan kurssi, joten en aio kerrata ketjusääntöä tässä tarkasti. Sen sijaan tiivistän sen siten, että ketjusäännön avulla voimme purkaa monimutkaisen funktion osittaisderivaatat yksinkertaisemmiksi osittaisderivaattojen kertolaskuiksi. Jos meillä on funktio $f(g(x))$, ketjusäännön mukaan sen derivaatta on: $\frac{df}{dx} = \frac{df}{dg} \cdot \frac{dg}{dx}$. Mikäli et muista matematiikan tunneista mitään, kannattaa kerrata ketjusääntö kun kirjoitat oppimispäiväkirjaasi. Tehtävissä on annettu hyödyllisiä lähteitä, joista löydät lisätietoa.
+Ketjusäännön avulla voimme purkaa monimutkaisen funktion osittaisderivaatat yksinkertaisemmiksi osittaisderivaattojen kertolaskuiksi. Jos meillä on funktio $f(g(x))$, ketjusäännön mukaan sen derivaatta on: $\frac{df}{dx} = \frac{df}{dg} \cdot \frac{dg}{dx}$. Mikäli et muista matematiikan tunneista mitään, kannattaa kerrata ketjusääntö kun kirjoitat oppimispäiväkirjaasi. Tehtävissä on annettu hyödyllisiä lähteitä, joista löydät lisätietoa.
 
 Tämän viikon jälkeen sinulle pitäisi olla vahva ymmärrys siitä, mitä tapahtuu seuraavissa riveissä:
 
