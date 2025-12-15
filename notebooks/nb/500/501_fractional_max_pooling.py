@@ -191,7 +191,7 @@ def _(F, device, fmp_targets, nn):
             for block in self.blocks:
                 x = block(x)
 
-            # Tail Forward Pass
+            # Head Forward Pass
             x = self.convC2(x)
             x = self.bnC2(x) # Apply BN
             x = F.leaky_relu(x, 0.2)
@@ -255,7 +255,7 @@ def _(F, model, nn, torch):
                     print(f"   Error: {e}")
                     return 
 
-        # 5. Tail (The "Fully Convolutional" Classifier)
+        # 5. Head (The "Fully Convolutional" Classifier)
         print(f"\n[Tail] Input: {x.shape} (Expected 2x2)")
 
         try:
@@ -274,7 +274,7 @@ def _(F, model, nn, torch):
             print(f"   -> Final Output (Flattened): {x.shape}")
 
         except Exception as e:
-            print(f"   !!! CRASH in Tail !!!")
+            print(f"   !!! CRASH in Head !!!")
             print(f"   Error: {e}")
 
     # Run it

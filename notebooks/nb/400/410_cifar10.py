@@ -78,7 +78,7 @@ def _(
     train_len,
     width,
 ):
-    # TODO
+    # IMPLEMENT
 
     print(f"Number of pictures in trainset: {train_len}")
     print(f"Number of pictures in testset: {test_len}")
@@ -105,7 +105,7 @@ def _(mo):
 
 @app.cell
 def _():
-    # TODO
+    # IMPLEMENT
     return
 
 
@@ -121,7 +121,7 @@ def _(mo):
 
 @app.cell
 def _():
-    # TODO
+    # IMPLEMENT
     return
 
 

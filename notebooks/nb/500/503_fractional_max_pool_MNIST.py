@@ -36,6 +36,7 @@ def _():
     import matplotlib.pyplot as plt
     import torch.nn.functional as F
     import math
+    import numpy as np
 
     from pathlib import Path
     from datetime import datetime
@@ -51,6 +52,7 @@ def _():
         datasets,
         datetime,
         nn,
+        np,
         os,
         plt,
         torch,
@@ -85,21 +87,21 @@ def _(os, torch):
     return NUM_CPU, device
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     ## Calculate sizes
 
     For MNIST (28x28), we use:
-    - alpha = sqrt(2) ≈ 1.414 (faster size reduction than CIFAR-10's 2^(1/3))
-    - 6 layers (fewer than CIFAR-10's 12)
+    - alpha = ???
+    - layers = ???
     """)
     return
 
 
 @app.cell
 def _():
-    def get_fmp_sizes(alpha=2**(1/2), layers=6):
+    def get_fmp_sizes(alpha=2**(1/3), layers=12):
         """
         Calculates the target spatial sizes for each FMP layer by walking 
         backwards from the network output to the input.
@@ -108,30 +110,23 @@ def _():
             alpha: Scaling factor for FMP (sqrt(2) for MNIST)
             layers: Number of convolutional blocks (6 for MNIST)
         """
-        # Start: The paper ends with C2-C1-Output. 
-        # C2 (2x2 Conv) reduces a 2x2 volume to 1x1. 
-        # Therefore, the input to the 'Tail' must be 2x2.
-        size = 2 
 
+        size = 2 
         sizes = []
 
-        # Walk backwards through the blocks
         for _ in range(layers):
-            # This 'size' is the target output for the current FMP layer
             sizes.append(size)
-
-            # Inverse FMP: Increase size by factor alpha, round to nearest integer 
+        
             size = int(round(size * alpha))
-
-            # Inverse C2 Conv: Add 1 (because 2x2 conv with valid padding reduces size by 1)
             size = size + 1
 
-        # 'sizes' is currently [Tail_Input, Block_N_Input, ..., Block2_Input]
-        # We need to reverse it to get [Block1_Output, Block2_Output, ...]
         return size, sizes[::-1]
 
     # Generate the list
-    input_dim, fmp_targets = get_fmp_sizes()
+    input_dim, fmp_targets = get_fmp_sizes(
+        alpha=..., # IMPLEMENT
+        layers=... # IMPLEMENT
+    )
     print(f"Calculated Input Size: {input_dim}")
     print(f"Target Sizes: {fmp_targets}")
     return fmp_targets, input_dim
@@ -143,10 +138,9 @@ def _(mo):
     ## Define Model
 
     Key adaptations for MNIST:
-    - `in_channels=1` (grayscale instead of RGB)
-    - `filter_growth_rate=32` (smaller than CIFAR-10's 64)
-    - 6 layers total (range 1..7)
-    - Dropout grows from 0% to 50% across 6 layers instead of 12
+    - `in_channels=?` (RGB or what?)
+    - `filter_growth_rate=??` (smaller than CIFAR-10's 64)
+    - ? layers total (instead of range 1..13)
     """)
     return
 
@@ -154,16 +148,23 @@ def _(mo):
 @app.cell
 def _(F, device, fmp_targets, input_dim, nn):
     class FMPNet_MNIST(nn.Module):
-        def __init__(self, target_sizes, filter_growth_rate, num_classes=10, num_layers=6, input_dim_val=None):
+        def __init__(
+            self,
+            target_sizes,
+            filter_growth_rate,
+            in_channels=3,
+            num_classes=10,
+            num_layers=12,
+            input_dim_val=None,
+        ):
             super().__init__()
             self.blocks = nn.ModuleList()
             self.input_dim = input_dim_val
-            in_channels = 1  # MNIST is grayscale
 
             # We iterate 1..num_layers and zip with the pre-calculated target sizes
             # n determines filters, target_size determines FMP output
             for n, target_size in zip(range(1, num_layers + 1), target_sizes):
-                out_channels = filter_growth_rate * n 
+                out_channels = filter_growth_rate * n
                 # Dropout grows linearly from 0% to 50%
                 p_dropout = ((n - 1) / (num_layers - 1)) * 0.5
 
@@ -173,18 +174,19 @@ def _(F, device, fmp_targets, input_dim, nn):
                     nn.BatchNorm2d(out_channels),
                     nn.LeakyReLU(0.2, inplace=True),
                     nn.Dropout2d(p=p_dropout),
-
                     # FMP: Explicitly enforce the output size
-                    nn.FractionalMaxPool2d(kernel_size=2, output_size=target_size)
+                    nn.FractionalMaxPool2d(kernel_size=2, output_size=target_size),
                 )
                 self.blocks.append(block)
                 in_channels = out_channels
 
-            # "Tail" of the network
+            # "Head" of the network
             # Input here is guaranteed to be 2x2 because the last FMP target was 2
-            self.convC2 = nn.Conv2d(in_channels, in_channels, kernel_size=2) # 2x2 -> 1x1
+            self.convC2 = nn.Conv2d(
+                in_channels, in_channels, kernel_size=2
+            )  # 2x2 -> 1x1
             self.bnC2 = nn.BatchNorm2d(in_channels)
-            self.convC1 = nn.Conv2d(in_channels, num_classes, kernel_size=1) 
+            self.convC1 = nn.Conv2d(in_channels, num_classes, kernel_size=1)
 
         def forward(self, x):
             # 1. Pad Input dynamically to match the calculated input_dim
@@ -193,12 +195,14 @@ def _(F, device, fmp_targets, input_dim, nn):
                 pad_total = self.input_dim - x.size(2)
                 if pad_total > 0:
                     pad_val = pad_total // 2
-                    x = F.pad(x, (pad_val, pad_val, pad_val, pad_val), "constant", 0)
+                    x = F.pad(
+                        x, (pad_val, pad_val, pad_val, pad_val), "constant", 0
+                    )
 
             for block in self.blocks:
                 x = block(x)
 
-            # Tail Forward Pass
+            # Head Forward Pass
             x = self.convC2(x)
             x = self.bnC2(x)
             x = F.leaky_relu(x, 0.2)
@@ -209,8 +213,17 @@ def _(F, device, fmp_targets, input_dim, nn):
             x = x.view(x.size(0), -1)
             return x
 
-    filter_growth_rate = 32  # Smaller than CIFAR-10's 64
-    model = FMPNet_MNIST(fmp_targets, filter_growth_rate, num_classes=10, num_layers=6, input_dim_val=input_dim)
+
+    filter_growth_rate = ... # IMPLEMENT
+
+    model = FMPNet_MNIST(
+        fmp_targets,
+        filter_growth_rate,
+        in_channels=..., # IMPLEMENT
+        num_classes=..., # IMPLEMENT
+        num_layers=...,  # IMPLEMENT
+        input_dim_val=input_dim,
+    )
     model = model.to(device)
 
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -262,8 +275,8 @@ def _(F, input_dim, model, nn, torch):
                     print(f"   Error: {e}")
                     return 
 
-        # 5. Tail (The "Fully Convolutional" Classifier)
-        print(f"\n[Tail] Input: {x.shape} (Expected 2x2)")
+        # 5. Head (The "Fully Convolutional" Classifier)
+        print(f"\n[Head] Input: {x.shape} (Expected 2x2)")
 
         try:
             # C2: 2x2 Conv -> Reduces 2x2 input to 1x1
@@ -281,7 +294,7 @@ def _(F, input_dim, model, nn, torch):
             print(f"   -> Final Output (Flattened): {x.shape}")
 
         except Exception as e:
-            print(f"   !!! CRASH in Tail !!!")
+            print(f"   !!! CRASH in Head !!!")
             print(f"   Error: {e}")
 
     # Run it
@@ -554,9 +567,7 @@ def _(mo):
 
 
 @app.cell
-def _(EPOCHS, history, plt):
-    import numpy as np
-
+def _(EPOCHS, history, np, plt):
     plt.style.use("ggplot")
     plt.figure(figsize=(10, 6))
     plt.plot(np.arange(0, EPOCHS), history["train_loss"], label="train_loss")

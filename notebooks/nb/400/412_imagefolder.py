@@ -14,8 +14,6 @@ def _():
 def _(mo):
     mo.md(r"""
     # ImageFolder
-
-    TODO
     """)
     return
 
@@ -91,7 +89,8 @@ def _(mo):
 
 @app.cell
 def _(ImageFolder, transforms):
-    # TODO: Re-implement this cell! 
+    # IMPLEMENT
+    # Read the assignment and re-implement this cell
 
     transform = transforms.ToTensor()
     dataset = ImageFolder(root='./data/colors/', transform=transform)

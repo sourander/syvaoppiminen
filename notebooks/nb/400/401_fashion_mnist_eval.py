@@ -227,7 +227,7 @@ def _(mo):
 
 @app.cell
 def _():
-    # TODO
+    # IMPLEMENT
     return
 
 
@@ -245,7 +245,7 @@ def _(mo):
 
 @app.cell
 def _():
-    # TODO
+    # IMPLEMENT
     return
 
 

@@ -23,7 +23,11 @@ Miten tämä on mahdollista? Lienee selvää, että 2010-luvun alussa ratkaisu t
 | fc3.bias   | torch.Size([10])         | 10            |
 | **Total**  |                          | **3,676,682** |
 
-Olet varmasti kokeillut tätä ratkaisua itsekin: verkon kokoa kasvattamalla ei päästä kovin pitkälle. Mikä siis avuksi? Historiasta löytyy vastaus: konvoluutioverkot (Convolutional Neural Networks, CNN).
+Olet varmasti kokeillut tätä ratkaisua itsekin: verkon kokoa kasvattamalla ei päästä kovin pitkälle. Mikä siis avuksi? Historiasta löytyy vastaus: konvoluutioverkot (Convolutional Neural Networks, CNN). Alla näkyy kurssikirjasta kuva, joka havainnollistaa konvoluutioverkkojen suorituskykyä MNIST-datasetin avulla [^udlbook].
+
+![](../images/500_ConvMNIST1D.svg)
+
+**Kuva 1:** MNIST konvoluutioverkolla (2050 parametria) vs. FCNN:llä (150,185 parametria). [^udlbook]
 
 Ihmiseen kun vertaa, niin jo vuonna 2014 Grahamin **Fractional Max-Pooling** -malli saavutti huimat tulokset: *"we obtained test errors of 4.50% (1 test), 3.67% (12 tests) and 3.47% (100 tests)"* [^fractionalmp]. Konvoluutioverkot mahdollistavat siis huomattavan tehokkaan tavan käsitellä kuvia. Ja mikä oli Grahamin mallin parametrien määrä? **74 miljoonaa** parametria (jos `filter_growth_rate = 160`). Tosin paperissa mainitaan myös 12M parametria käyttänyt malli (`filter_growth_rate = 64`). Tämä pienempi malli on se, mikä on toteutettu kurssin koodissa.
 
@@ -31,7 +35,7 @@ $74 \text{M}$ parametrin malli ylsi Grahamin paperin mukaan $3.47 \%$ virheeseen
 
 ![](../images/500_fmp_training_curves.png)
 
-**Kuva 1:** *300 epookin koulutuksen aikaiset tarkkuus- ja virhekäyrät Grahamin Fractional Max-Pooling -mallille (12M parametria).*
+**Kuva 2:** *300 epookin koulutuksen aikaiset tarkkuus- ja virhekäyrät Grahamin Fractional Max-Pooling -mallille (12M parametria).*
 
 ### Rautavaatimukset
 
@@ -63,13 +67,18 @@ Jos 12M parametria vie 32-kokoisella erällä `2650 MiB` muistia, niin suuremman
 
 ### Lyhyt historia
 
+Alla olevan historian parametriluvut ovat hyvinkin suuntaa-antavia, sillä useimmista arkkitehtuureista voi muovata eri kokoisia malleja. Lukema liittyy usein alkuperäiseen julkaisuun.
+
 * **1980**: Konvoluutioverkkojen juuret ulottuvat 1980-luvulle, jolloin Kunihiko Fukushima esitteli Neocognitron-mallin, josta polveutuvat myöhemmät konvoluutioverkot. [^neocognition] 
-* **1994**:MNIST-dataset ja LeNet-4.
 * **1998**: LeNet-5, tunnetuin näistä LeNet-X -malleista. ~60k parametria [^lenet5].
 * **2012**: AlexNet, merkittävä edistysaskel syvien konvoluutioverkkojen koulutuksessa, joka voitti ImageNet-kilpailun ylivoimaisesti. [^alexnet].
+* **2014**: GoogLeNet (Inception v1), joka esitteli Inception-kerroksen ja syvän arkkitehtuurin. ~6.8 M parametria. [^googlenet].
 * **2015**: VGG-16, syvä konvoluutioverkko, joka käytti nimensä mukaisesti 16 kerrosta. ~138 M parametria. [^vgg16] [^vgg16neurohive].
 * **2015**: ResNet, esitteli "residual connections", jotka mahdollistivat erittäin syvien verkkojen koulutuksen. ~19 M parametria. [^resnet] [^resnetmedium].
+* **2015**: U-Net, erityisen mielenkiintoinen arkkitehtuuri segmentointiin. ~31 M parametria. [^unet].
+* **2017**: Mask R-CNN, joka yhdisti objektin tunnistuksen ja segmentoinnin. ~44 M parametria. [^maskrcnn].
 * **2018**: DenseNet, joka käytti tiheitä yhteyksiä kerrosten välillä parantaakseen tiedonsiirtoa ja vähentääkseen gradientin katoamista. ~28 M parametria. [^densenet].
+* **2020**: Vision Transformer (ViT), joka sovelsi transformer-arkkitehtuuria kuvantunnistukseen, tarjoten vaihtoehdon perinteisille konvoluutioverkoille. ~86 M parametria (ViT-Base). [^vit].
 
 ## Piirrevektorit käsin
 
@@ -103,11 +112,11 @@ Tutustutaan alla lyhyesti kahteen globaaliin *image descriptor* -menetelmään: 
 
 ### LBP
 
-Tekstuureita voi kuvastaa esimerkiksi Local Binary Patterns (LBP) -menetelmällä, jonka esittelivät Ojala et al. vuonna 2002 Oulun yliopiston julkaisussa "Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns" [^lbp]. Paperi on ladattavissa kirjautumatta [Stanfordin CS216B kurssin linkistä](http://vision.stanford.edu/teaching/cs231b_spring1415/papers/lbp.pdf). LBP perustuu pikselin vertailuun sitä ympäröivien pikseleiden kanssa. Naiivi toteutus vertailee 3x3 alueen keskustaa muihin. Jos ympäröivä pikseli on kirkkaampi tai yhtä kirkas kuin keskuspikseli, sille annetaan arvo 1, muuten 0. Näin muodostuu 8-bittinen binaariluku, joka voidaan muuntaa desimaaliluvuksi. Kellonvastaisesti oletetaan siis, että ympäröivät pikselit ovat arvoltaan $x_0 \times 2^0 + x_1 \times 2^1 + ... + x_7 \times 2^7$. Tämä luku kuvaa kyseisen pikselin tekstuuria. Monimutkaisemmassa esimerkissä voidaan valita säde, jolloin ympäröivät pisteet eivät olekaan välittömästi keskuspikselin vieressä, vaan kauempana. Katso Kuva 2, jossa tämä toteutus on havainnollistettu.
+Tekstuureita voi kuvastaa esimerkiksi Local Binary Patterns (LBP) -menetelmällä, jonka esittelivät Ojala et al. vuonna 2002 Oulun yliopiston julkaisussa "Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns" [^lbp]. Paperi on ladattavissa kirjautumatta [Stanfordin CS216B kurssin linkistä](http://vision.stanford.edu/teaching/cs231b_spring1415/papers/lbp.pdf). LBP perustuu pikselin vertailuun sitä ympäröivien pikseleiden kanssa. Naiivi toteutus vertailee 3x3 alueen keskustaa muihin. Jos ympäröivä pikseli on kirkkaampi tai yhtä kirkas kuin keskuspikseli, sille annetaan arvo 1, muuten 0. Näin muodostuu 8-bittinen binaariluku, joka voidaan muuntaa desimaaliluvuksi. Kellonvastaisesti oletetaan siis, että ympäröivät pikselit ovat arvoltaan $x_0 \times 2^0 + x_1 \times 2^1 + ... + x_7 \times 2^7$. Tämä luku kuvaa kyseisen pikselin tekstuuria. Monimutkaisemmassa esimerkissä voidaan valita säde, jolloin ympäröivät pisteet eivät olekaan välittömästi keskuspikselin vieressä, vaan kauempana. Katso Kuva 3, jossa tämä toteutus on havainnollistettu.
 
 ![](../images/500_LBP_neighbors.svg)
 
-**Kuva 2:** *Local Binary Patterns (LBP) -menetelmä vertailee keskuspikseliä sitä ympäröiviin pikseleihin. Kuva: By Xiawi - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=11743214*
+**Kuva 3:** *Local Binary Patterns (LBP) -menetelmä vertailee keskuspikseliä sitä ympäröiviin pikseleihin. Kuva: By Xiawi - Own work, CC BY-SA 3.0, https://commons.wikimedia.org/w/index.php?curid=11743214*
 
 !!! tip "Käytännössä?"
 
@@ -137,7 +146,7 @@ Voi olla hyödyllistä silmäillä läpi myös: [Medium.com | Katthik Mittal: A 
 
 ![alt text](../images/500_hog_cat_loop_nanobanana.png)
 
-**Kuva 3:** *HOG-piirteiden visualisointi. Kuva on 200x200 pikseliä ja solun koko 10x10 (turkoosi viiva). Keltaiset neliöt näyttävät blockin (2x2 solua, yhteensä 20x20 pikseliä) kolme ensimmäistä sijaintia, kun block liukuu yhden solun askelin x-suunnassa. Opacity kasvaa (0.2 → 0.3 → 1.0) havainnollistamaan liukumisen etenemistä. HOG-kuvassa gradientti määrää viivan suunnan ja voimakkuus paksuuden. Kissakuva: Nanobanana.*
+**Kuva 4:** *HOG-piirteiden visualisointi. Kuva on 200x200 pikseliä ja solun koko 10x10 (turkoosi viiva). Keltaiset neliöt näyttävät blockin (2x2 solua, yhteensä 20x20 pikseliä) kolme ensimmäistä sijaintia, kun block liukuu yhden solun askelin x-suunnassa. Opacity kasvaa (0.2 → 0.3 → 1.0) havainnollistamaan liukumisen etenemistä. HOG-kuvassa gradientti määrää viivan suunnan ja voimakkuus paksuuden. Kissakuva: Nanobanana.*
 
 !!! tip "Mitä tällä siis tekee?"
 
@@ -158,7 +167,7 @@ Käsitellään lyhyesti näistä kenties yksinkertaisin kombinaatio: FAST + SIFT
 
 ![](../images/500_FAST_corner_pattern.jpg)
 
-**Kuva 4:** *FAST-algoritmin pikselimalli. Keskuspikseli (kirkas) verrataan ympäröiviin pikseleihin (tummat). Jotta pikseli luokiteltaisiin kulmaksi, sen ympärillä täytyy olla jatkuva kaari, jossa vähintään n peräkkäistä pikseliä (säteellä r) poikkeavat keskuspikselin kirkkaudesta samaan suuntaan – kaikki joko kirkkaampia tai tummempia – vähintään kynnysarvon t verran. Kuva: Jingjin Huang, Guoqing Zhou, Xiang Zhou and Rongting Zhang, CC [BY 4.0](https://creativecommons.org/licenses/by/4.0), via Wikimedia Commons*
+**Kuva 5:** *FAST-algoritmin pikselimalli. Keskuspikseli (kirkas) verrataan ympäröiviin pikseleihin (tummat). Jotta pikseli luokiteltaisiin kulmaksi, sen ympärillä täytyy olla jatkuva kaari, jossa vähintään n peräkkäistä pikseliä (säteellä r) poikkeavat keskuspikselin kirkkaudesta samaan suuntaan – kaikki joko kirkkaampia tai tummempia – vähintään kynnysarvon t verran. Kuva: Jingjin Huang, Guoqing Zhou, Xiang Zhou and Rongting Zhang, CC [BY 4.0](https://creativecommons.org/licenses/by/4.0), via Wikimedia Commons*
 
 **SIFT (Scale-Invariant Feature Transform)**: Kun kiinnostavat pisteet on löydetty FAST:lla, seuraava vaihe on muodostaa piirrevektorit. SIFT:n esitteli David Lowe vuonna 2004 julkaistussa artikkelissaan "Distinctive Image Features from Scale-Invariant Keypoints" [^sift]. SIFT laskee kullekin kiinnostavalle pisteelle piirrevektorin, joka on tyypillisesti 128-ulotteinen. Toteutus ei juuri poikkea HOG:sta, sillä SIFT käyttää myös kaltevuuksia (oriented gradients) piirteiden laskentaan. SIFT ottaa 16x16 alueen kiinnostavan pisteen ympäriltä ja jakaa sen 4x4 soluun (cells). Jokaisesta solusta lasketaan 8-bittinen histogrammi kaltevuuksista, käyttäen gaussian-painotusta, jolloin kaukana olevat pikselit vaikuttavat vähemmän. Lopuksi nämä histogrammit yhdistetään yhdeksi pitkäksi piirrevektoriksi. 4x4 solua, joissa kussakin 8 laaria, antaa yhteensä $4 \times 4 \times 8 = 128$-ulotteisen vektorin.
 
@@ -179,7 +188,7 @@ Aiemmasta opitusta on hyötyä, sillä konvoluutioverkkojen *head* eli viimeiset
 
 ![alt text](../images/500_cnn_arch.png)
 
-**Kuva 5:** *Yksinkertainen konvoluutioverkon arkkitehtuuri. Kuva on luotu [NN-SVG](https://alexlenail.me/NN-SVG/AlexNet.html)-työkalulla.*
+**Kuva 6:** *Yksinkertainen konvoluutioverkon arkkitehtuuri. Kuva on luotu [NN-SVG](https://alexlenail.me/NN-SVG/AlexNet.html)-työkalulla.*
 
 Yllä oleva kuva havainnollistaa konvoluutioverkon arkkitehtuuria yksinkertaistetusti. Syöte on 224×224×3 RGB-kuva. Verkko koostuu kolmesta pääosasta:
 
@@ -195,7 +204,15 @@ Yllä oleva kuva havainnollistaa konvoluutioverkon arkkitehtuuria yksinkertaiste
 
 ### Konvoluutiokerros
 
-Lue tämä: [A Comprehensive Guide to Convolutional Neural Networks — the ELI5 way](https://medium.com/data-science/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53)
+![](../images/500_Conv2D.svg)
+
+**Kuva 7:** *2D-konvoluutiokerros. Kukin lähtöarvo on painotettu summa lähimmistä 3×3 syötteistä (plus bias ja aktivointi). Ylärivin kuvat a ja b esittelevät, kuinka suodin liikkuu kuvassa. Seuraava kerros ($H_1$ eli käytännössä piirrekartta) syntyy 3x3 syötteen ja painojen pistetulosta. Alarivin kuvat c ja d esittelevät, kuinka nollilla toppaamiinen (zero-padding) mahdollistavat reunapikseleiden arvojen käytön. [^udlbook]*
+
+![](../images/500_ConvImage.svg)
+
+**Kuva 8:** *RGB-kuvassa, kuten myös myöhemmissä piirrekartoissa, on enemmän kuin 1 kanava. RGB-kuvan tapauksessa filtteri on kokoa $3 \times 3 \times 3$ (leveys x korkeus x syvyys). Jokainen kanava (R, G, B) kerrotaan vastaavalla suotimella. Nämä summataan yhteen, lisätään bias, ja aktivoidaan jolloin saadaan yksi arvo piirrekarttaan. [^udlbook]*
+
+Pysähdy tässä välissä ja lue tämä visuaalisesti ja selkeästi toteutettu selostus aiheesta: [A Comprehensive Guide to Convolutional Neural Networks — the ELI5 way](https://medium.com/data-science/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53)
 
 Konvoluutiokerros suorittaa syötteelle konvoluution, joka on matemaattinen operaatio, jossa pieni suodin (kernel/filter) liukuu syötteen yli ja laskee pistetulon (dot product) suotimen ja syötteen vastaavien osien välillä. Tämä prosessi mahdollistaa paikallisten piirteiden, kuten reunojen, kulmien ja tekstuurien, tunnistamisen kuvasta. Aiheeseen tutustumiseen auttaa, jos tutkit, kuinka erilaiset suotimet (esim. reunojen tunnistamiseen tarkoitetut Sobel-suotimet) toimivat. Tähän on mainio apusivusto: [Setosa.io | Image Kernels explained visually](https://setosa.io/ev/image-kernels/).
 
@@ -276,7 +293,7 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 
     *   **Käänteinen koon laskenta:** Miten `get_fmp_sizes`-funktio toimii? Miksi verkon kerrosten koot lasketaan "lopusta alkuun" (output $\to$ input)?
     *   **Dynaaminen padding:** Toteutuksessa käytetään dynaamista paddingia (`pad_total`). Miksi tämä on välttämätöntä juuri tässä arkkitehtuurissa, kun taas esimerkiksi VGG-verkossa pärjätään kiinteällä paddingilla?
-    *   **Verkon "häntä" (Tail):** Miten `FMPNet`-luokan `forward`-metodin loppuosa eroaa perinteisestä `nn.Linear`-kerroksesta? Miksi tässä on käytetty $1\times1$ konvoluutiota (`convC1`)? Onko kenties niin, että matemaattisesti $1\times1$ konvoluutio $1\times1$ kokoisella spatiaalisella kartalla on identtisen täysin kytketyn kerroksen kanssa?
+    *   **Verkon "pää" (Head):** Miten `FMPNet`-luokan `forward`-metodin loppuosa eroaa perinteisestä `nn.Linear`-kerroksesta? Miksi tässä on käytetty $1\times1$ konvoluutiota (`convC1`)? Onko kenties niin, että matemaattisesti $1\times1$ konvoluutio $1\times1$ kokoisella spatiaalisella kartalla on identtisen täysin kytketyn kerroksen kanssa?
     *   **Ensemble-ennustaminen:** Miten mallin ennusteet lasketaan testausvaiheessa? Miksi sama kuva syötetään verkolle useita kertoja? Eikö neuroverkko olekaan deterministinen? Miksi minun toteutus toimii, vaikka siinä ei syötetä kuin kerran?
     *   **Suotimien kasvu:** Miksi `filter_growth_rate` on toteutettu siten, että kanavien määrä kasvaa lineaarisesti ($k \times n$)? Tähän vastataan alkuperäisessä paperissa.
   
@@ -296,7 +313,23 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
     *   **Tavoite:** Kouluta malli ja vertaa saavuttamaasi tarkkuutta.
         * Pärjännet reilusti pienemmällä epookkimäärällä kuin 300.   
   
-    P.S. Voit kokeilla, kauan mallin koulutus kestää GPU vs. CPU. Jos haluat säästää aikaa, selvitä 10 epookkiin kuluva aika ja skaalaa se haluamaasi epookkimäärään. Opettajan GPU:lla kesti noin 7 sekuntia per epookki (batch size 32).
+    Oikean arkkitehtuurin myötä mallin luomisen jälkeen pitäisi tulostua `Total trainable parameters: 438,826` ja `debug_forward_pass()`-funktion pitäisi tulostaa jotakuinkin seuraavaa viimeisissä riveissään::
+
+    ```
+    [Head] Input: torch.Size([1, 192, 2, 2]) (Expected 2x2)
+    -> ConvC2 (2x2 kernel): torch.Size([1, 192, 1, 1]) (Should be 1x1)
+    -> ConvC1 (1x1 kernel): torch.Size([1, 10, 1, 1]) (Channels = Num Classes)
+    -> Final Output (Flattened): torch.Size([1, 10])
+    ```
+
+    !!! tip
+    
+        Voit kokeilla, kauan mallin koulutus kestää GPU vs. CPU. Jos haluat säästää aikaa, selvitä 10 epookkiin kuluva aika ja skaalaa se haluamaasi epookkimäärään. Opettajan GPU:lla kesti noin 7 sekuntia per epookki (batch size 32). Jos CPU olisi käytössä, niin mikä seuraavista olisi oikea arvio?
+
+        - 10 sekuntia per epookki (+ 43 %)
+        - 30 sekuntia per epookki (+ 329 %)
+        - 1 min 30 s per epookki (+ 1186 %)
+        - 2 min 30 s per epookki (+ 2043 %)
 
 !!! question "Tehtävä: LeNet ja MNIST"
 
@@ -332,26 +365,20 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 
 ## Lähteet
 
-[^neocognition]: Fukushima, K. *Neocognitron: A Self-organizing Neural Network Model for a Mechanism of Pattern Recognition Unaffected by Shift in Position*. Princeton. https://www.cs.princeton.edu/courses/archive/spr08/cos598B/Readings/Fukushima1980.pdf
-
-[^lbp]: Ojala, T., Pietikäinen, M., & Mäenpää, T. *Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 24(7), 971-987. 2002. https://doi.org/10.1109/34.1000236
-
 [^fractionalmp]: Graham, B. *Fractional Max-Pooling*. University of Warwick. 2014 (version 4: 2015). https://doi.org/10.48550/arXiv.1412.6071
-
+[^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+[^neocognition]: Fukushima, K. *Neocognitron: A Self-organizing Neural Network Model for a Mechanism of Pattern Recognition Unaffected by Shift in Position*. Princeton. https://www.cs.princeton.edu/courses/archive/spr08/cos598B/Readings/Fukushima1980.pdf
 [^lenet5]: LeCun, Y., Bottou, L., Bengio, Y., & Haffner, P. *Gradient-Based Learning Applied to Document Recognition*. Proceedings of the IEEE, 86(11). http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf
-
 [^alexnet]: Krizhevsky, A., Sutskever, I., & Hinton, G. E. *ImageNet Classification with Deep Convolutional Neural Networks*. https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf
-
+[^googlenet]: Szegedy, C. et. al. *Going Deeper with Convolutions*. https://arxiv.org/abs/1409.4842
 [^vgg16]: Simonyan, K., & Zisserman, A. *Very Deep Convolutional Networks for Large-Scale Image Recognition*. https://arxiv.org/abs/1409.1556
-
 [^vgg16neurohive]: Hassan, M. *VGG16 – Convolutional Network for Classification and Detection*. Neurohive. https://neurohive.io/en/popular-networks/vgg16/
-
 [^resnet]: He, K., Zhang, X., Ren, S., & Sun, J. *Deep Residual Learning for Image Recognition*. https://arxiv.org/abs/1512.03385
-
 [^resnetmedium]: Azeem. *Understanding ResNet Architecture: A Deep Dive into Residual Neural Network*. https://medium.com/@ibtedaazeem/understanding-resnet-architecture-a-deep-dive-into-residual-neural-network-2c792e6537a9
-
+[^unet]: Ronneberger, O., Fischer, P., & Brox, T. *U-Net: Convolutional Networks for Biomedical Image Segmentation*. https://arxiv.org/abs/1505.04597
+[^maskrcnn]: He, K., Gkioxari, G., Dollár, P., & Girshick, R. *Mask R-CNN*. https://arxiv.org/abs/1703.06870
 [^densenet]: Huang, G., Liu, Z., Van Der Maaten, L., & Weinberger, K. Q. *Densely Connected Convolutional Networks*. https://arxiv.org/abs/1608.06993
-
+[^vit]: Dosovitskiy, A. et. al. *An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale*. https://arxiv.org/abs/2010.11929
+[^lbp]: Ojala, T., Pietikäinen, M., & Mäenpää, T. *Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 24(7), 971-987. 2002. https://doi.org/10.1109/34.1000236
 [^sift]: Lowe, D. G. *Distinctive Image Features from Scale-Invariant Keypoints*. 2004. https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
-
 [^pyisgurus]: Rosebrock, A. *PyImageSearch Gurus Course: 8.5.1 A CNN Primer*. https://www.pyimagesearch.com/pyimagesearch-gurus-course/

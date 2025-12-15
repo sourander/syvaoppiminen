@@ -97,7 +97,7 @@ def _(F, device, nn):
             for block in self.blocks:
                 x = block(x)
 
-            # Tail Forward Pass
+            # Head Forward Pass
             x = self.convC2(x)
             x = self.bnC2(x) # Apply BN
             x = F.leaky_relu(x, 0.2)
@@ -388,12 +388,12 @@ def _(BLOCK_IDX, BLOCK_LAYER, COLORMAP, F, autopsy_victim, device, model, plt):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Display the Tail
+    ## Display the Head
 
-    The tail takes the 12th block's output as input.
+    The head takes the 12th block's output as input.
 
     ```
-    [Tail] Input: torch.Size([1, 768, 2, 2])
+    [Head] Input: torch.Size([1, 768, 2, 2])
        -> ConvC2 (2x2 kernel): torch.Size([1, 768, 1, 1]) (Channels = Features)
        -> ConvC1 (1x1 kernel): torch.Size([1, 10, 1, 1])  (Channels = Num Classes)
        -> Final Output (Flattened): torch.Size([1, 10])
@@ -461,11 +461,11 @@ def _(F, autopsy_victim, device, model, np, plt, testset, torch):
         plt.tight_layout()
         return fig
 
-    def process_tail(model, image_tensor):
+    def process_head(model, image_tensor):
         """
-        Process the tail of the network and visualize the transformations.
+        Process the head  of the network and visualize the transformations.
 
-        The FMPNet tail uses a "fully convolutional" approach instead of traditional
+        The FMPNet head  uses a "fully convolutional" approach instead of traditional
         fully connected (FC) layers. This is achieved by:
         1. Using a 2x2 Conv to reduce the 2x2 spatial input to 1x1
         2. Using a 1x1 Conv to project features to the number of classes
@@ -485,8 +485,8 @@ def _(F, autopsy_victim, device, model, np, plt, testset, torch):
             x = block(x)
 
         # Save the input for visualization
-        input_to_tail = x.clone()
-        print(f"\n[1] Input to Tail (Block 12 output): {x.shape}")
+        input_to_head  = x.clone()
+        print(f"\n[1] Input to Head (Block 12 output): {x.shape}")
         print(f"    2×2 spatial grid with 768 channels")
 
         # Apply ConvC2 (2x2 kernel) - Reduces spatial dimensions to 1x1
@@ -498,7 +498,7 @@ def _(F, autopsy_victim, device, model, np, plt, testset, torch):
         print(f"\n    Visualizing transformation for channels 0, 1, 2:")
         figs = []
         for ch in range(3):
-            fig = visualize_2x2_to_1x1(input_to_tail, x_before_bn, channel_idx=ch)
+            fig = visualize_2x2_to_1x1(input_to_head, x_before_bn, channel_idx=ch)
             figs.append(fig)
 
         # Apply BatchNorm and activation (covered in previous cells)
@@ -535,8 +535,8 @@ def _(F, autopsy_victim, device, model, np, plt, testset, torch):
 
         return x, probs, predicted_class, figs
 
-    # Run the tail processing demonstration
-    logits, probabilities, pred_class, visualization_figs = process_tail(model, autopsy_victim)
+    # Run the head  processing demonstration
+    logits, probabilities, pred_class, visualization_figs = process_head(model, autopsy_victim)
 
     # Display the visualizations
     visualization_figs[0]

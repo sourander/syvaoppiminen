@@ -13,4 +13,3 @@ TODO! Tähän tulee ainakin seuraavat asiat:
 * Case: Aikasarjamallinnus jollain datalla
 
 Muista tsekata osio 4.4 kirjasta Deep Learning with PyTorch (Manning).
-
