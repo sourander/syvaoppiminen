@@ -73,6 +73,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Tutustuminen Fractional Max-Pooling -toteutukseen
 - [ ] Tehtävä: FMP ja MNIST
 - [ ] Tehtävä: LeNet ja MNIST
+- [ ] Tehtävä: (Valinnainen) HOG
 
 
 ```

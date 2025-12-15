@@ -130,13 +130,8 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
 ## Lähteet
 
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-
-[^dlwithpytorch]: Stevens, E, Antiga, L & Viehmann, T. *Deep Learning with PyTorch*. Manning. 2020.
-
 [^pytorchhistory]: TensorGym. *The Complete History and Evolution of PyTorch | Deep Learning Framework Timeline*. n.d. https://tensorgym.com/blog/pytorch-history
-
 [^geron3rd]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly. 2022.
-
-[^keras-vs-tf-keras]: Rosebrock, J. *Keras vs. tf.keras: What’s the difference in TensorFlow 2.0?* PyImageSearch Blog. https://pyimagesearch.com/2019/10/21/keras-vs-tf-keras-whats-the-difference-in-tensorflow-2-0/
-
+[^dlwithpytorch]: Stevens, E, Antiga, L & Viehmann, T. *Deep Learning with PyTorch*. Manning. 2020.
 [^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+[^keras-vs-tf-keras]: Rosebrock, J. *Keras vs. tf.keras: What’s the difference in TensorFlow 2.0?* PyImageSearch Blog. https://pyimagesearch.com/2019/10/21/keras-vs-tf-keras-whats-the-difference-in-tensorflow-2-0/

@@ -99,4 +99,3 @@ Seuraavassa osassa tätä kurssia opit PyTorchin ja siihen liittyvien aputyökal
 
 [^whypythonslow]: VanderPlas, J. *Why is Python slow?* https://jakevdp.github.io/blog/2014/05/09/why-python-is-slow/
 [^whynumpyfast]: Numpy. *Why is NumPy fast?* https://numpy.org/doc/stable/user/whatisnumpy.html#why-is-numpy-fast
-
