@@ -35,7 +35,7 @@ $74 \text{M}$ parametrin malli ylsi Grahamin paperin mukaan $3.47 \%$ virheeseen
 
 ### Rautavaatimukset
 
-Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -korttia, jossa on 6 GB muistia. Muistiin mahtuisi $\frac{6 \times 1024^3}{4} \approx 1600 \text{M}$ parametria (per BATCH). Jos *batch size* on 32, niin silloin käytössä on $\frac{1600}{32} \approx 50 \text{M}$ parametria. Tämä on yhä reilusti enemmän kuin edellä esitellyssä pienemmässä 14 miljoonan parametrin verkossa. Koulutusvaiheessa muistiin pitää mahtua myös aktivoinnit, gradientit ja optimointiin liittyvät muuttujat. Näitä lukemia voi laskea, mutta sen voi myös selvittää kokeilemalla. Alla on typistetty `nvidia-smi`-komennon tulos koulutuksen aikana (GeForce RTX 3060 Ti, 8 GB muistia):
+Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -korttia, jossa on 6 GB muistia. Muistiin mahtuisi $\frac{6 \times 1024^3}{4} \approx 1600 \text{M}$ parametria (per BATCH). Jos *batch size* on 32, niin silloin käytössä on $\frac{1600}{32} \approx 50 \text{M}$ parametria. Tämä on yhä reilusti enemmän kuin edellä esitellyssä pienemmässä 14 miljoonan parametrin verkossa. Koulutusvaiheessa muistiin pitää mahtua myös aktivoinnit, gradientit ja optimointiin liittyvät muuttujat. Näitä lukemia voi laskea (ks. kurssikirja!), mutta sen voi myös selvittää kokeilemalla. Alla on typistetty `nvidia-smi`-komennon tulos koulutuksen aikana (GeForce RTX 3060 Ti, 8 GB muistia):
 
 ```
 +-------------------------------------------------------------------+
@@ -71,9 +71,7 @@ Jos 12M parametria vie 32-kokoisella erällä `2650 MiB` muistia, niin suuremman
 * **2015**: ResNet, esitteli "residual connections", jotka mahdollistivat erittäin syvien verkkojen koulutuksen. ~19 M parametria. [^resnet] [^resnetmedium].
 * **2018**: DenseNet, joka käytti tiheitä yhteyksiä kerrosten välillä parantaakseen tiedonsiirtoa ja vähentääkseen gradientin katoamista. ~28 M parametria. [^densenet].
 
-## Käytäntö
-
-### Visual Feature Descriptors
+## Piirrevektorit käsin
 
 On hyödyksi pohtia, miten kuvia käsitellään perinteisissä tietokonenäön sovelluksissa ennen konvoluutioverkkojen aikakautta. Yksi keskeinen käsite on **feature vector** eli piirrevektori, joka tiivistää kuvan olennaiset piirteet matemaattiseen muotoon. Piirrevektori voi näytää vaikka tältä:
 
@@ -99,13 +97,13 @@ Vektoreita voi etsiä monin eri tavoin, ja nämä tavat voidaan jakaa kahteen p�
 
 Koko kuvan pinta-alaa kuvaavat piirteet voivat olla harvoissa tapauksissa hyödyllisiä, mutta usein paikalliset piirteet tarjoavat enemmän informaatiota. Kuvan voi myös jakaa pienempiin osiin (esim. 100x100 pikselin kuva -> 10x10 pikselin ruudukko) ja laskea kullekin osalle (engl *cell*) piirrevektori.
 
-Muista, että tämän kurssin aiheena eivät ole perinteiset tietokonenäön menetelmät, vaan konvoluutioverkot. ==Ethän siis käytät tähän osioon useita tunteja==: riittää, että tunnistat perusidean, mikä tarjoaa mahdollisuuden ymmärtää konvoluutioverkkojen hyötyjä paremmin.
+Muista, että tämän kurssin aiheena eivät ole perinteiset tietokonenäön menetelmät, vaan konvoluutioverkot. ==Ethän siis käytät tähän osioon kymmeniä tunteja==, ellei kalenterisi ole harvinaisen väljä. Riittää, että tunnistat perusidean, mikä tarjoaa mahdollisuuden ymmärtää konvoluutioverkkojen hyötyjä paremmin.
 
 Tutustutaan alla lyhyesti kahteen globaaliin *image descriptor* -menetelmään: LBP ja HOG.
 
-#### LBP
+### LBP
 
-Tekstuureita voi kuvastaa esimerkiksi Local Binary Patterns (LBP) -menetelmällä, jonka esittelivät Ojala et al. vuonna 2002 Oulun yliopiston julkaisussa "Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns" [^lbp]. Paperi on ladattavissa kirjautumatta [Stanfordin CS216B kurssin linkistä](http://vision.stanford.edu/teaching/cs231b_spring1415/papers/lbp.pdf). LBP perustuu pikselin vertailuun sitä ympäröivien pikseleiden kanssa. Naiivi toteutus vertailee 3x3 alueen keskustaa muihin. Jos ympäröivä pikseli on kirkkaampi tai yhtä kirkas kuin keskuspikseli, sille annetaan arvo 1, muuten 0. Näin muodostuu 8-bittinen binaariluku, joka voidaan muuntaa desimaaliluvuksi. Kellonvastaisesti oletetaan siis, että ympäröivät pikselit ovat arvoltaan $1 x 2^0 + 0 + 2^1 + ... + 1 x 2^7$. Tämä luku kuvaa kyseisen pikselin tekstuuria. Monimutkaisemmassa esimerkissä voidaan valita säde, jolloin ympäröivät pisteet eivät olekaan välittömästi keskuspikselin vieressä, vaan kauempana. Katso Kuva 2, jossa tämä toteutus on havainnollistettu.
+Tekstuureita voi kuvastaa esimerkiksi Local Binary Patterns (LBP) -menetelmällä, jonka esittelivät Ojala et al. vuonna 2002 Oulun yliopiston julkaisussa "Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns" [^lbp]. Paperi on ladattavissa kirjautumatta [Stanfordin CS216B kurssin linkistä](http://vision.stanford.edu/teaching/cs231b_spring1415/papers/lbp.pdf). LBP perustuu pikselin vertailuun sitä ympäröivien pikseleiden kanssa. Naiivi toteutus vertailee 3x3 alueen keskustaa muihin. Jos ympäröivä pikseli on kirkkaampi tai yhtä kirkas kuin keskuspikseli, sille annetaan arvo 1, muuten 0. Näin muodostuu 8-bittinen binaariluku, joka voidaan muuntaa desimaaliluvuksi. Kellonvastaisesti oletetaan siis, että ympäröivät pikselit ovat arvoltaan $x_0 \times 2^0 + x_1 \times 2^1 + ... + x_7 \times 2^7$. Tämä luku kuvaa kyseisen pikselin tekstuuria. Monimutkaisemmassa esimerkissä voidaan valita säde, jolloin ympäröivät pisteet eivät olekaan välittömästi keskuspikselin vieressä, vaan kauempana. Katso Kuva 2, jossa tämä toteutus on havainnollistettu.
 
 ![](../images/500_LBP_neighbors.svg)
 
@@ -115,33 +113,125 @@ Tekstuureita voi kuvastaa esimerkiksi Local Binary Patterns (LBP) -menetelmäll�
 
     Jos haluat kokeilla LBP:tä Pythonissa, niin `skimage`-kirjasto tarjoaa valmiin toteutuksen: [Local Binary Pattern for texture classification](https://scikit-image.org/docs/0.25.x/auto_examples/features_detection/plot_local_binary_pattern.html). Jos haluat nähdä kokonaisemman esimerkin, Adrian Rosebrockin blogipostaus [Face Recognition with Local Binary Patterns (LBPs) and OpenCV](https://pyimagesearch.com/2021/05/03/face-recognition-with-local-binary-patterns-lbps-and-opencv/) on hyvä paikka aloittaa. Huomaa, että näissäkin tapauksissa on vahva oletus, että sinulla on jokin tapa rajata kiinnostava alue kuvasta (esim. kasvot). Tähän voi käyttää perinteisiä tietokonenäön menetelmiä, kuten Haar-cascade -luokittelijoita tai HOG+SVM -yhdistelmää.
 
-#### HOG
+### HOG
 
-HOG (Histogram of Oriented Gradients) on toinen suosittu piirrevektorin muodostamismenetelmä, joka keskittyy kuvan reunojen ja kulmien suuntiin. HOG jakaa kuvan pienempiin alueisiin (soluihin, *cells*), ja laskee kullekin solulle histogrammin gradienttien suunnista. Gradientti kuvaa pikselin kirkkauden muutosta, ja HOG käyttää tätä tietoa tunnistaakseen kuvioita, kuten reunat ja kulmat. Dalal ja Triggs esittelivät HOG:n vuonna 2005 julkaistussa artikkelissaan "Histograms of Oriented Gradients for Human Detection". Artikkeli on ladattavissa [Inria:n sivuilta](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf).
+HOG (Histogram of Oriented Gradients) on toinen suosittu piirrevektorin muodostamismenetelmä. Dalal ja Triggs esittelivät HOG:n vuonna 2005 julkaistussa artikkelissaan "Histograms of Oriented Gradients for Human Detection". Artikkeli on ladattavissa [Inria:n sivuilta](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf). Termin "oriented gradients" voi suomentaa suunnatuiksi kaltevuuksiksi. Sinulle on jo aiemmin kurssilta tuttu käsite *gradientti*, joka kuvaa funktion muutosnopeutta. Tässä muutoksella tarkoitetaan pikselin kirkkausarvon muutosta. Tämä muutos selvitetään – laita seuraava sana korvan taakse – *konvoluutiosuodattimilla* (esim. Sobel), jotka laskevat pikselin kirkkausarvon muutoksen horisontaalisesti (x-suunta) ja vertikaalisesti (y-suunta). Näin saadaan jokaiselle pikselille kaksi arvoa: $G_x$ ja $G_y$. Näiden avulla voidaan laskea gradientin suuruus ja suunta:
+
+$$
+\text{magnitude} = \sqrt{G_x^2 + G_y^2}
+$$
+
+Kuva jaetaan soluihin (engl. *cells*), esimerkiksi 10x10 pikselin alueisiin. Kustakin solusta lasketaan histogrammi, jossa on esimerkiksi 9 laaria (esim. 0-19°, 20-39°, ..., 160-179°). Pikselin gradientin kontribuutio painotetaan sen suuruudella, eli jyrkemmät muutokset vaikuttavat enemmän. Nämä laarit osallistuvat lohkoihin (engl. *blocks*), jotka liukuvat kuvan yli askelein siten, että lohkojen alueet voivat olla päällekkäisiä. Jokaisesta lohkosta saadaan normaaliarvoitu histogrammi, joka yhdistetään lopulta yhdeksi pitkäksi piirrevektoriksi koko kuvalle. Piirrevektorin pituus riippuu solujen ja lohkojen koosta sekä histogrammin laarien määrästä. Sen voi laskea näin, jos meillä on `200x200` kuva:
+
+```python
+ppc = 10                       # pixels per cell
+cbp = 2                        # cells per block
+cells_xy = 200 // ppc          # 20 cells per dimension
+blocks_xy = cells_xy - 1       # 19 blocks per dimension (assuming stride 1)
+feat_per_block = cbp ** 2 * 9  # 2x2 cells per block, 9 bins per histogram
+fd = blocks_xy ** 2 * feat_per_block
+# Output: 12996
+```
 
 Voi olla hyödyllistä silmäillä läpi myös: [Medium.com | Katthik Mittal: A Gentle Introduction Into The Histogram Of Oriented Gradients](https://medium.com/analytics-vidhya/a-gentle-introduction-into-the-histogram-of-oriented-gradients-fdee9ed8f2aa)
 
 ![alt text](../images/500_hog_cat_loop_nanobanana.png)
 
-**Kuva 3:** *HOG-piirteiden visualisointi. Kuva: 400x400 pikseliä, soluja 40x40. HOG-featuren pituus on `54756`. Kuva: Nanobanana.*
+**Kuva 3:** *HOG-piirteiden visualisointi. Kuva on 200x200 pikseliä ja solun koko 10x10 (turkoosi viiva). Keltaiset neliöt näyttävät blockin (2x2 solua, yhteensä 20x20 pikseliä) kolme ensimmäistä sijaintia, kun block liukuu yhden solun askelin x-suunnassa. Opacity kasvaa (0.2 → 0.3 → 1.0) havainnollistamaan liukumisen etenemistä. HOG-kuvassa gradientti määrää viivan suunnan ja voimakkuus paksuuden. Kissakuva: Nanobanana.*
 
-#### Interest Point Detector and Feature Descriptor
+!!! tip "Mitä tällä siis tekee?"
 
-TODO: Selitä tässä lyhyesti, kuinka tunnistaa tärkeät pisteet kuvasta ja laskea niille piirrevektori (esim. SIFT, SURF, ORB).
+    Vastaavan HOG-piirrevektorin voisi syöttää esimerkiksi:
 
-### Konvoluutioverkkojen rakenne
+    1. SVM-luokittelijalle
+    2. FCNN-verkolle
+    
+    Jos laskisit HOG-piirteet MNIST-numeroista, niin voisit käyttää FCNN:ää kuten kurssilla aiemminkin on käytetty. Erona olisi, että pelkän pikselin intensiteetin sijaan syötteenä olisi tietoa reunojen suunnista ja voimakkuuksista. Neuroverkkojen osalta tämä lähestymistapa on kuitenkin vanhentunut, sillä konvoluutioverkot pystyvät oppimaan piirteet suoraan kuvista ilman erillistä piirrevektorin laskentaa.
 
-Aiemmasta opitusta on hyötyä, sillä konvoluutioverkkojen *head* eli viimeiset kerrokset ovat tuttuja Dense/FC-kerroksia. Alkuosa, eli *body*, sisältää uudenlaisia kerroksia: **konvoluutiokerros** (*convolutional*) ja **koontikerros** (*pooling*).
+### FAST ja SIFT
 
-#### Konvoluutiokerros
+Edellä esitellyt LBP ja HOG laskevat piirteitä koko kuvasta (tai rajatusta/ikkunoidusta osasta). Toinen lähestymistapa on tunnistaa ensin **kiinnostavat pisteet** (keypoints) kuvasta ja laskea piirrevektori ==vain näiden pisteiden== ympäriltä. Ensimmäiseen vaiheeseen, jossa tunnistaan kiinnostavat pisteet, voidaan käyttää erilaisia algoritmeja, kuten: **FAST**, **Harris** tai **DoG**. Jälkimmäiseen vaiheeseen, jossa lasketaan kustakin kiinnostavasta pisteestä piirrevektori, voidaan käyttää menetelmiä kuten **SIFT** tai **SURF**.
+
+Käsitellään lyhyesti näistä kenties yksinkertaisin kombinaatio: FAST + SIFT.
+
+**FAST (Features from Accelerated Segment Test)**: Etsii kiinnostavia pisteitä vertaamalla pikselin kirkkausarvoa sitä ympäröiviin pikseleihin. Tämä ei ole erityisen kaukana siitä, miten LBP toimii.
+
+![](../images/500_FAST_corner_pattern.jpg)
+
+**Kuva 4:** *FAST-algoritmin pikselimalli. Keskuspikseli (kirkas) verrataan ympäröiviin pikseleihin (tummat). Jotta pikseli luokiteltaisiin kulmaksi, sen ympärillä täytyy olla jatkuva kaari, jossa vähintään n peräkkäistä pikseliä (säteellä r) poikkeavat keskuspikselin kirkkaudesta samaan suuntaan – kaikki joko kirkkaampia tai tummempia – vähintään kynnysarvon t verran. Kuva: Jingjin Huang, Guoqing Zhou, Xiang Zhou and Rongting Zhang, CC [BY 4.0](https://creativecommons.org/licenses/by/4.0), via Wikimedia Commons*
+
+**SIFT (Scale-Invariant Feature Transform)**: Kun kiinnostavat pisteet on löydetty FAST:lla, seuraava vaihe on muodostaa piirrevektorit. SIFT:n esitteli David Lowe vuonna 2004 julkaistussa artikkelissaan "Distinctive Image Features from Scale-Invariant Keypoints" [^sift]. SIFT laskee kullekin kiinnostavalle pisteelle piirrevektorin, joka on tyypillisesti 128-ulotteinen. Toteutus ei juuri poikkea HOG:sta, sillä SIFT käyttää myös kaltevuuksia (oriented gradients) piirteiden laskentaan. SIFT ottaa 16x16 alueen kiinnostavan pisteen ympäriltä ja jakaa sen 4x4 soluun (cells). Jokaisesta solusta lasketaan 8-bittinen histogrammi kaltevuuksista, käyttäen gaussian-painotusta, jolloin kaukana olevat pikselit vaikuttavat vähemmän. Lopuksi nämä histogrammit yhdistetään yhdeksi pitkäksi piirrevektoriksi. 4x4 solua, joissa kussakin 8 laaria, antaa yhteensä $4 \times 4 \times 8 = 128$-ulotteisen vektorin.
+
+!!! tip
+
+    Voi olla hyödyllistä käyttää 20 sekuntia elämästään katsoen kahta seuraavaa linkkiä, joissa esitellään kombinaatiotyökalut, jotka hoitavat sekä kiinnostavien pisteiden etsinnän että piirrevektorin laskennan. Katso erityisesti kuvat:
+
+    * [scikit-image: ORB feature detector and binary descriptor](https://scikit-image.org/docs/0.25.x/auto_examples/features_detection/plot_orb.html)
+    * [scikit-image: SIFT feature detector and descriptor extractor](https://scikit-image.org/docs/0.25.x/auto_examples/features_detection/plot_sift.html)
+
+    Bonus: jos aihe kiinnostaa enemmänkin, tutustu OpenCV:n dokumentaation osioon [Feature Detection and Description](https://docs.opencv.org/4.12.0/db/d27/tutorial_py_table_of_contents_feature2d.html). Jo pelkkä kuvien katselu voi konkretisoida aihetta.
+
+## Piirrevektorit konvoluutioverkoissa
+
+### Arkkitehtuuri
+
+Aiemmasta opitusta on hyötyä, sillä konvoluutioverkkojen *head* eli viimeiset kerrokset ovat tuttuja FC-kerroksia (eli *fully connected*). Mallin viimeiste kerrotset ovat siis tyypillinen FCNN, joka ottaa syötteenään piirrevektorin ja tuottaa luokitusennusteen. Konvoluutioverkkojen voima piilee kuitenkin niiden *body*-osassa, joka koostuu uudenlaisista termeistä: **konvoluutiokerros** (*convolutional*) ja **koontikerros** (*pooling*).
+
+![alt text](../images/500_cnn_arch.png)
+
+**Kuva 5:** *Yksinkertainen konvoluutioverkon arkkitehtuuri. Kuva on luotu [NN-SVG](https://alexlenail.me/NN-SVG/AlexNet.html)-työkalulla.*
+
+Yllä oleva kuva havainnollistaa konvoluutioverkon arkkitehtuuria yksinkertaistetusti. Syöte on 224×224×3 RGB-kuva. Verkko koostuu kolmesta pääosasta:
+
+**1. Konvoluutiokerrokset (body):** Kolme suurta laatikkoa vasemmalla edustavat konvoluutiokerroksia, jotka tunnistavat kuvan piirteitä. Ensimmäinen kerros tuottaa 96 kappaletta 55×55-kokoisia piirrekarttoja. Kolmannessa kerroksessa piirrekartat ovat kutistuneet 13×13-kokoisiksi, mutta niitä on enemmän (384 kpl). Kerroksien välissä näkyvä sini-punainen "lyijykynä" kuvaa konvoluutio-operaatiota: lyijykynän runko edustaa $n \times n$ suodinta (kernel), joka liukuu syötteen yli, ja kärki osoittaa kohtaan, johon suotimen tulos tallennetaan.
+
+**2. Litistäminen (flatten):** Konvoluutiokerrosten tuottamat 3D-piirrekartat litistetään yhdeksi pitkäksi vektoriksi.
+
+**3. Täysin kytketyt kerrokset (head):** Oikealla olevat kaksi pystysuoraa palkkia edustavat perinteisiä FCNN-kerroksia. Nämä ottavat litistetyn piirrevektorin syötteenään ja tuottavat lopulta 10-ulotteisen logit-vektorin (tässä oletetaan 10 luokkaa).
+
+!!! warning
+
+    Tämä on AlexNet-tyyppinen visualisointi, jossa pooling-kerrokset on jätetty pois yksinkertaisuuden vuoksi. Todellisuudessa pooling-kerrokset pienentävät piirrekarttojen kokoa konvoluutiokerrosten välissä.
+
+### Konvoluutiokerros
 
 Lue tämä: [A Comprehensive Guide to Convolutional Neural Networks — the ELI5 way](https://medium.com/data-science/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5-way-3bd2b1164a53)
 
 Konvoluutiokerros suorittaa syötteelle konvoluution, joka on matemaattinen operaatio, jossa pieni suodin (kernel/filter) liukuu syötteen yli ja laskee pistetulon (dot product) suotimen ja syötteen vastaavien osien välillä. Tämä prosessi mahdollistaa paikallisten piirteiden, kuten reunojen, kulmien ja tekstuurien, tunnistamisen kuvasta. Aiheeseen tutustumiseen auttaa, jos tutkit, kuinka erilaiset suotimet (esim. reunojen tunnistamiseen tarkoitetut Sobel-suotimet) toimivat. Tähän on mainio apusivusto: [Setosa.io | Image Kernels explained visually](https://setosa.io/ev/image-kernels/).
 
-#### Koontikerros
+Peräkkäin kytketyt konvoluutiokerrokset mahdollistavat yhä monimutkaisempien piirteiden oppimisen. Alkuvaiheen kerrokset saattavat tunnistaa yksinkertaisia piirteitä, kuten reunat ja kulmat, kun taas syvemmät kerrokset voivat yhdistellä näitä piirteitä muodostaakseen monimutkaisempia kuvioita, kuten kasvoja tai esineitä. Kukin konvoluutiokerros ottaa seuraavat parametrit sisäänsä [^pyisgurus]:
+
+* Syöte: $W_1 \times H_1 \times D_1$ (leveys x korkeus x syvyys/kanavat)
+* Filttereiden määrä: $K$ (eli syvyyssuunnan koko)
+* Suotimen koko: $F$ (esim. $3 \times 3$)
+* Askel (stride): $S$ (usein 1)
+* Toppaus (padding): $P$ (usein $K//2$ eli 'same' toppaus)
+
+Konvoluutiokerroksen lähtö täten kokoa:
+
+* Leveys: $W_2 = \frac{W_1 - F + 2P}{S} + 1$
+* Korkeus: $H_2 = \frac{H_1 - F + 2P}{S} + 1$
+* Syvyys: $D_2 = K$
+
+Tämä osuus on jätetty lyhyeksi, koska aihe on niin kattavasti selitetty kurssikirjoissa, yllä olevassa Medium-artikkelissa ja esimerkiksi StatQuestin sekä 3Blue1Brownin videoissa.
+
+### Koontikerros
 
 TODO.
+
+Kukin koontikerros ottaa seuraavat parametrit sisäänsä [^pyisgurus]:
+
+* Syöte: $W_1 \times H_1 \times D_1$ (leveys, korkeus, syvyys/kanavat)
+* Suotimen koko: $F$ (esim. $2 \times 2$)
+* Askel (stride): $S$
+
+Koontikerroksen lähtö täten kokoa:
+
+* Leveys: $W_2 = \frac{W_1 - F}{S} + 1$
+* Korkeus: $H_2 = \frac{H_1 - F}{S} + 1$
+* Syvyys: $D_2 = D_1$
+
+Hyvin tyypillinen koontikerros on $2 \times 2$ max-pooling, jossa askeleena on 2. Tämä tarkoittaa, että kuvan leveys ja korkeus puolittuvat jokaisella pooling-kerroksella.
 
 ## Case Study: Fractional Max-Pooling (Graham, 2014)
 
@@ -203,9 +293,10 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
         *   CIFAR-10-mallissa kerroksia oli 12 ja kasvukerroin suuri.
         *   MNIST-mallille riittää vähempi määrä kerroksia ja pienempi kasvukerroin.
         *   Myös skaalauskerroin $\alpha$ voi olla eri (esim. $\sqrt{2}$ vs $\sqrt[3]{2}$), jotta kuva kutistuu sopivasti 28x28-koosta.
-    *   **Tavoite:** Kouluta malli ja vertaa saavuttamaasi tarkkuutta
+    *   **Tavoite:** Kouluta malli ja vertaa saavuttamaasi tarkkuutta.
+        * Pärjännet reilusti pienemmällä epookkimäärällä kuin 300.   
   
-    P.S. Voit kokeilla, kauan mallin koulutus kestää GPU vs. CPU. Jos haluat säästää aikaa, selvitä 10 epookkiin kuluva aika ja skaalaa se haluamaasi epookkimäärään.
+    P.S. Voit kokeilla, kauan mallin koulutus kestää GPU vs. CPU. Jos haluat säästää aikaa, selvitä 10 epookkiin kuluva aika ja skaalaa se haluamaasi epookkimäärään. Opettajan GPU:lla kesti noin 7 sekuntia per epookki (batch size 32).
 
 !!! question "Tehtävä: LeNet ja MNIST"
 
@@ -235,7 +326,9 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
     | FC2        | 10          |                      |
     | Softmax    | 10          |                      |
 
-    
+!!! question "Tehtävä: (Valinnainen) HOG"
+
+    Tämä on valinnainen tehtävä. Kokeile `505_hog.py`-tiedostoa jotakin kuvaa vasten. Kyseisellä Notebookilla on luotu yllä oleva *"Kissa hyppää hularenkaasta"*-triptyykki.
 
 ## Lähteet
 
@@ -258,3 +351,7 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 [^resnetmedium]: Azeem. *Understanding ResNet Architecture: A Deep Dive into Residual Neural Network*. https://medium.com/@ibtedaazeem/understanding-resnet-architecture-a-deep-dive-into-residual-neural-network-2c792e6537a9
 
 [^densenet]: Huang, G., Liu, Z., Van Der Maaten, L., & Weinberger, K. Q. *Densely Connected Convolutional Networks*. https://arxiv.org/abs/1608.06993
+
+[^sift]: Lowe, D. G. *Distinctive Image Features from Scale-Invariant Keypoints*. 2004. https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
+
+[^pyisgurus]: Rosebrock, A. *PyImageSearch Gurus Course: 8.5.1 A CNN Primer*. https://www.pyimagesearch.com/pyimagesearch-gurus-course/
