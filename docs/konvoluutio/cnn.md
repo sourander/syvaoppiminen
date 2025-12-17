@@ -2,7 +2,7 @@
 priority: 500
 ---
 
-# Konvoluutioverkot (CNN)
+# Konvoluutioverkot
 
 ## Perusteet
 
@@ -206,7 +206,7 @@ Yllä oleva kuva havainnollistaa konvoluutioverkon arkkitehtuuria yksinkertaiste
 
 ![](../images/500_Conv2D.svg)
 
-**Kuva 7:** *2D-konvoluutiokerros. Kukin lähtöarvo on painotettu summa lähimmistä 3×3 syötteistä (plus bias ja aktivointi). Ylärivin kuvat a ja b esittelevät, kuinka suodin liikkuu kuvassa. Seuraava kerros ($H_1$ eli käytännössä piirrekartta) syntyy 3x3 syötteen ja painojen pistetulosta. Alarivin kuvat c ja d esittelevät, kuinka nollilla toppaamiinen (zero-padding) mahdollistavat reunapikseleiden arvojen käytön. [^udlbook]*
+**Kuva 7:** *2D-konvoluutiokerros. Kukin lähtöarvo on painotettu summa lähimmistä 3×3 syötteistä (plus bias ja aktivointi). Ylärivin kuvat a ja b esittelevät, kuinka suodin liikkuu kuvassa. Seuraava kerros ($H_1$ eli käytännössä piirrekartta eli feature map) syntyy 3x3 syötteen ja painojen pistetulosta. Alarivin kuvat c ja d esittelevät, kuinka nollilla toppaamiinen (zero-padding) mahdollistavat reunapikseleiden arvojen käytön. [^udlbook]*
 
 ![](../images/500_ConvImage.svg)
 
@@ -234,7 +234,11 @@ Tämä osuus on jätetty lyhyeksi, koska aihe on niin kattavasti selitetty kurss
 
 ### Koontikerros
 
-TODO.
+Koontikerros (pooling layer) on konvoluutioverkon komponentti, joka suorittaa alinäytteistämisen (downsampling) syötteelle. Tämän kerroksen päätarkoituksena on vähentää piirrekarttojen (engl. feature maps, activation maps) spatiaalista kokoa (leveys ja korkeus), mikä auttaa vähentämään laskennallista kuormitusta, muistinkäyttöä ja ylikoulutuksen riskiä. Koontikerros tiivistää tärkeimmät piirteet säilyttäen samalla olennaisen informaation. Näitä on montaa eri sorttia, mutta yleisimmät ovat **max-pooling** ja **average-pooling**. Näiden PyTorch-toteutukset löytyvät `torch.nn.MaxPool2d` ja `torch.nn.AvgPool2d` -luokista. Näiden 2-ulotteisten koontikerrosten lisäksi on olemassa myös 1-ulotteisia ja 3-ulotteisia versioita, joita käytetään vastaavasti 1D- ja 3D-datassa. Géron esittelee myös harvinaisemmat tyypit: **depthwise pooling** ja **global average pooling** [^geronpytorch].
+
+![](../images/500_pooling.png)
+
+**Kuva 9:** *Max-pooling toteutettuna 5x5 taulukkoa vasten. Suotimen koko on 3x3. Ylemmässä esimerkissä askel on 1, alemmassa askel on 2. Kummassakin tapauksessa on esitelty kolme ensimmäistä askelta.*
 
 Kukin koontikerros ottaa seuraavat parametrit sisäänsä [^pyisgurus]:
 
@@ -248,7 +252,7 @@ Koontikerroksen lähtö täten kokoa:
 * Korkeus: $H_2 = \frac{H_1 - F}{S} + 1$
 * Syvyys: $D_2 = D_1$
 
-Hyvin tyypillinen koontikerros on $2 \times 2$ max-pooling, jossa askeleena on 2. Tämä tarkoittaa, että kuvan leveys ja korkeus puolittuvat jokaisella pooling-kerroksella.
+Hyvin tyypillinen koontikerros on $2 \times 2$ max-pooling, jossa askeleena on 2. Tämä tarkoittaa, että kuvan leveys ja korkeus puolittuvat jokaisella pooling-kerroksella. Kärjistäen kyseessä on siis `resize(50 %, interpolation=max)`-operaatio. Muista kuitenkin, että tässä ei sinänsä enää pienennetä *kuvaa* vaan *piirrekarttoja*.
 
 ## Case Study: Fractional Max-Pooling (Graham, 2014)
 
@@ -268,7 +272,7 @@ Lisäksi menetelmä hyödyntää satunnaisuutta. Pooling-alueet voidaan valita j
 
 #### Moderni "Head" -rakenne
 
-Verkon loppuosa poikkeaa myös perinteisestä. Sen sijaan, että piirrekartat litistettäisiin (flatten) ja syötettäisiin tiheille (Dense/Linear) kerroksille, malli käyttää $1\times1$ konvoluutiota (C1). Tämä kerros projisoi piirteet suoraan luokkien lukumäärää vastaavaksi vektoriksi. Tämä tekniikka vähentää parametrien määrää verkon loppupäässä ja on nykyään yleinen käytäntö ns. täysin konvoluutiopohjaisissa verkoissa (Fully Convolutional Networks).
+Verkon loppuosa poikkeaa myös perinteisestä. Sen sijaan, että piirrekartat litistettäisiin (flatten) ja syötettäisiin tiheille (Dense/Linear) kerroksille, malli käyttää $1\times1$ konvoluutiota (C1). Tämä kerros projisoi piirteet suoraan luokkien lukumäärää vastaavaksi vektoriksi.
 
 #### Regularisointi ja koulutuksen erikoisuudet
 
@@ -382,3 +386,4 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 [^lbp]: Ojala, T., Pietikäinen, M., & Mäenpää, T. *Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 24(7), 971-987. 2002. https://doi.org/10.1109/34.1000236
 [^sift]: Lowe, D. G. *Distinctive Image Features from Scale-Invariant Keypoints*. 2004. https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
 [^pyisgurus]: Rosebrock, A. *PyImageSearch Gurus Course: 8.5.1 A CNN Primer*. https://www.pyimagesearch.com/pyimagesearch-gurus-course/
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
