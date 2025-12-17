@@ -1,5 +1,5 @@
 ---
-priority: 600
+priority: 610
 ---
 
 # Siirtovaikutus (Transfer Learning)

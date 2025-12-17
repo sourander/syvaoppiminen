@@ -75,5 +75,11 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: LeNet ja MNIST
 - [ ] Tehtävä: (Valinnainen) HOG
 
+## Koulutetun mallin käyttö (600)
+
+- [ ] Tehtävä: Luo Hugging Face tunnus
+- [ ] Tehtävä: Hugging Face Hello World
+- [ ] Tehtävä: Hate Speech over Naive Bayes
+
 
 ```
