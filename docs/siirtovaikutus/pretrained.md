@@ -63,16 +63,36 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
 
 !!! question "Tehtävä: Hugging Face Hello World"
 
-    Asenna transformers-kirjasto. Ainakin kirjoitushetkellä se vaatii poikkeuksellisen `uv pip`-komennon; pelkkä `uv add` nostaa herjan "SetuptoolsDeprecationWarning: License classifiers are deprecated". Tarkista tuore ohje [gh:hugginface/transformers](https://github.com/huggingface/transformers)-repositorion asennusohjeista! Kirjoitushetkelä oikea komento oli:
+    Asenna transformers-kirjasto, jos sinulla ei sitä jo ole. Suorita seuraava komento projektisi juuressa:
 
     ```bash
-    # Retrieval on minun lisäys. Se tuo datasets-kirjaston muassaan.
-    uv pip install "transformers[torch,retrieval]"
+    uv add "transformers[retrieval,timm,torch-vision]"
     ```
 
     !!! warning
 
-        Tämä komento altistaa riippuvuuskonflikteille. Esimerkiksi datasets-kirjaston riippuvuutena oli joulukuussa 2025 `huggingface-hub==1.2.3`, kun taas `transformers` tulee toimeen korkeintaan `0.36.0`-version kanssa. Komento `uv pip install` ei kirjoita `pyproject.toml` tai `uv.lock`-tiedostoon, joten nämä riippuvuudet eivät jatkossa asennu itsestään. Toivon opiskelijoilta kärsivällisyyttä ja ymmärrystä tämän suhteen.
+        Tässä pitää olla tarkkana kirjastojen riippuvuuksien suhteen. Tarvitsemme kirjastot `datasets` ja `huggingface_hub` myös, mutta niitä ei kannata lähtökohtaisesti asentaa erikseen. Asenna ne sen sijaan käyttäen `transformers`-kirjaston **extras**-ominaisuutta eli hakasulkeissa listatut lisäosat. Tämä varmistaa, että asennettavat versiot ovat yhteensopivia keskenään.
+        
+        Kirjoitushetkellä minulle ei esimerkiksi ollut ollenkaan `torch`-kirjastoa asennettuna omana rivinään, koska `transformers` hoiti sen asennuksen automaattisesti (koska extrat). Nämä asennettujen pakettien suhteet selviää komennolla `uv tree`, ja vielä tarkemmin voi tutkia `uv tree --package=transformers`. Rankasti parsittu output, joka korostaa mahdollista ongelmaa, näkyy alla:
+
+        ```
+        transformers v4.57.3
+        ├── huggingface-hub v0.36.0
+        │   └──  ...
+        ├── tokenizers v0.22.1
+        │   └── huggingface-hub v0.36.0 (*)
+        ├── datasets v4.4.1 (extra: retrieval)
+        │   └── huggingface-hub v0.36.0 (*)
+        ├── timm v1.0.19 (extra: timm)
+        │   ├── huggingface-hub v0.36.0 (*)
+        │   ├── torch v2.9.1
+        │   │   └── ...
+        │   └── torchvision v0.24.1
+        │       └── torch v2.9.1 (*)
+        └── torchvision v0.24.1 (extra: torch-vision)
+        ``` 
+
+        Jos käyt [gh:huggingface/huggingface_hub](https://github.com/huggingface/huggingface_hub)-repossa, huomaat, että `huggingface_hub`-kirjasto on tuoreelta versioltaan (kirjoitushetkellä) `v1.2.3`. Kyseinen kirjasto on loikannut uuteen Major-versioon Oct 27. Jos asentaisit sen käsin, `uv` asentaisi tämän tuoreen version, ja **major on taaksepäin yhteensopimaon by definition**. Saisit paljon erroria. Summa summarum, käytä ison kirjaston extra-asennuksia aina kun mahdollista!
 
         1. Älkää epäröikö kysyä apua, jos asennuksessa ilmenee ongelmia!
         2. Älä vaivu *"opettajan pitäisi hoitaa nämä asiat"* -ajatteluun. Tämä on osa ohjelmistokehityksen arkea, ja on tärkeää oppia ratkaisemaan nämä ongelmat. Et todellakaan tule säästymään kirjastoriippuvuuksien kanssa painimiselta myöhemminkään urallasi.

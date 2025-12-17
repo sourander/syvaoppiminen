@@ -11,7 +11,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "tensorboard>=2.20.0",
     "torchmetrics>=1.8.2",
-    "torchvision>=0.23.0",
     "torchvista>=0.2.6",
     "torchviz>=0.0.3",
+    "transformers[retrieval,timm,torch-vision]>=4.57.3",
 ]
