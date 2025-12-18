@@ -44,17 +44,25 @@ for epoch in range(EPOCHS):
 
 ### Numpy to the rescue
 
+!!! note "Käytänteet"
+
+    Lineaarialgebran teoriassa käytetään yleensä **sarakevektoreita** $(n, 1)$, jolloin operaatio on $y = Wx + b$. Ohjelmistokehykset (PyTorch, NumPy) käsittelevät dataa kuitenkin **riveinä** (yleensä muodossa $(batch\_size, n)$).
+
+    Tästä syystä koodissa operaatio toteutetaan muodossa: $y = xW^\intercal + b$
+
+    Tämä transpoosi sallii painomatriisin $W$ kertomisen tehokkaasti kokonaisella databatchilla, jossa kukin näyte on omana rivinään.
+
 Huomaa, että Numpy-vektorointi tiivistää saman koodin hyvinkin lyhyeksi. Jos jätetään pari yksityiskohtaa pois, `forward()`-metodin koodi näyttää tältä:
 
 ```python
 def forward(self, x):
 
-    # Inputs -> Hiddens
-    Z1 = self.A0.dot(self.W0) + self.b0
+    # Layer 1 (hidden layer)
+    Z1 = self.A0.dot(self.W1) + self.b1
     self.A1 = self.sigmoid(Z1)
 
-    # Hiddens -> Output
-    Z2 = self.A1.dot(self.W1) + self.b1
+    # Layer 2 (output layer)
+    Z2 = self.A1.dot(self.W2) + self.b2
     self.A2 = self.sigmoid(Z2)
     return self.A2
 ```
