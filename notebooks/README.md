@@ -138,12 +138,95 @@ displayed_models = ["github/gpt-4o-mini", "github/gpt-5"]
 ```
 
 
-## Teacher 👨‍🏫: How to handle solution backups
+## Teacher 👨‍🏫: How to handle Solutions
 
-Some of the Notebooks contain exercises. Example solutions are in a subdirectory `solutions`. You can backup the current state of that directory by running:
+Some of the Notebooks contain exercises. Example solutions are in a subdirectory `solutions`. Old hack was backing them up to OneDrive using a script. New solution is using `git-crypt` to encrypt the solutions directory, so that only teachers with the decryption key can access them.
+
+Here is a guide for setup, I will most likely end up doing this on other courses too.
+
+### Part A: Encrypt (macOS)
+
+This setup is done only on one machine. I will start it on my macOS. The folloging command initializes git-crypt in the repository. The key file is created into `.git/git-crypt/keys/default`. Run this only once per repository.
 
 ```bash
-./backup_solutions.sh
+brew install git-crypt
+git-crypt init
+# Output: Generating key...
 ```
 
-It will be saved in a timestamped `tar.gz` file into a `${ONEDRIVE}/__SOLUTIONS_BACKUPS/syvaoppiminen/yyyy-mm-dd-solutions.tar.gz`.
+Modify the Git's dotiles as follows:
+
+```
+# .gitattributes Add this:
+notebooks/nb/solutions/** filter=git-crypt diff=git-crypt
+
+# .gitignore Remove if exists
+notebooks/nb/solutions/
+```
+
+Finally, push to GitHub:
+
+```bash
+# Usual commands
+git add .gitattributes .gitignore notebooks/nb/solutions
+git commit -m "Add encrypted solutions using git-crypt"
+
+# Verify - list files and view one of them (should be GITCRYPT + binary data)
+git show HEAD:notebooks/nb/solutions
+git show HEAD:notebooks/nb/solutions/213_tensor_exercises.ipynb | head -n 2
+
+# Push to GitHub
+git push
+```
+
+### Part B: Pull (Ubuntu)
+
+On another machine, Ubuntu Desktop in this, I ran these commands:
+
+```bash
+# Install
+sudo apt install git-crypt
+cd syvaoppiminen
+git pull
+
+# Verify
+head -n 2 notebooks/nb/solutions/213_tensor_exercises.ipynb
+# Output: GITCRYPT + binary data
+```
+
+### Part C: Share key (macOS)
+
+Instead of GPG keys, I will be using symmetric key encryption for simplicity. These solutions can be found using LLM's anyways, so no need to overengineer this. In order to allow decryption on other machines, the key must be shared. On macOS machine, run:
+
+```bash
+# Export the repo’s symmetric key
+git-crypt export-key gh-solutions.git-crypt.key
+
+# Copy it to the Ubuntu machine
+scp gh-solutions.git-crypt.key poytakone:~
+
+# Delete local copy
+rm gh-solutions.git-crypt.key
+```
+
+### Part D: Decrypt (Ubuntu)
+
+On Ubuntu machine, run:
+
+```bash
+cd syvaoppiminen
+
+# Unlock the repo using the symmetric key
+git-crypt unlock ~/gh-solutions.git-crypt.key
+
+# Verify
+head -n 2 notebooks/nb/solutions/213_tensor_exercises.ipynb
+# Output: { "cells": [ ...}
+```
+
+Finally, store the key to a password manager and delete the local file: `rm ~/gh-solutions.git-crypt.key`.
+
+How does it work? After these commands, the Ubuntu PC will have exactly the same `.git/git-crypt/keys/default` file as the macOS machine. The "repo is the key" principle applies: as long as the same key file is used, the encryption and decryption will work seamlessly. The `unlock` command simply copied the key file to the correct location.
+
+
+
