@@ -21,7 +21,7 @@ TODO
 
 ## Hugging Face
 
-PyTorchin itsensä tarjoamien esikoulutettujen mallien lisäksi on olemassa useita kolmannen osapuolen sivustoja tai kirjastoja, jotka tarjoavat laajan valikoiman esikoulutettuja malleja eri tarkoituksiin. Eri julkaisuihin löytyviä malleja voi löytyä esimerkiksi Githubista tai Zenodosta. Tällä kurssilla käsitellään yksinkertaisuuden vuoksi vain ja ainoastaan Hugging Facea. Mikä siis on Hugging Face? Ei ainakaan sitä, mikä se perustamishetkellä oli:
+PyTorchin itsensä tarjoamien esikoulutettujen mallien lisäksi on olemassa useita kolmannen osapuolen sivustoja tai kirjastoja, jotka tarjoavat laajan valikoiman esikoulutettuja malleja eri tarkoituksiin. Eri julkaisuihin löytyviä malleja voi löytyä esimerkiksi Githubista tai Zenodosta. Tällä kurssilla käsitellään yksinkertaisuuden vuoksi vain ja ainoastaan Hugging Facea. Hugging Facella on ensimmäisen luokan tuki nimenomaan PyTorch-viitekehykselle [^dlwithpython]. Mikä siis on Hugging Face? Ei ainakaan sitä, mikä se perustamishetkellä oli:
 
 > "In 2016, Clement Delangue, Julien Chamound, and Thomas Wolf launched an AI-powered chatbot for teenagers called Hugging Face. Their vision for the product was a digital friend that was entertaining enough for people to have fun talking to it"
 >
@@ -29,7 +29,7 @@ PyTorchin itsensä tarjoamien esikoulutettujen mallien lisäksi on olemassa usei
 
 Nykypäivänä Hugging Face on API-talouden ilmentymä. Sen etusivun navigaatiossa olevista osioista voi päätellä sen eri palvelut:
 
-* **Models**: Esikoulutettuja malleja (2.2M kirjoitushetkellä, joista 220k PyTorch-malleja). 
+* **Models**: Esikoulutettuja malleja (2.2M kirjoitushetkellä). 
     * :arrow_up: Tämän tunnin aihe!
 * **Datasets**: Valmiita datakokoelmia.
 * **Spaces**: Mahdollistaa esimerkiksi Gradio‑ tai Streamlit‑pohjaisten sovellusten julkaisemisen ja jakamisen.
@@ -111,4 +111,5 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
 
 ## Lähteet
 
+[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^pathtopivot]: Shen, J. *How Hugging Face Transformed a $4.5B AI Powerhouse [Pivot Case Study]*. The Path to Pivot. 2024. https://www.pathtopivot.com/hugging-face-pivot-case-study/
