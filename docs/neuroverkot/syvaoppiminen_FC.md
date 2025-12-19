@@ -14,6 +14,10 @@ Määritelmän osalta Understanding Deep Learning kirjan luvun 3 alku on hyvä:
 
 Prince toteaa, että matalan neuroverkkojen kyky kuvata monimutkaisia funktioita kasvaa piilokerroksen neuronien määrän lisääntyessä. Riittävän suurella neuronimäärällä matalat verkot pystyvät mallintamaan mielivaltaisen monimutkaisia funktioita. Käytännössä tämä on kuitenkin usein mahdotonta, sillä tarvittava neuronien määrä voi kasvaa kohtuuttoman suureksi. [^udlbook]
 
+![](../images/200_robot_uncrumpling_papers.jpg)
+
+**Kuva 1:** *Kirjassa Deep Learning with Python syvää neuroverkkoa verrataan operaatioksi, jonka tehtävä on suoristaa paperimytty. Input on paperimytty, ja näistä opitaan ne datan representaation laskokset, jotka mytyn ovat luoneet [^dlwithpython]. Kuva on ChatGPT:llä luotu.*
+
 Syvät neuroverkot tarjoavat tähän ratkaisun: ne pystyvät tuottamaan huomattavasti enemmän lineaarisia alueita kuin matalat verkot samalla parametrimäärällä. Kerrosten määrän ja niiden neuronien määrä on siis jotakin, mitä pitää optimoida mallia suunniteltaessa. Palaamme tähän kohta tässä samassa luvussa.
 
 ### Yleiskatsaus
@@ -26,7 +30,7 @@ Kuvassa kerroksen yksi neuronit ovat $h_1$, $h_2$ ja $h_3$. Kunkin niiden tulost
 
 ![](../images/110_DeepTwoLayer.svg)
 
-**Kuva 1:** *Kaksi kerroksinen syväverkko, jossa on kaksi piilotettua kerrosta, joissa kussakin on kolme neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen.*
+**Kuva 2:** *Kaksi kerroksinen syväverkko, jossa on kaksi piilotettua kerrosta, joissa kussakin on kolme neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen.*
 
 ### Laskutoimitukset
 
@@ -96,7 +100,7 @@ Tutustumme myös muihin hyperparametreihin kurssin edetessä. Hyperparametrien *
 
 ![](../images/110_DeepKLayer.svg)
 
-**Kuva 2:** *Syväverkko, jossa on $K$ piilotettua kerrosta, joissa kussakin on $D_k$ neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen. Tähän kuvaan on piirretty mukaan myös vakiotermit (bias) $b_k$, jotka ovat $D_k$-ulotteisia vektoreita.*
+**Kuva 3:** *Syväverkko, jossa on $K$ piilotettua kerrosta, joissa kussakin on $D_k$ neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen. Tähän kuvaan on piirretty mukaan myös vakiotermit (bias) $b_k$, jotka ovat $D_k$-ulotteisia vektoreita.*
 
 Huomaa, että jos meidän *budjetti* GPU-muistille sallii vain $N = 1000$ painoa, voimme valita esimerkiksi luoda $K=2$ kerrosta, joissa kummassakin $D_k = 500$ neuronia. Tai voimme tehdä $K=5$ kerrosta, joissa kussakin on $D_k = 200$ neuronia. Tai voimme luoda suppilon, jossa ensimmäisessä kerroksessa on $D_1 = 400$ neuronia, toisessa $D_2 = 300$, kolmannessa $D_3 = 200$ ja neljännessä $D_4 = 100$. Kaikki nämä vaihtoehdot käyttävät saman verran muistia, mutta niillä on erilaiset kyvyt oppia erilaisia funktioita. Jos tutkit vanhoja malleja, huomaat, että suppilo oli ennen hyvinkin suosittu arkkitehtuuri. Nykyään on tavallisempaa käyttää saman kokoisia kerroksia. Géron antaa nyrkkisäännön, että paremman hyödyn saa tyypillisesti lisäämällä kerrosten määrää kuin neuronien määrää kerroksessa. [^handson-tf]
 
@@ -112,7 +116,7 @@ MNIST-datassa on käsinkirjoitettuja numeroita (0-9), jotka on skaalattu 28x28 p
 
 ![](../images/110_mnist_grid.png)
 
-**Kuva 3:** *MNIST-datan esimerkkikuvia. Kuvat on poimittu PyTorch:n [torchvision.datasets.MNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.MNIST.html)-luokasta.*
+**Kuva 4:** *MNIST-datan esimerkkikuvia. Kuvat on poimittu PyTorch:n [torchvision.datasets.MNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.MNIST.html)-luokasta.*
 
 **Tavoite on siis:** kouluttaa moniluokkainen luokittelija, joka pystyy tunnistamaan käsinkirjoitetut numerot. Tämä on 10-luokkainen luokittelutehtävä, jossa jokainen luokka vastaa yhtä numeroa (0-9). Työ on jo tehty sinun puolestasi, koska tämä on kurssin aloitus, ja sinulle ei ole vielä edes opetettu PyTorchin käyttöä. Koodi löytyy Notebookista `notebooks/nb/100/110_first_model.ipynb` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen). Aloitusluennolla sinulle on esitelty, mistä mitäkin materiaalia löytyy, ja kuinka kurssi kannattaa suorittaa.
 
@@ -126,7 +130,7 @@ Aloitetaan käänteisesti tulosten esittelemisestä. Kuten on sanottu, MNIST on 
 
 ![](../images/110_mlp_mnist_training_loss_and_acc.png)
 
-**Kuva 4:** *MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta.*
+**Kuva 5:** *MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta.*
 
 Kuvaajassa näkyy neljä käyrää: `train_loss`, `train_acc`, `val_loss` ja `val_acc`. Nämä kuvaavat mallin suoriutumista koulutusdatalla (train) ja validaatiodatalle (val). Koulutusdata on se data, jolla malli on koulutettu, ja validaatiodata on erillinen osajoukko datasta, jota ei ole käytetty mallin kouluttamiseen. Validaatiodataa käytetään mallin arviointiin koulutuksen aikana, jotta nähdään, kuinka hyvin malli yleistyy näkemättömään dataan. Ideaalitilanteessa lopullinen arviointi tehdään testidatalla, joka on täysin erillinen sekä koulutus- että validaatiodatasta. Tässä meidän yksinkertaisessa esimerkissä emme kuitenkaan tee erillistä testidataa. Eli siis kaikki 60 000 kuvaa ovat koulutusdataa ja 10 000 kuvaa ovat validaatiodataa. Hyväksymme validaatiotuloksen lopulliseksi tulokseksi.
 
@@ -159,11 +163,11 @@ Alla näkyy kuvaajissa, mitä tapahtuu 100-500 epookin aikana. Kuvaajat on otett
 
 ![](../images/110_mlp_mnist_training_100to500_tensorboard.png)
 
-**Kuva 5:** *TensorBoardissa on mahdollista zoomata kuvaajaan sisään. Tässä kuvaajassa näkyy suunnilleen alue 100-500. Mallin virhe vähenee epookista 100 eteenpäin, mutta `train` ja `val` käyrät alkavat erkaantua toisistaan, mikä viittaa ylikoulutukseen.*
+**Kuva 6:** *TensorBoardissa on mahdollista zoomata kuvaajaan sisään. Tässä kuvaajassa näkyy suunnilleen alue 100-500. Mallin virhe vähenee epookista 100 eteenpäin, mutta `train` ja `val` käyrät alkavat erkaantua toisistaan, mikä viittaa ylikoulutukseen.*
 
 ![](../images/110_mlp_mnist_training_400to500_acc_tensorboard.png)
 
-**Kuva 6:** *Tässä kuvaajassa on zoomattu alueelle 400-500 accuracy-käyrässä. Kuten näkyy, validaatiotarkkuus ei ole parantunut 400. epookin jälkeen, mutta koulutustarkkuus jatkaa parantumistaan. Tämä on selkeä merkki ylikoulutumisesta (overfitting). Malli käytännössä oppii ulkoa koulutusdatan.*
+**Kuva 7:** *Tässä kuvaajassa on zoomattu alueelle 400-500 accuracy-käyrässä. Kuten näkyy, validaatiotarkkuus ei ole parantunut 400. epookin jälkeen, mutta koulutustarkkuus jatkaa parantumistaan. Tämä on selkeä merkki ylikoulutumisesta (overfitting). Malli käytännössä oppii ulkoa koulutusdatan.*
 
 
 ### Nostoja koodista
@@ -353,6 +357,7 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
 
 ## Lähteet
 
+[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
 [^handson-tf]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly Media. 2022.
 [^maslowshammer]: Wikipedia. Law of the instrument. https://en.wikipedia.org/wiki/Law_of_the_instrument
