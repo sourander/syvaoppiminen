@@ -49,12 +49,12 @@ Sama pätee esimerkiksi kurssin videoihin. Jos videon otsikossa on luku välill�
 
 ## Koodin ajaminen
 
-Kurssilla ei pelkästään katsella koodia vaan sitä ajetaan myös. Voit ajaa koodit 
+Kurssilla ei pelkästään katsella koodia vaan sitä ajetaan myös. Voit ajaa koodit seuraavilla tavoilla, järjestettynä suositelluimmasta vähiten suositeltuun:
 
-* Jupyter Hubissa
-* Google Colabiss
-* Coder-ympäristössä
 * Paikallisesti `uv`:lla
+* Disco Coder -ympäristössä
+* Jupyter Hubissa
+* Google Colabissa
 
 Vaihtoehtoja esitellään kurssivideoilla ja tukisessioissa. Mikäli sinulla on oma näytönohjain, on äärimmäisen suositeltavaa opetella ajamaan koodia paikallisesti kyseistä näytönohjainta hyödyntäen. AI-opiskelijalta tämä on jopa odotettavaa.
 

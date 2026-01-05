@@ -12,7 +12,7 @@ Neuroverkkojen luomisen prosessista käytetään termiä *mallinnus* (*engl. mod
 
 ### Työvaiheet lyhyesti
 
-Aiemmin Johdatus koneoppimiseen -kurssilla tutustuit jo yleiseen koneoppimisen työnkulkuun: datan keräämiseen, esikäsittelyyn, mallin valintaan ja arviointiin. Tässä luvussa tarkennamme näitä vaiheita nimenomaan neuroverkon näkökulmasta – eli siihen, millainen funktio valitaan ja miten sen muotoa (arkkitehtuuria) säädetään. Alla oleva taulukko on yhdistelmä Essential Math for AI -kirjan luvun 3 alun työnkulusta [^mathforai] sekä DEep Learning with Python (3rd ed) kirjan luvusta 6 [^dlwithpython]. Se kokoaa yhteen mallintamisen tärkeimmät vaiheet. Datan hankinta (tai lähinnä sen käyttö PyTorchissa) käsitellään tarkemmin seuraavassa luvussa. Datan louhintaa on käsitelty muilla kursseilla.
+Aiemmin Johdatus koneoppimiseen -kurssilla tutustuit jo yleiseen koneoppimisen työnkulkuun: datan keräämiseen, esikäsittelyyn, mallin valintaan ja arviointiin. Tässä luvussa tarkennamme näitä vaiheita nimenomaan neuroverkon näkökulmasta – eli siihen, millainen funktio valitaan ja miten sen muotoa (arkkitehtuuria) säädetään. Alla oleva taulukko on yhdistelmä Essential Math for AI -kirjan luvun 3 alun työnkulusta [^mathforai] sekä Deep Learning with Python (3rd ed) kirjan luvusta 6 [^dlwithpython]. Se kokoaa yhteen mallintamisen tärkeimmät vaiheet. Datan hankinta (tai lähinnä sen käyttö PyTorchissa) käsitellään tarkemmin seuraavassa luvussa. Datan louhintaa on käsitelty muilla kursseilla.
 
 
 | Työvaihe                        | Kuvaus                                                                                                                              |
