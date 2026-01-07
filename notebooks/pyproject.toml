@@ -14,4 +14,5 @@ dependencies = [
     "torchvista>=0.2.6",
     "torchviz>=0.0.3",
     "transformers[retrieval,timm,torch-vision]>=4.57.3",
+    "wigglystuff>=0.2.8",
 ]

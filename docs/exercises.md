@@ -80,6 +80,12 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Luo Hugging Face tunnus
 - [ ] Tehtävä: Hugging Face Hello World
 - [ ] Tehtävä: Hate Speech over Naive Bayes
+- [ ] Tehtävä: MobileNetV3 käyttö
+
+## Siirtovaikutus (610)
+
+- [ ] Tehtävä: Dogs vs. Cats siirtovaikutus
+- [ ] Tehtävä: RPS-datasetin luonti webcamilla
 
 
 ```

@@ -15,9 +15,7 @@ PyTorchin valmiiksi koulutettuihin malleihin pääsee käsiksi kahta reittiä:
 
 Jos tarkkoja ollaan, niin nämä reitit ovat sinänsä samat, että `torchvision.models` käyttää taustalla PyTorch Hubia. Erona on, että `torchvision.models` tarjoaa vain kuvantunnistukseen tarkoitettuja malleja, kun taas PyTorch Hubista löytyy malleja monenlaisiin tarkoituksiin, kuten luonnollisen kielen käsittelyyn (NLP) ja generatiivisiin malleihin. Jotta tämä ei olisi liian helppoa, niin monet näistä malleista ovat fyysisesti säilöttynä Hugging Facen mallivarastoon. Katso vaikka [PyTorch Hub: PyTorch-Transformers](https://docs.pytorch.org/vision/main/models)-dokumentaatio.
 
-TODO
-
-TODO
+Tutustut näihin malleihin harjoituksissa alla.
 
 ## Hugging Face
 
@@ -109,7 +107,22 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
 
     Toteuta `601_hate_speech.py`-tiedostoon puuttuvat kohdat. Tutustu skriptin toimintaan. Jos sinulla on Johdatus koneoppimiseen -kurssin muistiinpanot saatavilla, tarkista, mihin tarkkuuteen Naive Bayes -malli ylsi saman datan ja ongelman kanssa.
 
+!!! question "Tehtävä: MobileNetV3 käyttö"
+
+    Tiedostossa `603_pretrained.ipynb` on Marimo Notebook, jossa on käytössä torchvisionin esikoulutettu MobileNetV3 Small -malli.
+
+    Muokkaa tiedostoa siten, että:
+
+    1. Valitse jokin toinen luokka (ei opettajan valitsema *magpie*)
+    2. Etsi internetistä kuvia, jotka kuuluvat tähän luokkaan (vähintään 1 kpl)
+    3. Muokkaa `Display Image` siten, että myös esikäsitelty kuva näytetään.
+    4. Tee ennuste.
+
+    Voit kokeilla myös muita malleja, kuten ResNet- tai EfficientNet-malleja, jotka soveltuvat luokitteluun – tai jos olet rohkea, kokeile vaikka Object Detection -malleja (esim. Faster R-CNN)! Luokitteluun sopivan mallin valinnassa voi auttaa kurssikirjan Table 12-3, *Some of the pretrained models available in torchvision, sorted by size* [^geronpytorch]. 
+
+
 ## Lähteet
 
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^pathtopivot]: Shen, J. *How Hugging Face Transformed a $4.5B AI Powerhouse [Pivot Case Study]*. The Path to Pivot. 2024. https://www.pathtopivot.com/hugging-face-pivot-case-study/
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
