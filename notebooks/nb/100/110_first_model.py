@@ -504,7 +504,7 @@ def _(mo):
     To view the training results in TensorBoard, run the following command in a terminal:
 
     ```bash
-    tensorboard --logdir=runs
+    uv run tensorboard --logdir=runs
     ```
 
     Then open your browser to [http://localhost:6006](http://localhost:6006)
