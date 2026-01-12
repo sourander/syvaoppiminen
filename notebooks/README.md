@@ -30,12 +30,31 @@ The `uv` project exists so that you can use Marimo either in Browser or using VS
 
 Note that we are using GPU, so assuming you have a local Nvidia GPU available, you want to install:
 
+### On Windows
+
 * Latest Nvidia Drivers
-* Run `nvidia-smi` to verify installation and check CUDA version (e.g. `12.7`)
-    * The nvidia-smi CUDA version shows the maximum CUDA Toolkit version your installed NVIDIA driver supports.
-* Install CUDA Toolkit matching the version shown by `nvidia-smi`
-    * This can be detected how !?!?!?
-* 
+* Docker Desktop with WSL2 backend
+
+Read the [GPU support in Docker Desktop for Windows](https://docs.docker.com/desktop/features/gpu/) for more information.
+
+### On Ubuntu (native)
+
+* Latest Nvidia Drivers
+* CUDA Toolkit.
+
+Read the **Prepare Ubuntu** and **Network Repository Installation** sections from the [CUDA Installation Guide for Linux: Ubuntu](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#ubuntu) guide. After those steps, do the [Post-installation Actions](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#post-installation-actions) as well. In summary, you will:
+
+### On Ubuntu (Docker)
+
+* Latest Nvidia Drivers
+* Docker Engine
+* Nvidia Container Toolkit
+
+When using Docker, you do not need to install CUDA Toolkit, since the Docker image contains it already. Read the [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) for more information.
+
+### On macOS
+
+Assuming you have M1 or other Apple Silicon GPU, it just works. You do not need Docker. Simply run `uv run marimo edit`. 
 
 ### Using the Teacher's UV Environment
 

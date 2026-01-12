@@ -144,16 +144,18 @@ Koulutuksen tulokset eri raudalla:
 | ----------------------- | ------------ | ------------------ | ------------------- |
 | MacBook Pro (CPU)       | 2.9 s        | 4 min 48 s         | 95.35 %             |
 | MacBook Pro (MPS)       | 3.7 s        | 6 min 12 s         | 95.18 %             |
-| PC (CPU)                | 3.2 s        | 5 min 22 s         | 95.21 %             |
-| PC (CUDA)               | 3.3 s        | 5 min 30 s         | 95.14 %             |
+| Linux PC (CPU)          | 3.2 s        | 5 min 22 s         | 95.21 %             |
+| Linux PC (CUDA)         | 3.3 s        | 5 min 30 s         | 95.14 %             |
 | Disco (CUDA)            | 4.0 s        | 8 min 38 s         | 95.37 %             |
+| Win PC (CPU)            | 4.0 s        | 8 min 38 s         | 95.26 %             |
 | Disco (CPU)             | 4.1 s        | 8 min 50 s         | 95.27 %             |
+| Win PC (GPU)            | 6.9 s        | 11 min 32 s        | 95.26 %             |
 | Google Colab (CPU)      | 10.8 s       | 18 min 00 s        | 95.35 %             |
 | Google Colab (CUDA)     | 13.8 s       | 23 min 00 s        | 95.19 %             |
 | Jupyter Hub (CPU)       | 20.4 s       | 33 min 24 s        | 95.35 %             |
 | Jupyter Hub (0.33x GPU) | 20.5 s       | 34 min 10 s        | 95.33 %             |
 
-Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia. Verrokkina listalla on Google Colab:n ilmainen CPU runtime sekä GPU runtime (Tesla T4). Jupyter Hubissa koodi on ajettu tavallisena torstai-iltanapäivänä ilman tietoa siitä, onko alustalla muita samanaikaisia käyttäjiä.
+Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia. Linuxissa koodi ajetaan ilman konttia natiivissa suoritusympäristössä; Windowsissa sama kone käyttää Docker WSL 2:sta. Jupyter Hubissa koodi on ajettu tavallisena torstai-iltanapäivänä ilman tietoa siitä, onko alustalla muita samanaikaisia käyttäjiä. Verrokkina listalla on Google Colab:n ilmainen CPU runtime sekä GPU runtime (Tesla T4). 
 
 ### Epookkien määrä
 
