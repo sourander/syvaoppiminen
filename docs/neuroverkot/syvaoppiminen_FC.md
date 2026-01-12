@@ -342,7 +342,7 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
 
     ```bash
     cd notebooks/
-    uv run tensorboard --logdir nb/100/runs
+    uv run tensorboard --logdir=runs
     ```
 
     Tutustu TensorBoardin käyttöliittymään ja sen tarjoamiin visualisointeihin. Tutki, mikä rivi Notebookissa on vastuussa kunkin metriikan kirjaamisesta TensorBoardiin.

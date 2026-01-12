@@ -28,6 +28,15 @@ notebooks/nb/100/112_dolor.py
 
 The `uv` project exists so that you can use Marimo either in Browser or using VS Code Extension for Marimo. This guide focuses on the browser usage, but there is a section about VS Code as well. Note that teacher will use it in the browser during the lessons.
 
+Note that we are using GPU, so assuming you have a local Nvidia GPU available, you want to install:
+
+* Latest Nvidia Drivers
+* Run `nvidia-smi` to verify installation and check CUDA version (e.g. `12.7`)
+    * The nvidia-smi CUDA version shows the maximum CUDA Toolkit version your installed NVIDIA driver supports.
+* Install CUDA Toolkit matching the version shown by `nvidia-smi`
+    * This can be detected how !?!?!?
+* 
+
 ### Using the Teacher's UV Environment
 
 To use teacher's UV environment, simply run:
@@ -42,7 +51,7 @@ cd notebooks
 # This will create `.venv/` in the current directory
 # with same versions of all packages as the teacher has.
 # They are listed in uv.lock file.
-uv sync
+uv sync --frozen
 ```
 
 You can check what the teacher's environment contains by inspecting the `pyproject.toml` file. If you a wondering what the recommended is in `marimo[recommended]`, it is called *extras*. As of 2025 November, it contains following packages:

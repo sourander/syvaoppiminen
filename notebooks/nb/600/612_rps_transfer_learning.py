@@ -32,6 +32,7 @@ def _():
     from torchvision.datasets import ImageFolder
     from sklearn.model_selection import train_test_split
     from torch.utils.data import Subset
+    from torchmetrics.classification import MulticlassAccuracy
     return (
         ImageFolder,
         Path,
@@ -148,13 +149,13 @@ def _(
         axes = axes.flatten()
         mean = torch.tensor(imagenet_mean).view(3, 1, 1)
         std = torch.tensor(imagenet_std).view(3, 1, 1)
-    
+
         for ax, img in zip(axes, images):
             img_disp = img.clone()
 
             if img_transform:
                 img_disp = img_transform(img_disp)
-            
+
             # img_disp = img_disp * std + mean
             img_disp = img_disp.permute(1, 2, 0).numpy()
             img_disp = np.clip(img_disp, 0.0, 1.0)
@@ -178,7 +179,48 @@ def _(mo):
     mo.md(r"""
     ## Model
 
-    This example uses the MobiletNet V3. You can use something else, if you like. For example, Inception V3 can be a good challenge. You need to battle with something called auxiliary logits.
+    This example uses the Inception V3 (alias GoogLeNet). Inception uses "auxiliary logits" during training. It may loosely resemle a residual connection, but it is not quite that, since it bypasses the next modules and shortcuts to output loss. In the loss functions, these can then be added together with a weight. You can see it's usage in the source code of Inception: [gh:pytorch/torchvision/../inception:L103-L155](https://github.com/pytorch/vision/blob/main/torchvision/models/inception.py#L103-L155)
+
+    ```python
+        def forward:
+            # Forward pass contains layers up to Mixed_6e
+            x = BEFORE(x)
+
+            # The aux logits and handled here conditionally
+            if aux_logits:
+                aux = AuxLogits(x)
+
+            # Forward pass continues with Mixed_7a to 7c
+            x = AFTER(x)
+
+            # And finally, tuple of typical classifier
+            # and the aux classifier is returned
+            return x, aux
+    ```
+
+    The actual aux logit head is:
+
+    ```
+    InceptionAux(
+      (conv0): BasicConv2d(
+        (conv): Conv2d(768, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(128, eps=0.001, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (conv1): BasicConv2d(
+        (conv): Conv2d(128, 768, kernel_size=(5, 5), stride=(1, 1), bias=False)
+        (bn): BatchNorm2d(768, eps=0.001, momentum=0.1, affine=True, track_running_stats=True)
+      )
+      (fc): Linear(in_features=768, out_features=1000, bias=True)
+    )
+    ```
+
+    You can also see these in the original paper [Going Deeper with Convolutions](https://doi.org/10.48550/arXiv.1409.4842).  Look at the Figure 3 (pg. 7). You can see two classification heads branching off from the *main road*. They are *"put on top of the output of the Inception (4a) and (4d) modules"*
+
+    However, this is something we need to handle when training the model and computing the loss. Original paper explains it as:
+
+    > "During training, their loss gets added to the total loss of the
+    > network with a discount weight (the losses of the auxiliary classifiers were weighted by 0.3). At
+    > inference time, these auxiliary networks are discarded."
     """)
     return
 
@@ -189,24 +231,80 @@ def _(device, models):
 
     pre_trained_model = models.inception_v3(weights=weights)
     pre_trained_model = pre_trained_model.to(device)
-    return (pre_trained_model,)
-
-
-@app.cell
-def _(pre_trained_model):
-    pre_trained_model.fc
     return
 
 
-@app.cell
-def _(pre_trained_model):
-    pre_trained_model.AuxLogits
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Training Function
+
+    Note that we have the auxiliary logits, and we must weight them in to the loss. This affects the training function. An example of how this can be done is seen in the repository for book XXX in a file [Chapter03.ipynb](https://github.com/lmoroney/PyTorch-Book-FIles/blob/main/Chapter03/PyTorch_Chapter_3.ipynb). The key part is:
+
+    ```python
+        # Forward pass
+        outputs = model(inputs)
+        # Handle multiple outputs for training with auxiliary logits
+        if isinstance(outputs, tuple):
+            output, aux_output = outputs
+            loss1 = criterion(output, labels)
+            loss2 = criterion(aux_output, labels)
+            loss = loss1 + 0.4 * loss2  # Scale the auxiliary loss as is standard for Inception
+        else:
+            loss = criterion(outputs, labels)
+    ```
+    """)
     return
 
 
-@app.cell
-def _():
-    return
+@app.function
+def train_epoch(model, train_loader, criterion, optimizer, metric, device, epoch=None, num_epochs=None):
+        """Train the model for one epoch.
+
+        Returns:
+            tuple: (epoch_loss, epoch_acc)
+        """
+        model.train()
+        metric.reset()
+        total_loss = 0.0
+
+        for batch_idx, batch in enumerate(train_loader):
+            images = batch["image"].to(device)
+            labels = batch["labels"].to(device)
+
+            # Forward pass
+            optimizer.zero_grad()
+            outputs = model(images)
+
+            # Handle auxiliary logits for Inception V3
+            if isinstance(outputs, tuple):
+                main_output, aux_output = outputs
+                loss1 = criterion(main_output, labels)
+                loss2 = criterion(aux_output, labels)
+                loss = loss1 + 0.4 * loss2  # Weight auxiliary loss by 0.4
+            else:
+                main_output = outputs
+                loss = criterion(outputs, labels)
+
+            # Backward pass
+            loss.backward()
+            optimizer.step()
+
+            total_loss += loss.item()
+
+            # Statistics (use main output for accuracy)
+            metric.update(main_output, labels)
+
+            if (batch_idx + 1) % 50 == 0:
+                current_acc = metric.compute().item()
+                print(f"Epoch [{epoch}/{num_epochs}], "
+                      f"Batch [{batch_idx+1}/{len(train_loader)}], "
+                      f"Loss: {total_loss/(batch_idx+1):.4f}, "
+                      f"Acc: {100.*current_acc:.2f}%")
+
+        epoch_loss = total_loss / len(train_loader)
+        epoch_acc = metric.compute().item()
+        return epoch_loss, epoch_acc
 
 
 if __name__ == "__main__":
