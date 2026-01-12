@@ -1,4 +1,4 @@
-# Syväoppiminen I
+# Tervetuloa kurssille
 
 !!! warning
 
