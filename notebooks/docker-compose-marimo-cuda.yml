@@ -1,5 +1,7 @@
 services:
   marimo:
+
+    image: syvaoppiminen-cuda-container
     build:
       context: .
       dockerfile: marimo-cuda.Dockerfile
@@ -32,9 +34,8 @@ services:
               capabilities: [gpu]
 
   tensorboard:
-    build:
-      context: .
-      dockerfile: marimo-cuda.Dockerfile
+    image: syvaoppiminen-cuda-container
+    pull_policy: never
 
     ports:
       - "6006:6006"
