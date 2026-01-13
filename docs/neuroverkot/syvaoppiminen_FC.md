@@ -143,9 +143,9 @@ Koulutuksen tulokset eri raudalla:
 | Rauta                   | Aika/epookki | Aika/koko koulutus | Lopputarkkuus (val) |
 | ----------------------- | ------------ | ------------------ | ------------------- |
 | MacBook Pro (CPU)       | 2.9 s        | 4 min 48 s         | 95.35 %             |
-| MacBook Pro (MPS)       | 3.7 s        | 6 min 12 s         | 95.18 %             |
 | Linux PC (CPU)          | 3.2 s        | 5 min 22 s         | 95.21 %             |
 | Linux PC (CUDA)         | 3.3 s        | 5 min 30 s         | 95.14 %             |
+| MacBook Pro (MPS)       | 3.7 s        | 6 min 12 s         | 95.18 %             |
 | Disco (CUDA)            | 4.0 s        | 8 min 38 s         | 95.37 %             |
 | Win PC (CPU)            | 4.0 s        | 8 min 38 s         | 95.26 %             |
 | Disco (CPU)             | 4.1 s        | 8 min 50 s         | 95.27 %             |
