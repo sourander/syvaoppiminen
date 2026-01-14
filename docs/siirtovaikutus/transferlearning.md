@@ -182,5 +182,5 @@ Ajoittain löydät myös valmiita työkaluja, jotka helpottavat siirtovaikutukse
 [^tervekoululainen]: UKK-instituutti. *Siirtovaikutus*. Terve koululainen. https://tervekoululainen.fi/ylakoulu/liikuntataidot/siirtovaikutus/
 [^reminder]: Bozinovski, S. *Reminder of the First Paper on Transfer Learning in Neural Networks, 1976.* 2020. https://doi.org/10.31449/inf.v44i3.2828
 [^aiengineering]: Huyen, C. *AI Engineering*. O'reilly. 2024.
-[^dl4cv]: Rosebrock, A. *Deep Learning for Computer Vision with Python. Starter Bundle. 3rd Edition*. PyImageSearch. 2019.
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
+[^dl4cv]: Rosebrock, A. *Deep Learning for Computer Vision with Python. Starter Bundle. 3rd Edition*. PyImageSearch. 2019.

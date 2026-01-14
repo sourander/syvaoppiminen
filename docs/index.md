@@ -65,4 +65,3 @@ Vaihtoehtoja esitellään kurssivideoilla ja tukisessioissa. Mikäli sinulla on 
     Käännös onnistuu `marimo export ipynb notebook.py -o notebook.ipynb` -komennolla. Lue lisää Marimon [Coming from Jupyter](https://docs.marimo.io/guides/coming_from/jupyter/) -ohjeesta.
 
     On suositeltavaa kuitenkin opetella Marimo-työkalun käyttö.
-
