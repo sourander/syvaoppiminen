@@ -35,14 +35,30 @@ Note that we are using GPU, so assuming you have a local Nvidia GPU available, y
 * Latest Nvidia Drivers
 * Docker Desktop with WSL2 backend
 
-Read the [GPU support in Docker Desktop for Windows](https://docs.docker.com/desktop/features/gpu/) for more information.
+You can then launch the Compose Project with:
+
+```bash
+docker compose -f docker-compose-marimo.yml up -d
+```
+
+After that, you can access the Marimo service at localhost:2718 and TensorBoard at port 6006. Read the [GPU support in Docker Desktop for Windows](https://docs.docker.com/desktop/features/gpu/) for more information.
 
 ### On Ubuntu (native)
 
 * Latest Nvidia Drivers
 * CUDA Toolkit.
 
-Read the **Prepare Ubuntu** and **Network Repository Installation** sections from the [CUDA Installation Guide for Linux: Ubuntu](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#ubuntu) guide. After those steps, do the [Post-installation Actions](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#post-installation-actions) as well. In summary, you will:
+Read the **Prepare Ubuntu** and **Network Repository Installation** sections from the [CUDA Installation Guide for Linux: Ubuntu](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#ubuntu) guide. After those steps, do the [Post-installation Actions](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#post-installation-actions) as well.
+
+After that, simply utilize the `uv` command to run Marimo in browser:
+
+```bash
+# Marimo
+uv run marimo edit
+
+# TensorBoard
+uv run tensorboard --logdir=runs
+```
 
 ### On Ubuntu (Docker)
 
@@ -50,13 +66,17 @@ Read the **Prepare Ubuntu** and **Network Repository Installation** sections fro
 * Docker Engine
 * Nvidia Container Toolkit
 
-When using Docker, you do not need to install CUDA Toolkit, since the Docker image contains it already. Read the [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) for more information.
+When using Docker, you do not need to install CUDA Toolkit, since the Docker image contains it already. Read the [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) for more information. After that, the launch command is same as on Windows:
+
+```bash
+docker compose -f docker-compose-marimo.yml up -d
+```
 
 ### On macOS
 
 Assuming you have M1 or other Apple Silicon GPU, it just works. You do not need Docker. Simply run `uv run marimo edit`. 
 
-### Using the Teacher's UV Environment
+#### Information about the Teacher's UV Environment
 
 To use teacher's UV environment, simply run:
 
@@ -73,7 +93,7 @@ cd notebooks
 uv sync --frozen
 ```
 
-You can check what the teacher's environment contains by inspecting the `pyproject.toml` file. If you a wondering what the recommended is in `marimo[recommended]`, it is called *extras*. As of 2025 November, it contains following packages:
+You can check what the teacher's environment contains by inspecting the `pyproject.toml` file. If you are wondering what the term *recommended* is in `marimo[recommended]`, it is called *extras*. As of 2025 November, it contains following packages:
 
 * duckdb
 * altair
@@ -89,12 +109,15 @@ You can check those by reading the [pyproject.toml](https://github.com/marimo-te
 <details>
 <summary>🤓 Click to expand: If you want your own UV Environment</summary>
 
-### Creating your own UV Environment
+#### Creating your own UV Environment
 
 ```bash
 # To create your own,
 # delete uv project files
 rm pyproject.toml  uv.lock
+
+# Delete existing .venv if exists
+rm -rf .venv/
 
 # Then create your own bare uv environment with a chosen name
 uv init --bare syvaoppiminen
@@ -124,22 +147,16 @@ It is completely possibly to use Marimo right inside VS Code. However, I think t
 
     ```json
     {
-    "marimo.marimoPath": "uv run marimo",
-    "marimo.sandbox": true // optional
+        "marimo.marimoPath": "uv run marimo",
+        // "marimo.sandbox": true // optional
     }
     ```
 2. Install the Marimo VS Code Extension.
-3. Then, run in terminal:
+3. Open any of the Notebooks and press the Marimo icon in the top right corner.
 
-    ```bash
-    uv run marimo vscode install-extension
-    ```
+## 🤖 Using Github Copilot Pro with Marimo
 
-The last command will open VS Code in the `notebooks` directory. You want this, since the VS Code will use the `{{workspaceFolder}}/.venv/**/*` as the Python interpreter for everything, including the Marimo Notebooks.
-
-## 🤖 Using Github Copilot with Marimo
-
-To enable Github Copilot in Marimo Notebooks, follow these steps:
+Assuming you have enabled your Github Copilot educational license, you can use it in the Marimo UI as well. Here is how to set it up:
 
 1. Install Github CLI (`gh`)
 2. Install extension: `gh extension install https://github.com/github/gh-models`
@@ -159,10 +176,9 @@ You can also add other models like `github/gpt-5`. To identify suitable models, 
 
 ```toml
 [ai.models]
-custom_models = ["github/gpt-5"]
-chat_model = "github/gpt-4o-mini"
-edit_model = "github/gpt-5"
-displayed_models = ["github/gpt-4o-mini", "github/gpt-5"]
+displayed_models = ["github/gpt-4o-mini", "github/gpt-5-mini"]
+edit_model = "github/gpt-5-mini"
+chat_model = "github/gpt-5-mini"
 ```
 
 
