@@ -218,14 +218,16 @@ for epoch in range(EPOCHS):
 
 Miksi `BATCH_SIZE` on juuri 128? Alla taulukko, josta voit lukea tyypillisiä eri eräkoon vaikutuksia koulutukseen, tulokseen, muistinkäyttöön ja niin edelleen:
 
-|                    | Pienet (1-16)        | Medium (32-128) | Large (256-512)          |
-| ------------------ | -------------------- | --------------- | ------------------------ |
-| **Koulutusnopeus** | Hidas                | Tasapainoinen   | Nopea jos muisti riittää |
-| **Muistinkäyttö**  | Pieni                | Kohtalainen     | Suuri                    |
-| **Lopputarkkuus**  | Hyvä                 | Erittäin hyvä   | Voi heikentyä            |
-| **Konvergenssi**   | Todennäköisesti 100- | 100 oli ok      | Todennäköisesti 100+     |
+|                        | Pienet (2-8)                  | Medium (16-64) | Large (64-2048)         |
+| ---------------------- | ----------------------------- | -------------- | ----------------------- |
+| **Muistinkäyttö**      | Pieni                         | Kohtalainen    | Suuri                   |
+| **Base learning rate** | Korkea arvo, laaja alue       | Keskikokoinen  | Pieni arvo, kapea alue. |
+| **Gradientin laatu**   | Kohinaisa, mutta ajantasainen | Tasapainoinen  | Vakaa                   |
+| **Lopputarkkuus**      | Paras?                        | Hyvä?          | Varoen hyvä?            |
 
-Palaanne kurssin aikana tähän aiheeseen, mutta on hyvä muistaa, että eräkoon valinta on tärkeä hyperparametri, joka vaikuttaa merkittävästi mallin suorituskykyyn ja koulutusprosessiin. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin, mutta ne voivat myös johtaa huonompaan yleistymiseen.
+Yllä oleva taulukko perustuu *Revisiting Small Batch Training for Deep Neural Networks* julkaisuun [^smallbatchtraining]. Géro mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
+
+Eräkoon valinta on hyperparametri. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin, mutta ne voivat myös johtaa huonompaan yleistymiseen. Mikäli teet tuotantomallia, todennäköisesti joudut haarukoimaan arvoja jossain määrin.
 
 Selvyyden vuoksi sanottakoon vielä, että:
 
@@ -362,4 +364,6 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
 [^handson-tf]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly Media. 2022.
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
 [^maslowshammer]: Wikipedia. Law of the instrument. https://en.wikipedia.org/wiki/Law_of_the_instrument
+[^smallbatchtraining]: Masters, D. & Luschi, C. *Revisiting Small Batch Training for Deep Neural Networks*. arXiv:1804.07612. 2018. https://arxiv.org/abs/1804.07612
