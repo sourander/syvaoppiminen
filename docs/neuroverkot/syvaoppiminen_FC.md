@@ -225,7 +225,7 @@ Miksi `BATCH_SIZE` on juuri 128? Alla taulukko, josta voit lukea tyypillisiä er
 | **Gradientin laatu**   | Kohinaisa, mutta ajantasainen | Tasapainoinen  | Vakaa                   |
 | **Lopputarkkuus**      | Paras?                        | Hyvä?          | Varoen hyvä?            |
 
-Yllä oleva taulukko perustuu *Revisiting Small Batch Training for Deep Neural Networks* julkaisuun [^smallbatchtraining]. Kysymysmerkit ovat minun lisä. Géro mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
+Yllä oleva taulukko perustuu *Revisiting Small Batch Training for Deep Neural Networks* julkaisuun [^smallbatchtraining]. Kysymysmerkit ovat minun lisä. Géron mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
 
 Eräkoon valinta on hyperparametri – sanotaan usein. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin. Jos Google Researchin Tuning Playbookiin on uskominen, eräkoko ei ylipäätänsä ole hyperparametri vaan tekninen valinta: *"The batch size should not be treated as a tunable hyperparameter for validation set performance."* [^tuningplaybook] He siis käytännössä ehdottavat, että eräkoko valitaan sen perusteella, mikä parantaa thoughputtia ja koulutuksen nopeutta. Muut hyperparametrit, kuten learning rate, säädetään sitten eräkoko huomioiden.
 
