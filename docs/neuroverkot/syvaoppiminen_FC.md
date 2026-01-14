@@ -225,9 +225,9 @@ Miksi `BATCH_SIZE` on juuri 128? Alla taulukko, josta voit lukea tyypillisiä er
 | **Gradientin laatu**   | Kohinaisa, mutta ajantasainen | Tasapainoinen  | Vakaa                   |
 | **Lopputarkkuus**      | Paras?                        | Hyvä?          | Varoen hyvä?            |
 
-Yllä oleva taulukko perustuu *Revisiting Small Batch Training for Deep Neural Networks* julkaisuun [^smallbatchtraining]. Géro mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
+Yllä oleva taulukko perustuu *Revisiting Small Batch Training for Deep Neural Networks* julkaisuun [^smallbatchtraining]. Kysymysmerkit ovat minun lisä. Géro mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
 
-Eräkoon valinta on hyperparametri. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin, mutta ne voivat myös johtaa huonompaan yleistymiseen. Mikäli teet tuotantomallia, todennäköisesti joudut haarukoimaan arvoja jossain määrin.
+Eräkoon valinta on hyperparametri – sanotaan usein. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin. Jos Google Researchin Tuning Playbookiin on uskominen, eräkoko ei ylipäätänsä ole hyperparametri vaan tekninen valinta: *"The batch size should not be treated as a tunable hyperparameter for validation set performance."* [^tuningplaybook] He siis käytännössä ehdottavat, että eräkoko valitaan sen perusteella, mikä parantaa thoughputtia ja koulutuksen nopeutta. Muut hyperparametrit, kuten learning rate, säädetään sitten eräkoko huomioiden.
 
 Selvyyden vuoksi sanottakoon vielä, että:
 
@@ -367,3 +367,4 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
 [^maslowshammer]: Wikipedia. Law of the instrument. https://en.wikipedia.org/wiki/Law_of_the_instrument
 [^smallbatchtraining]: Masters, D. & Luschi, C. *Revisiting Small Batch Training for Deep Neural Networks*. arXiv:1804.07612. 2018. https://arxiv.org/abs/1804.07612
 [^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+[^tuningplaybook]: Godbole, V., Dahl. E, Gilmer. J., Shallue, J. & Nado. Z. *Deep Learning Tuning Playbook*. Google Research. https://github.com/google-research/tuning_playbook
