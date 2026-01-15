@@ -16,9 +16,19 @@ Tutustut kurssin aikana kirjoihin [Understanding Machine Learning](https://udlbo
 
 ## Tehtävät
 
-Kurssi sisältää tehtäviä, jotka on tarkoitettu tehtäviksi kurssin aikana. Tehtävät löytyvät kunkin osion lopusta. Lisäksi **kaikki** tehtävät ovat koostettuna [Tehtäväkooste](exercises.md)-sivulle. Tehtävät palautetaan [Oppimispäiväkirja 101](https://sourander.github.io/oat/) -ohjeistuksen mukaisesti eli Gitlab Pages:ssa hostattuna staattisena sivustona.
+Kurssi sisältää tehtäviä, jotka tukevat syväoppimisen keskeisten käsitteiden ja menetelmien ymmärtämistä. Tehtävien tarkoitus ei ole tuottaa yksittäisiä *“oikeita vastauksia”*, vaan toimia lähtökohtana oppimiselle, kokeilulle ja reflektoinnille.
 
-Useat tehtävät viittaavat [Marimo](https://marimo.io/)-työkalulla tehtyihin notebookeihin. Kyseessä on Jupyter Notebook -työkalun seuraaja. Löydät notebookit [gh:sourander/syvaopiminen/notebooks](https://github.com/sourander/syvaoppiminen/tree/main/notebooks) -polusta *tämän kurssin* repositoriosta. Notebookien käyttö neuvotaan kurssivideoilla ja tukisessioissa.
+Kurssin lopullinen palautus on oppimispäiväkirja, joka on yhtenäinen, raporttimainen dokumentti. Oppimispäiväkirja ei ole viikko- tai tehtäväkohtainen loki, vaan kokonaisuus, jossa:
+
+* yhdistät kurssimateriaalin, kirjallisuuden ja tehtävien kautta syntyneet havainnot
+* perustat esityksesi omaan ymmärrykseesi, kokeiluihisi ja pohdintaasi
+* käytät tehtäviä esimerkkeinä, kokeiluina ja havaintojen lähteenä
+
+Tehtäviin ei odoteta kysymys–vastaus-tyyppisiä ratkaisuja oppimispäiväkirjassa. Sen sijaan odotetaan selittävää, perustelevaa ja kokonaisuuksia yhdistelevää tekstiä, hieman opinnäytetyön tapaan, mutta kurssin laajuuteen sopivassa mittakaavassa.
+
+Tehtävät löytyvät kunkin osion lopusta. Lisäksi **kaikki** tehtävät ovat koostettuna [Tehtäväkooste](exercises.md)-sivulle. Tehtävät palautetaan [Oppimispäiväkirja 101](https://sourander.github.io/oat/) -ohjeistuksen mukaisesti eli Gitlab Pages:ssa hostattuna staattisena sivustona.
+
+Useat tehtävät viittaavat [Marimo](https://marimo.io/)-työkalulla tehtyihin notebookeihin. Kyseessä on Jupyter Notebook -työkalun seuraaja. Notebookit löydät kurssin repositoriosta polusta [gh:sourander/syvaoppiminen/notebooks](https://github.com/sourander/syvaoppiminen/tree/main/notebooks).
 
 ## Numerointi
 
