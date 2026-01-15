@@ -52,11 +52,11 @@ Käytämme tämän luvun esimerkkinä verkkoa, joka tunnetaan nimellä `NumpyNNw
 
 ### Toteutus ilman vektorointia
 
-Tutustumme ensin siihen, miltä malli näyttäisi, jos ==emme käyttäisi Numpy-kirjastoa==. Tätä mallia ei löydy mistään kokonaisuuteena, mutta saat toki koodata sen itse jos haluat. Olkoon sen nimi: `PythonNN`. Tutustu alla olevassa kuvassa esitettyyn koodiin. Koodi on värikoodattu siten, että värit täsmäävät Kuvan 1 painojen väreihin.
+Tutustumme ensin siihen, miltä malli näyttäisi, jos ==emme käyttäisi Numpy-kirjaston== mahdollistamaa vektori- tai matriisilaskentaa. Tätä mallia ei löydy mistään kokonaisuuteena, mutta saat toki koodata sen itse jos haluat. Olkoon sen nimi: `PythonNN`. Tutustu alla olevassa kuvassa esitettyyn koodiin. Koodi on värikoodattu siten, että värit täsmäävät Kuvan 1 painojen väreihin.
 
 ![](../images/200_2-2-1-init-and-forward-code.png)
 
-**Kuva 3:** *Kuvassa on `PythonNN`-verkon `__init__`- ja `forward`-metodit ilman vektorointia. Koodissa on paljon rautakoodattua toistoa. Huomaa, että tätä mallia ei ole meidän kurssillamme toteutettuna missään Notebookissa. Kaikki sinun ajamasi koodi sisältää jossain määrin vektoroidun toteutuksen.*
+**Kuva 3:** *Kuvassa on `PythonNN`-verkon `__init__`- ja `forward`-metodit ilman vektorointia. Koodissa on paljon rautakoodattua toistoa. Huomaa, että tätä mallia ei ole meidän kurssillamme toteutettuna missään Notebookissa. Kaikki sinun ajamasi koodi sisältää jossain määrin vektoroidun toteutuksen. Huomaa, että NumPyllä initialisoidut parametrit ovat liukulukuja, jotka voisi yhtä hyvin generoida Pythonin random-kirjastolla.*
 
 Esimerkki on tarkoituksella jätetty täysin rautakoodatuksi. Ongelmaa voisi koodin ylläpidettävyyden ja uudelleenkäytettävyyden kannalta parantaa käyttämällä silmukoita ja listoja. Koodista tulisi *rakenteeltaan* dynaamisempaa, mutta se suoritettaisiin yhä yksi kerta per syöte, yksi paino kerrallaan - eli siis sekventiaalisesti.
 
