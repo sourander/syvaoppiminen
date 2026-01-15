@@ -18,7 +18,7 @@ Tutustut kurssin aikana kirjoihin [Understanding Machine Learning](https://udlbo
 
 Kurssi sisältää tehtäviä, jotka tukevat syväoppimisen keskeisten käsitteiden ja menetelmien ymmärtämistä. Tehtävien tarkoitus ei ole tuottaa yksittäisiä *“oikeita vastauksia”*, vaan toimia lähtökohtana oppimiselle, kokeilulle ja reflektoinnille.
 
-Kurssin lopullinen palautus on oppimispäiväkirja, joka on yhtenäinen, raporttimainen dokumentti. Oppimispäiväkirja ei ole viikko- tai tehtäväkohtainen loki, vaan kokonaisuus, jossa:
+Kurssin lopullinen palautus on oppimispäiväkirja, joka on yhtenäinen, raporttimainen dokumentti. Oppimispäiväkirja ei ole tehtäväkohtainen loki, vaan kokonaisuus, jossa:
 
 * yhdistät kurssimateriaalin, kirjallisuuden ja tehtävien kautta syntyneet havainnot
 * perustat esityksesi omaan ymmärrykseesi, kokeiluihisi ja pohdintaasi
