@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.19.2"
 app = marimo.App(width="medium")
 
 
@@ -58,7 +58,7 @@ def _(np):
             self.b1 = np.zeros((1, 2))
 
             # W2: Hidden layer (2 neurons) to output layer (1 neuron)
-            self.W2 = np.random.uniform(-0.5, 0.5, size=(2, 1))
+            self.W2 = np.random.uniform(-0.5, 0.5, size=(1, 2))
             self.b2 = np.zeros((1, 1))
 
             # Cache for storing activations
@@ -68,9 +68,9 @@ def _(np):
 
             # Cache for gradients.
             self.dZ2 = np.empty((1, 1))
-            self.dW2 = np.empty((2, 1)) 
+            self.dW2 = np.empty((1, 2)) 
             self.db2 = np.empty((1, 1))
-            
+
             self.dZ1 = np.empty((1, 2))
             self.dW1 = np.empty((2, 2))
             self.db1 = np.empty((1, 2))
@@ -92,11 +92,11 @@ def _(np):
             self.A0 = x
 
             # Layer 1 (hidden layer)
-            Z1 = self.A0.dot(self.W1) + self.b1
+            Z1 = self.A0.dot(self.W1.T) + self.b1
             self.A1 = self.sigmoid(Z1)
 
             # Layer 2 (output layer)
-            Z2 = self.A1.dot(self.W2) + self.b2
+            Z2 = self.A1.dot(self.W2.T) + self.b2
             self.A2 = self.sigmoid(Z2)
 
             return self.A2
@@ -108,20 +108,20 @@ def _(np):
             # === Layer 2 (Output) ===
             # 1. Error at output (dZ2)
             self.dZ2 = self.A2 - target
-        
+
             # 2. Gradients for W2 and b2
-            self.dW2 = self.A1.T.dot(self.dZ2)
+            self.dW2 = self.dZ2.T.dot(self.A1)
             self.db2 = self.dZ2 # Sum over batch if batch_size > 1
 
             # === Layer 1 (Hidden) ===
             # 3. Error at hidden layer (dZ1)
             # Propagate error back through W2
-            dA1 = self.dZ2.dot(self.W2.T)
+            dA1 = self.dZ2.dot(self.W2)
             # Apply derivative of sigmoid
             self.dZ1 = dA1 * self.sigmoid_derivative(self.A1)
 
             # 4. Gradients for W1 and b1
-            self.dW1 = self.A0.T.dot(self.dZ1)
+            self.dW1 = self.dZ1.T.dot(self.A0)
             self.db1 = self.dZ1 # Sum over batch if batch_size > 1
 
         def optimize(self):
@@ -167,10 +167,10 @@ def _(np):
             p = np.atleast_2d(X)
 
             # Layer 1 (hidden layer)
-            p = self.sigmoid(np.dot(p, self.W1) + self.b1)
+            p = self.sigmoid(np.dot(p, self.W1.T) + self.b1)
 
             # Layer 2 (output layer)
-            return self.sigmoid(np.dot(p, self.W2) + self.b2)
+            return self.sigmoid(np.dot(p, self.W2.T) + self.b2)
 
         def calculate_loss(self, X, targets):
             targets = np.atleast_2d(targets)
