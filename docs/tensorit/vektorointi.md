@@ -18,7 +18,7 @@ Tensor on yleistetty käsite vektoreista, matriiseista ja yhä moniulotteisemmis
 
 **Kuva 1:** *Eri mallisia tensoreita. Skaalarilla ei ole ulottuvuuksia, vektorilla on yksi, matriisilla kaksi ja korkeamman asteen tensoreilla kolme tai enemmän ulottuvuuksia.*
 
-Alla yleisiä Tensoreista muodostettuja datasettejä jaoteltuna sen mukaan, mitä reaalimaailman dataa se kuvastaa. Taulukko on pohjimmiltaan kirjasta  Deep Learning with Python, Third Edition [^dlwithpython]:
+Alla yleisiä Tensoreista muodostettuja datasettejä jaoteltuna sen mukaan, mitä reaalimaailman dataa se kuvastaa. Luettelo on pohjimmiltaan kirjasta  Deep Learning with Python, Third Edition [^dlwithpython]:
 
 * **Vektori**: 
     * muotoa: `(samples, features)`
@@ -26,7 +26,7 @@ Alla yleisiä Tensoreista muodostettuja datasettejä jaoteltuna sen mukaan, mit�
     * tyypillinen tabulaarimuotoinen data, jossa kukin rivi on näyte ja kukin sarake ominaisuus.
 * **Aikasarja** tai muu **sekvenssi**: 
     * muotoa `(samples, timesteps, features)`, tai
-    * muotoa `(samples, sequence_length, num_features)`
+    * muotoa `(samples, sequence_length, features)`
     * kukin näyte on sekvenssi, jossa on useita aikapisteitä ja jokaisessa aikapisteessä useita ominaisuuksia.
 * **Kuvat**:
     * muotoa `(samples, c, h, w)` (PyTorch) tai,
@@ -92,11 +92,11 @@ Huomaa, että Numpy-vektorointi tiivistää saman koodin hyvinkin lyhyeksi. Jos 
 def forward(self, x):
 
     # Layer 1 (hidden layer)
-    Z1 = self.A0.dot(self.W1) + self.b1
+    Z1 = self.A0.dot(self.W1.T) + self.b1
     self.A1 = self.sigmoid(Z1)
 
     # Layer 2 (output layer)
-    Z2 = self.A1.dot(self.W2) + self.b2
+    Z2 = self.A1.dot(self.W2.T) + self.b2
     self.A2 = self.sigmoid(Z2)
     return self.A2
 ```
