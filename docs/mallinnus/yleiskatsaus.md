@@ -56,14 +56,14 @@ Tässä on tärkeää erottaa kaksi asiaa: virhefunktio ja evaluointimittarit. V
 
 Alla taulukko yleisimmistä tehtävätyypeistä, niiden ulostuloaktivoinneista ja virhefunktioista PyTorchissa. Taulukko on kirjoitettu englanniksi, koska en löydä vakiintuneita suomennoksia, jotka erottaisivat toisistaan moniluokkaisen ennustuksen kaksi eri tyyppiä (multi-class vs. multi-label classification). Pidemmiltä nimiltään nämä ovat ==multiclass, single-label classification== ja ==multilabel, multi-class classification==. Ensimmäisessä voi olla vain yksi luokka kerrallaan (esim. koira TAI kissa TAI lintu), kun taas jälkimmäisessä voi olla useita luokkia samanaikaisesti (esim. koira JA kissa).
 
-| **Task type**                     | **Output activation**                | **PyTorch loss function** | **Task type explained**   | **Human metric**             |
-| --------------------------------- | ------------------------------------ | ------------------------- | ------------------------- | ---------------------------- |
-| **Regression**                    | None                                 | `MSELoss`, `L1Loss`       | `0.123`                   | MAE                          |
-| **Binary classification**         | None (Sigmoid) :one:                 | `BCEWithLogitsLoss`       | `a` or not                | binary accuracy, F1, ROC AUC |
-| **Multi-label classification**    | None (Sigmoid) :one:                 | `BCEWithLogitsLoss`       | `a` and/or `b` and/or `c` | binary accuracy, F1, ROC AUC |
-| **Multi-class classification**    | None (Softmax) :two:                 | `CrossEntropyLoss`        | `a` or `b` or `c`         | top-k accuracy, ROC AUC      |
-| **Gaussian regression** :three:   | None (mean), <br>Softplus (variance) | `GaussianNLLLoss`         | mean and variance         | MAE (mean only)              |
-| **Poisson count modeling** :four: | None                                 | `PoissonNLLLoss`          | `0` or `1` or `2` … `n`   | MAE                          |
+| **Task type**                     | **Output activation**                | **PyTorch loss function** | **Task type explained**   | **Human metric**                         |
+| --------------------------------- | ------------------------------------ | ------------------------- | ------------------------- | ---------------------------------------- |
+| **Regression**                    | None                                 | `MSELoss`, `L1Loss`       | `0.123`                   | MAE                                      |
+| **Binary classification**         | None (Sigmoid) :one:                 | `BCEWithLogitsLoss`       | `a` or not                | binary acc, F1, ROC AUC                  |
+| **Multi-label classification**    | None (Sigmoid per label) :one:       | `BCEWithLogitsLoss`       | `a` and/or `b` and/or `c` | multilabel acc, F1, ROC AUC, Hamming     |
+| **Multi-class classification**    | None (Softmax) :two:                 | `CrossEntropyLoss`        | `a` or `b` or `c`         | multiclass acc, top-k acc, ROC AUC (OvR) |
+| **Gaussian regression** :three:   | None (mean), <br>Softplus (variance) | `GaussianNLLLoss`         | mean and variance         | MAE (mean only)                          |
+| **Poisson count modeling** :four: | None                                 | `PoissonNLLLoss`          | `0` … `n`                 | MAE                                      |
 
 !!! note "Selitykset"
 
