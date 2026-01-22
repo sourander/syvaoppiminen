@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.3"
+__generated_with = "0.19.2"
 app = marimo.App(width="medium")
 
 
@@ -34,8 +34,7 @@ def _():
 
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, ConfusionMatrixDisplay
-    from torch.utils.data import Dataset, DataLoader, TensorDataset
-    from torch.hub import download_url_to_file
+    from torch.utils.data import DataLoader, TensorDataset
 
     from huggingface_hub import hf_hub_download
     return (
@@ -444,7 +443,8 @@ def _(mo):
     ```python
     model.eval()
     with torch.no_grad():
-        y_pred_probs = model(X_test_tensor).squeeze().cpu().numpy()
+        logits = model(X_test_tensor).squeeze()
+        y_pred_probs = torch.sigmoid(logits).cpu().numpy()
         y_pred = (y_pred_probs >= 0.5).astype(int)
     ```
     """)
