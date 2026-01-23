@@ -119,9 +119,9 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
 
         Älä sukella liian syvälle hyperparametrien virittämiseen. Tässä voisi käyttää uskomattoman määrän aikaa. Jos vibe-koodaat ratkaisua, joka alkaa sisältää termejä kuten Dropout, Early Stopping, Optuna, kannattaa huomioida, että nämä tulevat tutuksi kurssin Mallinnus-osiossa myöhemmin.
 
-!!! question "Tehtävä: ONXX JAX:ia näkynyt?"
+!!! question "Tehtävä: ONNX JAX:ia näkynyt?"
 
-    Yllä olevasta historiasta puuttuu ONXX tyystin ja Jax on vain sivuhuomio. Tutustu Jaxiin ja ONNX:ään itsenäisesti ja kirjoita lyhyt yhteenveto oppimispäiväkirjaasi. ONXX:iin tutustutaan kenties tarkemmin myöhemmin kurssilla – ehkäpä vaikka Syväoppiminen II:ssa.
+    Yllä olevasta historiasta puuttuu ONNX tyystin ja Jax on vain sivuhuomio. Tutustu Jaxiin ja ONNX:ään itsenäisesti ja kirjoita lyhyt yhteenveto oppimispäiväkirjaasi. ONNX:iin tutustutaan kenties tarkemmin myöhemmin kurssilla – ehkäpä vaikka Syväoppiminen II:ssa.
 
     On äärimmäisen suositeltavaa lisäksi käyttää Google Trendsiä ja vertailla, miten Worldwide-tasolla kehykset PyTorch, TensorFlow, Keras ja JAX ovat kehittyneet viimeisen viiden vuoden aikana. Huomaa, että tässä on kuitenkin kyse vain hakuhistoriasta. Se ei välttämättä suoraan heijasta todellista käyttöä tuotantoympäristöissä tai tutkimuksessa.
 

@@ -40,7 +40,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: PyTorch Introduction to Pytorch Tensors
 - [ ] Tehtävä: Auto MPG
 - [ ] Tehtävä: Kyberviha PyTorch-mallilla
-- [ ] Tehtävä: ONXX JAX:ia näkynyt?
+- [ ] Tehtävä: ONNX JAX:ia näkynyt?
 
 ## Vastavirta (Backprop) (300)
 
