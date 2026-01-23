@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.19.4"
 app = marimo.App(width="medium")
 
 
@@ -102,7 +102,7 @@ def _(pd):
     # One-hot encode the make column
     df = pd.get_dummies(df, columns=["make"], prefix="make", dtype=float, drop_first=True)
 
-    # Drop the original name column (optional, if you don't need it)
+    # Drop the original name column
     df = df.drop(columns=["name"])
 
     # List all columns start start with 'make_'
@@ -158,7 +158,7 @@ def _(device, df, make_columns, torch):
     x_std = x.std(dim=0, keepdim=True)
     x_scaled = (x - x_mean) / (x_std + 1e-8)
 
-    y = torch.from_numpy(df["mpg"].values).to(device, dtype=torch.float32)
+    y = torch.from_numpy(df["mpg"].values.copy()).to(device, dtype=torch.float32)
     return x, x_scaled, y
 
 
