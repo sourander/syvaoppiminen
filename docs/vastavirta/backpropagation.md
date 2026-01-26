@@ -26,6 +26,16 @@ Vastavirta-algoritmi (engl. backpropagation) on keskeinen menetelmä neuroverkko
 
     Huomaa kuitenkin, että optimointialgoritmit eivät ole tämän viikon aihe. Niihin tutustutaan hieman ensi viikolla. Tällä viikolla oletetaan, että meillä on jokin optimointialgoritmi, joka tarvitsee gradientit painojen päivittämiseen.
 
+Loppupeleissä backpropagation on vain ketjusäännön soveltamista laskentaverkkoon. Eräs Anthropicin perustajista, Christopher Olah, pohtii blogissaan seuraavasti:
+
+> "When I first understood what backpropagation was, my reaction was: “Oh, that’s just the chain rule! How did it take us so long to figure out?” I’m not the only one who’s had that reaction." [^colahblog]
+>
+> — Christopher Olah
+
+Ja näinhän se jälkiviisaana on. Olah nostaa kuitenkin esiin, että asia ei ollut lainkaan niin ilmeinen silloin, kun takaisinkytkentä (backpropagation) alun perin keksittiin. Tuohon aikaan ei ollut selvää, että juuri derivaattojen laskeminen olisi oikea tapa opettaa neuroverkkoja. Tämäkin ajatus tulee luontevaksi vasta sitten, kun ymmärtää, että derivaatat voidaan laskea tehokkaasti. Syntyy eräänlainen kehäpäätelmä: jotta ymmärtäisimme, miksi derivaatat ovat hyödyllisiä, meidän täytyy jo tietää, että niiden laskeminen on mahdollista ja tehokasta. [^colahblog]
+
+Lisäksi Olah huomauttaa, että olisi ollut helppoa tyrmätä koko lähestymistapa nopealla järkeilyllä. Ajatus neuroverkkojen opettamisesta gradienttipohjaisilla menetelmillä saattoi vaikuttaa tuomittuna epäonnistumaan: eikö optimointi jäisi jumiin lokaaleihin minimeihin? [^colahblog] 
+
 ## Kertaus: Mikä on gradientti?
 
 Tätä aihetta on käsitelty Johdatus koneoppimiseen -kurssissa Hill Climbing ja Gradient Descent -osioissa. Jos et muista aiheesta mitään, on äärimmäisen suositeltavaa kurkata omaa oppimispäiväkirjaasi ja kerrata lyhyesti. Tarkasti ottaen meidän tulee selvittää kaksi termiä: 
@@ -405,6 +415,7 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
         Tulet huomaamaan, että `f2 - f1` on hyvin lähellä `x.grad[2] * 0.00001`. Eli jos kasvatat `x[2]`:ta pikkiriikkisen verran, niin `f`:n arvo muuttuu suunnilleen `x.grad[2]` kertaa tuo pieni muutos. Huomaa kuitenkin, että lukema ei tule olemaan niin sama, että voisit verrata sitä `==`-operaattorilla.
 ## Lähteet
 
+[^colahblog]: Olah, C. *Calculus on Computational Graphs: Backpropagation*. 2015. https://colah.github.io/posts/2015-08-Backprop/
 [^essentialmath]: Nield, T. *Essential Math for Data Science*. O'Reilly. 2021.
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^dl4cv]: Rosebrock, A. *Deep Learning for Computer Vision with Python. Starter Bundle. 3rd Edition*. PyImageSearch. 2019.
