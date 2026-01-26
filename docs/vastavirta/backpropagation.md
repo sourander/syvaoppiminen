@@ -32,7 +32,7 @@ Loppupeleissä backpropagation on vain ketjusäännön soveltamista laskentaverk
 >
 > — Christopher Olah
 
-Ja näinhän se jälkiviisaana on. Olah nostaa kuitenkin esiin, että asia ei ollut lainkaan niin ilmeinen silloin, kun takaisinkytkentä (backpropagation) alun perin keksittiin. Tuohon aikaan ei ollut selvää, että juuri derivaattojen laskeminen olisi oikea tapa opettaa neuroverkkoja. Tämäkin ajatus tulee luontevaksi vasta sitten, kun ymmärtää, että derivaatat voidaan laskea tehokkaasti. Syntyy eräänlainen kehäpäätelmä: jotta ymmärtäisimme, miksi derivaatat ovat hyödyllisiä, meidän täytyy jo tietää, että niiden laskeminen on mahdollista ja tehokasta. [^colahblog]
+Ja näinhän se jälkiviisaana on. Olah nostaa kuitenkin esiin, että asia ei ollut lainkaan niin ilmeinen silloin, kun vastavirta-algoritmi (backpropagation) alun perin keksittiin. Tuohon aikaan ei ollut selvää, että juuri derivaattojen laskeminen olisi oikea tapa opettaa neuroverkkoja. Tämäkin ajatus tulee luontevaksi vasta sitten, kun ymmärtää, että derivaatat voidaan laskea tehokkaasti. Syntyy eräänlainen kehäpäätelmä: jotta ymmärtäisimme, miksi derivaatat ovat hyödyllisiä, meidän täytyy jo tietää, että niiden laskeminen on mahdollista ja tehokasta. [^colahblog]
 
 Lisäksi Olah huomauttaa, että olisi ollut helppoa tyrmätä koko lähestymistapa nopealla järkeilyllä. Ajatus neuroverkkojen opettamisesta gradienttipohjaisilla menetelmillä saattoi vaikuttaa tuomittuna epäonnistumaan: eikö optimointi jäisi jumiin lokaaleihin minimeihin? [^colahblog] 
 
