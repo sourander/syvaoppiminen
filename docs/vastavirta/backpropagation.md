@@ -108,7 +108,7 @@ graph LR
 
 ### Paperilla
 
-Johdatus koneoppimiseen -kurssilla gradientin laskeminen oli kovin helppoa, koska logistinen regerssio on yksinkertainen lineaarinen malli (jolla on logistinen funktio perässä). Neuroverkoissa meillä on monta funktiota. Jos pelkästään yllä olevan Mermaid-kaavion verkon osalta meillä on seuraavanlainen laskukaava:
+Johdatus koneoppimiseen -kurssilla gradientin laskeminen oli kovin helppoa, koska logistinen regressio on yksinkertainen lineaarinen malli (jolla on logistinen funktio perässä). Neuroverkoissa meillä on monta funktiota. Jos pelkästään yllä olevan Mermaid-kaavion verkon osalta meillä on seuraavanlainen laskukaava:
 
 $$
 \begin{aligned}
