@@ -98,7 +98,7 @@ Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttä
 
     Avaa `212_tensors.py`. Huomaa, että kyseessä on PyTorchin virallinen [Introduction to PyTorch - YouTube Series: Introduction to PyTorch Tensors](https://docs.pytorch.org/tutorials/beginner/introyt/tensors_deeper_tutorial.html) -opas, joka on käännetty Marimo-muotoon.
 
-    Myös tässä voit käytätä Google Colabia alkuperäisen ohjeen avaamiseen tai noudattaa kurssin Marimo-versiota.
+    Myös tässä voit käyttää Google Colabia alkuperäisen ohjeen avaamiseen tai noudattaa kurssin Marimo-versiota.
 
 
 !!! question "Tehtävä: Auto MPG"
