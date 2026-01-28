@@ -353,9 +353,10 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
 
     Aloita tutustumalla sekä minun materiaaliin että internetistä löytyvään, intuitiotasoa korostavaan sisältöön. Hyviä lähteitä ovat ainakin:
 
-    * [3Blue1Brown video: Backpropagation, intuitively | Deep Learning Chapter 3](https://www.youtube.com/watch?v=Ilg3gGewQ5U)
-    * [StatQuest: Neural Networks Pt. 2: Backpropagation Main Ideas](https://youtu.be/IN2XmBhILt4)
+    * [3Blue1Brown video: Backpropagation, intuitively | Deep Learning Chapter 3](https://www.youtube.com/watch?v=Ilg3gGewQ5U) (12 min)
+    * [StatQuest: Neural Networks Pt. 2: Backpropagation Main Ideas](https://youtu.be/IN2XmBhILt4) (17 min)
     * Jos sinulla on pääsy Manningin kirjaan *Deep Learning with Python, Third Edition* (2025), tutustu lukuun 2.4 *"The engine of neural networks: Gradient-based optimization"* [^dlwithpython].
+    * [Karpathy: CS231n Winter 2016: Lecture 4: Backpropagation, Neural Networks 1](https://youtu.be/i94OvYb6noo). OpenAI:n yksi perustaja, alalla hyvinkin tunnettu Andrej Karpathy käy Stanfordin luennolla läpi vastavirta-algoritmin. (1 h 20 min)
 
 !!! question "Tehtävä: Lopusta vaiheittain alkuun"
 
