@@ -1,0 +1,1770 @@
+
+<!doctype html>
+<html lang="fi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../vastavirta/backpropagation/">
+      
+      
+        <link rel="next" href="../datanlataus/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Yleiskatsaus - Syväoppiminen I</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#yleiskatsaus" class="md-skip">
+          Hyppää sisältöön
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Ylätunniste">
+    <a href="../.." title="Syväoppiminen I" class="md-header__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Syväoppiminen I
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Yleiskatsaus
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Hae" placeholder="Hae" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Haku">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Tyhjää" aria-label="Tyhjää" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Aloitetaan hakua
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigaatio" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Syväoppiminen I" class="md-nav__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Syväoppiminen I
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tervetuloa kurssille
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Neuroverkot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../neuroverkot/neuroverkot_101/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../neuroverkot/syvaoppiminen_FC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syvät neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Tensorit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Tensorit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tensorit/vektorointi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vektorointi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tensorit/pytorch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyTorch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Vastavirta
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Vastavirta
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vastavirta/backpropagation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vastavirta (Backprop)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Mallinnus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4. Mallinnus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yleiskatsaus
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yleiskatsaus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mallinnus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mallinnus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mallinnus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tyovaiheet-lyhyesti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Työvaiheet lyhyesti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tyovaiheet-yksityiskohtaisemmin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Työvaiheet yksityiskohtaisemmin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Työvaiheet yksityiskohtaisemmin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ongelma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ongelma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virhefunktio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virhefunktio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Malli
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularisointi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regularisointi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#koulutus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koulutus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datanlataus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datan lataus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kaytannot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kouluttamisen käytännöt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Konvoluutio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5. Konvoluutio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../konvoluutio/cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konvoluutioverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    6. Siirtovaikutus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/pretrained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Koulutetun mallin käyttö
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/transferlearning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Kieli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    7. Kieli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/nlp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Luonnollinen kieli
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/rnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RNN ja jälkeläiset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Aikasarjat
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aikasarjat/ideat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tehtäväkooste
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mallinnus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mallinnus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mallinnus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tyovaiheet-lyhyesti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Työvaiheet lyhyesti
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tyovaiheet-yksityiskohtaisemmin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Työvaiheet yksityiskohtaisemmin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Työvaiheet yksityiskohtaisemmin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ongelma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ongelma
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#virhefunktio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Virhefunktio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Malli
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularisointi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regularisointi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#koulutus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koulutus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="yleiskatsaus">Yleiskatsaus</h1>
+<h2 id="mallinnus">Mallinnus</h2>
+<p>Tämä luku on osin koostetta aiemmista luvuista, mutta aiheisiin sukelletaan hieman syvemmälle. Osa termeistä, kuten optimointifunktiot, ovat olleet vain sivulauseina. Leikkisästi sanottuna aihe on: <em>"Mistä on pienet – tai suuret – neuroverkot tehty?"</em> 🤖</p>
+<p>Neuroverkkojen luomisen prosessista käytetään termiä <em>mallinnus</em> (<em>engl. modeling, building or developing a model</em>). Mallinnus tarkoittaa prosessia, jossa suunnitellaan, rakennetaan ja koulutetaan neuroverkko, joka ratkaisee tietyn ongelman. Mallinnus kattaa siis kaikki vaiheet datan hankinnasta ja esikäsittelystä mallin arkkitehtuurin suunnitteluun, kouluttamiseen ja arviointiin. Keskeisin vaihe on se, kun matemaattinen funktio sovitetaan dataan, mutta se on mekaanisin ja kenties helpoin osa-alue.</p>
+<h3 id="tyovaiheet-lyhyesti">Työvaiheet lyhyesti</h3>
+<p>Aiemmin Johdatus koneoppimiseen -kurssilla tutustuit jo yleiseen koneoppimisen työnkulkuun: datan keräämiseen, esikäsittelyyn, mallin valintaan ja arviointiin. Tässä luvussa tarkennamme näitä vaiheita nimenomaan neuroverkon näkökulmasta – eli siihen, millainen funktio valitaan ja miten sen muotoa (arkkitehtuuria) säädetään. Alla oleva taulukko on yhdistelmä Essential Math for AI -kirjan luvun 3 alun työnkulusta <sup id="fnref:mathforai"><a class="footnote-ref" href="#fn:mathforai">1</a></sup> sekä Deep Learning with Python (3rd ed) kirjan luvusta 6 <sup id="fnref:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">2</a></sup>. Se kokoaa yhteen mallintamisen tärkeimmät vaiheet. Datan hankinta (tai lähinnä sen käyttö PyTorchissa) käsitellään tarkemmin seuraavassa luvussa. Datan louhintaa on käsitelty muilla kursseilla.</p>
+<table>
+<thead>
+<tr>
+<th>Työvaihe</th>
+<th>Kuvaus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tunnista <strong>ongelma</strong></td>
+<td>Määrittele, onko kyse luokittelusta, regressiosta, generoinnista tai esimerkiksi anomalioiden havaitsemisesta.</td>
+</tr>
+<tr>
+<td>Hanki sopiva <strong>data</strong></td>
+<td>Varmista, että dataa on oikeanmallista, sitä on riittävästi ja se on laadukasta. Tämä vaihe on usein aikaa vievin.</td>
+</tr>
+<tr>
+<td>Valitse <strong>virhefunktio</strong></td>
+<td>Virhefunktio (eng. loss function, error function, cost function, objective function) kertoo, kuinka ohi tavoitteesta ennuste menee.</td>
+</tr>
+<tr>
+<td>Luo <strong>malli</strong></td>
+<td>Suunnittele tai valitse hypoteesifunktio.</td>
+</tr>
+<tr>
+<td>Valitse <strong>optimointimenetelmä</strong></td>
+<td>Gradienttimenetelmä (eng. gradient descent) on keskeinen työkalu minimointiin. Se perustuu virhefunktion derivaatan laskemiseen.</td>
+</tr>
+<tr>
+<td><strong>Regularisoi</strong></td>
+<td>Regularisointi tekee funktiosta tasaisemman ja vähentää ylisovittamista.</td>
+</tr>
+<tr>
+<td><strong>Kouluta</strong></td>
+<td>Optimoi eli minimoi virhe . Tämä on CPU/GPU-intensiivinen <em>fit</em>-vaihe eli mallin koulutus.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tyovaiheet-yksityiskohtaisemmin">Työvaiheet yksityiskohtaisemmin</h2>
+<h3 id="ongelma">Ongelma</h3>
+<blockquote>
+<p>"You can’t do good work without a deep understanding of the context of what you’re doing. Why is your customer trying to solve this particular problem? What value will they derive from the solution? How will your model be used? How will it fit into your customer’s business processes? What kind of data is available or could be collected? What kind of machine learning task can be mapped to the business problem?" <sup id="fnref5:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">2</a></sup>
+</p>
+</blockquote>
+<p>Tämä on Johdatus koneoppimiseen -kurssilta tuttua. Esimerkiksi logistinen regressio soveltuu luokitteluun, kun taas lineaarinen regressio on tarkoitettu jatkuvien arvojen ennustamiseen, ja k-Means soveltuu klusterointiin. Neuroverkoissa tämä muuttuu sinänsä, että sama arkkitehtuuri voi soveltua monenlaisiin ongelmiin, kunhan mallin ulostulokerros ja virhefunktio valitaan oikein. Myöhemmin kurssilla käsittelemme kuviin, tekstiin tai aikasarjoihin erikoistuneita arkkitehtuureita; tämän viikon tarkoituksena on tunnistaa, kuinka <mark>eteenpäin kytketyn verkon (feedforward neural network)</mark> arkkitehtuuri soveltuu erilaisiin ongelmiin.</p>
+<p>Tulet huomaamaan, että sama Dense-kerrosten verkko soveltuu muiden muassa seuraaviin ongelmiin: regressio, binääriluokittelu, monen luokan luokittelu (joko yksi luokka tai useita luokkia kerrallaan) ja jopa epävarmuuden mallintaminen. Erona on vain ulostulokerros ja virhefunktio.</p>
+<p>Ongelmaa pohtiessa on hyvä pyrkiä tunnistaa myös alin lähtökohta (engl. baseline). Luokittelussa alin lähtökohta on satunnainen arvaus: binääriluokittelussa 50 %, k-luokassa 1/k. Regressiossa alin lähtökohta tulee tunnistaa bisneskontekstissa: kuinka tarkka ennusteen tulee olla, jotta siitä on hyötyä?</p>
+<h3 id="data">Data</h3>
+<p>Tähän palaamme seuraavassa luvussa. </p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Tässä vaiheessa on hyvä huomioida, että neuroverkon tulevat toimeen ns. raakadatan kanssa. Oletkin jo nähnyt, kuinka neuroverkko luokittelee kuvia pikseleiden intensiteettien perusteella ilman, että kuvia on erikseen muunnettu piirteiksi (kuten reunat, kulmat, muodot). Raakadata esitetään kuitenkin aina vektoroidussa numeromuodossa. Myös kielimallit toimivat numeroidulla datalla.</p>
+</div>
+<h3 id="virhefunktio">Virhefunktio</h3>
+<p>Tässä on tärkeää erottaa kaksi asiaa: virhefunktio ja evaluointimittarit. Virhefunktion tulee soveltua optimointiin, eli sen tulee olla derivoituva. Evaluointimittarit taas voivat olla mitä tahansa, kunhan ne mittaavat haluttua ominaisuutta – mieluiten luotettavasti ja helposti tulkittavasti.</p>
+<p><strong>Virhefunktio</strong> (<em>engl. loss function, error function, cost function, objective function</em>) mittaa, kuinka hyvin malli suoriutuu annetusta tehtävästä.</p>
+<p><strong>Evaluointimittarit</strong> (<em>engl. evaluation metrics</em>) mittaavat mallin suorituskykyä, mutta niitä ei käytetä optimointiin. Esimerkiksi ROC AUC on suosittu binääriluokittelun arviointimittari, mutta sitä ei voi käyttää virhefunktiona, koska se ei ole derivoituva. <sup id="fnref2:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">2</a></sup></p>
+<p>Alla taulukko yleisimmistä tehtävätyypeistä, niiden ulostuloaktivoinneista ja virhefunktioista PyTorchissa. Taulukko on kirjoitettu englanniksi, koska en löydä vakiintuneita suomennoksia, jotka erottaisivat toisistaan moniluokkaisen ennustuksen kaksi eri tyyppiä (multi-class vs. multi-label classification). Pidemmiltä nimiltään nämä ovat <mark>multiclass, single-label classification</mark> ja <mark>multilabel, multi-class classification</mark>. Ensimmäisessä voi olla vain yksi luokka kerrallaan (esim. koira TAI kissa TAI lintu), kun taas jälkimmäisessä voi olla useita luokkia samanaikaisesti (esim. koira JA kissa).</p>
+<table>
+<thead>
+<tr>
+<th><strong>Task type</strong></th>
+<th><strong>Output activation</strong></th>
+<th><strong>PyTorch loss function</strong></th>
+<th><strong>Task type explained</strong></th>
+<th><strong>Human metric</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Regression</strong></td>
+<td>None</td>
+<td><code>MSELoss</code>, <code>L1Loss</code></td>
+<td><code>0.123</code></td>
+<td>MAE</td>
+</tr>
+<tr>
+<td><strong>Binary classification</strong></td>
+<td>None (Sigmoid) <img alt="1⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/31-20e3.svg" title=":one:" /></td>
+<td><code>BCEWithLogitsLoss</code></td>
+<td><code>a</code> or not</td>
+<td>binary acc, F1, ROC AUC</td>
+</tr>
+<tr>
+<td><strong>Multi-label classification</strong></td>
+<td>None (Sigmoid per label) <img alt="1⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/31-20e3.svg" title=":one:" /></td>
+<td><code>BCEWithLogitsLoss</code></td>
+<td><code>a</code> and/or <code>b</code> and/or <code>c</code></td>
+<td>multilabel acc, F1, ROC AUC, Hamming</td>
+</tr>
+<tr>
+<td><strong>Multi-class classification</strong></td>
+<td>None (Softmax) <img alt="2⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/32-20e3.svg" title=":two:" /></td>
+<td><code>CrossEntropyLoss</code></td>
+<td><code>a</code> or <code>b</code> or <code>c</code></td>
+<td>multiclass acc, top-k acc, ROC AUC (OvR)</td>
+</tr>
+<tr>
+<td><strong>Gaussian regression</strong> <img alt="3⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/33-20e3.svg" title=":three:" /></td>
+<td>None (mean), <br>Softplus (variance)</td>
+<td><code>GaussianNLLLoss</code></td>
+<td>mean and variance</td>
+<td>MAE (mean only)</td>
+</tr>
+<tr>
+<td><strong>Poisson count modeling</strong> <img alt="4⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/34-20e3.svg" title=":four:" /></td>
+<td>None</td>
+<td><code>PoissonNLLLoss</code></td>
+<td><code>0</code> … <code>n</code></td>
+<td>MAE</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Selitykset</p>
+<p><img alt="1⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/31-20e3.svg" title=":one:" /> Saatat nähdä yhdistelmän <code>Sigmoid + BCELoss</code>, mutta <code>BCEWithLogitsLoss</code> on suositeltavampi, koska se on numeerisesti vakaampi (kuten <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html">PyTorchin dokumentaatiossa: BCEWithLogitsLoss</a> todetaan.)</p>
+<p><img alt="2⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/32-20e3.svg" title=":two:" /> Saatat nähdä yhdistelmän <code>LogSoftmax + NLLLoss</code> moniluokkaisessa luokittelussa, mutta <code>CrossEntropyLoss</code> sisältää jo molemmat vaiheet ja välttää turhan työn.</p>
+<p><img alt="3⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/33-20e3.svg" title=":three:" /> Gaussinen regressiomalli antaa kaksi lukua: arvauksen (keskiarvo) ja epävarmuuden (varianssi). Malli voi esimerkiksi sanoa: <em>"Arvioin, että lämpötila on 21 °C, mutta epävarmuus on noin ±3 °C."</em> Varianssin positiivisuus voidaan varmistaa eksponentti- tai Softplus-aktivoinnilla. Softplus lisää numeerista vakautta, mutta tuo myös pienen harhan tai lattian varianssiin.</p>
+<p><img alt="4⃣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/34-20e3.svg" title=":four:" /> Poisson-malli olettaa, että ilmiö noudattaa Poisson-jakaumaa tavallisen normaalijakauman (kuten regressiossa) sijaan. Malli ennustaa ei-negatiivisen luvun: <em>"Annettujen piirteiden perusteella ennustan, että asiakkaita tulee 10."</em></p>
+</div>
+<h3 id="malli">Malli</h3>
+<p>Nyt sinulla pitäisi olla data vektoroituna, ongelma määriteltynä ja virhefunktio valittuna. Seuraava askel on hypoteesifunktion eli mallin valinta. Tätä varten sinun on käytännössä pakko pilkkoa datasetti kolmeen osaan:</p>
+<ul>
+<li>Koulutusdata (training set)</li>
+<li>Validointidata (validation set)</li>
+<li>Testidata (test set)</li>
+</ul>
+<p>Hypoteesifunktiolla eli mallilla on monta nimeä: <em>"We use the terms hypothesis function, learning function, prediction function, training function, and model interchangeably."</em> <sup id="fnref2:mathforai"><a class="footnote-ref" href="#fn:mathforai">1</a></sup> Johdatus koneoppimiseen -kurssilla mallin valinta oli yksi vaiheista; neuroverkkojen kohdalla mallin valinta tarkoittaa arkkitehtuurin määrittelyä. Käytännössä mallin kerrosten määrä ja muoto ovat hyperparametreja. "A deep learning model is like a sieve for data processing, made of a succession of increasingly refined data filters—the layers <sup id="fnref3:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">2</a></sup>".</p>
+<p>Watson ja Chollet kirjoittavat, että "To figure out how big a model you’ll need, you must develop a model that overfits." <sup id="fnref4:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">2</a></sup> Tämä tarkoittaa, että et käytännössä voi etukäteen tietää, minkä kokoinen malli soveltuu tehtävään. Aloita pienestä ja skaalaa sitä suuremmaksi kunnes löydät ylisovittamisen rajan. Tämän jälkeen voit käyttää regularisointia ja etsiä tasapainoa alisovittamisen ja ylisovittamisen välillä. Malli monimutkaisuus määrittyy seuraavilla:</p>
+<ul>
+<li>Kerrosten lukumäärä</li>
+<li>Kunkin kerroksen solmujen (neuroneiden) lukumäärä</li>
+<li>Epookkien lukumäärä</li>
+</ul>
+<p>Lisäksi voit muuttaa esimerkiksi aktivointifunktioita, optimointimenetelmiä ja oppimisnopeutta (learning rate). Näihin kuitenkin löytyy yleensä hyvät oletusarvot, joilla pääsee pitkälle. Tutustumme näihin tarkemmin <a href="../kaytannot/">Kouluttamisen käytännöt</a>-luvussa.</p>
+<h3 id="regularisointi">Regularisointi</h3>
+<p>Tähän palataan <a href="../kaytannot/">Kouluttamisen käytännöt</a>-luvussa.</p>
+<h3 id="koulutus">Koulutus</h3>
+<p>Mallin varsinainen koulutus tapahtuu optimointimenetelmällä, joka minimoi virhefunktion arvon. Yleisin menetelmä on gradienttimenetelmä (engl. gradient descent). Gradienttimenetelmä perustuu virhefunktion derivaatan laskemiseen ja sen hyödyntämiseen mallin painojen päivittämisessä siten, että virhe pienenee jokaisella askeleella. Tämän pitäisi olla sinulle jo tuttua.</p>
+<p>Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa, GPU alkaa tuottaa lämpöä ja sinä menet kahville. ☕</p>
+<h2 id="tehtavat">Tehtävät</h2>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Mallinna Fashion MNIST</p>
+<p>Kouluta yksinkertainen neuroverkko <a href="https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.FashionMNIST.html">FashionMNIST</a> -datasetillä. Datasetti on siitä tuttu, että se noudattaa MNIST:n tavoin samaista rakennetta: 28x28 pikselin harmaasävykuvat, joissa on vaatekappaleita luokiteltavana. Luokkia on 10 ja kyseessä on <em>multi-class, single-label classification</em> -ongelma. Datasetti löytyy suoraan <code>torchvision.datasets</code>-moduulista jaettuna koulutus- ja testidataseteiksi. Niissä on yhteensä 70 000 kuvaa (60 000 koulutukseen, 10 000 testaukseen). Tämä kaikki on hyvin, hyvin tuttua MNIST:stä. Se, mikä muuttuu, on että kuvat ovat vaikeampia tulkita kuin numerot (sandaali vs. lenkkari on vaikeampi erottaa kuin 3 vs. 7). Jos käytät samaa 784-256-128-10 -arkkitehtuuria kuin aiempi MLP, ja Sigmoid-kerroksia, koulutus kestää jotakuinkin yhtä kauan kuin edellinenkin. Saavutettu tarkkuus tulee olemaan heikompi (n. 85 %) sadalla epookilla. </p>
+<p>Huomaa, että <em>"oikea vastaus"</em> on vähemmän merkityksellinen kuin sinun oppimismatka ja ymmärryksen syventyminen. Kokeile erilaisia arkkitehtuureita, optimointimenetelmiä ja hyperparametreja. Dokumentoi oppimiskokemuksesi. Oikean vastauksen sinulle antaa tuore kielimalli hetkessä, tai voit jopa kaivaa sen netistä, kuten <a href="https://docs.pytorch.org/tutorials/beginner/basics/data_tutorial.html">PyTorch Learn the Basics: Datasets &amp; Dataloaders</a> tai AI and ML for Coders in PyTorch -kirjan <a href="https://github.com/lmoroney/PyTorch-Book-FIles/blob/main/Chapter02/PyTorchChapter2.ipynb">repositoriosta</a>. Huijaamalla huijaat lähinnä vain itseäsi.</p>
+<p>Älä siis huijaa vaan ota ensimmäisen viikon <code>110_first_model.py</code>-tiedosto esimerkiksi. Voit käyttää pohjana <code>400_fashion_mnist.py</code>-tiedostoa tai luoda kokonaan oman Notebookisi. </p>
+<ul>
+<li>Aloita pienestä mallista ja kasvata sitä, kunnes löydät ylisovittamisen rajan.</li>
+<li>Käytä Tensorboardia prosessin seurantaan ja dokumentointiin.</li>
+<li>Tallenna malli seuraavaa tehtävää varten!</li>
+</ul>
+<p>Kun tallennat arvot, tallenna mukana myös mallin arkkitehtuuriin liittyvät tiedot, joiden avulla saat alustettua täysin saman mallin uusiksi.</p>
+<div class="admonition tip">
+<p class="admonition-title">Mallin tallennus</p>
+<p>Tallenna malli PyTorchin <code>torch.save()</code>-funktiolla. Tallenna mukaan myös mallin arkkitehtuuriin liittyvät tiedot, kuten kerrosten lukumäärä ja solmujen lukumäärä kussakin kerroksessa. Näin voit alustaa täysin saman mallin uudelleen lataamisen yhteydessä. Tämän voi tehdä monin eri tavoin, mutta alla on yksi esimerkki:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">model_checkpoint</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="s1">&#39;input_size&#39;</span><span class="p">:</span> <span class="mi">784</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="s1">&#39;output_size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="s1">&#39;hidden_layers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="s1">&#39;state_dict&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_checkpoint</span><span class="p">,</span> <span class="s1">&#39;mnist_mlp_checkpoint.pth&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Jos haluat haastaa itseäsi, kokeile kääntää malli TorchScript-muotoon <code>torch.jit.script()</code>-funktiolla. Löydät tähän hyvän esimerkin <strong>Hands-On Machine Learning with Scikit-Learn and PyTorch</strong> -kirjan luvun 10 lopusta otsikon <em>"Compiling and Optimizing a PyTorch Model"</em> alta.</p>
+<div class="admonition tip">
+<p class="admonition-title">Relu vs. Sigmoid</p>
+<p>Kannattaa kokeilla ainakin ReLU-aktivointia Sigmoidin sijasta, minkä jo itsessään pitäisi nostaa tarkkuutta muutaman prosenttiyksikön verran.</p>
+</div>
+</div>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Lataa Fashion MNIST -malli</p>
+<p>Käytä edellisen tehtävän tallennettua mallia ennustamaan luokkia Fashion MNIST -datasetin testidatalle. Tämän Notebookin kanssa sinulla ei ole sitä ongelmaa, että vahingossa ajaisit useita minuutteja vievän solun uudestaan. Toisin sanoen tässä sinun on helppo harjoitella seuraavia asioita:</p>
+<ul>
+<li>Mallin lataaminen tiedostosta.</li>
+<li>Mallin käyttäminen ennustamiseen.</li>
+<li>Ennusteiden evaluointi sopivilla mittareilla (kuten top-k accuracy).</li>
+<li>Output-kerroksen numeroiden tutkiminen<ul>
+<li>Aktivaatio on None, joten ulostulo on raakaa logit-arvoa.</li>
+<li>Tulosta arvot sinällään ja todennäköisyydet (softmaxin avulla).</li>
+</ul>
+</li>
+</ul>
+<p>Voit käyttää pohjana <code>401_fashion_mnist_eval.py</code>-tiedostoa tai luoda kokonaan oman Notebookisi.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Tutustu aktivointifunktioihin</p>
+<p>Aja Marimo Notebook <code>413_activation_functions.ipynb</code> ja tutustu eri aktivointifunktioihin.</p>
+</div>
+<h2 id="lahteet">Lähteet</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:mathforai">
+<p>Nelson, H. <em>Essential Math for AI</em>. O'Reilly Media. 2023.&#160;<a class="footnote-backref" href="#fnref:mathforai" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:mathforai" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dlwithpython">
+<p>Watson, M &amp; Chollet, F. <em>Deep Learning with Python, Third Edition</em>. Manning. 2025.&#160;<a class="footnote-backref" href="#fnref:dlwithpython" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:dlwithpython" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:dlwithpython" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:dlwithpython" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:dlwithpython" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 <a href="https://www.kamk.fi">Kajaanin Ammattikorkeakoulu Oy</a>. 
+Licenced under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">BY-NC-SA 4.0</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Kopioitu leikep\u00f6yd\u00e4lle", "clipboard.copy": "Kopioi leikep\u00f6yd\u00e4lle", "search.result.more.one": "1 lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.more.other": "# lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.none": "Ei t\u00e4sm\u00e4\u00e4vi\u00e4 dokumentteja", "search.result.one": "1 t\u00e4sm\u00e4\u00e4v\u00e4 dokumentti", "search.result.other": "# t\u00e4sm\u00e4\u00e4v\u00e4\u00e4 dokumenttia", "search.result.placeholder": "Kirjoita aloittaaksesi haun", "search.result.term.missing": "Puuttuu", "select.version": "Valitse versio"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
