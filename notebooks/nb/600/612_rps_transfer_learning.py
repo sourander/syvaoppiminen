@@ -147,8 +147,6 @@ def _(
     def five_by_four_fig(images, img_transform=None):
         fig, axes = plt.subplots(4, 5, figsize=(10,8), constrained_layout=True)
         axes = axes.flatten()
-        mean = torch.tensor(imagenet_mean).view(3, 1, 1)
-        std = torch.tensor(imagenet_std).view(3, 1, 1)
 
         for ax, img in zip(axes, images):
             img_disp = img.clone()
