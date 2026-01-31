@@ -16,7 +16,11 @@ Termi *ambiguous* tarkoittaa, että luonnollisessa kielessä samalle asialle voi
 >
 > – Pyhäjokiseutu 02.10.2024
 
-Onko tilanne kenties ollut sellainen, että: "Susi ja hänen omistajansa olivat pyöräilemässä. He hyökkäsivät koiran kimppuun." Vastaavia monitulkintaisia lauseita on Suomen Kuvalehden Jyvät & Akanat -palstalla viikoittain. Tässä kaksi tuoretta esimerkkiä lisäviihteenä 5/2026 numerosta: 
+![](../images/700_gemini-susi-quote.jpg)
+
+**Kuva 1:** *Kirjaimellisesti tulkittu otsikko: "Susi hyökkäsi omistajansa kanssa pyörälenkillä olleen koiran kimppuun keskellä asutusta Raahessa.". Kuva luotu Gemini Nano Banana mallilla.*
+
+Onko tilanne kenties ollut Kuvan 1 mukainen: susi ja hänen omistajansa olivat hyökkääjät, kun koiraraukka yritti pyöräillä karkuun? Vastaavia monitulkintaisia lauseita on Suomen Kuvalehden Jyvät & Akanat -palstalla viikoittain. Tässä kaksi tuoretta esimerkkiä lisäviihteenä 5/2026 numerosta: 
 
 > "Nikotiinipussit muuttavat aivoja – kokenut lääkäri kertoo, miten pääset niistä pysyvästi eroon"
 >
