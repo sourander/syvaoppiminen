@@ -348,7 +348,17 @@ TODO! Esittele tässä baseline.
 
 ### Tiheät vektorit
 
-TODO! Esittele termi Word2Vec (joka ei ole algoritmi vaan perhe). Alla on esiteltynä kaksi sen jäsentä: Word2Vec ja GloVe. Lisäksi esitellään fastText, joka on Facebookin paranneltu versio GloVe:stä.
+TODO! Esittele termi Word2Vec (joka ei ole algoritmi vaan perhe). Alla on esiteltynä kaksi sen jäsentä: CBOW ja Skip-Gram.
+
+Lisäksi esitellään GloVe ja fastText, joka on Facebookin paranneltu versio GloVe:stä.
+
+#### CBOW
+
+TODO! Word2Vec:n Continuous Bag of Words (CBOW) -malli ennustaa keskimmäisen sanan ympäröivien sanojen perusteella. [^mikolov2013]
+
+#### Skip-Gram
+
+TODO! Word2Vec:n Skip-Gram-malli toimii päinvastoin: se ennustaa ympäröivät sanat keskimmäisen sanan perusteella. [^mikolov2013]
 
 #### GloVe
 
@@ -391,7 +401,28 @@ TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka pai
 
 ## Yhteenveto
 
-TODO! Ennen siirtymistä RNN-lukuun, varmista että ero on selvä: NLP:ssä voidaan laskea sanavektorien keskiarvo (Bag-of-Words lähestymistapa, hukkaa sanajärjestyksen). Syväoppimisessa haluamme yleensä säilyttää järjestyksen (Sequence).
+Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti väitteisiin.
+
+### 1990-luku
+
+* **Esiprosessointi ja sanojen tokenisointi**. Tilastolliset menetelmät ovat hyvin hauraita syötteen suhteen, joten sananmuodot, hukkasanat ja muut on käsiteltävä huolellisesti. Tiedät tämän Johdatus koneoppimiseen -kurssilta. Naive Bayes luulee esimerkiksi että `Kissa` ja `kissa` ovat eri sanoja, ellet erikseen käsittele datasettiä.
+* **One-Hot & BoW**. Sanat esitettiin eristettyinä indekseinä tai frekvensseinä sanakirjassa, jossa esiintyy aivan jokainen mallin tuntema sana. [^appliednlp]
+* **N-Gram**. Ainut tapa mallintaa kontekstia oli tarkastella peräkkäisten sanojen yhdistelmiä. Kärjistetysti tietyistä sanapareista (bigram) tai -kolmikoista (trigram) laskettiin todennäköisyydet, eli vaikkapa `new york` on yksi token.
+* **RNN ja LSTM**. RNN oli 90-luvulla akateeminen kuriositeetti. Laskentatehoa oli todella vähän ja saatavat datasetit pieniä. Wikipediaa tai näytönohjaimia ei ollut olemassa.
+
+### 2000-luku
+
+* **Word Embeddings**. Bengio ja kollegat esittelivät sanavektorit kielimallinnukseen (tai käännöstyöhön). Sanavektori sisältää tietoa kontekstista, kuten sanojen `dog` ja `cat` samankaltaisuudesta. [^bengio2003]
+
+### 2010-luku
+
+* **Word2Vec**. Mikolov ja kollegat Googlessa esittelivät Word2Vecin (CBOW ja Skip-Gram), joka mahdollisti erittäin tehokkaan tavan oppia sanavektoreita suurista tekstikorpuksista. Huomaa sana *efficient* julkaisun otsikossa. Tämä jatkoi Bengion kehitystä. [^mikolov2013]
+* **Seq2Seq**. Sutskever ja kollegat esittelivät encoder-decoder-arkkitehtuurin konekäännökseen, jossa RNN-verkko koodaa syötteen ja toinen RNN dekoodaa sen toiselle kielelle. Enkooderin ja dekooderin välissä on kiinteämittainen vektori, joka pyrkii sisältämään kaiken syötteen merkityksen. [^sutskever2014]
+* **Attention seq2seq**. Huomattiin, että kiinteämittainen vektori on pullonkaula, joka rajoittaa mallin suorituskykyä erityisesti pitkille syötteille. Bahdanau ja kollegat esittelivät *attention*-mekanismin, joka sallii dekooderin keskittyä eri osiin syötettä eri aikoina, parantaen merkittävästi käännösten laatua. [^bahdanau2015]
+* **Kontekstisidonnaiset sanavektorit**. Sanavektorit eivät ole enää staattisia, vaan ne riippuvat lauseen kontekstista.
+* **Subword-tokenisointi**. Koko sanan käyttö tokenina on naiivi ratkaisu. Yksittäisen kirjaimen käyttö tokenina sisältää enemmän informaatiota, mutta on epätehokas ratkaisu. Välistä löytynee siis hyvä balanssi? Byte-Pair Encoding (BPE) ja vastaavat menetelmät pyrkivät muodostamaan tokenit dynaamisesti yleisimmistä osasanoista. [^bpe]
+* **Transformers**. Tästä jatketaan tarkemmin [Transformers-luvussa](transformers.md).
+
 
 ## Tehtävät
 
@@ -410,3 +441,9 @@ Tähän tulee tehtävät. Kirjoitan ne viimeiseksi.
 [^airevolution]: Kanabar, V. & Wong, J. The AI Revolution in Project Management: Elevating Productivity with Generative AI*. Pearson. 2023.
 [^genesis]: Williams, B. *A Commonsense Approach to Story Understanding*. MIT. 2016. https://groups.csail.mit.edu/genesis/papers/2017%20Bryan%20Williams.pdf
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
+[^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
+[^mikolov2013]: Mikolov, T. et. al. *Efficient Estimation of Word Representations in Vector Space*. 2013. https://arxiv.org/abs/1301.3781
+[^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
+[^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
+[^appliednlp]: Patel, A & Arasanipalai, A. *Applied Natural Language Processing in the Enterprise*. O'Reilly. 2021.
+[^bpe]: Sennrich, R. et. al. *Neural Machine Translation of Rare Words with Subword Units*. 2016. https://arxiv.org/abs/1508.07909
