@@ -101,7 +101,7 @@ Tunnetuin varhaisista *chatterbot*-sovelluksista on ELIZA, erityisesti skripti D
 
     ![ELIZA](../images/700_ELIZA-cli.png)
 
-    **Kuva 1:** *ELIZA vastailee opettajan murheisiin.*
+    **Kuva 2:** *ELIZA vastailee opettajan murheisiin.*
 
 ELIZA herätti yleisön mielenkiinnon ja sen ympärille syntyi hypeä. Weizenbaum päätyi itse taistelemaan tätä hypeä vastaan, aloittaen ikään kuin ristiretken omaa ohjelmaansa vastaan. ELIZA ei tiennyt mitään psykologiasta ja oli pikemminkin Carl Rogerin terapian karikatyyri tai parodia, joka lähinnä heijastaa kysymykset takaisin käyttäjälle. [^aiux]
 
@@ -274,7 +274,7 @@ mo.Html(displacy.render(doc, style="dep"))
 
 ![](../images/700_displacy-susi-quote.png)
 
-**Kuva 2:** *Riippuvuussuhteiden visualisointi SpaCy:llä.*
+**Kuva 3:** *Riippuvuussuhteiden visualisointi SpaCy:llä.*
 
 #### Nimettyjen entiteettien tunnistus (NER)
 Errisnimien, organisaatioiden, paikkojen, päivämäärien ja rahasummien automaattinen tunnistus tekstivirrasta.
@@ -342,23 +342,78 @@ Löydät vastaavan rakenteen myös `doc.tensor`-attribuutista, joka sisältää 
 
 Mutta kuinka tähän outoon vektoriin ollaan päädytty? Tutustutaan alla eri menetelmiin, aloittaen Johdatus koneoppimiseen -kurssilta tutuksi tulleesta One-Hot Encoding -menetelmästä, edeten tiheisiin vektoreihin, joiden piirteet on opittu tilastollisesti. Seuraavassa luvussa tutustumme suurten kielimallien käyttämiin kontekstisidonnaisiin sanavektoreihin. Niiden ymmärtäminen on helpompaa, jos aloitetaan perusasioista.
 
-### One-Hot Encoding
+### ⛔ One-Hot Encoding
 
-TODO! Esittele tässä baseline.
+Tämän pitäisi olla sinulle tuttu konsepti Johdatus koneoppimiseen -kurssilta. Yksinkertaisesti sanottuna, One-Hot Encodin muuntaa jokaisen sanan vektoriksi, jossa on yhtä monta ulottuvuutta kuin sanakirjassa on sanoja. Vektorin arvo on 1 siinä ulottuvuudessa, joka vastaa kyseistä sanaa, ja 0 muualla. Eli siis, jos meillä on 6 sanan sanasto (*engl. corpus*): ["kissa", "koira", "auto", "talo", "puu", "vene"], niin koko sanasto olisi enkoodattuna:
+
+```python
+vocab = {
+    "kissa": [1, 0, 0, 0, 0, 0],
+    "koira": [0, 1, 0, 0, 0, 0],
+    "auto":  [0, 0, 1, 0, 0, 0],
+    "talo":  [0, 0, 0, 1, 0, 0],
+    "puu":   [0, 0, 0, 0, 1, 0],
+    "vene":  [0, 0, 0, 0, 0, 1],
+    "UNK":   [0, 0, 0, 0, 0, 0],  # Tuntematon sana
+}
+```
+
+Jos koko sanasto on siis $400\,000$ sanaa, jokainen sana esitetään $400\,000$-ulotteisena vektorina, jossa vain yksi arvo on 1 ja loput $399\,999$ ovat 0. Tämä johtaa erittäin harvaan (sparse) esitykseen. Kukin vektori on orthogonaalinen toisiinsa nähden, mikä tarkoittaa, että sanojen välillä ei ole lainkaan semanttista yhteyttä. Esimerkiksi "kissa" ja "koira" ovat yhtä kaukana toisistaan kuin "kissa" ja "auto", vaikka ne ovat semanttisesti lähempänä toisiaan. Tämä metodi oli käytössä 1990-luvulla, mutta nykyisten kielimallien kohdalla sen voi unohtaa tyystin. [^appliednlp]
 
 ### Tiheät vektorit
 
-TODO! Esittele termi Word2Vec (joka ei ole algoritmi vaan perhe). Alla on esiteltynä kaksi sen jäsentä: CBOW ja Skip-Gram.
+Naiivi harva esitys on siis ongelmallinen. Seuraavaksi yksinkertaisin lähestymsistapa on käyttää tiheitä vektoreita, joissa jokainen sana esitetään matalammassa ulottuvuudessa (esim. 100 tai 300 ulottuvuutta). Tällaiset vektorit oppivat säilyttämään sanojen semanttisia suhteita, kuten synonyymit ja analogiat. Useita menetelmiä on kehitetty tällaisten sanavektorien luomiseksi, joista hyvät esimerkit ovat Word2Vec, GloVe ja fastText. [^appliednlp]
 
-Lisäksi esitellään GloVe ja fastText, joka on Facebookin paranneltu versio GloVe:stä.
+Word2Vec ei itsessään ole algoritmi vaan pikemminkin joukko malleja, jotka oppivat sanavektoreita tilastollisesti. Mikolov esitteli alkuperäisessä artikkelissaan kaksi päämallia: Continuous Bag of Words (CBOW) ja Skip-Gram. [^mikolov2013] Tutustumme erityisesti CBOW:iin alla.
 
-#### CBOW
+Ennen Mikolovin artikkelia oli tyypillistä, että kukin NLP-tutkija kehitti/koulutti oman sanavektorimallinsa omaan käyttöönsä. Word2Vec:n mallit mullistivat tätä siten, että jatkossa tutkijat pystyivät hyödyntämään valmiiksi koulutettuja sanavektoreita, *pretrained word embeddings*, jotka oli koulutettu valtavilla tekstikorpuksilla (esim. Google News, Wikipedia). Näin sanavektorit muuttuivat standardoiduiksi resursseiksi, joita voitiin jakaa ja käyttää eri NLP-tehtävissä. [^appliednlp]
 
-TODO! Word2Vec:n Continuous Bag of Words (CBOW) -malli ennustaa keskimmäisen sanan ympäröivien sanojen perusteella. [^mikolov2013]
+#### Word2Vec
 
-#### Skip-Gram
+!!! warning
 
-TODO! Word2Vec:n Skip-Gram-malli toimii päinvastoin: se ennustaa ympäröivät sanat keskimmäisen sanan perusteella. [^mikolov2013]
+    Vältä sekaannusta Bag of Words (BoW) -menetelmän kanssa, joka on eri asia kuin Continuous Bag of Words (CBOW). BOW on Naive Bayesin ja muiden perinteisten mallien esikäsittelymenetelmä, jossa lause esitetään sanakirjassa esiintyvien sanojen frekvensseinä ilman järjestystä.
+
+    * BoW: 
+        * Dokumentti-tason esitys, jossa lasketaan kunkin sanaston sanan esiintymiskerrat (tai muita tilastollisia esiintymisiä, kuten TF-IDF).
+        * Ei vaadi minkään sortin koulutusta.
+    * CBOW: 
+        * Sanatason esitys.
+        * Koulutetaan ennustamaan sanaa sen kontekstin perusteella.
+
+Continuous Bag of Words (CBOW) -malli ennustaa keskimmäisen sanan ympäröivien sanojen perusteella. [^mikolov2013] Käydään algoritmi läpi esimerkin avulla. Kuvitellaan lause: =="Train will arrive at five"==. Meidän ikkunakoko on 2, eli otamme kaksi sanaa kummaltakin puolelta keskimmäistä sanaa. Meidän haluttu *embedding* ulottuvuus on 3. Täten *input* ja *target* ovat esikäsittelyn jälkeen:
+
+```python
+n = len(rest_of_vocab)
+X = [
+  [1,0,0,0,0] + [0]*n,  # train
+  [0,1,0,0,0] + [0]*n,  # will
+  [0,0,0,1,0] + [0]*n,  # at
+  [0,0,0,0,1] + [0]*n   # five
+]
+y = [0,0,1,0,0] + [0]*n  # arrive
+```
+
+Näiden johdosta meillä on `Nx3`-kokoinen embedding matrix `W` (`N` sanaa sanastossa, 3 ulottuvuutta). Tämän matriisin **jokainen rivi on sanan vektoriesitys**. Tämä vektori on siis *embedding matrix*. Koulutuksen jälkeen tämä on se, mitä me haluamme käyttää sanavektoreina. Aluksi nämä arvot ovat satunnaisia. Syöte käytännössä valitsee `W`:stä neljä riviä (operaatiolla `X @ W`), jotka vastaavat tässä tapauksessa sanoja `train`, `will`, `at` ja `five`. Tämä *valinta* tapahtuu siten, että matriisin muut arvot saavat arvon nolla, jolloin vain näiden neljän sanan rivit vaikuttavat lopputulokseen.
+
+Tämä operaatio kääritään vielä summan tai keskiarvon sisään, `h = torch.sum(X @ W, dim=0)`, jolloin saadaan kolmeulotteinen vektori `h`, joka on näiden neljän sanan vektoreiden summa. Tämän jälkeen lasketaan `h @ W2`, jossa `W2` on toinen painomatriisi, joka muuntaa takaisin sanatilaan. Alla olevassa kuvassa tämä on nimeltään $W'$. Tulos on vektori, jossa on `N` ulottuvuutta. Lopuksi käytetään softmaxia ja lasketaan tappio (loss) verraten ennustettua sanaa `y`:tä vastaan. Koko prosessi toistetaan valtavalla määrällä lauseita, jolloin `W` oppii säilyttämään sanojen semanttisia suhteita.
+
+![](../images/700_CBOW.png)
+
+**Kuva 4:** *Continuous Bag of Words (CBOW) -mallin arkkitehtuuri. Kuva on mukailtu Mikolov:n alkuperäisestä artikkelista, mutta avattu yllä olevan tekstiesimerkin mukaiseksi.*
+
+Seuraavaksi voisimme liu'uttaa tätä ikkunaa eteenpäin lauseessa, jolloin saamme lisää *input*- ja *target*-pareja. Seuraava ikkuna voisi olla: =="will arrive at five o'clock"==, jolloin `y` olisi `at`. Näin jatketaan koko korpuksen läpi useita kertoja.
+
+CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet [^appliednlp]:
+
+1. **Pieni ikkuna**. CBOW käyttää kiinteän kokoista liukuvaa ikkunaa, joka rajoittaa kontekstin määrää. Pitkän kantaman riippuvuudet jäävät huomiotta.
+2. **Subword-tieto puuttuu**. CBOW käsittelee sanat kokonaisina yksikköinä. Esimerkiksi substansiitivsta muodostetun adjektiivin kantasanan yhteys jää huomiotta (`vaara` vs. `vaarallinen` tai `intelligent` vs. `intelligence`).
+3. **Out of Vocabulary (OOV)**. CBOW ei pysty käsittelemään sanoja, joita ei ole nähty koulutuksen aikana. Tämä on ongelma harvinaisille sanoille tai kirjoitusvirheille.
+4. **Staattisuus**. Jokaisella sanalla on yksi kiinteä vektoriesitys, joka ei muutu kontekstin mukaan. Ono se kuusi nyt sitten numero vai puu?
+
+!!! question "Entä Skip-gram?" 
+
+    Skip-gram toimii päinvastoin kuin CBOW: se ennustaa kontekstisanoja annetun sanan perusteella. Eli jos meillä on sana `arrive`, Skip-gram yrittää ennustaa sanat `train`, `will`, `at` ja `five`. Arkkitehtuuri on muuten samanlainen, mutta syöte ja tavoite ovat vaihtaneet paikkaa [^mikolov2013]. Skip-gram toimii erityisen hyvin harvinaisten sanojen kanssa, koska se keskittyy yksittäisiin sanoihin ja niiden konteksteihin. [^nlp101]
 
 #### GloVe
 
@@ -434,16 +489,17 @@ Tähän tulee tehtävät. Kirjoitan ne viimeiseksi.
 [^turing1950]: Turing, A. M. *Computing Machinery and Intelligence.* Mind. 1950. https://courses.cs.umbc.edu/471/papers/turing.pdf
 [^aimarketing]: Ammerman, W. *The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning*. McGraw-Hill. 2024.
 [^llmturing]: Jones, C.R. & Benjamin, B. *Large Language Models Pass the Turing Test*. 2025. https://arxiv.org/abs/2503.23674
-[^aiux]: Lew, G. & Schumacher, R. *AI and UX: Why Artificial Intelligence Needs User Experience*. Apress. 2020.
 [^demystifyingai]: Barton, R. & Henry, J. *Demystifying Generative AI: A Practical and Intuitive Introduction*. Addison-Wesley Professional. 2026.
+[^aiux]: Lew, G. & Schumacher, R. *AI and UX: Why Artificial Intelligence Needs User Experience*. Apress. 2020.
 [^rfc439]: Unknown. *PARRY Encounters the DOCTOR*. 1973. https://www.rfc-editor.org/rfc/rfc439.html
 [^conversational]: Rawat, R. et. al. *Conversational Artificial Intelligence*. Wiley-Scrivener. 2024.
 [^airevolution]: Kanabar, V. & Wong, J. The AI Revolution in Project Management: Elevating Productivity with Generative AI*. Pearson. 2023.
 [^genesis]: Williams, B. *A Commonsense Approach to Story Understanding*. MIT. 2016. https://groups.csail.mit.edu/genesis/papers/2017%20Bryan%20Williams.pdf
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
-[^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
+[^appliednlp]: Patel, A & Arasanipalai, A. *Applied Natural Language Processing in the Enterprise*. O'Reilly. 2021.
 [^mikolov2013]: Mikolov, T. et. al. *Efficient Estimation of Word Representations in Vector Space*. 2013. https://arxiv.org/abs/1301.3781
+[^nlp101]: Kulshreshta, R. *NLP 101: Word2Vec — Skip-gram and CBOW*. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
+[^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
 [^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
 [^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
-[^appliednlp]: Patel, A & Arasanipalai, A. *Applied Natural Language Processing in the Enterprise*. O'Reilly. 2021.
 [^bpe]: Sennrich, R. et. al. *Neural Machine Translation of Rare Words with Subword Units*. 2016. https://arxiv.org/abs/1508.07909
