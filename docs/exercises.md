@@ -87,5 +87,10 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Dogs vs. Cats siirtovaikutus
 - [ ] Tehtävä: RPS-datasetin luonti webcamilla
 
+## Luonnollinen kieli (700)
+
+- [ ] Tehtävä: Embeddings
+- [ ] Tehtävä: SpaCY Playground
+
 
 ```

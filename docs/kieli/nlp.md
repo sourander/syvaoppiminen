@@ -337,6 +337,16 @@ for token in doc:
     print(f"... | {value:>5.2f}")
 ```
 
+Output:
+
+```
+       Pizza:  0.49 | -5.49 | -3.25 | ... | -3.25
+          on:  5.62 | -1.54 | -0.35 | ... | -0.35
+  ravitsevaa:  4.88 |  3.93 |  0.55 | ... |  0.55
+           .: -0.65 | -0.54 |  6.29 | ... |  6.29
+```
+
+
 Löydät vastaavan rakenteen myös `doc.tensor`-attribuutista, joka sisältää koko lauseen vektoritensorin, jonka muoto olisi tässä tapauksessa `(3, 96)`. PyTorchissa tulet käsittelemään niitä yleisimmin tensoreina kokoa: `(batch_size, seq_len, embedding_dim)`.
 
 
@@ -417,15 +427,22 @@ CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet [^applied
 
 #### GloVe
 
-TODO! GloVe (Global Vectors) parantaa Word2Veciä hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja pelkän lokaalin ikkunan sijaan. Facebookin fastText vie tämän askeleen pidemmälle pilkkomalla sanat osiin (n-grams), jolloin malli pystyy ymmärtämään myös sille tuntemattomia sanoja niiden morfologisen rakenteen perusteella.
+GloVe julkaistiin 2014 Stanfordissa, vuosi Word2Vec:n jälkeen. GloVe korjaa CBOW:n ensimmäisenä puutteen (ks. yltä) hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja(*engl. co-occurrence matrix*) pelkän lokaalin ikkunan sijaan. GloVe rakentaa sanavektorit siten, että sanojen vektoreiden välinen etäisyys heijastaa niiden yhteisesiintymistiheyttä koko korpuksessa: tämä tehdään tekemällä dimensiovähennys yhteisesiintymismatriisille [^appliednlp].
 
-TODO! Korosta Word2Vec/GloVe-osiossa niiden heikkoutta: jos sanaa ei ole sanakirjassa (esim. kirjoitusvirhe tai harvinainen taivutusmuoto "syväoppimisellansakaan"), malli hajoaa tai käyttää <UNK>-tokenia. Tämä motivoi fastTextiä (joka on mainittu) ja myöhemmin BPE/WordPiece-tokenisaatiota Transfomer-luvussa.
+Emme käsittele algoritmia tässä tarkemmin, mutta voit tutua sen verkkosivuihin [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/projects/glove/). Sivuilta löytyy sekä julkaisu, kivoja kuvia, että linkki GitHub-koodiin (C-kieltä).
 
 #### fastText
 
-TODO! Mainitse, että moderneissa NLP-putkissa on fastText:iä kehittyneempiä menetelmiä, kuten BERT-pohjaiset ratkaisut, tai jopa mallin sisäinen embedding-kerros, jotka oppivat kontekstisidonnaisia sanavektoreita mallin koulutuksen aikana. Näihin tutustutaan Transformers-luvussa.
+Facebook julkaisi fastText-algoritmin vuonna 2016. Kuten sen artikkelin otsikosta, *"Enriching Word Vectors with Subword Information"*, voi päätellä, fastText ottaa huomioon sanojen sisäiset osat (subwords), kuten n-grammit. Tämä auttaa käsittelemään harvinaisia sanoja ja morfologisesti rikkaita kieliä paremmin kuin Word2Vec tai GloVe. fastText edustaa kutakuinkin seuraavaa evoluutiovaihetta sanavektoreissa [^bojanowski2016].
 
-TODO! Korosta staattisuutta. Sana "pankki" on aina sama vektori, oli kyseessä hiekkapankki tai Nordea.
+Emme käsittele myöskään tätä algoritmia tarkemmin. Voit tutustua sen verkkosivuihin [fastText: Library for Efficient Text Classification and Representation Learning](https://fasttext.cc/). Sivuilta löytyy Explain Like I'm Five -video, linkki koodiin ja muuta hyödyllistä.
+
+Se, mikä meitä kiinnostaa, on että mitkä CBOW:n heikkouksista on nyt korjattu [^appliednlp]:
+
+1. ⛔ **Pieni ikkuna**. fastText käyttää edelleen kiinteän kokoista ikkunaa.
+2. ✅ **Subword-tieto**. fastText jakaa sanat n-grammeihin.
+3. ✅ **Out of Vocabulary (OOV)**. fastText voi luoda vektoreita tuntemattomille sanoille niiden n-grammien perusteella.
+4. ⛔ **Staattisuus**. fastTextin sanavektorit ovat edelleen staattisia.
 
 ### Vektorien vertailu
 
@@ -434,6 +451,23 @@ TODO! Kun sanat on muutettu numeerisiksi vektoreiksi, voimme laskea niiden väli
 TODO! Yleisin tapa mitata kahden sanavektorin samankaltaisuutta on laskea niiden välinen kulma (kosini), joka on riippumaton itse vektorin pituudesta (skaalasta). Käytännön harjoituksissa hyödynnämme tähän Pythonin SciPy-kirjaston spatial.distance.cosine -funktiota.
 
 #### Vektorien analogiat
+
+> "We now evaluate our approach on word analogy
+questions, of the form A is to B as C is to D,
+where D must be predicted by the models." 
+>
+> — Mikolov et al., 2013 [^mikolov2013]
+
+Koska embedding on piirrovektori, voidaan laskea vektoreiden välisiä eroja ja summia. Tämä mahdollistaa semanttisten analogioiden löytämisen. Esimerkiksi, jos meillä on sanat `king`, `man` ja `woman`, voimme tehdä seuraavanlaista matematiikkaa:
+
+```python
+import numpy as np
+
+king_vector = nlp("king").vector
+man_vector = nlp("man").vector
+woman_vector = nlp("woman").vector
+queen_vector = king_vector - man_vector + woman_vector
+```
 
 TODO! Vektoriavaruuden avulla voidaan laskea analogioita, kuten "kuningas - mies + nainen = kuningatar".
 
@@ -481,7 +515,19 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 
 ## Tehtävät
 
-Tähän tulee tehtävät. Kirjoitan ne viimeiseksi.
+!!! question "Tehtävä: Embeddings"
+
+    Avaa Marimo Notebook `700_embeddings.py` ja tutustu koodiin. Suorita koodi ja tarkastele tuloksia. Kokeile muuttaa sanoja ja nähdä, miten vektorit muuttuvat. Notebookissa muun muassa:
+
+    * Vertaillaan sanaparien etäisyyksiä (esim. `sielu` vs. `teräs`)
+    * Tutustutaan 1000 yleisimmän suomenkielisen sanan keskinäisiin etäisyyksiin: mitkä ovat lähimmät ja kaukaisimmat sanat?
+    * Tarkastellaan 2-ulotteiseen koordinaatistoon projisoituja sanavektoreita (PCA- ja t-SNE-menetelmillä)
+
+!!! question "Tehtävä: SpaCY Playground"
+
+    Tämä tehtävä on vapaaehtoinen: tee, jos se auttaa sinua ymmmärtämään konseptit yltä.
+
+    Käytä `701_spacy_playground.py`-notebookia apuna esimerkiksi yllä olevan tekstin ymmärtämiseen. Voit kopioida ja liittää koodinpätkät ja kokeilla niitä itse. Notebookissa on lähinnä vain import ja mallin lataus valmiina.
 
 ## Lähteet
 
@@ -499,6 +545,7 @@ Tähän tulee tehtävät. Kirjoitan ne viimeiseksi.
 [^appliednlp]: Patel, A & Arasanipalai, A. *Applied Natural Language Processing in the Enterprise*. O'Reilly. 2021.
 [^mikolov2013]: Mikolov, T. et. al. *Efficient Estimation of Word Representations in Vector Space*. 2013. https://arxiv.org/abs/1301.3781
 [^nlp101]: Kulshreshta, R. *NLP 101: Word2Vec — Skip-gram and CBOW*. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
+[^bojanowski2016]: Bojanowski, P. et. al. *Enriching Word Vectors with Subword Information*. 2016. https://arxiv.org/pdf/1607.04606
 [^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
 [^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
 [^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
