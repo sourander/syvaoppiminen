@@ -92,5 +92,10 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Embeddings
 - [ ] Tehtävä: SpaCY Playground
 
+## RNN ja jälkeläiset (710)
+
+- [ ] Tehtävä: Sukunimien luokittelu Pt.1
+- [ ] Tehtävä: Sukunimien luokittelu Pt.2
+
 
 ```

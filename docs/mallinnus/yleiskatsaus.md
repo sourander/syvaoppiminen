@@ -132,7 +132,7 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
             'state_dict': model.state_dict()
         }
 
-        torch.save(model_checkpoint, 'mnist_mlp_checkpoint.pth')
+        torch.save(model_checkpoint, 'models/mnist_mlp_checkpoint.pth')
         ```
 
         Jos haluat haastaa itseäsi, kokeile kääntää malli TorchScript-muotoon `torch.jit.script()`-funktiolla. Löydät tähän hyvän esimerkin **Hands-On Machine Learning with Scikit-Learn and PyTorch** -kirjan luvun 10 lopusta otsikon *"Compiling and Optimizing a PyTorch Model"* alta.
