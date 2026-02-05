@@ -156,7 +156,7 @@ Muutoin tämä vaihe on jossain määrin mekaaninen. Käytät valmista kirjastoa
 
 !!! question "Tehtävä: Tutustu aktivointifunktioihin"
 
-    Aja Marimo Notebook `413_activation_functions.ipynb` ja tutustu eri aktivointifunktioihin.
+    Aja Marimo Notebook `403_activation_functions.ipynb` ja tutustu eri aktivointifunktioihin.
 
 ## Lähteet
 
