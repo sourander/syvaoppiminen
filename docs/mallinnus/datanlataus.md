@@ -9,7 +9,7 @@ priority: 410
 PyTorch tarjoaa `torch.utils.data`-moduulissa kaksi luokkaa, jotka helpottavat datan käsittelyä: `Dataset` ja `DataLoader`. Lisäksi löytyy esimerkiksi `TensorDataset`-luokka, josta voi olla apua harjoitellessa.
 
 * **Dataset** on luokka, joka käärii sisäänsä datan ja labelit.
-* **DataLoader** on luokka, joka kääriin yllä olevan iteraoitavaksi objektiksi.
+* **DataLoader** on luokka, joka käärii yllä olevan iteroitavaksi objektiksi.
 
 ### TensorDataset
 
@@ -46,7 +46,7 @@ Yksinkertaisimmillaan `Dataset`-luokan tarvitsee toteuttaa kaksi metodia: `__len
 
 ```python
 class CustomDataset(Dataset):
-    def __init__(self):
+    def __init__(self, data, labels):
         self.data = data
         self.labels = labels
 
@@ -253,7 +253,7 @@ split_ds = ds["train"].train_test_split(test_size=0.3, seed=42)
 
 # Siirretään ne eri loadereihin
 trainloader = DataLoader(ds["train"], batch_size=32)
-testloader = DataLoader(ds["train"], batch_size=32)
+testloader = DataLoader(ds["test"], batch_size=32)
 
 # Kaivetaan yksi batch ulos
 for batch in trainloader:
