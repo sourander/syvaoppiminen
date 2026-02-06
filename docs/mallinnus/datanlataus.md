@@ -64,7 +64,7 @@ Luonnollisesti voit tehdä datasetistä aivan mitä tahansa. Vain ohjelmointitai
     * Tai kenties lataa S3:sta (jos `download=True`)
     * Tai varoita jos tuoreempi data on saatavilla verkosta
 * Esikäsittele dataa lennossa (jos `transform`-parametri on määritelty)
-* Palauta vain jokin tietty versio/subset datasta (esim. `train==True`)
+* Palauta vain jokin tietty versio/subset datasta (esim. `train=True`)
 * Parametri `obj.classes` sisältäen ihmisluettavat luokat
 * Parametri `obj.class_to_idx` määrittelee, mikä luokka vastaa mitäkin indeksiä
 
@@ -93,7 +93,7 @@ train_ds, val_ds, test_ds =
 
 ### DataLoader
 
-DataLoader on vain wrapper Datasetin ympärille, joten jatketaan yllä luodun `CustomDataset`-esimerkin parissa. Huomaa, että DataLoader ei toteuta `__getitem__`-metodia, vaan ainoastaan `__iter__`-metodin, joka palauttaa iteraattorin. Et voi siis hakea yksittäistä näytettä `mydataloader[0]`, vaan sinun tulee iteroida datan läpi esimerkiksi `for`-silmukassa tai `next()`-funktiolla.
+DataLoader on vain wrapper Datasetin ympärille, joten jatketaan yllä luodun `TensorDataset`-esimerkin parissa. Huomaa, että DataLoader ei toteuta `__getitem__`-metodia, vaan ainoastaan `__iter__`-metodin, joka palauttaa iteraattorin. Et voi siis hakea yksittäistä näytettä `mydataloader[0]`, vaan sinun tulee iteroida datan läpi esimerkiksi `for`-silmukassa tai `next()`-funktiolla.
 
 ```python
 # Alustetaan aiemmin luodun datasetin pohjalta DataLoader
