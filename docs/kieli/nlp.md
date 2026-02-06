@@ -202,6 +202,15 @@ Kun syötät tekstiä SpaCy-putkeen (*engl. pipeline*), se suorittaa taustalla a
 
 !!! tip
 
+    Jos haluat tietää, mitä vaikkapa `PRP` tarkoittaa, voit tarkistaa sen `explain()`-metodilla.
+
+    ```python
+    nlp = spacy.load("se_malli_jonka_tagger_tai_parser_sinua_kiinnostaa")
+    print(nlp.explain("PRP"))
+    ```
+
+!!! tip
+
     Kannattaa tutustua dokumentaatiosta sivuihin: 
     
     * [SpaCy Linguistic Features](https://spacy.io/usage/linguistic-features). Siellä käsitellään tarkemmin se, mikä on alla vain listattuna yhden esimerkin avulla.
