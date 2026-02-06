@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.3"
+__generated_with = "0.19.7"
 app = marimo.App(width="medium")
 
 
@@ -122,6 +122,10 @@ def _(mo):
 @app.cell
 def _():
     # IMPLEMENT
+    # Teacher implemented two functions here:
+    # Signatures:
+    #   def get_class_examples(chosen) -> list:
+    #   def five_by_four_fig(class_examples) -> Fig
     return
 
 

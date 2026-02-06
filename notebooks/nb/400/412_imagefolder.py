@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.3"
+__generated_with = "0.19.7"
 app = marimo.App(width="medium")
 
 
@@ -50,17 +50,17 @@ def _(Image, Path, torch):
         'green': torch.tensor([0.0, 1.0, 0.0]),
         'blue': torch.tensor([0.0, 0.0, 1.0])
         }
-    
+
         for color_name, color_tensor in colors.items():
             class_dir_path = out_dir_path / color_name
             class_dir_path.mkdir(parents=True, exist_ok=True)
-    
+
             for idx in range(1, num_images + 1):
                 # Generate random image and push toward the color
                 img = torch.rand(3, *img_size) * 0.3 + color_tensor.view(3, 1, 1) * 0.7
                 img = (img * 255).clamp(0, 255).byte()  # convert to 0-255
                 img_pil = Image.fromarray(img.permute(1, 2, 0).numpy())  # C,H,W -> H,W,C
-    
+
                 # Save image
                 save_path = class_dir_path / f"{idx:03d}.png"
                 img_pil.save(save_path)
@@ -90,7 +90,7 @@ def _(mo):
 @app.cell
 def _(ImageFolder, transforms):
     # IMPLEMENT
-    # Read the assignment and re-implement this cell
+    # Read the assignment and IMPLEMENT this cell
 
     transform = transforms.ToTensor()
     dataset = ImageFolder(root='./data/colors/', transform=transform)
@@ -123,10 +123,10 @@ def _(DataLoader, dataset, plt):
     for idx, ax in enumerate(axes):
         img = images[idx]  # [3,H,W]
         label = labels[idx].item()
-    
+
         # Convert tensor to HWC numpy for plt
         img_np = img.permute(1, 2, 0).numpy()
-    
+
         ax.imshow(img_np)
         ax.axis('off')
         ax.set_title(should_be_colors[label], fontsize=10)
