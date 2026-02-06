@@ -320,7 +320,7 @@ for token in doc:
 
 !!! tip "Määritelmät"
 
-    * **Embedding**: Yleinen termi, joka viittaa mihin tahansa tiheään numeeriseen esitykseen, joka säilyttää tietyn rakenteen tai suhteet alkuperäisessä datassa. Raschka:n mukaan se on *"a mapping from discrete objects, such as words, images, or even entire documents, to points in a continuous vector space"* [^llmfromscratch].
+    * **Embedding**: Yleinen termi, joka viittaa mihin tahansa tiheään numeeriseen esitykseen, joka säilyttää tietyn rakenteen tai suhteet alkuperäisessä datassa. Raschka:n mukaan se on *"a mapping from discrete objects, such as words, images, or even entire documents, to points in a continuous vector space"* [^llmfromscratch]. Tähän liittyy ainakin satavuotinen historia, sisältäen klassiset PCA:t (Principal Component Analysis) sekä modernit ongelmat/ratkaisut kuten MDE (MinimumDistortion Embedding) sekä tietenkin alla esiteltävät neuroverkkopohjaiset menetelmät. [^pymde]
     * **Word Embedding**: Erityisesti sanojen tiheä numeerinen esitys, joka säilyttää semanttisia suhteita sanojen välillä. Esimerkiksi Word2Vec ja GloVe ovat menetelmiä, jotka luovat sanavektoreita. [^llmfromscratch]
     * **Word Vector** eli **sanavektori**: Sama kuin aiempi, mutta korostaa sen vektoriluonnetta matemaattisena objektina.
 
@@ -542,6 +542,7 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 [^airevolution]: Kanabar, V. & Wong, J. The AI Revolution in Project Management: Elevating Productivity with Generative AI*. Pearson. 2023.
 [^genesis]: Williams, B. *A Commonsense Approach to Story Understanding*. MIT. 2016. https://groups.csail.mit.edu/genesis/papers/2017%20Bryan%20Williams.pdf
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
+[^pymde]: Akshay and pymde contributors. *What is an embedding?*. pymde docs. https://pymde.org/getting_started/#what-is-an-embedding
 [^appliednlp]: Patel, A & Arasanipalai, A. *Applied Natural Language Processing in the Enterprise*. O'Reilly. 2021.
 [^mikolov2013]: Mikolov, T. et. al. *Efficient Estimation of Word Representations in Vector Space*. 2013. https://arxiv.org/abs/1301.3781
 [^nlp101]: Kulshreshta, R. *NLP 101: Word2Vec — Skip-gram and CBOW*. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
