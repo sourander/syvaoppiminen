@@ -414,6 +414,7 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
         ```
 
         Tulet huomaamaan, että `f2 - f1` on hyvin lähellä `x.grad[2] * 0.00001`. Eli jos kasvatat `x[2]`:ta pikkiriikkisen verran, niin `f`:n arvo muuttuu suunnilleen `x.grad[2]` kertaa tuo pieni muutos. Huomaa kuitenkin, että lukema ei tule olemaan niin sama, että voisit verrata sitä `==`-operaattorilla.
+
 ## Lähteet
 
 [^colahblog]: Olah, C. *Calculus on Computational Graphs: Backpropagation*. 2015. https://colah.github.io/posts/2015-08-Backprop/

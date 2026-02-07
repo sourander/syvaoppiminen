@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.1"
+__generated_with = "0.19.7"
 app = marimo.App(width="medium")
 
 
@@ -231,7 +231,7 @@ def _(W0, W1, b0, b1, loss, model, x_sample, y_pred, y_target):
     # Draw labels
     nx.draw_networkx_labels(G, pos, labels, font_size=9, font_weight='bold', ax=ax)
 
-    # Draw edge labels (weights and gradients)
+    # Draw edge labels (weights and local derivatives)
     edge_labels = {}
     for u, v, d in edges:
         if d['weight'] is not None:
@@ -251,37 +251,37 @@ def _(mo):
     mo.md(r"""
     ## Step by step replication of forward and backward pass calculations
 
-    Ok, now we know that the gradients w.r.t. weights are stored in W0.grad and W1.grad after backpropagation. Let's start mimicing what PyTorch did. We will start this work from the input layer and move forward to compute all intermediate values. After this, we will start from the loss and move backwards to compute all gradients step by step.
+    Ok, now we know that the gradients w.r.t. weights are stored in W0.grad and W1.grad after backpropagation. Let's start mimicing what PyTorch did. We will start this work from the input layer and move forward to compute all intermediate values. After this, we will start from the loss and move backwards to compute all local derivatives step by step.
 
     ### List of variables we will compute:
 
     **Input to Hidden Layer (W0 weights):**
-    - `d_z0_x0`, `d_z0_x1`, `d_z0_x2` - Partial derivatives of hidden neuron 0's linear output w.r.t. first row of W0
-    - `d_z1_x0`, `d_z1_x1`, `d_z1_x2` - Partial derivatives of hidden neuron 1's linear output w.r.t. second row of W0
-    - `d_z0_b0` - Partial derivative of z0 w.r.t. bias b0 (always 1)
-    - `d_z1_b1` - Partial derivative of z1 w.r.t. bias b1 (always 1)
+    - `d_z0_x0`, `d_z0_x1`, `d_z0_x2` - Local derivatives of hidden neuron 0's linear output w.r.t. first row of W0
+    - `d_z1_x0`, `d_z1_x1`, `d_z1_x2` - Local derivatives of hidden neuron 1's linear output w.r.t. second row of W0
+    - `d_z0_b0` - Local derivative of z0 w.r.t. bias b0 (always 1)
+    - `d_z1_b1` - Local derivative of z1 w.r.t. bias b1 (always 1)
 
     **Hidden Layer Activation (ReLU):**
-    - `d_a0_z0` - Derivative of ReLU for hidden neuron 0 (1 if z0_0 > 0, else 0)
-    - `d_a1_z1` - Derivative of ReLU for hidden neuron 1 (1 if z0_1 > 0, else 0)
+    - `d_a0_z0` - Local derivative of ReLU for hidden neuron 0 (1 if z0_0 > 0, else 0)
+    - `d_a1_z1` - Local derivative of ReLU for hidden neuron 1 (1 if z0_1 > 0, else 0)
 
     **Hidden to Output Layer (W1 weights):**
-    - `d_z3_a0` - Partial derivative of output w.r.t. W1[0,0] (equals a0_0)
-    - `d_z3_a1` - Partial derivative of output w.r.t. W1[0,1] (equals a0_1)
-    - `dz1_da0_0` - Partial derivative of output w.r.t. activated hidden neuron 0 (equals W1[0,0])
-    - `dz1_da0_1` - Partial derivative of output w.r.t. activated hidden neuron 1 (equals W1[0,1])
-    - `d_z3_b3` - Partial derivative of output z1 w.r.t. output bias b1 (always 1)
+    - `d_z3_a0` - Local derivative of output w.r.t. W1[0,0] (equals a0_0)
+    - `d_z3_a1` - Local derivative of output w.r.t. W1[0,1] (equals a0_1)
+    - `dz1_da0_0` - Local derivative of output w.r.t. activated hidden neuron 0 (equals W1[0,0])
+    - `dz1_da0_1` - Local derivative of output w.r.t. activated hidden neuron 1 (equals W1[0,1])
+    - `d_z3_b3` - Local derivative of output z1 w.r.t. output bias b1 (always 1)
 
     **Output Layer (no activation):**
-    - `d_pred_z3` - Derivative of prediction w.r.t. linear output (equals 1, identity function)
+    - `d_pred_z3` - Local derivative of prediction w.r.t. linear output (equals 1, identity function)
 
     **Loss Function (MSE):**
-    - `dL_dy_pred` - Gradient of loss w.r.t. prediction (equals 2*(y_pred - y_target))
+    - `dL_dy_pred` - Local derivative of loss w.r.t. prediction (equals 2*(y_pred - y_target))
 
     **Final Gradients (using chain rule):**
-    - `dL_dW0_00`, `dL_dW0_01`, `dL_dW0_02` - Full gradients for first row of W0 (hidden neuron 0)
-    - `dL_dW0_10`, `dL_dW0_11`, `dL_dW0_12` - Full gradients for second row of W0 (hidden neuron 1)
-    - `dL_dW1_00`, `dL_dW1_01` - Full gradients for W1
+    - `dL_dW0_00`, `dL_dW0_01`, `dL_dW0_02` - Full partial derivatives for first row of W0 (hidden neuron 0)
+    - `dL_dW0_10`, `dL_dW0_11`, `dL_dW0_12` - Full partial derivatives for second row of W0 (hidden neuron 1)
+    - `dL_dW1_00`, `dL_dW1_01` - Full partial derivatives for W1
     """)
     return
 
@@ -291,14 +291,14 @@ def _(mo):
     mo.md(r"""
     ### Input to Hidden Layer: dz0_x_dW0_xx
 
-    We will start by computing the partial derivatives of the linear outputs of the hidden layer neurons w.r.t. their weights in W0.
+    We will start by computing the local derivatives of the linear outputs of the hidden layer neurons w.r.t. their weights in W0.
     """)
     return
 
 
 @app.cell
 def _(W0, b0, x_sample):
-    # Helper function to compute gradient
+    # Helper function to compute local derivative
     def compute_gradient(weights, x, bias):
         w = weights.detach().clone().requires_grad_(True)
         z = w @ x.T + bias.detach()
@@ -313,11 +313,11 @@ def _(W0, b0, x_sample):
     grad_1 = compute_gradient(W0[1], x_sample, b0[1])
     d_z1_x0, d_z1_x1, d_z1_x2 = grad_1[0].item(), grad_1[1].item(), grad_1[2].item()
 
-    # Bias gradients (always 1 for linear operations)
+    # Local derivatives w.r.t. bias (always 1 for linear operations)
     d_z0_b0 = 1.0
     d_z1_b1 = 1.0
 
-    print("=== Partial Derivatives: Input to Hidden Layer ===")
+    print("=== Local Derivatives: Input to Hidden Layer ===")
     print(f"dz0/dx0 = {d_z0_x0:.4f} (expected: {x_sample[0, 0].item():.4f})")
     print(f"dz0/dx1 = {d_z0_x1:.4f} (expected: {x_sample[0, 1].item():.4f})")
     print(f"dz0/dx2 = {d_z0_x2:.4f} (expected: {x_sample[0, 2].item():.4f})")
@@ -343,25 +343,25 @@ def _(mo):
     mo.md(r"""
     ### Hidden Layer Activation (ReLU): da0_x_dz0_x
 
-    ReLU activation is super simple to derivate. If the input is greater than zero, the derivative is 1, otherwise it is 0.
+    ReLU activation is super simple to differentiate. If the input is greater than zero, the derivative is 1, otherwise it is 0.
     """)
     return
 
 
 @app.cell
 def _(model, torch):
-    def relu_gradient(z_value):
+    def relu_derivative(z_value):
         z = z_value.detach().clone().requires_grad_(True)
         a = torch.relu(z)
         a.backward()
         return z.grad.item()
 
-    # Compute derivatives of ReLU activation
+    # Compute local derivatives of ReLU activation
     # ReLU derivative: 1 if input > 0, else 0
-    d_a0_z0 = relu_gradient(model.z0[0][0])
-    d_a1_z1 = relu_gradient(model.z0[0][1])
+    d_a0_z0 = relu_derivative(model.z0[0][0])
+    d_a1_z1 = relu_derivative(model.z0[0][1])
 
-    print("=== Partial Derivatives: Hidden Layer Activation (ReLU) ===")
+    print("=== Local Derivatives: Hidden Layer Activation (ReLU) ===")
     print(f"da0_0/dz0_0 = {d_a0_z0:.4f} (ReLU derivative, 1 if z0_0 > 0)")
     print(f"da0_1/dz0_1 = {d_a1_z1:.4f} (ReLU derivative, 1 if z0_1 > 0)")
     return d_a0_z0, d_a1_z1
@@ -372,44 +372,44 @@ def _(mo):
     mo.md(r"""
     ### Hidden to Output Layer
 
-    Compute partial derivatives for hidden to output layer. We need:
+    Compute local derivatives for hidden to output layer. We need:
 
-    * `d_z3_a0`, `d_z3_a1` - Partial derivatives of output w.r.t. W1 weights
-    * `dz1_da0_0`, `dz1_da0_1` - Partial derivatives of output w.r.t. activated hidden neurons
+    * `d_z3_a0`, `d_z3_a1` - Local derivatives of output w.r.t. W1 weights
+    * `dz1_da0_0`, `dz1_da0_1` - Local derivatives of output w.r.t. activated hidden neurons
     """)
     return
 
 
 @app.cell
 def _(W1, b1, model):
-    def gradient_wrt_weights(weights, inputs, bias):
+    def local_derivative_wrt_weights(weights, inputs, bias):
         w = weights.detach().clone().requires_grad_(True)
         inp = inputs.detach()     # Break connection to the main graph
         z = inp @ w.T + bias.detach().T
         z.backward()
         return w.grad
 
-    def gradient_wrt_inputs(weights, inputs, bias):
+    def local_derivative_wrt_inputs(weights, inputs, bias):
         inp = inputs.detach().clone().requires_grad_(True)
         w = weights.detach()      # Also detach weights
         z = inp @ w.T + bias.detach().T
         z.backward()
         return inp.grad
 
-    # Gradients w.r.t. W1 weights
-    W1_grad = gradient_wrt_weights(W1, model.a0, b1)
+    # Local derivatives w.r.t. W1 weights
+    W1_grad = local_derivative_wrt_weights(W1, model.a0, b1)
     d_z3_a0 = W1_grad[0, 0].item()  # Should equal a0_0
     d_z3_a1 = W1_grad[0, 1].item()  # Should equal a0_1
 
-    # Gradients w.r.t. activated hidden layer outputs
-    a0_grad = gradient_wrt_inputs(W1, model.a0, b1)
+    # Local derivatives w.r.t. activated hidden layer outputs
+    a0_grad = local_derivative_wrt_inputs(W1, model.a0, b1)
     dz1_da0_0 = a0_grad[0, 0].item()  # Should equal W1[0, 0]
     dz1_da0_1 = a0_grad[0, 1].item()  # Should equal W1[0, 1]
 
-    # Bias gradient is again simply just 1
+    # Local derivative w.r.t. bias is again simply just 1
     d_z3_b3 = 1.0
 
-    print("=== Partial Derivatives: Hidden to Output Layer ===")
+    print("=== Local Derivatives: Hidden to Output Layer ===")
     print(f"dz1/dW1_00 = {d_z3_a0:.4f} (expected: {model.a0[0, 0].item():.4f})")
     print(f"dz1/dW1_01 = {d_z3_a1:.4f} (expected: {model.a0[0, 1].item():.4f})")
     print(f"dz1/da0_0 = {dz1_da0_0:.4f} (expected: {W1[0, 0].item():.4f})")
@@ -432,7 +432,7 @@ def _():
 
     d_pred_z3 = 1
 
-    print("=== Partial Derivative: Output Layer (Identity) ===")
+    print("=== Local Derivative: Output Layer (Identity) ===")
     print(f"dy_pred/dz1 = {d_pred_z3:.4f} (identity function derivative)")
     return (d_pred_z3,)
 
@@ -442,7 +442,7 @@ def _(mo):
     mo.md(r"""
     ### Loss Function (MSE)
 
-    Compute partial derivative for the MSE (Mean Squared Error). Notice that our n is simply 1 in this case.
+    Compute local derivative for the MSE (Mean Squared Error). Notice that our n is simply 1 in this case.
 
     * $\text{MSE} = \frac{1}{n=1}(y_{\text{pred}} - y_{\text{target}})^2$
 
@@ -453,22 +453,22 @@ def _(mo):
 
 @app.cell
 def _(y_pred, y_target):
-    # Helper function to compute MSE gradient
-    def mse_gradient(pred, target):
+    # Helper function to compute MSE local derivative
+    def mse_derivative(pred, target):
         p = pred.detach().clone().requires_grad_(True)
         loss = (p - target) ** 2
         loss.sum().backward()
         return p.grad.item()
 
-    dL_dy_pred = mse_gradient(y_pred, y_target)
+    dL_dy_pred = mse_derivative(y_pred, y_target)
 
     # Manual computation for verification
-    manual_mse_derivate = 2 * (y_pred.item() - y_target.item())
+    manual_mse_derivative = 2 * (y_pred.item() - y_target.item())
 
-    print("=== Partial Derivative: Loss Function (MSE) ===")
+    print("=== Local Derivative: Loss Function (MSE) ===")
     print(f"dL/dy_pred = {dL_dy_pred:.4f}")
-    print(f"Manual computation: 2 * ({y_pred.item():.4f} - {y_target.item():.4f}) = {manual_mse_derivate:.4f}")
-    print(f"Match: {abs(dL_dy_pred - manual_mse_derivate) < 1e-6}")
+    print(f"Manual computation: 2 * ({y_pred.item():.4f} - {y_target.item():.4f}) = {manual_mse_derivative:.4f}")
+    print(f"Match: {abs(dL_dy_pred - manual_mse_derivative) < 1e-6}")
     return (dL_dy_pred,)
 
 
@@ -477,9 +477,9 @@ def _(mo):
     mo.md(r"""
     ## Final Gradients (using chain rule)
 
-    Now we'll compute the complete gradients by applying the chain rule backwards through the network. We already have all the partial derivatives we need - we just need to multiply them together according to the chain rule.
+    Now we'll compute the complete gradients by applying the chain rule backwards through the network. We already have all the local derivatives we need - we just need to multiply them together according to the chain rule.
 
-    These computed gradients should match exactly with PyTorch's W0.grad and W1.grad!
+    These computed partial derivatives should match exactly with PyTorch's W0.grad and W1.grad!
     """)
     return
 
