@@ -18,9 +18,7 @@ def _(mo):
     You can use any SpaCy model/pipeline here. Download it first:
 
     ```bash
-    uv add spacy
-    uv add pip
-    uv run spacy download "fi_core_news_sm"
+    uv add "fi-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fi_core_news_sm-3.8.0/fi_core_news_sm-3.8.0-py3-none-any.whl"
     ```
     """)
     return

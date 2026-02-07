@@ -225,8 +225,7 @@ Kun syötät tekstiä SpaCy-putkeen (*engl. pipeline*), se suorittaa taustalla a
     Sinulla pitää luonnollisesti olla SpaCy asennettuna (`uv add spacy`). Lisäksi sinun pitää ladata malli. Aja terminaalissa seuraava komento:
 
     ```bash
-    uv add pip
-    uv run spacy download "fi_core_news_sm"
+    uv add "fi-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fi_core_news_sm-3.8.0/fi_core_news_sm-3.8.0-py3-none-any.whl"
     ```
 
     Tämän jälkeen käynnistä Marimo, luo uusi Notebook, ja ota malli käyttöön:

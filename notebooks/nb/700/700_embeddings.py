@@ -52,12 +52,10 @@ def _(mo):
     mo.md(r"""
     ### Load Pipeline and fetch the word vectors (embeddings)
 
-    We will use the LARGE model for this. You need to install it like this.
+    We will use the LARGE model for this. When using uv, you need to install it like this:
 
     ```bash
-    uv add spacy
-    uv add pip
-    uv run spacy download "fi_core_news_lg"
+    uv add "fi-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fi_core_news_lg-3.8.0/fi_core_news_lg-3.8.0-py3-none-any.whl"
     ```
     """)
     return
