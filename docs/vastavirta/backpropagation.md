@@ -159,7 +159,7 @@ Tämä on se keino, kuinka backpropagation esitellään usein ohjelmoinnin yhtey
 
 Huomaa, että tämä on pakko tehdä ==järjestyksessä lopusta alkuun==, koska jokainen kerros tarvitsee edellisen kerroksen gradientin.
 
-Itse operaatio näyttää meidän viime viikona `NumpyNNwithBCE`-mallissamme tältä:
+Itse operaatio näyttää meidän viime viikon `NumpyNNwithBCE`-mallissamme tältä:
 
 ```python
 def backward(self, target):
@@ -182,19 +182,23 @@ def backward(self, target):
     self.db1 = self.dZ1  # (7)!
 ```
 
-1. **dZ2** eli **delta** (δ²) on lähtökerroksen virhe. Binary cross-entropy + sigmoid -yhdistelmällä tämä yksinkertaistuu muotoon `ennuste - todellinen`. Tämä on gradientti häviön suhteen pre-aktivaatioon Z².
+1. **dZ2** eli **delta** (δ²) on lähtökerroksen derivaatta. Binary cross-entropy + sigmoid -yhdistelmällä tämä yksinkertaistuu muotoon `ennuste - todellinen`. Tämä on gradientti häviön suhteen pre-aktivaatioon Z².
 
-2. **dW2** on gradientti lähtökerroksen painoille W². Lasketaan kertomalla edellisen kerroksen aktivaatiot (A¹) nykyisen kerroksen virheellä (dZ²). Huomaa transpoosi (`.T`)!
+2. **dW2** on gradientti lähtökerroksen painoille W². Lasketaan kertomalla edellisen kerroksen aktivaatiot (A¹) nykyisen kerroksen virheellä (dZ²). Käytännössä tässä on tulosääntö.
 
 3. **db2** on gradientti lähtökerroksen biaseille b². Bias-gradientti on yksinkertaisesti sama kuin virhe (dZ²), koska biasin derivaatta on 1.
 
-4. **dA1** on gradientti piilotetun kerroksen aktivaatioiden suhteen. Propagoidaan virhe taaksepäin kertomalla nykyisen kerroksen virhe (dZ²) nykyisen kerroksen painojen transpoosin (W².T) kanssa.
+4. **dA1** on gradientti piilotetun kerroksen aktivaatioiden suhteen. Propagoidaan virhe taaksepäin kertomalla nykyisen kerroksen virhe (dZ²) nykyisen kerroksen painojen (W².T) kanssa. Tämä on tulosäännön toinen puolisko (vrt. dW² lasku yllä).
 
-5. **dZ1** eli **delta** (δ¹) on piilotetun kerroksen virhe. Lasketaan kertomalla propagoitu aktivaatiovirhe (dA1) sigmoidin derivaatalla pisteessä A¹. Tämä on ketjusäännön sovellus!
+5. **dZ1** eli **delta** (δ¹) on piilotetun kerroksen virhe. Lasketaan kertomalla propagoitu aktivaatiovirhe (dA¹) sigmoidin derivaatalla pisteessä A¹. Tämä on ketjusäännön sovellus!
 
-6. **dW1** on gradientti piilotetun kerroksen painoille W¹. Lasketaan samalla tavalla kuin dW2: kerrotaan syötteet (A⁰) nykyisen kerroksen virheellä (dZ¹).
+6. **dW1** on gradientti piilotetun kerroksen painoille W¹. Lasketaan samalla tavalla kuin dW2.
 
-7. **db1** on gradientti piilotetun kerroksen biaseille b¹. Sama logiikka kuin db2: bias-gradientti on yksinkertaisesti virhe (dZ¹).
+7. **db1** on gradientti piilotetun kerroksen biaseille b¹. Lasketaan samalla tavalla kuin db2.
+
+![](../images/300_NumpyNNwithBCE.png)
+
+**Kuva 1**: *Malli `NumpyNNwithBCE` Excalidraw-piirroksena. Ylemmässä kuvion puoliskossa on avattuna piilotetut kerrokset siten, että neuroni on purettu Z- ja A-osiin eli esiaktivoituun ja sigmoid-muunnettuun. Alemmassa kuviossa on tuttu piirrostapa 2-2-1 verkoste siten, että biasit on piilotettu.*
 
 !!! note 
 
@@ -230,7 +234,7 @@ def backward(self, target):
         self.dW1 = self.A0.T.dot(self.dZ1) # Gradientti W1:lle
 ```
 
-Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerroksen, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodiblokki mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]. Esimerkissä käytetään yleistä ketjusääntöä, joka lasketaan myös lähtökerrokselle (output layer). Siksi output_delta sisältää myös aktivaatiofunktion derivaatan. Tämä tarvitaan, koska käytössä on MSE-virhefunktio – aiemmassa BCE-esimerkissä tätä vaihetta ei tarvittu Sigmoid+BCE-yhdistelmän vuoksi.
+Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerrokset, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodiblokki mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]. Esimerkissä käytetään yleistä ketjusääntöä, joka lasketaan myös lähtökerrokselle (output layer). Huomaa, että `output_delta` sisältää myös aktivaatiofunktion derivaatan. Tämä tarvitaan, koska käytössä on MSE-virhefunktio – aiemmassa BCE-esimerkissä tätä vaihetta ei tarvittu Sigmoid+BCE-yhdistelmän vuoksi. Termillä *delta* viitataan esiaktivaation virheeseen, joka on siis $dZ^n$-termi.
 
 ```python
     def backprop(self, X, y):
@@ -261,7 +265,7 @@ Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, 
         self.deltas = deltas[::-1]
 ```
 
-Huomaa, että Rosebrockin koodi poikkeaa meidän esimerkistä siten, että se laskee tässä vaiheessa ainoastaan kerrosten virhetermit eli deltat ($dZ$), mutta ei vielä varsinaisia painojen gradientteja ($dW$).
+Huomaa, että Rosebrockin koodi poikkeaa meidän esimerkistä siten, että se laskee tässä vaiheessa ainoastaan kerrosten virhetermit eli deltat ($dZ^n$), mutta ei vielä varsinaisia painojen gradientteja ($dW^n$).
 
 Meidän NumpyNNwithBCE-toteutuksessamme laskimme backward-metodissa valmiiksi myös gradientit (esim. self.dW2 = ...), jotta rakenne vastaisi täysin PyTorchin tapaa tallentaa gradientit .grad-muuttujaan. Rosebrockin esimerkissä gradienttien laskeminen (eli aktivaatioiden ja deltojen välinen matriisitulo) on jätetty tehtäväksi vasta myöhemmin, varsinaisen painojen päivityksen yhteyteen.
 
