@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.19.2"
+__generated_with = "0.19.9"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -44,6 +45,7 @@ def _():
     from sklearn.metrics import classification_report
     from torch.utils.tensorboard import SummaryWriter
     from torchmetrics.classification import MulticlassAccuracy
+
     return (
         DataLoader,
         MulticlassAccuracy,
@@ -188,6 +190,18 @@ def _(device, nn, torch, writer):
             self.fc2 = nn.Linear(256, 128)
             self.fc3 = nn.Linear(128, 10)
 
+            # Initialize weights with Glorot (Xavier) initialization
+            # This is preferred for sigmoid activation functions
+            # Source: Magnus Ekman, Learning Deep Learning
+            self._initialize_weights()
+
+        def _initialize_weights(self):
+            """Apply Glorot (Xavier) uniform initialization to all linear layers."""
+            for layer in self.modules():
+                if isinstance(layer, nn.Linear):
+                    nn.init.xavier_uniform_(layer.weight)
+                    nn.init.zeros_(layer.bias)
+
         def forward(self, x):
             # Flatten the input
             x = x.view(-1, 784)
@@ -283,6 +297,7 @@ def _(torch):
         avg_loss = total_loss / len(data_loader)
         accuracy = metric.compute().item()
         return avg_loss, accuracy
+
     return evaluate, train_epoch
 
 
