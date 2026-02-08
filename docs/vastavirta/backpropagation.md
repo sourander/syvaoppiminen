@@ -198,7 +198,7 @@ def backward(self, target):
 
 ![](../images/300_NumpyNNwithBCE.png)
 
-**Kuva 1**: *Malli `NumpyNNwithBCE` Excalidraw-piirroksena. Ylemmässä kuvion puoliskossa on avattuna piilotetut kerrokset siten, että neuroni on purettu Z- ja A-osiin eli esiaktivoituun ja sigmoid-muunnettuun. Alemmassa kuviossa on tuttu piirrostapa 2-2-1 verkoste siten, että biasit on piilotettu.*
+**Kuva 1**: *Malli `NumpyNNwithBCE` Excalidraw-piirroksena. Ylemmässä kuvion puoliskossa on avattuna piilotetut kerrokset siten, että neuroni on purettu Z- ja A-osiin eli esiaktivoituun ja sigmoid-muunnettuun. Alemmassa kuviossa on tuttu esitys 2-2-1 verkosta siten, että biasit on piilotettu. Huomaa, että `X == A0`.*
 
 !!! note 
 
