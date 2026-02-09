@@ -3293,11 +3293,11 @@ wheels = [
 
 [[package]]
 name = "setuptools"
-version = "81.0.0"
+version = "82.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/0d/1c/73e719955c59b8e424d015ab450f51c0af856ae46ea2da83eba51cc88de1/setuptools-81.0.0.tar.gz", hash = "sha256:487b53915f52501f0a79ccfd0c02c165ffe06631443a886740b91af4b7a5845a", size = 1198299, upload-time = "2026-02-06T21:10:39.601Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/f3/748f4d6f65d1756b9ae577f329c951cda23fb900e4de9f70900ced962085/setuptools-82.0.0.tar.gz", hash = "sha256:22e0a2d69474c6ae4feb01951cb69d515ed23728cf96d05513d36e42b62b37cb", size = 1144893, upload-time = "2026-02-08T15:08:40.206Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/e3/c164c88b2e5ce7b24d667b9bd83589cf4f3520d97cad01534cd3c4f55fdb/setuptools-81.0.0-py3-none-any.whl", hash = "sha256:fdd925d5c5d9f62e4b74b30d6dd7828ce236fd6ed998a08d81de62ce5a6310d6", size = 1062021, upload-time = "2026-02-06T21:10:37.175Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/c6/76dc613121b793286a3f91621d7b75a2b493e0390ddca50f11993eadf192/setuptools-82.0.0-py3-none-any.whl", hash = "sha256:70b18734b607bd1da571d097d236cfcfacaf01de45717d59e6e04b96877532e0", size = 1003468, upload-time = "2026-02-08T15:08:38.723Z" },
 ]
 
 [[package]]
@@ -4127,16 +4127,16 @@ wheels = [
 
 [[package]]
 name = "wigglystuff"
-version = "0.2.21"
+version = "0.2.22"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anywidget" },
     { name = "numpy" },
     { name = "pillow" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/72/bb/5a1a8456109c4809139265264c35cf834ef3bd9b7b50050085e620d175a7/wigglystuff-0.2.21.tar.gz", hash = "sha256:73f8b87cbd492831452ac9f7dafb709467048f55710fe819c4d0e209913f1edb", size = 481275, upload-time = "2026-02-04T13:27:43.975Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/45/2d34b70d9a29af0fbd83a1962da3b787fc4e2c375931280f91202c23e485/wigglystuff-0.2.22.tar.gz", hash = "sha256:144ebcbb8aa755de44e5febddffea3c210b28a66b4242f7d704f9fd1852087ff", size = 481800, upload-time = "2026-02-08T20:32:03.365Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/82/00/26912b119faa07d624dce535b99422c064559e980efee73694b78ac9eb3a/wigglystuff-0.2.21-py3-none-any.whl", hash = "sha256:d55fdb5c0c81ce930b81fbfe7e199193e72efb0e938e4e04e1a684876477b0ce", size = 507536, upload-time = "2026-02-04T13:27:42.518Z" },
+    { url = "https://files.pythonhosted.org/packages/a7/3c/0e9c9581949fdc1428a7830d2a1c899a111d8221393ae4c6eb7d1bb79b16/wigglystuff-0.2.22-py3-none-any.whl", hash = "sha256:75ba9f687b7e1a004b1dd65fadb836d32ef9f9c34c52ab381e17094e0c9d61e3", size = 507999, upload-time = "2026-02-08T20:32:01.503Z" },
 ]
 
 [[package]]

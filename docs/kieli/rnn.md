@@ -28,7 +28,7 @@ priority: 710
 
     Avaa Marimo Notebook `710_...py` ja tutustu koodiin. Kyseessä on [NLP From Scratch: Classifying Names with a Character-Level RNN](https://docs.pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html)-tutoriaali PyTorchin dokumentaatiosta, joka on käännetty Marimo-malliin sopivaksi. Suorita koodi ja tarkastele tuloksia.
 
-    Mallin koulutus vei Macbook Pro:lla MPS:ää käyttäen 12 minuuttia.
+    Mallin koulutus vei Macbook Pro:lla MPS:ää käyttäen 12 minuuttia. CUDA-PC:llä koulutus meni 2 minuutissa.
 
 !!! question "Tehtävä: Sukunimien luokittelu Pt.2"
 
@@ -40,5 +40,24 @@ priority: 710
     4. Liitä tiedostoon `data/names/Finnish.txt`
 
     Nyt sinulle pitäisi olla datasetissä uusi label `Finnish`, joka sisältää toista tuhatta suomenkielistä sukunimeä. Kouluta malli uudestaan, kenties eri tiedostonimellä, ja tarkastele tuloksia. Tunnistaako se sinut oikein? Mahdoitko olla training- vai test-datassa vai et kummassakaan?
+
+!!! question "Tehtävä: Sukunimien generointi"
+
+    Tutustu `711_char_rnn_generation_tutorial.py`-tiedostoon, joka on Marimo-muotoon käännetty versio [NLP From Scratch: Generating Names with a Character-Level RNN](https://docs.pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html)-tutoriaalista. Tässä tutoriaalissa käytetään samaa dataa kuin edellisessä, mutta nyt mallin tavoite on generoida uusia sukunimiä eri kielille. Tutustu Notebookin koodiin ja selvitä, kuinka malli koulutetaan ja kuinka sitä kutsutaan. Muista, että tarkoituksena ei ole pelkästään ajaa koodia, vaan ymmärtää, miten se toimii. Tee tämä ymmärrys näkyväksi oppimispäiväkirjassasi.
+
+    Huomaa, että dataset on sama kuin edellisessä tehtävässä, joten sinun äskettäin lisäämäsi suomalaiset sukunimet ovat nyt mukana myös tässä mallissa. Generointiin voit käyttää Notebookissa olevia valmiita funktioita:
+
+    ```python
+    samples('Finnish', 'ABCDEFGHIJKL')
+    Artinen
+    Bartanen
+    Charinen
+    Dantalak
+    Eantara
+    Fintanen
+    # + ???
+    ```
+
+    Malli kouluttautui opettajan Macbook Pro:lla noin 1 minuutissa.
 
 ## Lähteet
