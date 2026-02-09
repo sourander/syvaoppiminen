@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.19.4"
+__generated_with = "0.19.9"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -49,10 +50,6 @@ def _():
     import torch.nn as nn
     import torch.nn.functional as F
 
-    from sklearn.model_selection import train_test_split
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.compose import ColumnTransformer
-    from sklearn.pipeline import Pipeline
     return F, nn, pd, torch
 
 
@@ -256,7 +253,10 @@ def _(loss_fn, model, optimizer, x_train, y_train):
 
         if epoch % 100 == 0:
             print(f"Epoch {epoch}, loss: {loss.item()}")
-    return
+
+    # Added to make Marimo DAG aware of the changes made to this model
+    trained_model = model
+    return (trained_model,)
 
 
 @app.cell(hide_code=True)
@@ -268,12 +268,12 @@ def _(mo):
 
 
 @app.cell
-def _(loss_fn, model, torch, x_test, x_train, y_test, y_train):
+def _(loss_fn, torch, trained_model, x_test, x_train, y_test, y_train):
     # Make predictions on both sets
-    model.eval()  # Set model to evaluation mode
+    trained_model.eval()  # Set model to evaluation mode
     with torch.no_grad():
-        y_train_pred = model(x_train).flatten()
-        y_test_pred = model(x_test).flatten()
+        y_train_pred = trained_model(x_train).flatten()
+        y_test_pred = trained_model(x_test).flatten()
 
     # Calculate metrics for both sets
     train_rmse = torch.sqrt(loss_fn(y_train_pred, y_train))
