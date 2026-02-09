@@ -161,19 +161,19 @@ h_{pre3} &= \theta_{30} + \theta_{31} x
 \end{align*}
 $$
 
-Yllä olevissa lukee pienellä `pre`, koska kyseessä ovat esiasteet (pre-activations). Näistä saa varsinaiset piilotetun yksikön aktivoinnit (activations) aktivointifunktion avulla. Käsittelemme aktivointifunktiot myöhemmin kattavammin, mutta tässä välissä riittää hyväksyä, että kunkin piilotetun kerroksen neuronin laskema arvo syötetään tyypillisesti ReLu-aktivointifunktioon, joka palauttaa nollan, jos syöte on negatiivinen, ja syötteen itsensä, jos se on positiivinen.
+Yllä olevissa lukee pienellä `pre`, koska kyseessä ovat esiasteet (*engl. pre-activations*), jotka merkitään usein lyhenteellä $z$, ja tunnetaan myös nimellä logitti (*engl. logit*). Näistä saa varsinaiset piilotetun yksikön aktivoinnit (activations) aktivointifunktion avulla. Käsittelemme aktivointifunktiot myöhemmin kattavammin, mutta tässä välissä riittää hyväksyä, että kunkin piilotetun kerroksen neuronin laskema arvo syötetään tyypillisesti ReLu-aktivointifunktioon, joka palauttaa nollan, jos syöte on negatiivinen, ja syötteen itsensä, jos se on positiivinen.
 
 ![](../images/100_ShallowReLU.svg)
 
 **Kuva 6:** ReLu-aktivointifunktio. (CC-BY-NC-ND) [^udlbook]
 
-Kun tämä aktivointifunktio, $f(z) = max(0, z)$, joka tunnetaan jatkossa a-merkkinä, on otettu huomioon, piilotetun kerroksen arvot ovat siis:
+Kun tämä aktivointifunktio, $f(z) = max(0, z)$, joka tunnetaan jatkossa pienenä sigmana ($\sigma$), on otettu huomioon, piilotetun kerroksen arvot ovat siis:
 
 $$
 \begin{align*}
-h_1 &= a(\theta_{10} + \theta_{11} x) \\
-h_2 &= a(\theta_{20} + \theta_{21} x) \\
-h_3 &= a(\theta_{30} + \theta_{31} x)
+h_1 &= \sigma(\theta_{10} + \theta_{11} x) \\
+h_2 &= \sigma(\theta_{20} + \theta_{21} x) \\
+h_3 &= \sigma(\theta_{30} + \theta_{31} x)
 \end{align*}
 $$
 
