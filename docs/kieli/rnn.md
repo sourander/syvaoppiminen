@@ -94,7 +94,7 @@ Muuttujat ovat selitettynä alla:
 * $W$ on $d_h \times d_h$ painomatriisi, joka painottaa edellistä hidden statea.
 * $U$ on $d_h \times d_x$ painomatriisi, joka painottaa nykyistä syötevektoria.
 * $b$ on bias-vektori (koko $d_h$).
-* $\sigma$ on aktivointifunktio, tyypillisesti $\tanh$.
+* $\sigma$ on aktivointifunktio, tyypillisesti tanh.
 
 Huomaa, että $d_h$ (hidden_size) on vapaasti valittava hyperparametri — se **ei** ole sama kuin lauseen pituus. Huomaa myös, että painomatriisit $W$ ja $U$ sekä bias $b$ ovat **jaettuja painoja**: samaa matriisia ja vektoria käytetään kaikissa aika-askeleissa.
 
@@ -109,6 +109,10 @@ Ratkaisu on lisätä täytettä (PAD) syötteen loppuun. Yksittäinen batch-Tens
 | sample3 | vec_Turussa | ... | vec_END     | ==vec_PAD== | ==vec_PAD== |
 | ...     | ...         | ... | ...         | ...         | ...         |
 | sampleN | vec_Olipa   | ... | vec_Loppu   | ==vec_PAD== | ==vec_PAD== |
+
+!!! tip
+
+    Jos haluat, voit tutustua PyTorchin [torch.nn.utils.rnn.pad_packed_sequence](https://docs.pytorch.org/docs/stable/generated/torch.nn.utils.rnn.pad_packed_sequence.html) funktioon. Tämän käyttöä käsitellään Géronin kirjassa luvussa 14. [^geronpytorch]
 
 ### Ongelmatyypit sekvenssidatalle
 
@@ -146,23 +150,70 @@ Encoder-Decoder on toteutustavaltaan Sequence-to-Sequence -malli, mutta *synced*
 
 Arkkitehtuurissa on seq2vec -malli, *encoder*, jonka perään on kytketty vec2seq -malli, *decoder*. Encoder lukee koko syötteen ja tiivistää sen yhdeksi vektoriksi, joka tunnetaan nimellä *context vector*. Yllä olevassa kuvassa vain Encoder-osuus saa syötteen: tämä johtuu siitä, että kyseessä on inferenssivaihe. Koulutusvaiheessa myös Decoder saa syötteen (eli ground-truth-sekvenssin), mutta inferenssivaiheessa Decoder saa syötteenä edellisen aika-askeleen tuottaman outputin. Tämä on tärkeä ero, joka liittyy siihen, että koulutuksessa käytetään *teacher forcing* -tekniikkaa, jossa mallia ohjataan oikeaan suuntaan syöttämällä sille oikeat vastaukset, kun taas inferenssivaiheessa malli joutuu luottamaan omiin ennusteisiinsa. [^llmfromscratch]
 
-## Perinteinen RNN
-
-### Rakenne ja toiminta
+## RNN:n koulutus
 
 ### Unrolling
 
+Yllä käytetty `for`-loop on vastavirta eli *backpropagation* algoritmin kannalta huono. Muuttuja `hidden_state` on akkumulaattori, joka ylikirjoitetaan joka aika-askeleella, joten menneiden aika-askelten aktivointeja ei ole tallessa. RNN:n koulutuksessa käytetäänkin *unrolling* -tekniikkaa, jossa verkko "puretaan" useiksi kopioiksi, jotka on kytketty toisiinsa. Kuinka useaksi kopioksi? Batchen suurimman sekvenssin pituuden verran. [^ldl] [^geronpytorch]
+
+![](../images/710_rnn_unroll.png)
+
+**Kuva 3:** *RNN:n "unrolling" eli purkaminen. Katkoviivat edustavat sitä, että verkko voi olla jonkin yllämainitun taksonomien mukainen. Kustakin RNN-solusta lähtevä arvo joko osallistuu tai ei osallistu lopulliseen lähtöön, riippuen siitä, minkä tyyppisestä ongelmasta on kyse. [^ldl] [^geronpytorch]*
+
 ### Backpropagation Through Time (BPTT)
 
+Kun verkko on avattu, se on tavallinen feedforward-verkko. Voimme siis käyttää tavallista backpropagation-algoritmia. Termi tälle koko strategialle on *Backpropagation Through Time* (BPTT). Algoritmi on siis sama kuin ennenkin, mutta koska prosessiin liittyy temporaalinen elementti, sille on annettu nimi. [^ldl] [^geronpytorch]
+
+![](../images/710_rnn_linear.png)
+
+**Kuva 4:** *Muista, että RNN on vain lineaarinen verkko, joka on avattu useiksi kopioiksi. Meillä on yhä jokin *loss function*, jonka haluamme minimoida, ja usein ennen tätä on Linear-kerros, joka muuttaa hidden state -vektorin halutun kokoiseksi outputiksi.*
+
 ### Rajoitteet ja ongelmat
+
+Syvät verkot kärsivät ongelmasta *vanishing* ja *exploding gradient*, johon olet törmännyt kurssin tehtävissä aiemmin. Kun luku kerrotaan useita kertoja peräkkäin `< 1` luvulla, kuten vaikka `0.25`, luku lähestyy nollaa. Jos se kerrotaan useita kertoja `> 1` luvulla, kuten `1.25`, luku kasvaa eksponentiaalisesti. RNN:ssä tämä tapahtuu, koska sama painomatriisi, $W$ tai $U$, kerrotaan useita kertoja peräkkäin. Jos RNN:stä tekee syvän, kuten alla olevassa kuvassa, ongelma luonnollisesti pahenee. [^ldl]
+
+![](../images/710_rnn_multilayer.png)
+
+**Kuva 5:** *Monikerroksinen RNN. Violetilla ja punaisella värillä on korostettu sitä, että kaikki saman kerroksen neuronit jakavat $W_k$ painon, kuten myös $U_k$ painon.[^ldl] [^geronpytorch]*
+
+Syvyyden lisääminen RNN:ään pahentaa entisestään *vanishing* ja *exploding gradient* -ongelmia, jotka ovat RNN:n suurimpia haasteita. Kuvittele, että haluat selvittää $U_1$:n eli ensimmäisen kerroksen jaettua painomatriisia, jolla $x^{(t)}$ kerrotaan. Tämä matriisi on mukana ==jokaisessa kerroksessa==, joten gradientti kulkee läpi kaikkien kerrosten, mikä tarkoittaa, että se kerrotaan useita kertoja peräkkäin. [^ldl]
+
+### Ongelmien mitigointi
+
+Alla on Learning Deep Learning -kirjan [^ldl] taulukon suomennettu ja tiivistetty versio, jossa on esiteltynä yleisiä tapoja yrittää mitigoida katoavia (*engl. vanishing*) ja räjähtäviä (*engl. exploding*) gradientteja RNN:issä. Se, auttaako kyseinen tekniikka katoaviin vai räjähtäviin gradientteihin, on merkitty taulukossa emojein.
+
+| Tekniikka                 | Katoava | Räjähtävä | Huomiot                         |
+| ------------------------- | ------- | --------- | ------------------------------- |
+| Glorot tai He valinta     | ✅       | ⛔         | Riippu aktivointifunktiosta.    |
+| Batch Normalization       | ✅       | ⛔         | Puree piilotettuihin kerroksiin |
+| Ei-saturoituva aktivointi | ✅       | ⛔         | Esim. ReLU                      |
+| Gradient Clipping         | ⛔       | ✅         | Puree kaikkiin kerroksiin       |
+| Constant Error Carousel   | ✅       | ✅         | Lue alta LSTM:n kohdalta lisää  |
 
 ## Kehittyneemmät RNN-arkkitehtuurit
 
 ### LSTM (Long Short-Term Memory)
 
+LSTM on käytetyin RNN-variantti: sen hyödyt ovat pitkälti samat kuin RNN:n, mutta *cell state* ja *gating* -mekanismien ansiosta se kykenee paremmin säilyttämään tietoa pitkissä sekvensseissä. [^towardds]
+
 ### GRU (Gated Recurrent Unit)
 
 ### Vertailu: RNN vs. LSTM vs. GRU
+
+## Mallien arviointi (Metriikat)
+
+TODO! Tekstiä tuottavien tai kääntävien mallien laadun mittaaminen on vaikeampaa kuin luokittelun, sillä "oikeita" vastauksia voi olla useita, ja siksi yksinkertainen tarkkuusprosentti (accuracy) ei riitä... tai ei ole edes määriteltävissä.
+
+### Kielimallinnus: Perplexity
+
+TODO! Perplexity (PPL) mittaa sitä, kuinka "hämmentynyt" tai epävarma kielimalli on ennustaessaan seuraavaa sanaa; matalampi arvo kertoo paremmasta kyvystä mallintaa kielen rakennetta. Matemaattisesti se voidaan johtaa mallin ristientropiasta ja on standardimittari perinteisille kielimalleille.
+
+### Konekäännös ja generointi: BLEU ja ROUGE
+
+TODO! BLEU on konekäännösten standardimittari, joka laskee n-grammien päällekkäisyyttä koneen tuotoksen ja ihmisen tekemän referenssin välillä painottaen tarkkuutta (precision).
+
+TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka painottaa saantia (recall) eli sitä, kuinka suuri osa referenssitekstin sisällöstä löytyi koneen vastauksesta.
+
 
 ## Tehtävät
 
@@ -220,3 +271,4 @@ Arkkitehtuurissa on seq2vec -malli, *encoder*, jonka perään on kytketty vec2se
 [^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
 [^karpathy]: Karpathy, A. "The Unreasonable Effectiveness of Recurrent Neural Networks". 2015. https://karpathy.github.io/2015/05/21/rnn-effectiveness/
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
+[^towardds]: Dancker, J. *A Brief Introduction to Recurrent Neural Networks*. Towards Data Science. 2022. https://towardsdatascience.com/a-brief-introduction-to-recurrent-neural-networks-638f64a61ff4/
