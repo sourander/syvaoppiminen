@@ -477,28 +477,41 @@ woman_vector = nlp("woman").vector
 queen_vector = king_vector - man_vector + woman_vector
 ```
 
-TODO! Vektoriavaruuden avulla voidaan laskea analogioita, kuten "kuningas - mies + nainen = kuningatar".
+### Samankaltaisuus numerona
 
-## Mallien arviointi (Metriikat)
+Johdatus koneoppimiseen -kurssilta sinulle pitäisi olla tuttu käsite euklidinen etäisyys, joka mittaa suoraa etäisyyttä kahden vektorin välillä. Kyseessä on *linnuntie-etäisyys*. Piirrevektorin kohdalla tämä ei kuitenkaan ole paras tapa mitata samankaltaisuutta, koska se on herkkä vektoreiden normille eli pituudelle. Siksi käytetään usein kosinista samankaltaisuutta, joka mittaa vektoreiden välistä kulmaa, eikä niinkään etäisyyttä. [^buildingaiagents]
 
-TODO! Tekstiä tuottavien tai kääntävien mallien laadun mittaaminen on vaikeampaa kuin luokittelun, sillä "oikeita" vastauksia voi olla useita, ja siksi yksinkertainen tarkkuusprosentti (accuracy) ei riitä... tai ei ole edes määriteltävissä.
+Tämä *cosine similarity* on pistetulon normalisoitu versio. Se vastaa kahden vektorin välisen kulman kosinia, mistä nimi **kosininen samankaltaisuus** [^buildingaiagents]:
 
-### Kielimallinnus: Perplexity
+$$
+\text{cosine_similarity}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}
+$$
 
-TODO! Perplexity (PPL) mittaa sitä, kuinka "hämmentynyt" tai epävarma kielimalli on ennustaessaan seuraavaa sanaa; matalampi arvo kertoo paremmasta kyvystä mallintaa kielen rakennetta. Matemaattisesti se voidaan johtaa mallin ristientropiasta ja on standardimittari perinteisille kielimalleille.
+Kosinilla on hyödyllisiä ominaisuuksia skaalainvarianssin lisäksi [^buildingaiagents]:
 
-TODO! Perplexity voi olla vaikea käsite; sitä kannattaa ehkä avata intuitiolla: "Jos heität noppaa, perplexity on 6 (olet yhtä hämmentynyt kuin 1/6 todennäköisyys). Jos tiedät että noppa on painotettu antamaan aina kutosen, perplexity on 1."
+* Se on välillä -1 ja 1. 
+    * Vastakkaiset: -1
+    * Ortogonaaliset: 0
+    * Samansuuntaiset: 1
+* Se on nopea ja edullinen laskea.
+* Se on vähemmän herkkä sanojen esiintymistiheydelle ja siten kestävämpi poikkeuksille (*engl. outliers*)
+* Koska se on normalisoitu, sitä voidaan käyttää myös korkeaulotteisen datan kanssa.
 
-### Konekäännös ja generointi: BLEU ja ROUGE
+![](../images/700_cosine_scatterplot.png)
 
-TODO! BLEU on konekäännösten standardimittari, joka laskee n-grammien päällekkäisyyttä koneen tuotoksen ja ihmisen tekemän referenssin välillä painottaen tarkkuutta (precision).
+**Kuva 5:** *Havainnekuva kosinisen samankaltaisuuden arvoista eri ryppäiden välillä. Punainen kolmio edustaa kahden ryppään välistä kosinikulmaa.*
 
-TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka painottaa saantia (recall) eli sitä, kuinka suuri osa referenssitekstin sisällöstä löytyi koneen vastauksesta.
+Yllä olevassa kuvassa pisteet edustavat sanoja tai N-grammeja eli yleensä yhdessä esiintyvistä sanoista koostettuja kokonaisuuksia. Pisteparven `x`-akseli on `individual—social` ja `y` on `physical—digital`. 
 
+* :blue_circle: Siniset sanat ovat vahvan digitaalisia, lähes neutraaleja sosiaalisuudeltaan, kuten: `cloud_storage`, `database`, `encryption`. 
+* :yellow_circle: Keltaiset sanat ovat vähemmän digitaalisia, enemmän sosiaalisia, kuten: `social_media_app`, `group_chat`, `wikipedia`.
+* :purple_circle: Violetit sanat ovat miedosti fyysisen puolella ja yksilöllisiä, kuten: `map`, `board_game_rulebook`, `print`. 
+
+Jos valitsemme kustakin ryppäästä yhden sanan, voimme laskea etäisyyksiä. Saamme `cosine(yellow, blue) ≈ 0.5`. Sen sijaan `cosine(yellow, purple) ≈ -1.0`. Huomaa, että jos käyttäisimme euklidista etäisyyttä, tulos olisi hyvin eri: `euclid(yellow, blue) > euclid(yellow, purple)`. Yksinkertaisessa 2-ulotteisessa kuvaajassa tämä on silmämääräisesti todistettavissa: muista, että sanavektori on esimerkiksi 300-ulotteinen vektori.
 
 ## Yhteenveto
 
-Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti väitteisiin.
+Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti väitteisiin vuosikymmenittäin:
 
 ### 1990-luku
 
@@ -514,10 +527,10 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 ### 2010-luku
 
 * **Word2Vec**. Mikolov ja kollegat Googlessa esittelivät Word2Vecin (CBOW ja Skip-Gram), joka mahdollisti erittäin tehokkaan tavan oppia sanavektoreita suurista tekstikorpuksista. Huomaa sana *efficient* julkaisun otsikossa. Tämä jatkoi Bengion kehitystä. [^mikolov2013]
-* **Seq2Seq**. Sutskever ja kollegat esittelivät encoder-decoder-arkkitehtuurin konekäännökseen, jossa RNN-verkko koodaa syötteen ja toinen RNN dekoodaa sen toiselle kielelle. Enkooderin ja dekooderin välissä on kiinteämittainen vektori, joka pyrkii sisältämään kaiken syötteen merkityksen. [^sutskever2014]
-* **Attention seq2seq**. Huomattiin, että kiinteämittainen vektori on pullonkaula, joka rajoittaa mallin suorituskykyä erityisesti pitkille syötteille. Bahdanau ja kollegat esittelivät *attention*-mekanismin, joka sallii dekooderin keskittyä eri osiin syötettä eri aikoina, parantaen merkittävästi käännösten laatua. [^bahdanau2015]
 * **Kontekstisidonnaiset sanavektorit**. Sanavektorit eivät ole enää staattisia, vaan ne riippuvat lauseen kontekstista.
 * **Subword-tokenisointi**. Koko sanan käyttö tokenina on naiivi ratkaisu. Yksittäisen kirjaimen käyttö tokenina sisältää enemmän informaatiota, mutta on epätehokas ratkaisu. Välistä löytynee siis hyvä balanssi? Byte-Pair Encoding (BPE) ja vastaavat menetelmät pyrkivät muodostamaan tokenit dynaamisesti yleisimmistä osasanoista. [^bpe]
+* **Seq2Seq**. Sutskever ja kollegat esittelivät encoder-decoder-arkkitehtuurin konekäännökseen, jossa RNN-verkko koodaa syötteen ja toinen RNN dekoodaa sen toiselle kielelle. Enkooderin ja dekooderin välissä on kiinteämittainen vektori, joka pyrkii sisältämään kaiken syötteen merkityksen. [^sutskever2014] Tästä jatketaan tarkemmin [RNN ja jälkeläiset](rnn.md)-luvussa.
+* **Attention**. Bahdanau ja kollegat esittelivät *attention*-mekanismin, joka sallii dekooderin keskittyä eri osiin syötettä eri aikoina, parantaen merkittävästi käännösten laatua. [^bahdanau2015]
 * **Transformers**. Tästä jatketaan tarkemmin [Transformers-luvussa](transformers.md).
 
 
@@ -555,6 +568,7 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 [^mikolov2013]: Mikolov, T. et. al. *Efficient Estimation of Word Representations in Vector Space*. 2013. https://arxiv.org/abs/1301.3781
 [^nlp101]: Kulshreshta, R. *NLP 101: Word2Vec — Skip-gram and CBOW*. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
 [^bojanowski2016]: Bojanowski, P. et. al. *Enriching Word Vectors with Subword Information*. 2016. https://arxiv.org/pdf/1607.04606
+[^buildingaiagents]: Raieli, S. & Iuculano, G. *Building AI Agents with LLMs, RAG, and Knowledge Graphs*. Packt. 2025.
 [^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
 [^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
 [^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
