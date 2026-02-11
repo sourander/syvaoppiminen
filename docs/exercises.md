@@ -94,6 +94,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 
 ## RNN ja jälkeläiset (710)
 
+- [ ] Tehtävä: RNN videoiden avulla
 - [ ] Tehtävä: Sukunimien luokittelu Pt.1
 - [ ] Tehtävä: Sukunimien luokittelu Pt.2
 - [ ] Tehtävä: Sukunimien generointi

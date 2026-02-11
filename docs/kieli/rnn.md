@@ -4,9 +4,149 @@ priority: 710
 
 # RNN ja jälkeläiset
 
-## RNN
+## Linkki aiemmin opittuun
 
-### Motivaatio
+Edellisessä osiossa keskityimme paljolti termiin *embedding*. Käsitteen ymmärtäminen helpottaa merkittävästi RNN:n ja sen seuraajien, kuten LSTM:n ja GRU:n, toimintaperiaatteen ymmärtämistä. Jos olet epävarma, kannattaa kerrata edellistä osiota ja käydä kävelyllä tai nukkua yön yli.
+
+Toinen käsite, mikä kannattaa palauttaa mieleen, on *shared weights* eli jaetut painot. RNN:ssä, kuten konvoluutioverkoissakin, käytetään jaettuja painoja, mikä tarkoittaa, että samaa painojoukkoa käytetään useissa eri kohdissa verkkoa. Konvoluutioverkon kohdalla tämä on intuitiivista, koska paino on *kernel* eli suodatin, jonka vaikutusta kuvaan voi tarkastella visuaalisesti. RNN:sssä jaettu paino on konseptuaalisesti sama, mutta sen visualisointi on vaikeampaa, koska RNN käsittelee sekvenssidataa. Ihmismielellä on vaikeampi käsittää, kuinka samoja painoja voi soveltaa esimerkiksi lauseen eri sanoihin (tai siis niiden *embedding*-esityksiin).
+
+![](../images/710_fc_conv_rnn_comparison.png)
+
+**Kuva 1:** *Kaksi tuttua ja tuore tuttavuus vierekkäin. Konvoluutioverkko vähensi parametrien määrää hyödyntämällä paikallista rakennetta, jolloin kaikkea ei kytketä kaikkeen. RNN sen sijaan hyödyntää datan sekvenssiluonnetta, jolloin se voi hyödyntää aiempaa tietoa nykyisen syötteen käsittelyssä. Sivuun piirretty nuoli vie pieneen laatikkoon: yksi per neuroni. Tämä mahdollistaa "muistin", koska aktivoinnin vaikutus akkumuloituu tähän muuttujaan, joka on seuraavan syötteen käsittelyn laskennan osaksi. [^ldl]*
+
+RNN:n ja CNN:n eroavaisuuksista kannattaa jo heti hyväksyä se, että ==konvoluutioverkko vaatii tietyn kokoisen inputin==. Sen sijaan RNN tarvitsee vain saman kokoisen *embedding*-esityksen, mutta sekvenssin pituus voi vaihdella. Tämä mahdollistaa sen, että ==RNN pärjää eri mittaisten lauseiden kanssa==. Konvoluutioverkkoa *voi* siis käyttää `Conv1D`-hengessä käsittelemään lauseita, mutta tällöin täytyy määritellä maksimipituus ja lyhentää tai täyttää lauseet sopiviksi. RNN:ssä tätä ei tarvita. Tämä on merkittävä etu lauseiden kanssa, jotka ovat luonnostaan eri mittaisia.
+
+## Motivaatio
+
+RNN:t ovat neuroverkkoarkkitehtuuri, joka on suunniteltu käsittelemään sekvenssidataa, kuten tekstiä, ääntä tai aikasarjoja. On tärkeää painottaa sanaa *toistuva* tai *sekvenssi*. Ratkomme samankaltaisia ongelmia kuin aiemmin kurssilla, mutta nyt data on järjestetty sekvensseiksi: peräkkäisyys voi olla selkeä temporaalinen järjestys, kuten aikasarjoissa, tai ihan vain sanojen peräkkäisyys lauseessa.
+
+Alla on taulukko, joka havainnollistaa erilaisten ongelmatyyppien ratkaisua. Taulukko mukailee Magnus Ekmanin vastaavaa [^ldl]. Alempi rivi edustaa sekventtidataa eli tämän viikon aihetta, ylempi rivi on aiemmilta viikoilta tuttua kauraa:
+
+|                  | Regressio                 | Luokittelu                | Multiclass luokittelu           |
+| ---------------- | ------------------------- | ------------------------- | ------------------------------- |
+| **Ei-sekvenssi** | Ennusta talon hinta       | Tunnista sairaus          | Tunnista MNIST-digit            |
+| **Sekvenssi**    | Ennusta ensi kuun kysyntä | Tunnista sataako huomenna | Ennusta seuraava sana lauseessa |
+
+!!! tip
+
+    Joissakin kirjoissa/kursseissa käsitellään ensin aikasarjat, toisissa kielelliset ongelmat. Tällä kursilla on valittu aloittaa kielellisistä ongelmista, koska ne ovat intuitiivisia heti ensivilkaisulla: lauseiden kääntämistä kielestä toiseen ja niin edelleen. Lisäksi suurten kielimallin (LLM) suosion takia meillä kaikilla on jokin kosketuspinta tämän tyypin koneoppimismalleihin loppukäyttäjän näkökulmasta.
+
+## RNN:n perusidea
+
+Yllä esitellyssä kuvassa RNN:ään kuuluivat verkon takaisinkytkentään liittyvät pienet keltaiset laatikot. Näistä voi käyttää termiä *hidden state*. Kuten kuvatekstissä sanottiin, nämä käytännössä edustavat `accumulator`-muuttujaa loopissa. Tarkastellaan tätä lyhyne kuvitteellisen Python-toteutuksen avulla:
+
+```python
+# Hyperparametrit
+embedding_size = 4   # Embedding-vektorin pituus (d_x)
+hidden_size    = 3   # Hidden state -vektorin pituus (d_h)
+
+# Embedding on vektori, joka edustaa sanaa.
+vec_I    = [0.1, 0.2, 0.3, 0.4]   # sana "I"
+
+# Lauseet ovat listoja näistä vektoreista:
+# "I am not an"      → 4 sanaa → 4 aika-askelta
+# "I will not buy"   → 4 sanaa → 4 aika-askelta
+sentence1, target1 = ([vec_I, vec_am,   vec_not, vec_an],  label_A)
+sentence2, target2 = ([vec_I, vec_will, vec_not, vec_buy], label_B)
+batch = [(sentence1, target1), (sentence2, target2)]
+
+for sentence, target in batch:
+    # Nollataan muisti jokaisen lauseen alussa!
+    hidden_state = [0] * hidden_size
+
+    for word_vector in sentence:
+        # Joka aika-askeleella RNN saa syötteeksi:
+        #   1) nykyisen sanan embedding-vektorin
+        #   2) edellisen aika-askeleen hidden staten
+        # ja palauttaa uuden hidden staten.
+        hidden_state = rnn_cell(word_vector, hidden_state)
+
+    # Silmukan jälkeen hidden_state on tiivistelmä koko lauseesta.
+    # Tämän perusteella tehdään ennustus ja lasketaan virhe.
+    prediction = output_layer(hidden_state)
+    loss = loss_function(prediction, target)
+    # backpropagation kulkee kaikkien aika-askelten läpi (BPTT)
+```
+
+Matemaattisesti sekä koodina RNN-mallin yhden `rnn_cell`:n laskenta, jota lasketaan loopissa, on [^ldl] [^geronpytorch]:
+
+$$
+h^{(t)} = \sigma(W \cdot h^{(t-1)} + U \cdot x^{(t)} + b)
+$$
+
+```python
+def rnn_cell(x_t, h_prev):
+    h_part = W @ h_prev   # shapes: (d_h, d_h) @ (d_h,) → (d_h,)
+    x_part = U @ x_t      # shapes: (d_h, d_x) @ (d_x,) → (d_h,)
+
+    h_t = tanh(x_part + h_part + b)
+    return h_t
+```
+
+Muuttujat ovat selitettynä alla:
+
+* $t$ on aika-askel, joka vastaa sanan sijaintia lauseessa ($t=0, 1, 2, \ldots$).
+* $x^{(t)}$ on syötevektori ajanhetkellä $t$ eli kyseisen sanan *embedding*. 
+    * Koko: $d_x$ (embedding_size).
+* $h^{(t)}$ on *hidden state* ajanhetkellä $t$. Tämä on verkon "muisti". 
+    * Koko: $d_h$ (hidden_size).
+* $h^{(t-1)}$ on edellisen aika-askeleen hidden state. Alussa ($t=0$) tämä on tyypillisesti nollavektori.
+* $W$ on $d_h \times d_h$ painomatriisi, joka painottaa edellistä hidden statea.
+* $U$ on $d_h \times d_x$ painomatriisi, joka painottaa nykyistä syötevektoria.
+* $b$ on bias-vektori (koko $d_h$).
+* $\sigma$ on aktivointifunktio, tyypillisesti $\tanh$.
+
+Huomaa, että $d_h$ (hidden_size) on vapaasti valittava hyperparametri — se **ei** ole sama kuin lauseen pituus. Huomaa myös, että painomatriisit $W$ ja $U$ sekä bias $b$ ovat **jaettuja painoja**: samaa matriisia ja vektoria käytetään kaikissa aika-askeleissa.
+
+Tässä vaiheessa nohevilla opiskelijoilla on toivon mukaan kysymyksiä mielissään. Yksi selkeä kysymysaihio on, että jos batch:n on oltava matriisi (joka kerrotaan painomatriisilla $U$), niin miten lauseet tai tekstit, jotka ovat eri mittaisia, mahtuvat samaan matriisiin? Juurihan yllä todettiin, että RNN ei vaadi tietyn mittaisia syötteitä. Naiivi vastaus olisi pitää `batch_size` 1:ssä eli toteuttaa pedanttinen SGD. Tämä on toki mahdollista, mutta ei tehokasta. 
+
+Ratkaisu on lisätä täytettä (PAD) syötteen loppuun. Yksittäinen batch-Tensor on siis muotoa `(samples, sequence_length, features)`, missä `max_sentence_length` on suurimman samplen pituus batch:ssä, ja `features` on embedding. Alla on datasetti, jossa on muutamia sampleja . Ensimmäinen on kenties satu: *"Once (upon a ... and lived) happily ever after"*. Toinen lienee Raamattu: *"Alussa (loi Jumala ... olkoon kaikkien) kanssa. Amen"*. Alimmat näkyvät samplet ovat pari sanaa lyhyempiä, joten ne loppuvat keltaisella värillä korostettuun `vec_PAD`-täytteeseen, joka on siis $d_x$-ulotteinen *embedding* siinä missä kaikki muutkin tokenit. [^llmfromscratch]
+
+|         | t=0         | ... | t=max-2     | t=max-1     | t=max       |
+| ------- | ----------- | --- | ----------- | ----------- | ----------- |
+| sample1 | vec_Once    | ... | vec_happily | vec_ever    | vec_after   |
+| sample2 | vec_Alussa  | ... | vec_kanssa  | vec_DOT     | vec_Amen    |
+| sample3 | vec_Turussa | ... | vec_END     | ==vec_PAD== | ==vec_PAD== |
+| ...     | ...         | ... | ...         | ...         | ...         |
+| sampleN | vec_Olipa   | ... | vec_Loppu   | ==vec_PAD== | ==vec_PAD== |
+
+### Ongelmatyypit sekvenssidatalle
+
+Alla oleva jako tyyppeihin on peräisin Andrej Karpathyn blogipostauksesta otsikolla [The Unreasonable Effectiveness of Recurrent Neural Networks](https://karpathy.github.io/2015/05/21/rnn-effectiveness/), joka on yksi RNN:n klassikkolähteistä. Jaottelu on hyvin intuitiivinen ja auttaa hahmottamaan, millaisiin ongelmiin RNN:t sopivat. [^karpathy]
+
+![](../images/710_rnn_taxonomy.png)
+
+**Kuva 2:** *RNN-arkkitehtuurien taksonomia. [^karpathy] [^geronpytorch]*
+
+#### Vector-to-Vector (Vec2Vec)
+
+Tämä taksonomian yksinkertaisin malli voidaan käsitellä hyvin lyhyesti: siitä puuttuu hidden state ja koko `R`-kirjaimen tarkoittama *recurrent* -elementti. Sisään menee `d_x`-ulotteinen vektori ja ulos tulee `d_y`-ulotteinen vektori (tai skaalari). Tämä on siis perinteinen feedforward-verkko eli kurssilta tuttu MLP. Se on käytännössä mukana vain kuriositeettina. [^karpathy]
+
+#### Sequence-to-Vector (Seq2Vec)
+
+Tässä "many-to-one" -mallissa syötesekvenssi, kuten tekstilause tai ääninäyte, käsitellään aikasarjana ja tiivistetään yhdeksi tulosvektoriksi, jota käytetään tyypillisesti luokittelutehtävissä, kuten tunneanalyysissa tai roskapostin tunnistuksessa. [^geronpytorch]
+
+#### Vector-to-Sequence (Vec2Seq)
+
+Tämä "one-to-many" -arkkitehtuuri ottaa syötteenään yhden vektorin, esimerkiksi kuvan piirrevektorin, ja tuottaa siitä sarjan tuloksia, mikä on yleistä esimerkiksi kuvatekstien automaattisessa generoinnissa, jossa kuvasta luodaan sanajono. [^karpathy] Toinen esimerkki voisi olla nimen generointi, jossa syötteenä on henkilön kotimaa (vektoroituna One-Hot -esityksenä) ja mallin tavoitteena on tuottaa sarja merkkejä, jotka muodostavat sukunimen. Tähän liittyy myöhemmin tehtävä.
+
+#### Sequence-to-Sequence (Seq2Seq)
+
+Tähän kategoriaan kuuluu sekä *many-to-many* -malli että *Encoder-Decoder* -malli (ks. seuraava otsikko). Käsitellään ensin *many-to-many* -malli, joka on Karparthyn sanoin *synced sequence input and output*. Toisin sanoen sisään menee $n$-mittarinen sekvenssi ja ulos tulee $n$-mittarinen sekvenssi – eli yhtä pitkä syöte ja tuloste. Esimerkkinä voisi olla videon kehysten luokittelu, jossa jokaiselle kehyssekvenssin kehykselle halutaan tuottaa luokitus [^karpathy]. Tai kenties syöte on lista sanoja, ja ulos lista binääriluokittimen tuloksia, että onko kyseinen sana verbi.
+
+#### Encoder-Decoder
+
+!!! warning
+
+    Tämä on kurssin kannalta edistynyt käsite, ja sitä käsitellään Géronin kirjassa koko luku 14. Tämän 5 opintopisteen kurssin puitteissa emme ehdi syventyä tähän aiheeseen. Käsitellään se vain maininnan tasolla. Harjoituksessa `712_seq2seq_translation_tutorial.py` tutustut tähän koodin kautta.
+
+    Jos haluat tutustua aiheeseen syvemmin kurssin laajuuden ulkopuolella, esimerkiksi projektien yhteydessä, voit aloittaa lukemalla Géronin kirjan loppuun ja tutustumalla julkaisuihin, joita kyseinen [PyTorch tutoriaali](https://docs.pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html) suosittelee. Etsi sivulta väliotsikko "Recommended Reading".
+
+Encoder-Decoder on toteutustavaltaan Sequence-to-Sequence -malli, mutta *synced*-ominaisuus on poistettu. Arkkkitehtuuri on täten kaksivaiheinen: ensin *Encoder* lukee koko syötteen (esim. englanninkielisen lauseen) ja tiivistää sen yhdeksi kontekstivektoriksi (*state*), jonka jälkeen *Decoder* purkaa tuon vektorin halutuksi tulosteeksi (esim. ranskankieliseksi lauseeksi), mahdollistaen näin syötteen ja tulosteen eroavat pituudet ja irrelevanssin aikajärjestyksen suhteen. [^geronpytorch]
+
+Arkkitehtuurissa on seq2vec -malli, *encoder*, jonka perään on kytketty vec2seq -malli, *decoder*. Encoder lukee koko syötteen ja tiivistää sen yhdeksi vektoriksi, joka tunnetaan nimellä *context vector*. Yllä olevassa kuvassa vain Encoder-osuus saa syötteen: tämä johtuu siitä, että kyseessä on inferenssivaihe. Koulutusvaiheessa myös Decoder saa syötteen (eli ground-truth-sekvenssin), mutta inferenssivaiheessa Decoder saa syötteenä edellisen aika-askeleen tuottaman outputin. Tämä on tärkeä ero, joka liittyy siihen, että koulutuksessa käytetään *teacher forcing* -tekniikkaa, jossa mallia ohjataan oikeaan suuntaan syöttämällä sille oikeat vastaukset, kun taas inferenssivaiheessa malli joutuu luottamaan omiin ennusteisiinsa. [^llmfromscratch]
+
+## Perinteinen RNN
 
 ### Rakenne ja toiminta
 
@@ -14,7 +154,9 @@ priority: 710
 
 ### Backpropagation Through Time (BPTT)
 
-## Kehittyneemmät arkkitehtuurit
+### Rajoitteet ja ongelmat
+
+## Kehittyneemmät RNN-arkkitehtuurit
 
 ### LSTM (Long Short-Term Memory)
 
@@ -23,6 +165,18 @@ priority: 710
 ### Vertailu: RNN vs. LSTM vs. GRU
 
 ## Tehtävät
+
+!!! question "Tehtävä: RNN videoiden avulla"
+
+    Jos yllä oleva selostus ei selkeyttänyt aihetta, etsi myös muita lähteitä. 
+    
+    * Yksi ehdotus on Lex Fridmanin [MIT 6.S094: Recurrent Neural Networks for Steering Through Time](https://youtu.be/nFTQ7kHQWtc?t=2164)-luento, joka on saatavilla YouTubessa. Videon alku on kertausta vastavirta-algoritmista, joten voit hypätä suoraan 36:04 kohtaan, josta RNN:t alkavat. Erityisesti videon lopun Application-osiot ovat varsin korvaamattoman tasokasta sisältöä.
+    * Myös StatQuestin soittolista [Neural Networks / Deep Learning](https://youtube.com/playlist?list=PLblh5JKOoLUIxGDQs4LFFD--41Vzf-ME1&si=FBwTC2HDHZhTr6Nw) sisältää useita videoita, joissa käsitellään esim.:
+        * RNN
+        * LSTM
+        * Word2Vec (viime viikon aihe)
+        * Seq2Seq Encoder-Decoder
+        * Attention
 
 !!! question "Tehtävä: Sukunimien luokittelu Pt.1"
 
@@ -61,3 +215,8 @@ priority: 710
     Malli kouluttautui opettajan Macbook Pro:lla noin 1 minuutissa.
 
 ## Lähteet
+
+[^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+[^karpathy]: Karpathy, A. "The Unreasonable Effectiveness of Recurrent Neural Networks". 2015. https://karpathy.github.io/2015/05/21/rnn-effectiveness/
+[^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.

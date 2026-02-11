@@ -177,7 +177,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.image(src="nb/700/711_rnn_architecture.png")
+    mo.image(src="nb/700/images/711_rnn_architecture.png")
     return
 
 
@@ -261,7 +261,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.image(src="nb/700/711_kasparov.png")
+    mo.image(src="nb/700/images/711_kasparov.png")
     return
 
 
