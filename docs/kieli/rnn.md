@@ -33,6 +33,12 @@ Alla on taulukko, joka havainnollistaa erilaisten ongelmatyyppien ratkaisua. Tau
 
 ## RNN:n perusidea
 
+> "A recurrent neural network (RNN) is a neural network that consists of a hidden state $h$ and an
+optional output $y$ which operates on a variable length sequence $x = (x_1, \ldots, x_T)$. At each time
+step $t$, the hidden state $h_{t}$ of the RNN is updated by ..."
+>
+> — Co et. al. [^gru]
+
 Yllä esitellyssä kuvassa RNN:ään kuuluivat verkon takaisinkytkentään liittyvät pienet keltaiset laatikot. Näistä voi käyttää termiä *hidden state*. Kuten kuvatekstissä sanottiin, nämä käytännössä edustavat `accumulator`-muuttujaa loopissa. Tarkastellaan tätä lyhyne kuvitteellisen Python-toteutuksen avulla:
 
 ```python
@@ -122,19 +128,19 @@ Alla oleva jako tyyppeihin on peräisin Andrej Karpathyn blogipostauksesta otsik
 
 **Kuva 2:** *RNN-arkkitehtuurien taksonomia. [^karpathy] [^geronpytorch]*
 
-#### Vector-to-Vector (Vec2Vec)
+#### Vector-to-Vector
 
 Tämä taksonomian yksinkertaisin malli voidaan käsitellä hyvin lyhyesti: siitä puuttuu hidden state ja koko `R`-kirjaimen tarkoittama *recurrent* -elementti. Sisään menee `d_x`-ulotteinen vektori ja ulos tulee `d_y`-ulotteinen vektori (tai skaalari). Tämä on siis perinteinen feedforward-verkko eli kurssilta tuttu MLP. Se on käytännössä mukana vain kuriositeettina. [^karpathy]
 
-#### Sequence-to-Vector (Seq2Vec)
+#### Sequence-to-Vector
 
 Tässä "many-to-one" -mallissa syötesekvenssi, kuten tekstilause tai ääninäyte, käsitellään aikasarjana ja tiivistetään yhdeksi tulosvektoriksi, jota käytetään tyypillisesti luokittelutehtävissä, kuten tunneanalyysissa tai roskapostin tunnistuksessa. [^geronpytorch]
 
-#### Vector-to-Sequence (Vec2Seq)
+#### Vector-to-Sequence
 
 Tämä "one-to-many" -arkkitehtuuri ottaa syötteenään yhden vektorin, esimerkiksi kuvan piirrevektorin, ja tuottaa siitä sarjan tuloksia, mikä on yleistä esimerkiksi kuvatekstien automaattisessa generoinnissa, jossa kuvasta luodaan sanajono. [^karpathy] Toinen esimerkki voisi olla nimen generointi, jossa syötteenä on henkilön kotimaa (vektoroituna One-Hot -esityksenä) ja mallin tavoitteena on tuottaa sarja merkkejä, jotka muodostavat sukunimen. Tähän liittyy myöhemmin tehtävä.
 
-#### Sequence-to-Sequence (Seq2Seq)
+#### Sequence-to-Sequence
 
 Tähän kategoriaan kuuluu sekä *many-to-many* -malli että *Encoder-Decoder* -malli (ks. seuraava otsikko). Käsitellään ensin *many-to-many* -malli, joka on Karparthyn sanoin *synced sequence input and output*. Toisin sanoen sisään menee $n$-mittarinen sekvenssi ja ulos tulee $n$-mittarinen sekvenssi – eli yhtä pitkä syöte ja tuloste. Esimerkkinä voisi olla videon kehysten luokittelu, jossa jokaiselle kehyssekvenssin kehykselle halutaan tuottaa luokitus [^karpathy]. Tai kenties syöte on lista sanoja, ja ulos lista binääriluokittimen tuloksia, että onko kyseinen sana verbi.
 
@@ -160,7 +166,7 @@ Yllä käytetty `for`-loop on vastavirta eli *backpropagation* algoritmin kannal
 
 **Kuva 3:** *RNN:n "unrolling" eli purkaminen. Katkoviivat edustavat sitä, että verkko voi olla jonkin yllämainitun taksonomien mukainen. Kustakin RNN-solusta lähtevä arvo joko osallistuu tai ei osallistu lopulliseen lähtöön, riippuen siitä, minkä tyyppisestä ongelmasta on kyse. [^ldl] [^geronpytorch]*
 
-### Backpropagation Through Time (BPTT)
+### BPTT
 
 Kun verkko on avattu, se on tavallinen feedforward-verkko. Voimme siis käyttää tavallista backpropagation-algoritmia. Termi tälle koko strategialle on *Backpropagation Through Time* (BPTT). Algoritmi on siis sama kuin ennenkin, mutta koska prosessiin liittyy temporaalinen elementti, sille on annettu nimi. [^ldl] [^geronpytorch]
 
@@ -192,13 +198,60 @@ Alla on Learning Deep Learning -kirjan [^ldl] taulukon suomennettu ja tiivistett
 
 ## Kehittyneemmät RNN-arkkitehtuurit
 
-### LSTM (Long Short-Term Memory)
+### LSTM
+
+Hochreiter ja Schmidhuberin vuonna 1997 esittelemä LSTM on RNN-variantti, joka on suunniteltu keventämään RNN:n vanishing gradient -ongelmaa sekä parantamaan pitkäaikaista muistin säilyttämistä. Räjähtävät ja katoavat gradientit ovat oire siitä, että $W$-painomatriisin arvot ovat erisuuria kuin $1$. Ekman kirjoittaa: *"[...] with a large enough number of timesteps, the only way to avoid vanishing and exploding gradients is to use weights with a value of 1, which kind of defeats the purpose because we want to be able to adjust the weights"* [^ldl]. Mallin kouluttamisen idea on säätää painoja, joten painojen pitäminen kiinteästi arvossa 1 ei ole ratkaisu. Tästä äärimmäisen naiivista ajatuksesta on kuitenkin johdettavissa *constant error carousel* -tekniikka, joka on LSTM:n ydin. [^lstm] Julkaisun tiivistelmässä tämä avataan näin: *"Multiplicative
+gate units learn to open and close access to the constant error flow"* [^lstm]. Tyypillisen LSTM-solun kuvauksen sijasta, joka löytyy vaikkapa Géronin kirjasta, alla on kuva, jossa korostetaan, kuinka kaksi LSTM-soluea kytkeytyvät toisiinsa. Kuvaa kannattaa tuijottaa siten, että sinulla on saatavilla myös tyypillinen LSTM-solun kuva (esim. Figure 13-12 Géronin kirjasta). Myös alkuperäisen julkaisun Figure 1 on hyödyllinen ymmärryksen apuna, mutta sen kohdalla on syytä huomioida, että esitelty malli on naiivi LSTM, jossa takaisinkytkennän paino on kiinteästi 1, eikä sitä siis kouluteta. [^lstm] 
+
+![](../images/710_LSTM_architecture.png)
+
+**Kuva 6:** *LSTM-arkkitehtuuri. Kuvassa on kaksi LSTM-solua. Kuvaaja pyrkii yhdistämään eri lähteistä vastaavien kuvaajien parhaat puolet [^geronpytorch] [^ldl] [^lstm]. Oikeanpuoleiseen soluun on merkitty pienin numeroin, `(1)...(6)`, vaiheet, jotka ovat alla matemaattisina kaavoina.*
+
+LSTM:ssä on kolme porttia ja lisäksi *candidate*, jotka kaikki tuottavat $d_h$ ulotteisia vektoreita, jotka osallistuvat laskentaan. Yhdessä nämä neljä ovat:
+
+* **Forget gate**: Päätös siitä, mitä tietoa vanhasta *cell state* -vektorista säilytetään tai unohdetaan. Käytetään sigmoid-aktivointia, joka tuottaa arvoja välillä 0 (unohtaa kaiken) ja 1 (säilyttää kaiken). [^geronpytorch]
+* **Input gate**: Päätös siitä, mitä uutta tietoa syötteestä lisätään *cell state* -vektoriin. [^geronpytorch]
+* **Output gate**: Päätös siitä, mitä tietoa *cell state* -vektorista käytetään nykyisen aika-askeleen outputiksi. [^geronpytorch]
+* **Candidate**: Tuottaa ehdotetun uuden informaation, joka voidaan lisätä *cell state* -vektoriin, perustuen nykyiseen syötteeseen ja edelliseen hidden stateen. [^ldl]
+
+Kuvasta ja lähteistä voi koostaa, että:
+
+* LSTM-solut jakavat neljä painomatriisia: $W_f$, $W_i$, $W_o$ ja $W_c$. [^ldl] [^geronpytorch]
+* $h$ on hidden state vektori, jonka pituus on $d_h$. [^ldl] [^geronpytorch]
+* $c$ on cell state vektori, joka toimii LSTM:n muistina, ja sen pituus on jaettu $h$:n kanssa, eli $d_h$. [^ldl] [^geronpytorch]
+* $x$ on syötevektori, jonka pituus on $d_x$ (embedding_size).
+    * On mahdollista tehdä `concat(x, h)` ja käyttää tätä yhdistettyä vektoria syötteenä porttien laskentaan, jolloin painomatriisit $W_f$, $W_i$, $W_o$ ja $W_c$ olisivat muotoa $(d_h + d_x) \times d_h$. [^ldl]
+* Muistin tarve skaalautuu $d_h$ ja embedding-koon, $d_x$, mukaan.
+
+Aiheeseen liittyviä kuvaajia ja selostusta löytyy netistä reilusti. Yksi hyvä lähde on vastavirta-algoritmeista tuttu Christopher Olah. Hänen blogistaan löydät kenties tyypillisimmän tavan abstrahoida LSTM:n [^colab] – saman, jota Géron käyttää kirjassaan – merkinnästä [Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 
 LSTM on käytetyin RNN-variantti: sen hyödyt ovat pitkälti samat kuin RNN:n, mutta *cell state* ja *gating* -mekanismien ansiosta se kykenee paremmin säilyttämään tietoa pitkissä sekvensseissä. [^towardds]
 
-### GRU (Gated Recurrent Unit)
+!!! info "Matemaattiset kaavat"
 
-### Vertailu: RNN vs. LSTM vs. GRU
+    $$
+    \begin{align}
+    f(t) &= \sigma( W_f [ h^{(t-1)}, x^{(t)} ] + b_f ) \tag{1} \\
+    i(t) &= \sigma( W_i [ h^{(t-1)}, x^{(t)} ] + b_i ) \tag{2} \\
+    \tilde{C}(t) &= \tanh ( W_c [ h^{(t-1)}, x^{(t)} ] + b_c ) \tag{3} \\
+    C(t) &= f^{(t)} * C^{(t-1)} + i^{(t)} * \tilde{C}^{(t)} \tag{4} \\
+    o(t) &= \sigma( W_o [ h^{(t-1)}, x^{(t)} ] + b_o ) \tag{5} \\
+    h(t) &= o(t) * \tanh ( C(t) ) \tag{6}
+    \end{align}
+    $$
+
+    Yllä olevat kaavat ovat kirjasta Learning Deep Learning [^ldl]. Löydät Géronin kirjasta vastaavat kaavat, mutta niissä on ei ole käytetty `concatenate`-tekniikkaa, joten painomatriiseja on tuplamäärä [^geronpytorch]. Kaavojen numerot vastaavat seuraavia vaiheita, ja ne on merkitty yllä olevaan kuvaan (Kuva 6).
+
+### GRU
+
+Kyunghyun Cho ja kollegat esittelivät GRU-arkkitehtuurin 2014 [^gru]. GRU on käytännössä yksinkertaistettu LSTM, joka yksinkertaisuudestaan huolimatta suoriutuu LSTM:ään verrattavalla tavalla [^geronpytorch]. Alkuperäinen Cho:n ja kumppaneiden julkaisu ei sisällä lyhennettä *GRU* laisinkaan. Julkaisun aihe on seq2seq Encoder-Decocer -arkkitehtuuri, mutta ikään kuin kylkiäisenä esitellään tämä uusi yksinkeraistettu LSTM-variaatio:
+
+> "In addition to a novel model architecture, we also
+propose a new type of hidden unit (f in Eq. (1))
+that has been motivated by the LSTM unit but is
+much simpler to compute and implement"
+>
+> — Cho et. al. [^gru]
 
 ## Mallien arviointi (Metriikat)
 
@@ -272,3 +325,6 @@ TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka pai
 [^karpathy]: Karpathy, A. "The Unreasonable Effectiveness of Recurrent Neural Networks". 2015. https://karpathy.github.io/2015/05/21/rnn-effectiveness/
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
 [^towardds]: Dancker, J. *A Brief Introduction to Recurrent Neural Networks*. Towards Data Science. 2022. https://towardsdatascience.com/a-brief-introduction-to-recurrent-neural-networks-638f64a61ff4/
+[^lstm]: Hochreiter, S., & Schmidhuber, J. (1997). Long short-term memory. Neural computation. 1997. https://deeplearning.cs.cmu.edu/S23/document/readings/LSTM.pdf
+[^gru]: Cho, K., van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., & Bengio, Y. *Learning phrase representations using RNN encoder-decoder for statistical machine translation*. 2014. https://arxiv.org/abs/1406.1078
+[^colahblog]: Olah, C. *Understanding LSTM Networks*. 2015. https://colah.github.io/posts/2015-08-Understanding-LSTMs/
