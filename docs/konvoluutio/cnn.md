@@ -236,7 +236,7 @@ Peräkkäin kytketyt konvoluutiokerrokset mahdollistavat yhä monimutkaisempien 
 * Filttereiden määrä: $K$ (eli syvyyssuunnan koko)
 * Suotimen koko: $F$ (esim. $3 \times 3$)
 * Askel (stride): $S$ (usein 1)
-* Toppaus (padding): $P$ (usein $K//2$ eli 'same' toppaus)
+* Toppaus (padding): $P$ (usein `j // 2` eli 'same' toppaus)
 
 Konvoluutiokerroksen lähtö täten kokoa:
 
