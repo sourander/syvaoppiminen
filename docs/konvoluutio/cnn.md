@@ -6,7 +6,13 @@ priority: 500
 
 ## Perusteet
 
-### Motivaatio
+Töksäytetään heti alkuun kolme merkittävintä hyötyä konvoluutioverkoista (CNN) verrattuna perinteisiin täysin kytkettyihin verkkoihin (FCNN):
+
+1. **Parametritehokkuus**. Konvoluutioverkot jakavat painot paikallisesti. Tämä *shared weights* käsite tulee myöhemmin tutuksi myös kielimalleissa. [^geronpytorch]
+2. **Paikallisuus**. Konvoluutioverkot säilyttävät kuvan 2D-rakenteen. FCNN:n kohdalla kuva litistettiin pitkäksi vektoriksi, mikä tuhosi spatiaalisen informaation. [^geronpytorch]
+3. **Hierarkiset piirteet**. Monimutkainenkin visuaalinen tuotos koostuu pohjimmiltaan yksinkertaisista piirteistä (reunat, kulmat, tekstuurit). Tämä malli on CNN:n ydin. [^geronpytorch]
+
+### Parametritehokkuus
 
 Olet tutustunut kurssilla FCNN-verkkoihin, ja niiden rajat alkoivat löytyä Cifar10-datasetin kohdalla. Edellisen luvun tehtävässä koulutit FCNN-verkon – kenties arkkitehtuurilla `3072-1024-512-10` –, ja pääsit noin 55% tarkkuuteen. Tutustuessasi wikipedian [Cifar10](https://en.wikipedia.org/wiki/CIFAR-10)-sivuun huomasit, että jo 2010-luvun alkupuolella verkot kykenivät yli 95 % tarkkuuteen. On hyvä muistaa, että 95 % on jo merkittävän suuri tarkkuus. Graham lainaa Karpathyä, että: *"For comparison, human performance on CIFAR-10 is estimated to be 6%."* [^fractionalmp] Lukema on siis *error rate*, ei *accuracy*.
 
@@ -37,9 +43,17 @@ $74 \text{M}$ parametrin malli ylsi Grahamin paperin mukaan $3.47 \%$ virheeseen
 
 **Kuva 2:** *300 epookin koulutuksen aikaiset tarkkuus- ja virhekäyrät Grahamin Fractional Max-Pooling -mallille (12M parametria).*
 
-### Rautavaatimukset
+### Miten paljon muistia säästyy?
 
-Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -korttia, jossa on 6 GB muistia. Muistiin mahtuisi $\frac{6 \times 1024^3}{4} \approx 1600 \text{M}$ parametria (per BATCH). Jos *batch size* on 32, niin silloin käytössä on $\frac{1600}{32} \approx 50 \text{M}$ parametria. Tämä on yhä reilusti enemmän kuin edellä esitellyssä pienemmässä 14 miljoonan parametrin verkossa. Koulutusvaiheessa muistiin pitää mahtua myös aktivoinnit, gradientit ja optimointiin liittyvät muuttujat. Näitä lukemia voi laskea (ks. kurssikirja!), mutta sen voi myös selvittää kokeilemalla. Alla on typistetty `nvidia-smi`-komennon tulos koulutuksen aikana (GeForce RTX 3060 Ti, 8 GB muistia):
+Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -korttia, jossa on 6 GB muistia. Muistiin mahtuisi $\frac{6 \times 1024^3}{4} \approx 1600 \text{M}$ miljoonaa `float32`-liukulukua (4 tavua per luku). Tätä tilaa ei kuitenkaan voi käyttää pelkästään verkon parametreille. Koulutuksen aikana muistia tarvitaan:
+
+1. **Parametreille** (weights & biases)
+2. **Gradienteille** (yleensä yhtä paljon tilaa kuin parametreille)
+3. **Optimoijan tiloille** (esim. Adam-optimoija tallettaa kaksi lisäarvoa per parametri)
+4. **Aktivoinneille** (välitulokset verkon kerroksissa, nämä riippuvat suoraan **batch-koosta**)
+
+
+Alla on typistetty `nvidia-smi`-komennon tulos Fractional Max-Pooling -mallin koulutuksen aikana (GeForce RTX 3060 Ti, 8 GB muistia):
 
 ```
 +-------------------------------------------------------------------+
@@ -51,7 +65,7 @@ Vuonna 2014 olisi ollut mahdollista käyttää esimerkiksi GeForce GTX TITAN -ko
 +-------------------------------------------------------------------+
 ```
 
-Jos 12M parametria vie 32-kokoisella erällä `2650 MiB` muistia, niin suuremman mallin (`filter_growth_rate = 160`) huimat 74M parametria veisi noin `74/12 * 2650 ≈ 16342 MiB`, eli noin 16 GB muistia. Jos mallin halutaan mahtuvan 6 GB VRAM:iin, niin batch-kokoa pitäisi pienentää. Jos batch-koko lasketaan neljännekseen (`32/4 = 8`), niin tällöin muistia tarvittaisiin enää `16342 / 4 ≈ 4085 MiB`, eli noin 4 GB.
+Jos 12M parametria vie 32-kokoisella erällä `2650 MiB` muistia, niin suuremman mallin (`filter_growth_rate = 160`) huimat 74M parametria veisi hyvin karkeiden oletusten kera `74/12 * 2650 ≈ 16342 MiB` – eli noin 16 GB muistia. Termi `filter_growth_rate` selitetään alla MaxPooling-mallin yhteydessä. Jos tämän suuremman mallin halutaan mahtuvan 6 GB VRAM:iin, niin batch-kokoa pitäisi pienentää: parametrien määrää tämä ei vähennä, mutta aktivaatioiden määrää kylläkin.
 
 12M mallin kouluttamiseen kului opettajan GeForce RTX 3060 Ti:llä ==yli 11 tuntia== (300 epookkia, noin 2 min 17 sek per epookki).
 
@@ -184,7 +198,7 @@ Käsitellään lyhyesti näistä kenties yksinkertaisin kombinaatio: FAST + SIFT
 
 ### Arkkitehtuuri
 
-Aiemmasta opitusta on hyötyä, sillä konvoluutioverkkojen *head* eli viimeiset kerrokset ovat tuttuja FC-kerroksia (eli *fully connected*). Mallin viimeiste kerrotset ovat siis tyypillinen FCNN, joka ottaa syötteenään piirrevektorin ja tuottaa luokitusennusteen. Konvoluutioverkkojen voima piilee kuitenkin niiden *body*-osassa, joka koostuu uudenlaisista termeistä: **konvoluutiokerros** (*convolutional*) ja **koontikerros** (*pooling*).
+Aiemmasta opitusta on hyötyä, sillä konvoluutioverkkojen *head* eli viimeiset kerrokset ovat tuttuja FC-kerroksia (eli *fully connected*). Mallin viimeiset kerrokset ovat siis tyypillinen FCNN, joka ottaa syötteenään piirrevektorin ja tuottaa luokitusennusteen. Konvoluutioverkkojen voima piilee kuitenkin niiden *body*-osassa, joka koostuu uudenlaisista termeistä: **konvoluutiokerros** (*convolutional*) ja **koontikerros** (*pooling*). Malli on toki yhä *eteenpäin kytketty* (feedforward), mutta ei enää täysin kytketty (fully connected).
 
 ![alt text](../images/500_cnn_arch.png)
 
@@ -256,33 +270,33 @@ Hyvin tyypillinen koontikerros on $2 \times 2$ max-pooling, jossa askeleena on 2
 
 ## Case Study: Fractional Max-Pooling (Graham, 2014)
 
-Tässä osiossa syvennytään Benjamin Grahamin vuonna 2014 esittelemään **Fractional Max-Pooling** -arkkitehtuuriin, joka saavutti aikanaan poikkeuksellisen alle 4 % virheasteen CIFAR-10-datasetillä. Malli on erinomainen esimerkki siitä, kuinka konvoluutioverkkojen suunnittelussa voidaan poiketa valtavirran konventioista ja saavuttaa silti huipputuloksia. Motivaatio arkkitehtuurin valinnalle case studyyn on juurikin tämä: älä lukitse itseäsi ajattelemaan, että on vain yksi tapa rakentaa konvoluutioverkkoja tai muitakaan neuroverkkoja.
+Tässä osiossa syvennytään Benjamin Grahamin vuonna 2014 esittelemään **Fractional Max-Pooling** -arkkitehtuuriin, joka saavutti aikanaan poikkeuksellisen alle 4 % virheasteen CIFAR-10-datasetillä [^fractionalmp]. Malli on erinomainen esimerkki siitä, kuinka konvoluutioverkkojen suunnittelussa voidaan poiketa valtavirran konventioista ja saavuttaa silti huipputuloksia. Motivaatio arkkitehtuurin valinnalle case studyyn on juurikin tämä: älä lukitse itseäsi ajattelemaan, että on vain yksi tapa rakentaa konvoluutioverkkoja tai muitakaan neuroverkkoja.
 
 Case studyn koodi on toteutettu `501_fractional_max_pooling.py`-tiedostossa. Tähän osioon liittyy osion ensimmäinen tehtävä. Lue se alta.
 
 #### Arkkitehtuurin filosofia ja suotimien kasvu
 
-Tyypillisesti konvoluutioverkoissa, kuten VGG:ssä tai ResNetissä, kanavien määrä kaksinkertaistetaan tietyin väliajoin (esim. 64 $\to$ 128). Grahamin mallissa lähestymistapa on kuitenkin erilainen: kanavien määrä kasvaa lineaarisesti kaavalla $160 \times n$, missä $n$ on kerroksen järjestysnumero. Tämä lineaarinen kasvu johtaa verkon syventyessä massiiviseen parametrimäärään. Kun perinteiset verkot saattavat pysytellä kymmenissä miljoonissa parametreissa, Grahamin malli CIFAR-10:lle sisältää noin 75 miljoonaa parametria. Tämä osoittaa, että suuri parametrimäärä ei välttämättä johda ylikouluttumiseen, kunhan verkon muut rakenteelliset valinnat tukevat oppimista.
+Tyypillisesti konvoluutioverkoissa, kuten VGG:ssä tai ResNetissä, kanavien määrä kaksinkertaistetaan tietyin väliajoin (esim. 64 $\to$ 128). Grahamin mallissa lähestymistapa on kuitenkin erilainen: kanavien määrä kasvaa lineaarisesti kaavalla $160 \times n$, missä $n$ on kerroksen järjestysnumero [^fractionalmp].
 
 #### Fractional Max-Pooling -mekanismi
 
-Mallin keskeinen innovaatio on nimensä mukainen Fractional Max-Pooling. Perinteinen $2\times2$ max-pooling puolittaa kuvan koon jokaisella askeleella, mikä rajoittaa verkon syvyyttä pienillä kuvilla. Grahamin ratkaisussa skaalauskerroin on $\sqrt[3]{2}$ (noin 1,26). Tämä maltillisempi koon pienentäminen mahdollistaa huomattavasti syvemmät verkot ilman, että piirrekartat kutistuvat liian nopeasti $1\times1$-pikselin kokoon.
+Mallin keskeinen innovaatio on nimensä mukainen Fractional Max-Pooling. Perinteinen $2\times2$ max-pooling puolittaa kuvan koon jokaisella askeleella, mikä rajoittaa verkon syvyyttä pienillä kuvilla. Grahamin ratkaisussa skaalauskerroin on $\sqrt[3]{2}$ (noin 1,26) [^fractionalmp]. Tämä maltillisempi koon pienentäminen mahdollistaa huomattavasti syvemmät verkot ilman, että piirrekartat kutistuvat liian nopeasti $1\times1$-pikselin kokoon.
 
-Lisäksi menetelmä hyödyntää satunnaisuutta. Pooling-alueet voidaan valita joko limittäin (overlapping) tai erillisinä (disjoint), ja niiden sijainti arvotaan. Tämä tuo verkkoon sisäänrakennettua regularisointia, sillä verkko ei voi luottaa siihen, että tietyt piirteet löytyvät aina täsmälleen samasta kohdasta suhteessa pooling-ruudukkoon.
+Lisäksi menetelmä hyödyntää satunnaisuutta. Pooling-alueet voidaan valita joko limittäin (overlapping) tai erillisinä (disjoint) ja niiden sijainti arvotaan [^fractionalmp]. Kannattaa katsoa Figure 1 alkuperäisestä julkaisusta: se selventää asiaa, kuinka digitaalisessa kuvassa voi käyttää poolingia, joka ei ole kahdella jaollinen.
 
 #### Moderni "Head" -rakenne
 
-Verkon loppuosa poikkeaa myös perinteisestä. Sen sijaan, että piirrekartat litistettäisiin (flatten) ja syötettäisiin tiheille (Dense/Linear) kerroksille, malli käyttää $1\times1$ konvoluutiota (C1). Tämä kerros projisoi piirteet suoraan luokkien lukumäärää vastaavaksi vektoriksi.
+Verkon loppuosa poikkeaa myös tyypillisestä CNN:stä. Sen sijaan, että piirrekartat litistettäisiin (flatten) ja syötettäisiin tiheille (Dense/Linear) kerroksille, malli käyttää $1\times1$ konvoluutiota (C1) [^fractionalmp]. Tämä kerros projisoi piirteet suoraan luokkien lukumäärää vastaavaksi vektoriksi.
 
 #### Regularisointi ja koulutuksen erikoisuudet
 
-Koska malli on valtava suhteessa datasetin kokoon, regularisointi on kriittistä. Mallissa sovelletaan "kasvavaa dropoutia": ensimmäisissä piilotetuissa kerroksissa dropout on 0 %, ja se kasvaa lineaarisesti 50 %:iin verkon loppupäätä kohden.
+Koska malli on valtava suhteessa datasetin kokoon, regularisointi on kriittistä. Mallissa sovelletaan "kasvavaa dropoutia": ensimmäisissä piilotetuissa kerroksissa dropout on 0 %, ja se kasvaa lineaarisesti 50 %:iin verkon loppupäätä kohden. [^fractionalmp]
 
 Toinen tekninen erikoisuus liittyy verkon syötteen kokoon. Koska pooling-suhde on murtoluku, verkon vaatima syötekoko ei ole triviaali laskea. Käytännössä haluttu output-koko päätetään ensin, ja vaadittu input-koko lasketaan "takaperin" kertomalla kokoa skaalauskertoimella jokaisen kerroksen kohdalla. Tämä johtaa usein siihen, että alkuperäisiä kuvia on pehmustettava (padding) runsaasti.
 
 #### Inferenssi: Verkko on itsessään ensemble
 
-Pooling-vaiheen satunnaisuudesta johtuen saman kuvan ajaminen verkon läpi useaan kertaan tuottaa hieman erilaisia ennusteita. Tätä ominaisuutta hyödynnetään testausvaiheessa (inference). Lopullinen luokitus ei perustu yhteen ajokertaan, vaan usean (esim. 12) ajokerran keskiarvoon (Model Averaging). Tämä toimii ikään kuin "köyhän miehen ensemble-menetelmänä", parantaen luotettavuutta ilman tarvetta kouluttaa useita erillisiä verkkoja. Tätä ei ole toteutettu kurssin koodissa, mutta voit halutessasi kokeilla tätä itse. Se hoituisi jotakuinkin näin:
+Pooling-vaiheen satunnaisuudesta johtuen saman kuvan ajaminen verkon läpi useaan kertaan tuottaa hieman erilaisia ennusteita. Tätä ominaisuutta hyödynnetään testausvaiheessa (inference). Lopullinen luokitus ei perustu yhteen ajokertaan, vaan usean (esim. 12) ajokerran keskiarvoon (Model Averaging). Tämä toimii ikään kuin "köyhän miehen ensemble-menetelmänä", parantaen luotettavuutta ilman tarvetta kouluttaa useita erillisiä verkkoja. [^fractionalmp] Tätä ei ole toteutettu kurssin koodissa, mutta voit halutessasi kokeilla tätä itse. Se hoituisi jotakuinkin näin:
 
 ```python
 outputs = [model(image) for _ in range(12)]   # Run 12 times
@@ -299,7 +313,6 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
     *   **Dynaaminen padding:** Toteutuksessa käytetään dynaamista paddingia (`pad_total`). Miksi tämä on välttämätöntä juuri tässä arkkitehtuurissa, kun taas esimerkiksi VGG-verkossa pärjätään kiinteällä paddingilla?
     *   **Verkon "pää" (Head):** Miten `FMPNet`-luokan `forward`-metodin loppuosa eroaa perinteisestä `nn.Linear`-kerroksesta? Miksi tässä on käytetty $1\times1$ konvoluutiota (`convC1`)? Onko kenties niin, että matemaattisesti $1\times1$ konvoluutio $1\times1$ kokoisella spatiaalisella kartalla on identtisen täysin kytketyn kerroksen kanssa?
     *   **Ensemble-ennustaminen:** Miten mallin ennusteet lasketaan testausvaiheessa? Miksi sama kuva syötetään verkolle useita kertoja? Eikö neuroverkko olekaan deterministinen? Miksi minun toteutus toimii, vaikka siinä ei syötetä kuin kerran?
-    *   **Suotimien kasvu:** Miksi `filter_growth_rate` on toteutettu siten, että kanavien määrä kasvaa lineaarisesti ($k \times n$)? Tähän vastataan alkuperäisessä paperissa.
   
     Mallin kouluttamiseen meni opettajan GeForce RTX 3060 Ti:llä ==yli 11 tuntia== (300 epookkia, noin 2 min 17 sek per epookki). Saat kouluttaa mallin itse tai voit käyttää valmista mallia, joka on tallennettu tiedostoon `notebooks/gitlfs-store/502_cifar10_fractionalmaxp.pth`. Huomaa, että repositorio tulee kloonata Git LFS -tuen kanssa, jotta malli löytyy koneeltasi. Jos tämä on täysin vieras konsepti, lue: [How to Git | GitLab: LFS](https://sourander.github.io/how-to-git/kaytto/lfs/)
 
@@ -343,7 +356,7 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
     
     Mallin arkkitehtuuri löytyy LeCunin alkuperäisestä paperista [^lenet5]. Jos haluat olla uskollinenalkuperäiselle arkkitehtuurille, voit käyttää LeCunin tanh-aktivointifunktiota, jonka toteutus on $1.7159 \times \tanh(\frac{2}{3}x)$.
 
-    Alkuperäisessä paperissa mainitaan 32x32 syötekoko. MNIST on 28x28, joten voit lisätä kuviin 2 pikselin pehmusteen (padding) joka reunalle, jolloin kuvat ovat 32x32-kokoisia. Tämä prosessi liittyy paperin lauseeseen: *"In the first version, the images were centered in a 28 x 28 image by computing the center of mass of the pixels, and translating the image so as to position this point at the center of the 28x28 field In some instances, this 28x28 field was ex tended to 32x32 with background pixels"*.
+    Alkuperäisessä paperissa mainitaan 32x32 syötekoko. MNIST on 28x28, joten voit lisätä kuviin 2 pikselin reunuksen (padding) joka reunalle, jolloin kuvat ovat 32x32-kokoisia. Tämä prosessi liittyy paperin lauseeseen: *"In the first version, the images were centered in a 28 x 28 image by computing the center of mass of the pixels, and translating the image so as to position this point at the center of the 28x28 field In some instances, this 28x28 field was ex tended to 32x32 with background pixels"*.
 
     **Vaihtoehto 2: Modernisoitu LeNet-5**
 
@@ -369,6 +382,7 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 
 ## Lähteet
 
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
 [^fractionalmp]: Graham, B. *Fractional Max-Pooling*. University of Warwick. 2014 (version 4: 2015). https://doi.org/10.48550/arXiv.1412.6071
 [^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
 [^neocognition]: Fukushima, K. *Neocognitron: A Self-organizing Neural Network Model for a Mechanism of Pattern Recognition Unaffected by Shift in Position*. Princeton. https://www.cs.princeton.edu/courses/archive/spr08/cos598B/Readings/Fukushima1980.pdf
@@ -386,4 +400,4 @@ avg_output = torch.stack(outputs).mean(dim=0) # Average predictions
 [^lbp]: Ojala, T., Pietikäinen, M., & Mäenpää, T. *Multiresolution Gray Scale and Rotation Invariant Texture Classification with Local Binary Patterns*. IEEE Transactions on Pattern Analysis and Machine Intelligence, 24(7), 971-987. 2002. https://doi.org/10.1109/34.1000236
 [^sift]: Lowe, D. G. *Distinctive Image Features from Scale-Invariant Keypoints*. 2004. https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf
 [^pyisgurus]: Rosebrock, A. *PyImageSearch Gurus Course: 8.5.1 A CNN Primer*. https://www.pyimagesearch.com/pyimagesearch-gurus-course/
-[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+
