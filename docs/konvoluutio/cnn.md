@@ -194,6 +194,21 @@ Käsitellään lyhyesti näistä kenties yksinkertaisin kombinaatio: FAST + SIFT
 
     Bonus: jos aihe kiinnostaa enemmänkin, tutustu OpenCV:n dokumentaation osioon [Feature Detection and Description](https://docs.opencv.org/4.12.0/db/d27/tutorial_py_table_of_contents_feature2d.html). Jo pelkkä kuvien katselu voi konkretisoida aihetta.
 
+!!! info "Mitä näillä siis tekeekään?"
+
+    Jos jäi yhä vaivaamaan, mitä näillä piirrevektoreilla tekee, ja että eikös näitä synny joka kuvasta eri määrä, niin lyhyt vastaus:
+
+    1. Kerätään kaikista kuvista kaikki piirrevektorit (esim. SIFT). Tämä on vocabulary.
+    2. Klusteroidaan vocabulary:n piirrevektorit (esim. K-means) ja määritellään kunkin klusterin keskipiste "visuaaliseksi sanaksi".
+    3. Lasketaan kullekin kuvalle histogrammi, joka kuvaa, kuinka monta kertaa kukin visuaalinen sana esiintyy kyseisessä kuvassa.
+
+    Näistä voi sitten rakentaa: 
+    
+    * Google Reverse Image Search -tyyppisen sovelluksen, jossa syötetään kuva ja haetaan samankaltaisia kuvia.
+    * ...tai tyypillisen luokittelijan.
+
+    Pidempi ja visuaalisempi vastaus: [Pinecone | Bag of Visual Words](https://www.pinecone.io/learn/series/image-search/bag-of-visual-words/)
+
 ## Piirrevektorit konvoluutioverkoissa
 
 ### Arkkitehtuuri
