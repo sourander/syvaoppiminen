@@ -550,6 +550,12 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 
     Käytä `701_spacy_playground.py`-notebookia apuna esimerkiksi yllä olevan tekstin ymmärtämiseen. Voit kopioida ja liittää koodinpätkät ja kokeilla niitä itse. Notebookissa on lähinnä vain import ja mallin lataus valmiina.
 
+!!! question "Tehtävä: Sanavektorien vertailu"
+
+    Tämä tehtävä on vapaaehtoinen. Se vaatii suurehkon tiedoston lataamisen netistä, mikä voi olla rajoite joillekin.
+
+    Avaa `702_nvidia_pretrained_glove.py`-notebook ja tutustu koodiin. Suorita koodi ja tarkastele tuloksia. Tämä on oiva tapa tutustua suurella datalla koulutettuihin sanavektoreihin.
+
 ## Lähteet
 
 [^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.

@@ -91,6 +91,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 
 - [ ] Tehtävä: Embeddings
 - [ ] Tehtävä: SpaCY Playground
+- [ ] Tehtävä: Sanavektorien vertailu
 
 ## RNN ja jälkeläiset (710)
 
