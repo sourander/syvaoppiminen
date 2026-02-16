@@ -318,6 +318,16 @@ TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka pai
 
     Malli kouluttautui opettajan Macbook Pro:lla noin 1 minuutissa.
 
+!!! question "Tehtävä: Konekäännös (Seq2Seq + Attention)"
+
+    Tutustu `712_seq2seq_translation_tutorial.py`-tiedostoon, joka on Marimo-muotoon käännetty versio [NLP From Scratch: Translation with a Sequence to Sequence Network and Attention](https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html)-tutoriaalista. Tässä tehtävässä rakennetaan neuroverkko, joka kääntää englantia ranskaksi.
+
+    Malli hyödyntää [Sequence to Sequence](https://arxiv.org/abs/1409.3215) (seq2seq) -arkkitehtuuria, jossa kaksi RNN-verkkoa toimivat yhdessä: toinen enkoodaa syötteen ja toinen dekoodaa sen käännökseksi. Tämän lisäksi mallissa käytetään [Attention-mekanismia](https://arxiv.org/abs/1409.0473), joka antaa dekooderin keskittyä syötteen tiettyihin osiin käännöstä generoidessaan.
+
+    Tehtävänäsi on suorittaa Notebook, tutustua koodiin ja varmistaa, että ymmärrät Attention-mekanismin perusperiaatteen.
+
+    Malli kouluttautui opettajan Macbook Pro:lla noin 8 minuutissa.
+
 ## Lähteet
 
 [^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.
