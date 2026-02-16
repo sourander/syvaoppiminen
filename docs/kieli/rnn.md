@@ -328,6 +328,14 @@ TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka pai
 
     Malli kouluttautui opettajan Macbook Pro:lla noin 8 minuutissa.
 
+!!! question "Tehtävä: Kielimalli ja sanaulottuvuudet"
+
+    Tutustu `713_nvidia_language_model_embedding.py`-tiedostoon. Tämä on muokattu versio NVIDIA:n Learning Deep Learning -kirjan (ja videosarjan) esimerkistä. Tehtävässä koulutetaan LSTM-pohjainen kielimalli, joka ennustaa seuraavaa sanaa annetun kontekstin perusteella. Samalla malli oppii sanaulottuvuudet (word embeddings).
+
+    Tehtävänäsi on suorittaa Notebook ja tutustua koodiin. Kiinnitä erityisesti huomiota siihen, miten mallin oppimia embedding-vektoreita voidaan lopuksi hyödyntää etsimällä sanoille merkityksellisesti lähimpiä naapureita vektoriavaruudessa.
+
+    Malli kouluttautui opettajan Macbook Pro:lla noin 4 minuutissa.
+
 ## Lähteet
 
 [^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.

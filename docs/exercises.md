@@ -100,6 +100,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Sukunimien luokittelu Pt.2
 - [ ] Tehtävä: Sukunimien generointi
 - [ ] Tehtävä: Konekäännös (Seq2Seq + Attention)
+- [ ] Tehtävä: Kielimalli ja sanaulottuvuudet
 
 
 ```
