@@ -271,21 +271,6 @@ much simpler to compute and implement"
 >
 > — Cho et. al. [^gru]
 
-## Mallien arviointi (Metriikat)
-
-TODO! Tekstiä tuottavien tai kääntävien mallien laadun mittaaminen on vaikeampaa kuin luokittelun, sillä "oikeita" vastauksia voi olla useita, ja siksi yksinkertainen tarkkuusprosentti (accuracy) ei riitä... tai ei ole edes määriteltävissä.
-
-### Kielimallinnus: Perplexity
-
-TODO! Perplexity (PPL) mittaa sitä, kuinka "hämmentynyt" tai epävarma kielimalli on ennustaessaan seuraavaa sanaa; matalampi arvo kertoo paremmasta kyvystä mallintaa kielen rakennetta. Matemaattisesti se voidaan johtaa mallin ristientropiasta ja on standardimittari perinteisille kielimalleille.
-
-### Konekäännös ja generointi: BLEU ja ROUGE
-
-TODO! BLEU on konekäännösten standardimittari, joka laskee n-grammien päällekkäisyyttä koneen tuotoksen ja ihmisen tekemän referenssin välillä painottaen tarkkuutta (precision).
-
-TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka painottaa saantia (recall) eli sitä, kuinka suuri osa referenssitekstin sisällöstä löytyi koneen vastauksesta.
-
-
 ## Tehtävät
 
 !!! question "Tehtävä: RNN videoiden avulla"
@@ -340,7 +325,7 @@ TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka pai
 
     Tutustu `712_seq2seq_translation_tutorial.py`-tiedostoon, joka on Marimo-muotoon käännetty versio [NLP From Scratch: Translation with a Sequence to Sequence Network and Attention](https://pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html)-tutoriaalista. Tässä tehtävässä rakennetaan neuroverkko, joka kääntää ranskaa englanniksi.
 
-    Malli hyödyntää [Sequence to Sequence](https://arxiv.org/abs/1409.3215) (seq2seq) -arkkitehtuuria, jossa kaksi RNN-verkkoa toimivat yhdessä: toinen enkoodaa syötteen ja toinen dekoodaa sen käännökseksi. Tämän lisäksi mallissa käytetään [Attention-mekanismia](https://arxiv.org/abs/1409.0473), joka antaa dekooderin keskittyä syötteen tiettyihin osiin käännöstä generoidessaan.
+    Malli hyödyntää [Sequence to Sequence](https://arxiv.org/abs/1409.3215) (seq2seq) -arkkitehtuuria, jossa kaksi RNN-verkkoa toimivat yhdessä: toinen enkoodaa syötteen ja toinen dekoodaa sen käännökseksi. Tämän lisäksi mallissa käytetään [Attention-mekanismia](https://arxiv.org/abs/1409.0473), joka antaa dekooderin keskittyä syötteen tiettyihin osiin käännöstä generoidessaan. Attention käydään läpi tarkemmin seuraavassa [Transformers](transformers.md)-osiossa, joten voit palata siltä osin tähän Notebookiin myöhemmin.
 
     Tehtävänäsi on suorittaa Notebook, tutustua koodiin ja varmistaa, että ymmärrät Attention-mekanismin perusperiaatteen.
 
@@ -353,6 +338,10 @@ TODO! ROUGE on vastaava, erityisesti tiivistelmissä käytetty mittari, joka pai
     Tehtävänäsi on suorittaa Notebook ja tutustua koodiin. Kiinnitä erityisesti huomiota siihen, miten mallin oppimia embedding-vektoreita voidaan lopuksi hyödyntää etsimällä sanoille merkityksellisesti lähimpiä naapureita vektoriavaruudessa.
 
     Malli kouluttautui opettajan Macbook Pro:lla noin 4 minuutissa.
+
+    !!! tip
+
+        Huomaa, että tämä ei siis ole encoder-decoder -malli vaan iteratiivisesti ajettu seq2vec. Jos haluat tutustua Magnus Ekmanin versioon encoder-decoder -arkkitehtuurista, joka on toteutettu LSTM:llä, voit tutustua LDL:n repositoriosta löytyvään [v7_3_neural_machine_translation.ipyn](https://github.com/NVDLI/LDL/blob/main/pt_framework/v7_3_neural_machine_translation.ipynb) Jupyter Notebookiin. Malli on vastaava kuin `712_seq2seq_translation_tutorial.py`-tiedostossa, mutta kohtalaisen tiiviillä koodilla toteutettu.
 
 ## Lähteet
 
