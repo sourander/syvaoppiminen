@@ -479,7 +479,7 @@ queen_vector = king_vector - man_vector + woman_vector
 
 ### Samankaltaisuus numerona
 
-Johdatus koneoppimiseen -kurssilta sinulle pitäisi olla tuttu käsite euklidinen etäisyys, joka mittaa suoraa etäisyyttä kahden vektorin välillä. Kyseessä on *linnuntie-etäisyys*. Piirrevektorin kohdalla tämä ei kuitenkaan ole paras tapa mitata samankaltaisuutta, koska se on herkkä vektoreiden normille eli pituudelle. Siksi käytetään usein kosinista samankaltaisuutta, joka mittaa vektoreiden välistä kulmaa, eikä niinkään etäisyyttä. [^buildingaiagents]
+Johdatus koneoppimiseen -kurssilta sinulle pitäisi olla tuttu käsite euklidinen etäisyys, joka mittaa suoraa etäisyyttä kahden vektorin välillä. Kyseessä on *linnuntie-etäisyys*. Piirrevektorin kohdalla tämä ei kuitenkaan ole paras tapa mitata samankaltaisuutta, koska se on herkkä vektoreiden normille eli pituudelle. Siksi käytetään usein kosinista samankaltaisuutta, joka mittaa vektoreiden välistä kulmaa, eikä niinkään etäisyyttä. [^buildingaiagents] Ajatus itsessään on hyvin vanha. Ainakin itse sen esittelijöistä on Zellig Harris julkaisussa "Distributional Structure" vuodelta 1954. [^harris1954] PsycNetin tiivistelmä on seuraava: *"Harris maintains that it is possible to define a linguistic structure solely in terms of the "distributions" (= patterns of co-occurrences) of its elements. There is no parallel meaning-structure which can aid in describing formal structure. Meaning is partly a function of distribution."* [^psycnetharris1954]
 
 Tämä *cosine similarity* on pistetulon normalisoitu versio. Se vastaa kahden vektorin välisen kulman kosinia, mistä nimi **kosininen samankaltaisuus** [^buildingaiagents]:
 
@@ -575,6 +575,8 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 [^nlp101]: Kulshreshta, R. *NLP 101: Word2Vec — Skip-gram and CBOW*. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
 [^bojanowski2016]: Bojanowski, P. et. al. *Enriching Word Vectors with Subword Information*. 2016. https://arxiv.org/pdf/1607.04606
 [^buildingaiagents]: Raieli, S. & Iuculano, G. *Building AI Agents with LLMs, RAG, and Knowledge Graphs*. Packt. 2025.
+[^harris1954]: Harris, Z. *Distributional Structure*. Word. 1954. https://www.its.caltech.edu/~matilde/ZelligHarrisDistributionalStructure1954.pdf
+[^psycnetharris1954]: APA PsycNet. *Distributional Structure*. PsycINFO Database Record. 2016. https://psycnet.apa.org/record/1956-02807-001
 [^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
 [^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
 [^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
