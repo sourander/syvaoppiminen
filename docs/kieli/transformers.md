@@ -120,7 +120,7 @@ Intuition tasolla nämä kolme termiä voidaan ymmärtää seuraavasti:
 * **Key (Avain):** Toimii kuten tietokannan avain indeksoinnissa. Sekvenssin kaikilla jäsenillä on oma avain. [^llmfromscratch]
 * **Value (Arvo):**  Vastaa avain-arvo -parin varsinaista sisältöä tietokannassa. [^llmfromscratch]
   
-Value edustaa siis haluttua informaatiota. Kun malli on avainten perusteella päätellyt, mitkä syötteen osat ovat olennaisimpia kyselylle, se hakee hyödynnettäväksi niitä vastaavat arvot. [^llmfromscratch]
+Value edustaa siis haluttua informaatiota. Kun malli on avainten perusteella päätellyt, mitkä syötteen osat ovat olennaisimpia kyselylle, se hakee hyödynnettäväksi niitä vastaavat arvot. (BY-NC-ND) [^llmfromscratch]
 
 ![](../images/720_TransformerBlockSACross.svg)
 
@@ -136,7 +136,9 @@ Attention-mekanismin menestys on synnyttänyt useita variaatioita eri tappiofunk
 >
 > — Smolyakov [^ml-algos-depth]
 
-!TODO! Tähän Understanding Deep Learning -kirjasta lainattu kuva self-attentionista. Ja selitys.
+![](../images/720_TransformerBlockSA.svg)
+
+**Kuva 3:** *Self-attention-mekanismissa sama sekvenssi toimii sekä queryn, keyn että valuen laskennan perustana. Tämä katkaisee kytköksen decoderiin. (BY-NC-ND)* [^udlbook]
 
 Self-attentionin perusajatusta voidaan havainnollistaa kirjastometaforalla. Kuvittele, että etsit kirjastosta tietoa **Marsin kolonialisointia** käsittelevää esseetä varten (*Query*). Sinun ei tarvitse lukea jokaista hyllyssä olevaa kirjaa kannesta kanteen (*Value*) löytääksesi oikean teoksen. Sen sijaan selaat kirjojen selkämyksiä ja otsikoita (*Key*) löytääksesi ne, jotka vastaavat hakua. Toisin sanoen, self-attention on menetelmä, jonka avulla malli voi etsiä kontekstista juuri sen tiedon tai "edustuksen", jota se sillä hetkellä tarvitsee. [^buildingaiagents]
 
