@@ -30,8 +30,6 @@ Transformer-arkkitehtuuri, esitelty vuonna 2017, mullisti tätä siten, että *a
 
 ## Attention
 
-### Attention-mekanismi
-
 On hyvä pohtia heti alkuun motivaatiota: miksi tarvitsemme attentionia? Olet tutustunut RNN:n kohdalla encoder-decoder-arkkitehtuuriin, jossa encoderin tehtävänä on tiivistää koko syötesekvenssi yhdeksi vektoriksi, joka sitten dekoodataan tulosteeksi. Tämän tiivistyksen tulisi sisältää ==kaikki oleennainen informaatio== syötteestä. [^ldl]
 
 ```mermaid
@@ -59,33 +57,7 @@ Kykenetkö tulkitsemaan lauseen sisällön kertalukemalla vasemmalta oikealle, v
     Kyseinen lause on poimittu Kielikellon artikkelista, jossa käsitellään säädöskielen virke- ja lauserakenteen ongelmia. Käy kurkkaamassa, kuinka Kielikellon artikkelissa sama lause on selkeytetty listan avulla. [^kielikello]
 
 
-Tavallisen, aiemmin kurssilta tutun seq2seq RNN:n **kiinteän pituuden kontekstivektorista** tulee siis pullonkaula [^ml-algos-depth] [^llmfromscratch]. Attention-mekanismi tarjoaa tähän ratkaisuna **dynaamisen kontekstivektorin**, joka lasketaan uudestaan joka ikiselle dekooderin aika-askeleelle [^buildingaiagents]. Alla tätä on avattu koodiesimerkin avulla:
-
-```python
-# Input sequence
-sentence = "Pizza is life"
-tokens = tokenize(sentence)
-
-# without Attention
-sentence_summary = encode(tokens)
-print(sentence_summary)
-# Out: [0.1, 0.3, 0.5, ..., 0.2] # Pizza is life
-
-# with Attention
-all_timesteps = encode(tokens)
-print(all_timesteps)
-# Out:
-# [
-#   [0.1, 0.0, 0.8, ..., 0.1],  # Pizza
-#   [0.2, 0.9, 0.4, ..., 0.4],  # is
-#   [0.3, 0.2, 0.1, ..., 0.3],  # life
-# ]
-
-# And then, for each decoding step:
-decoder_output = decode(sentence_summary or all_timesteps)
-```
-
-Tällöin Attention Decoder voi itsenäisesti päättää, mihin se keskittää huomionsa dekoodatessaan käännöstä.
+Tavallisen, aiemmin kurssilta tutun seq2seq RNN:n **kiinteän pituuden kontekstivektorista** tulee siis pullonkaula [^ml-algos-depth] [^llmfromscratch]. Attention-mekanismi tarjoaa tähän ratkaisuna **dynaamisen kontekstivektorin**, joka lasketaan uudestaan joka ikiselle dekooderin aika-askeleelle [^buildingaiagents]. Tällöin Attention Decoder voi itsenäisesti päättää, mihin se keskittää huomionsa dekoodatessaan käännöstä.
 
 > "In simple words, during translation, we have a context vector that is dynamically updated and tells us how much attention we should give to each part of the input sequence."
 >
@@ -128,9 +100,20 @@ Value edustaa siis haluttua informaatiota. Kun malli on avainten perusteella pä
 
 Näillä kaikilla kolmella – Q, K, V – on erilaiset roolit, mutta niiden kaikkien laskenta on samankaltaista: ne saadaan lineaarisella projektiolla syöte-embeddingeistä. Tämä tarkoittaa, että syötteen embeddingit muunnetaan kolmeen eri avaruuteen (Q, K ja V) käyttämällä kolmea erillistä painomatriisia. Näin malli oppii erottamaan, miten se hakee tietoa (Q), miten se vertaa sitä syötteeseen (K) ja mitä tietoa se lopulta hyödyntää (V). [^transformers-def-guide]
 
+## Transformer-arkkitehtuuri
+
+Alkuperäisen Attention is All you Need -julkaisun transformer-arkkitehtuuri on pähkinänkuoressa [^ldl] [^attention2017]:
+
+* Encoder-Decoder-arkkitehtuuri, jossa on attention-mekanismi.
+* ... tarkemmin multi-head self-attention.
+* Positionaalinen koodaus mallintaa sanajärjestystä.
+* Ei rekurrenssia, vaan kaikki laskelmat tehdään rinnakkain.
+
+Tutustutaan alla sen pariin merkittävimpään osatekijään otsikko kerrallaan.
+
 ### Self-Attention
 
-Attention-mekanismin menestys on synnyttänyt useita variaatioita eri tappiofunktioita käyttäen. Näistä erityisesti *self-attention* on merkittävä, sillä se poimii informaatiota suoraan syötteestä itsestään ilman tarvetta verrata sitä mihinkään ulkoiseen tietoon. [^buildingaiagents]
+Attention-mekanismin menestys on synnyttänyt useita variaatioita eri tappiofunktioita käyttäen. Näistä erityisesti *self-attention* on merkittävä, sillä se poimii informaatiota suoraan syötteestä itsestään ilman tarvetta verrata sitä mihinkään ulkoiseen tietoon. [^buildingaiagents] Toisin sanoen linkki dekooderiin katkaistaan: myös $Q$ tulee syötteestä; ei enkooderin piilotiloista.
 
 > "Self-attention is the key component of transformer architecture. A transformer is a Seq2Seq model that uses attention in the encoder as well as the decoder, thus eliminating the need for RNNs"
 >
@@ -146,21 +129,53 @@ Self-attentionin perusajatusta voidaan havainnollistaa kirjastometaforalla. Kuvi
 
     Termien sekaannusvaara. ==Attention==-mekanismit mahdollistavat mallien keskittymisen eri osiin sekvenssejä, joita kutsutaan queryksi, keyksi ja valueksi. ==Self-attention== puolestaan viittaa erityisesti mekanismiin, jossa sama sekvenssi toimii queryn, keyn ja valuen laskennan perustana, mikä mahdollistaa sisäisten suhteiden ymmärtämisen sekvenssin sisällä. [^azure-book]
 
+### Multi-Head Self-Attention
 
-## Transformer-arkkitehtuuri
+Jos kytket samaan inputtiin monta paralleelia self-attention blokkia, sinulla on **multi-head**-ratkaisu käsissäsi. Kullakin niistä on oma $Q$, $K$ ja $V$ matriisi ja kukin oppii omat painonsa. Lopuksi lähdöt ketjutetaan (engl. concatenate) ja yhdistetään taas kerran uudella lineaarisella projisiolla – eli tarvitaan uusia koulutettavia parametreja. Kurssikirjassa multi-headin merkitystä kuvataan näin: *"Multiple heads seem to be necessary to make self-attention work well. It has been speculated that they make the self-attention network more robust to bad initializations."* [^udlbook]
 
-Transformer-arkkitehtuuri on pähkinänkuoressa [^ldl]:
+Voita ja kumppanit tutkivat 2019 asiaa, ja päättelivät, että *"only a small subset of heads appear to be important for the translation task. Important heads have one or more interpretable functions in the model, including attending to adjacent
+words and tracking specific syntactic relations.* [^voita2019]. Eli eri päät löytävät erilaisia tokeneiden välisiä kytköksiä, mutta kaikki niistä eivät ole välttämättä merkityksellisiä, joten mallin parametrikokoa voi pienentää *pruning*-tekniikalla: eli katkomalla päitä kuin Hercules Hydralta.
 
-* Encoder-Decoder-arkkitehtuuri, jossa on attention-mekanismi.
-* Encoder-Decoder käyttää multi-head self-attentionia.
-* Positionaalinen koodaus mallintaa sanajärjestystä.
-* Ei rekurrenssia, vaan kaikki laskelmat tehdään rinnakkain.
+![](../images/720_TransformerBlock.svg)
 
-!TODO! Tähän ainakin selitykseen transformer block. Haluanko viitata 3Blue1Brown:n videoon katsomaan lisää, kenties?
+**Kuva 4:** *Tähän mennessä vastaan tulleet osatekijät kun kytkee yhteen, ja ujuttaa väliin layer normalizationit regulaatoimaan, samme kuvassa näkyvän transformer-blokin: multi-head self-attention, layer normalization, MLP sekä vielä yksi layer normalization. Näitä voi kytkeä peräkkäin samalla tavalla kuin vaikkapa aiemmin nähtyjä Conv2D-blokkeja. (BY-NC-ND) [^udlbook]*
+
+Se, mitä tässä materiaaleissa ei käsitellä, on ==masked== multi-head self-attention, joka on osa Transformer-dekoorin rakennetta.
 
 ### Positional Encoding
 
-!TODO! Tarviiko edes omaa lukua? Jos, niin pitää lisätä luku myös muille arkkitehtuurin ominaispiirteille. Tod.näk. poistan.
+Transformer-arkkitehtuurissa kaikki laskennat tehdään rinnakkain, paralleelisti, mikä ajaa siihen, että RNN:n sekvenssijärjestyksen tuoma sanajärjestys kadotetaan. Ongelma ratkaistaan lisäämällä *positional encoding* kuhunkin embedding-vektoriin. Tämä encoding on vektori, joka ynnätään elementti elementiltä syötteeseen. Eli jos syötteen embedding on $e$ ja positionaalinen encoding on $p$, syötteen embedding muunnetaan $e' = e + p$. [^ldl] Tämän järjestystä kuvaavan vektorin voi joko oppia koulutuksessa tai laskea. Alkuperäisessä artikkelissa käytettiin laskukaavaa, joka hyödyntää sinin ja kosinin funktioita eri taajuuksilla. [^attention2017] Tämä kaava on poikkeaa hieman parillisten ja parittomien indeksien osalta, mutta perusidea on sama: eri taajuuksilla olevat sinit ja kosinit luovat uniikkeja positionaalisia koodeja, jotka auttavat mallia erottamaan sanojen järjestyksen. Kaava on seuraava:
+
+$$
+element_{(pos, i)} = \begin{cases}
+\sin\left(\frac{pos}{10000^{\frac{i}{d}}}\right) & \text{if } i \text{ is even} \\
+\cos\left(\frac{pos}{10000^{\frac{i-1}{d}}}\right) & \text{if } i \text{ is odd}
+\end{cases}
+$$
+
+Jossa:
+
+* $pos$ on sanan paikka sekvenssissä (esim. 0, 1, 2, ...)
+* $i$ on embedding-vektorin elementin indeksi (esim. 0, 1, 2, ...)
+* $d$ on embedding-vektorin koko (esim. 512)
+
+### Toiminta kokonaisuutena
+
+3Blue1Brown on tehnyt sen verran hyvää työtä transformer-arkkitehtuurin kokonaisuuden toiminnasta, joten viiton sinut suoraan katsomaan hänen videotaan. Video on upotettu alle.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eMlx5fFNoYc?si=998SG9QHp6ENmjuQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+**Video 1:** *3Blue1Brownin video, Attention in transformers, step-by-step | Deep Learning Chapter 6, selventää hyvin attention-mekanismia transformer-arkkitehtuurissa*
+
+On äärimmäisen suositeltavaa katsoa myös soittolistan seuraava video, [How might LLMs store facts | Deep Learning Chapter 7](https://youtu.be/9-Jl0dxWQs8?si=1tflE3dKxDw7baCv), joka selventää, mihin (kenties) tieto tallentuu transformer-mallissa. Eli siis: kuinka malli kykenee jatkamaan lausetta, joka vaatii tosielämän faktatietoa, kuten *"Mika Häkkinen on kuuluisa urheilija lajissa..."*.
+
+On syytä huomata, että vaikka Transformer ei sisällä rekursiivisia tai konvoluutiokerroksia perinteisessä mielessä, dekooderi toimii autoregressiivisesti – se tuottaa sanoja yksi kerrallaan ja syöttää edellisen tulosteen takaisin seuraavan askeleen syötteeksi. Tämä muistuttaa RNN:n takaisinkytkentää, mutta liittyy mallin käyttötapaan eikä itse arkkitehtuuriin. [^ldl]
+
+Jos arkkitehtuuria vertaa konvoluutioverkkoihin, on kiintoisaa, että vaikka Transformer ei eksplisiittisesti hyödynnä konvoluutioita, self-attention-kerrokset oppivat käytännössä usein konvoluutiomaisia operaatioita painojen jakamisen kautta. Oleellinen ero kuitenkin on, että self-attention voi kohdistua mihin tahansa syötteen kohtaan, kun taas konvoluutio rajautuu vain ytimen (engl. *kernel*) kattamiin naapuripositioihin. [^ldl]
+
+Lopulta tätä kokonaisuutta voi tiivistää siten, että kyseessä on yhä enkooderi-dekooderi-arkkitehtuuri, mutta rinnakkaistettavuus erottaa sen RNN-pohjaisista malleista. Alkuperäisessä julkaisussa arkkitehtuuria käytettiin nimenomaan kääntämiseen, mutta Transformer suoriutuu myös muista tehtävästä. Pelkästään kielen käsittelyssä siitä löytyy muunnelmia, kuten GPT ja BERT. [^ldl]
+
+
 
 ## Arkkitehtuurin variaatiot
 
@@ -301,20 +316,38 @@ TODO! Obvious.
 
 TODO! Obvious.
 
+## Tehtävät
+
+!!! question "Tehtävä: Perplexity"
+
+    Aja tiedosto `720_perplexity.py`. Kyseessä on **Transformers - The definitive Guide** -kirjan [^transformers-def-guide] esimerkki, joka on toteutettu PyTorchilla. Koodi on muutoin samaa, mutta se on saatettu yhteen Suomen kielen kanssa. Tutustu koodiin ja käytä sitä leikkikenttenä. Lopussa on soluja, jotka sallivat sinun selvittää jonkin keksimäsi lauseen PPL-arvon, näin:
+
+    ```python
+    Perplexity("Ainola on säveltäjä Jean Sibeliuksen ja hänen puolisonsa Aino Sibeliuksen asuintalo, joka on vuodesta 1974 alkaen toiminut kotimuseona")
+    ```
+
+    Lause on lainaus [Ainola](https://fi.wikipedia.org/wiki/Ainola)-artikkelista suomenkielisestä Wikipediasta. Wikipediaa on käytetty yhtenä lähteenä käyttämämme mallin `LumiOpen/Viking-7B` koulutuksessa. Huomaa, että mallin ajaminen GPU:lla vaatii noin 16 GB VRAM:ia. CPU:lla ajettaessa et saa Out Of Memory -varoituksia, mutta malli on toki hieman hidas.
+
+!!! question "Tehtävä: ???"
+
+    Tutustu `721_neural_machine_translation_transformer.py`-tiedostoon. Tämä on muokattu versio NVIDIA:n Learning Deep Learning -kirjan (ja videosarjan) esimerkistä. Tehtävässä koulutetaan Transformers-malli kääntämään yhdestä kielestä toiseen.
+
+    20 epookin koulutus kesti opettajan Macbook:lla noin 12.5 minuuttia. Huomaa, että MPS ei ole tuettu, joten koulutus tapahtui CPU:lla. Ubuntu-koneella meni noin 1.5 minuuttia GPU:lla.
 
 ## Lähteet
 
 [^attention2017]: Vaswani, A. et. al. *Attention is All You Need*. 2017. https://arxiv.org/abs/1706.03762
-[^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.
-[^kielikello]: Virtaniemi, A. *Kiiloja ja sokkeloita. Säädöskielen virke- ja lauserakenteen ongelmia*. 1992. https://kielikello.fi/kiiloja-ja-sokkeloita-saadoskielen-virke-ja-lauserakenteen-ongelmia/
-[^nimikirja]: 1322/1989. *Nimikirjan pitäminen eräistä henkilöstöryhmistä*. https://www.finlex.fi/fi/lainsaadanto/1989/1322
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^ml-algos-depth]: Smolyakov, V. *Machine Learning Algorithms in Depth*. Manning. 2025.
 [^buildingaiagents]: Raieli, S. & Iuculano, G. *Building AI Agents with LLMs, RAG, and Knowledge Graphs*. Packt. 2025.
-[^ml-q-ai]: Raschka, S. *Machine Learning Q and AI*. No Starch Press. 2024.
-[^transformers-def-guide]: Koenigstein, N. *Transformers: The Definitive Guide*. O'Reilly. 2026.
-[^comet]: Morgan, A. *Perplexity for LLM Evaluation*. 2024. https://www.comet.com/site/blog/perplexity-for-llm-evaluation/
-[^azure-book]: Esposito, F. *Programming Large Language Models with Azure Open AI: Conversational programming and prompt engineering with LLMs*. Microsoft Press. 2024.
+[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
+[^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.
+[^nimikirja]: 1322/1989. *Nimikirjan pitäminen eräistä henkilöstöryhmistä*. https://www.finlex.fi/fi/lainsaadanto/1989/1322
+[^kielikello]: Virtaniemi, A. *Kiiloja ja sokkeloita. Säädöskielen virke- ja lauserakenteen ongelmia*. 1992. https://kielikello.fi/kiiloja-ja-sokkeloita-saadoskielen-virke-ja-lauserakenteen-ongelmia/
+[^ml-algos-depth]: Smolyakov, V. *Machine Learning Algorithms in Depth*. Manning. 2025.
 [^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
 [^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+[^transformers-def-guide]: Koenigstein, N. *Transformers: The Definitive Guide*. O'Reilly. 2026.
+[^azure-book]: Esposito, F. *Programming Large Language Models with Azure Open AI: Conversational programming and prompt engineering with LLMs*. Microsoft Press. 2024.
+[^voita2019]: Voita, E., Talbot, D., Moiseev, F., Sennrich, R. & Titov, I. *Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned*. 2019. https://arxiv.org/abs/1905.09418
+[^ml-q-ai]: Raschka, S. *Machine Learning Q and AI*. No Starch Press. 2024.
+[^comet]: Morgan, A. *Perplexity for LLM Evaluation*. 2024. https://www.comet.com/site/blog/perplexity-for-llm-evaluation/

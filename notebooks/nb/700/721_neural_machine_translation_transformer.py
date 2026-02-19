@@ -834,22 +834,27 @@ def _(
             Transformer,
         )
 
-        print(f'Epoch {i+1}/{EPOCHS} loss: {train_loss:.4f} - acc: {train_acc:0.4f} - val_loss: {test_loss:.4f} - val_acc: {test_acc:0.4f}')
+        print(f'Epoch {i+1}/{EPOCHS} loss: {train_loss:.4f} - '
+              f'acc: {train_acc:0.4f} - val_loss: {test_loss:.4f} - '
+              f'val_acc: {test_acc:0.4f}')
 
         # Loop through samples to see result
         epoch_test_input = []
         epoch_test_target = []
         epoch_pred_seq = []
         for (test_input, test_target) in zip(sample_input_data,
-                                             sample_target_data):
+                                             sample_target_data):    
             # Run a single sentence through encoder model.
             x = np.reshape(test_input, (1, -1))
             inputs = torch.from_numpy(x)
             inputs = inputs.to(device)
-            # Create padding mask for encoder (though usually single sentence doesn't have padding meaningful if not batched with others, but good practice if input had padding)
+            # Create padding mask for encoder (though usually single 
+            # sentence doesn't have padding meaningful if not batched 
+            # with others, but good practice if input had padding)
             # Here test_input might have padding if it was padded to MAX_LENGTH.
             encoder_pad_mask = (inputs == PAD_INDEX).float()
-            encoder_pad_mask = encoder_pad_mask.masked_fill(encoder_pad_mask == 1, float('-inf'))
+            encoder_pad_mask = encoder_pad_mask.masked_fill(
+                encoder_pad_mask == 1, float('-inf'))
 
             intermediate_states = encoder_model(inputs, encoder_pad_mask)
 
@@ -874,16 +879,15 @@ def _(
                 if word_index == STOP_INDEX:
                     break
                 x = np.append(x, [[word_index]], axis=1)
-            src_words = tokens_to_words(src_tokenizer, test_input)
-            epoch_test_input.append(src_words)
-            dest_words = tokens_to_words(dest_tokenizer, test_target)
-            epoch_test_target.append(dest_words)
-            pred_words = tokens_to_words(dest_tokenizer, pred_seq)
-            epoch_pred_seq.append(pred_words)
-            print(src_words)
-            print(dest_words)
-            print(pred_words)
-            print('\n\n')
+
+            # Add all tested sentences into history for plotting purposes
+            epoch_test_input.append(
+                tokens_to_words(src_tokenizer, test_input))
+            epoch_test_target.append(
+                tokens_to_words(dest_tokenizer, test_target))
+            epoch_pred_seq.append(
+                tokens_to_words(dest_tokenizer, pred_seq))
+
         history["test_input"].append(epoch_test_input)
         history["test_target"].append(epoch_test_target)
         history["pred_seq"].append(epoch_pred_seq)

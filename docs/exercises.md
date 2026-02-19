@@ -102,5 +102,10 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Konekäännös (Seq2Seq + Attention)
 - [ ] Tehtävä: Kielimalli ja sanaulottuvuudet
 
+## Transformers (999)
+
+- [ ] Tehtävä: Perplexity
+- [ ] Tehtävä: ???
+
 
 ```
