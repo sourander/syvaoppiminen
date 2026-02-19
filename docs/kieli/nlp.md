@@ -578,6 +578,6 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 [^harris1954]: Harris, Z. *Distributional Structure*. Word. 1954. https://www.its.caltech.edu/~matilde/ZelligHarrisDistributionalStructure1954.pdf
 [^psycnetharris1954]: APA PsycNet. *Distributional Structure*. PsycINFO Database Record. 2016. https://psycnet.apa.org/record/1956-02807-001
 [^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
+[^bpe]: Sennrich, R. et. al. *Neural Machine Translation of Rare Words with Subword Units*. 2016. https://arxiv.org/abs/1508.07909
 [^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
 [^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
-[^bpe]: Sennrich, R. et. al. *Neural Machine Translation of Rare Words with Subword Units*. 2016. https://arxiv.org/abs/1508.07909
