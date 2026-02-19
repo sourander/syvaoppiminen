@@ -175,8 +175,8 @@ def _(mo):
     | Hyperparameter         | What it controls                    | Memory impact level         | How it affects memory                                         | Scaling behavior                          |
     | ---------------------- | ----------------------------------- | --------------------------- | ------------------------------------------------------------- | ----------------------------------------- |
     | **BATCH_SIZE**         | Number of samples per training step | 🔴  | Stores activations & gradients for all samples simultaneously | **Linear** with batch size                |
-    | **MAX_LENGTH**         | Max tokens per sequence             | 🔴  | Self-attention memory grows with sequence length              | ~O(L²) for attention + linear activations |
-    | **LAYER_SIZE**         | Hidden dimension of Transformer     | 🔴 | Controls size of attention & feed-forward layers              | Roughly **quadratic** with layer size     |
+    | **MAX_LENGTH**         | Max tokens per sequence             | 🔴  | Self-attention memory grows with sequence length              | ~O(L²) for attention matrix               |
+    | **LAYER_SIZE**         | Hidden dimension of Transformer     | 🔴 | Controls size of attention & feed-forward layers              | Roughly **quadratic** due to weight matrices |
     | **EMBEDDING_WIDTH**    | Embedding vector size               | 🟠 | Affects embedding tables and intermediate tensors             | Linear                                    |
     | **NUM_HEADS**          | Attention heads                     | 🟠 | Splits layer size across heads; adds some overhead            | Small increase if total dim fixed         |
     | **MAX_WORDS**          | Vocabulary size                     | 🟠 | Embedding + output softmax matrices scale with vocab          | Linear with vocab                         |
