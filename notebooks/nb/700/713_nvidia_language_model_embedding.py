@@ -25,6 +25,7 @@ def _(mo):
     - **Copyright**: (c) 2021 NVIDIA
     - **Modifications**:
         - Stylistic changes and conversion to Marimo
+        - Added MPS as a device option
         - Replaced TensorFlow/Keras `Tokenizer` and `text_to_word_sequence` with pure Python equivalents.
         - Copied the training function from [utilities.py](https://github.com/NVDLI/LDL/blob/main/pt_framework/utilities.py)
         - Separated logic from `train_model` into functions `train_epoch` and `validate_epoch`.
@@ -77,11 +78,21 @@ def _(mo):
 def _():
     import torch
     import torch.nn as nn
-    from sklearn.model_selection import train_test_split
-    from torch.utils.data import TensorDataset, DataLoader
     import numpy as np
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    from sklearn.model_selection import train_test_split
+    from torch.utils.data import TensorDataset, DataLoader
+
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
+        print(f"Using device: {device}")
+    elif torch.cuda.is_available():
+        device = torch.device("cuda")
+        print(f"Using device: {device}")
+    else:
+        device = torch.device("cpu")
+        print(f"Using device: {device}")
+
     EPOCHS = 32
     BATCH_SIZE = 256
     INPUT_FILE_NAME = './data/books/frankenstein.txt'
@@ -398,7 +409,7 @@ def _(
             self.state = None
             self.use_state = False
             self.embedding_layer = nn.Embedding(MAX_WORDS, EMBEDDING_WIDTH)
-        
+
             # Default is -1, 1.
             nn.init.uniform_(self.embedding_layer.weight, -0.05, 0.05) 
             self.lstm_layers = nn.LSTM(
@@ -430,7 +441,7 @@ def _(
                 x = self.lstm_layers(x)
             # Store most recent internal state.
             self.state = (x[1][0].detach().clone(), x[1][1].detach().clone()) 
-        
+
             x = self.dropout_layer(x[1][0][1])
             x = self.linear_layer(x)
             x = self.relu_layer(x)
