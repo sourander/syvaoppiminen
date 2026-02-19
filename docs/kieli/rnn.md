@@ -346,11 +346,11 @@ much simpler to compute and implement"
 ## Lähteet
 
 [^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.
+[^gru]: Cho, K., van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., & Bengio, Y. *Learning phrase representations using RNN encoder-decoder for statistical machine translation*. 2014. https://arxiv.org/abs/1406.1078
 [^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
-[^karpathy]: Karpathy, A. "The Unreasonable Effectiveness of Recurrent Neural Networks". 2015. https://karpathy.github.io/2015/05/21/rnn-effectiveness/
 [^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
-[^towardds]: Dancker, J. *A Brief Introduction to Recurrent Neural Networks*. Towards Data Science. 2022. https://towardsdatascience.com/a-brief-introduction-to-recurrent-neural-networks-638f64a61ff4/
+[^karpathy]: Karpathy, A. "The Unreasonable Effectiveness of Recurrent Neural Networks". 2015. https://karpathy.github.io/2015/05/21/rnn-effectiveness/
 [^lstm]: Hochreiter, S., & Schmidhuber, J. (1997). Long short-term memory. Neural computation. 1997. https://deeplearning.cs.cmu.edu/S23/document/readings/LSTM.pdf
 [^lstm-forget]: Gers, F. A., Schmidhuber, J., & Cummins, F. *Learning to forget: Continual prediction with LSTM. Neural computation*. 2000. doi: 10.1049/cp:19991218
-[^gru]: Cho, K., van Merriënboer, B., Gulcehre, C., Bahdanau, D., Bougares, F., Schwenk, H., & Bengio, Y. *Learning phrase representations using RNN encoder-decoder for statistical machine translation*. 2014. https://arxiv.org/abs/1406.1078
 [^colahblog]: Olah, C. *Understanding LSTM Networks*. 2015. https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+[^towardds]: Dancker, J. *A Brief Introduction to Recurrent Neural Networks*. Towards Data Science. 2022. https://towardsdatascience.com/a-brief-introduction-to-recurrent-neural-networks-638f64a61ff4/
