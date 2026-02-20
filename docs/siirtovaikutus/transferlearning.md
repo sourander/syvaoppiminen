@@ -134,8 +134,7 @@ Kun edellinen pää on korvattu uudella, meidän tulee kouluttaa vain tämä uus
 for param in conv_base.parameters():
     param.requires_grad = False
 
-# Voimme selvyyden vuoksi vahvistaa, että uusissa kerroksissa 
-# on päällä gradienttien laskenta. Default on True.
+# Uuden fully connected -kerroksen gradientit pitää sen sijaan laskea
 for param in conv_base.fc.parameters():
     param.requires_grad = True
 ```
