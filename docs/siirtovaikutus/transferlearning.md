@@ -169,12 +169,20 @@ Ajoittain löydät myös valmiita työkaluja, jotka helpottavat siirtovaikutukse
 
     Kuinka korkealle sijoittautuisit alkuperäisessä [Kaggle: Dogs vs. Cats](https://www.kaggle.com/competitions/dogs-vs-cats/leaderboard) -kilpailussa? Adrian Rosebrock esitteli muinoin kirjassaan, kuinka AlexNet:n kouluttamalla kokonaan ko. datasetillä saavutti noin 93 % tarkkuuden, mutta käyttämällä piirrepohjaista siirtovaikutusta (feature-based transfer learning) hän saavutti 98.69 % tarkkuuden, jolla olisi päässyt kilpailussa hopeasijalle! Mallina hänellä oli ResNet50, jolla hän generoi piirrevektorit, joita hän käytti Logistic Regression -luokittelijan syötteenä. [^dl4cv]
 
+    Malli kouluttautui opettajan Macbookilla noin 8 minuuttia (5 epookkia).
+
 
 !!! question "Tehtävä: RPS-datasetin luonti webcamilla"
 
     Laurence Monorey, joka on mm. kirjan *AI and ML for Coders in PyTorch* kirjoittaja, jakaa verkkosivuillaan datasettiä [Rock Paper Scissors](https://laurencemoroney.com/datasets.html), joka sisältää kuvia käsimerkeistä kivi, paperi ja sakset. Linkit ovat vanhoja, mutta alkuperäinen datasetti on yhä ladattavissa [storage.googleapis.com/learning-datasets/rps.zip](https://storage.googleapis.com/learning-datasets/rps.zip)-osoitteesta. Setissä on 840 kuvaa per luokka.
     
-    Voisimme käyttää tätä CGI-generoitua datasettiä, mutta on paljon parmepaa oppimista kasata oma datasetti! Meillä kaikilla on jokin webcam, joten käyttäkäämme sitä.
+    Voisimme käyttää tätä CGI-generoitua datasettiä, mutta on paljon parmepaa oppimista kasata oma datasetti! Meillä kaikilla on jokin webcam, joten käyttäkäämme sitä. Tähän löytyy valmis toteutus skriptistä `611_rps_generator.py`, joka perustuu `wigglystuff`-kirjaston Marimo-widgettiin `WebcamCapture`. Skripti tallentaa kuvat `data/{label}/filename.jpg`-polkuun, jossa `{label}` on vakiona `rock`, `paper` tai `scissors` — on täysin sallittua käyttää muitakin luokkia, kuten `pehmolelu|kaukosäädin|kännykkä` tai `lasit|lippis|pipo`.
+
+!!! question "Tehtävä: RPS ja Transfer Learning"
+
+    Aja `612_rps_transfer_learning.py` Marimo Notebook. Skriptissä käytetään edellisessä tehtävässä tallennettua datasettiä ja koulutetaan GoogleNet Inception-v3 -mallia hyödyntäen loppuun liitettyä luokittelijaa. Malli on esikoulutettu ImageNet-datasetillä, joka sisältää 1000 luokkaa, mutta sinulla on vain 3 luokkaa (tai minkä verran niitä päätitkään tehdä).
+
+    Tämän koulutus kestää vain joitakin sekunteja, olettaen että et kasaa valtavaa datasettiä.
 
 ## Lähteet
 

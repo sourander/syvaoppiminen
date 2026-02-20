@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -34,6 +35,7 @@ def _():
 
     from pathlib import Path
     from wigglystuff import WebcamCapture
+
     return Path, WebcamCapture, time
 
 
@@ -70,7 +72,7 @@ def _():
 @app.cell(hide_code=True)
 def _(WebcamCapture, mo):
     dropdown = mo.ui.dropdown(
-        options=["rock", "paper", "scissors"], value="rock", label="Label to save:"
+        options=["glasses", "hat", "neither"], value="glasses", label="Label to save:"
     )
 
     widget = mo.ui.anywidget(WebcamCapture(interval_ms=1000))

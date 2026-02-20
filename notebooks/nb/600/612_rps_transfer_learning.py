@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -23,22 +24,30 @@ def _(mo):
 @app.cell
 def _():
     import torch
+    import torch.nn as nn
+    import torch.optim as optim
     import torchvision.transforms.v2 as transforms
     import matplotlib.pyplot as plt
     import numpy as np
 
     from pathlib import Path
+    from torch.utils.data import DataLoader
     from torchvision import models
     from torchvision.datasets import ImageFolder
     from sklearn.model_selection import train_test_split
     from torch.utils.data import Subset
     from torchmetrics.classification import MulticlassAccuracy
+
     return (
+        DataLoader,
         ImageFolder,
+        MulticlassAccuracy,
         Path,
         Subset,
         models,
+        nn,
         np,
+        optim,
         plt,
         torch,
         train_test_split,
@@ -78,7 +87,15 @@ def _(mo):
 
 
 @app.cell
-def _(ImageFolder, Path, Subset, torch, train_test_split, transforms):
+def _(
+    DataLoader,
+    ImageFolder,
+    Path,
+    Subset,
+    torch,
+    train_test_split,
+    transforms,
+):
     DATA_DIR = Path("data/rps/")
     assert DATA_DIR.exists()
 
@@ -114,26 +131,31 @@ def _(ImageFolder, Path, Subset, torch, train_test_split, transforms):
 
     train_dataset = Subset(full_dataset, train_idx)
     test_dataset = Subset(full_dataset, test_idx)
+
+    # Training DataLoader
+    dataloader_train = DataLoader(
+        train_dataset,
+        batch_size=32,
+        shuffle=True,
+    )
+
+    # Optional: Test DataLoader (for validation)
+    dataloader_test = DataLoader(
+        test_dataset,
+        batch_size=32,
+        shuffle=False,
+    )
     return (
+        dataloader_test,
+        dataloader_train,
         full_dataset,
-        imagenet_mean,
-        imagenet_std,
         inv_transform,
         train_dataset,
     )
 
 
 @app.cell(hide_code=True)
-def _(
-    full_dataset,
-    imagenet_mean,
-    imagenet_std,
-    inv_transform,
-    np,
-    plt,
-    torch,
-    train_dataset,
-):
+def _(full_dataset, inv_transform, np, plt, train_dataset):
     def get_class_examples(train_dataset, chosen):
         class_examples = []
         for img, label in train_dataset:
@@ -229,7 +251,25 @@ def _(device, models):
 
     pre_trained_model = models.inception_v3(weights=weights)
     pre_trained_model = pre_trained_model.to(device)
+    return (pre_trained_model,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Create new FC
+    """)
     return
+
+
+@app.cell
+def _(full_dataset, nn):
+    # You can list model's child modules them like this
+    # [x for x in pre_trained_model.named_children()]
+
+    n_classes = len(full_dataset.classes)
+    new_head = nn.Linear(in_features=2048, out_features=n_classes)
+    return n_classes, new_head
 
 
 @app.cell(hide_code=True)
@@ -237,7 +277,7 @@ def _(mo):
     mo.md(r"""
     ## Training Function
 
-    Note that we have the auxiliary logits, and we must weight them in to the loss. This affects the training function. An example of how this can be done is seen in the repository for book XXX in a file [Chapter03.ipynb](https://github.com/lmoroney/PyTorch-Book-FIles/blob/main/Chapter03/PyTorch_Chapter_3.ipynb). The key part is:
+    Note that we have the auxiliary logits, and we must weight them in to the loss. This affects the training function. An example of how this can be done is seen in the repository for book **AI and ML for Coders in PyTorch** in a file [Chapter03.ipynb](https://github.com/lmoroney/PyTorch-Book-FIles/blob/main/Chapter03/PyTorch_Chapter_3.ipynb). The key part is:
 
     ```python
         # Forward pass
@@ -255,54 +295,161 @@ def _(mo):
     return
 
 
-@app.function
-def train_epoch(model, train_loader, criterion, optimizer, metric, device, epoch=None, num_epochs=None):
-        """Train the model for one epoch.
+@app.cell
+def _(torch):
+    def train_epoch(model, train_loader, criterion, optimizer, metric, device, epoch=None, num_epochs=None):
+            """Train the model for one epoch.
+
+            Returns:
+                tuple: (epoch_loss, epoch_acc)
+            """
+            model.train()
+            metric.reset()
+            total_loss = 0.0
+
+            for batch_idx, (inputs, labels) in enumerate(train_loader):
+                inputs, labels = inputs.to(device), labels.to(device)
+
+                # Forward pass
+                optimizer.zero_grad()
+                outputs = model(inputs)
+
+                # Handle auxiliary logits for Inception V3
+                if isinstance(outputs, tuple):
+                    main_output, aux_output = outputs
+                    loss1 = criterion(main_output, labels)
+                    loss2 = criterion(aux_output, labels)
+                    loss = loss1 + 0.4 * loss2  # Weight auxiliary loss by 0.4
+                else:
+                    main_output = outputs
+                    loss = criterion(outputs, labels)
+
+                # Backward pass
+                loss.backward()
+                optimizer.step()
+
+                total_loss += loss.item()
+
+                # Statistics (use main output for accuracy)
+                metric.update(main_output, labels)
+
+                if (batch_idx + 1) % 50 == 0:
+                    current_acc = metric.compute().item()
+                    print(f"Epoch [{epoch}/{num_epochs}], "
+                          f"Batch [{batch_idx+1}/{len(train_loader)}], "
+                          f"Loss: {total_loss/(batch_idx+1):.4f}, "
+                          f"Acc: {100.*current_acc:.2f}%")
+
+            epoch_loss = total_loss / len(train_loader)
+            epoch_acc = metric.compute().item()
+            return epoch_loss, epoch_acc
+
+    def evaluate(model, data_loader, criterion, metric, device):
+        """Evaluate the model on the given data loader.
 
         Returns:
-            tuple: (epoch_loss, epoch_acc)
+            tuple: (average_loss, accuracy)
         """
-        model.train()
+        model.eval()
         metric.reset()
         total_loss = 0.0
 
-        for batch_idx, batch in enumerate(train_loader):
-            images = batch["image"].to(device)
-            labels = batch["labels"].to(device)
+        with torch.no_grad():
+            for images, labels in data_loader:
+                images, labels = images.to(device), labels.to(device)
 
-            # Forward pass
-            optimizer.zero_grad()
-            outputs = model(images)
-
-            # Handle auxiliary logits for Inception V3
-            if isinstance(outputs, tuple):
-                main_output, aux_output = outputs
-                loss1 = criterion(main_output, labels)
-                loss2 = criterion(aux_output, labels)
-                loss = loss1 + 0.4 * loss2  # Weight auxiliary loss by 0.4
-            else:
-                main_output = outputs
+                outputs = model(images)
                 loss = criterion(outputs, labels)
 
-            # Backward pass
-            loss.backward()
-            optimizer.step()
+                total_loss += loss.item()
+                metric.update(outputs, labels)
 
-            total_loss += loss.item()
+        avg_loss = total_loss / len(data_loader)
+        accuracy = metric.compute().item()
+        return avg_loss, accuracy
 
-            # Statistics (use main output for accuracy)
-            metric.update(main_output, labels)
+    return evaluate, train_epoch
 
-            if (batch_idx + 1) % 50 == 0:
-                current_acc = metric.compute().item()
-                print(f"Epoch [{epoch}/{num_epochs}], "
-                      f"Batch [{batch_idx+1}/{len(train_loader)}], "
-                      f"Loss: {total_loss/(batch_idx+1):.4f}, "
-                      f"Acc: {100.*current_acc:.2f}%")
 
-        epoch_loss = total_loss / len(train_loader)
-        epoch_acc = metric.compute().item()
-        return epoch_loss, epoch_acc
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Training Loop
+
+    Note that we are not saving the model this time. Since our dataset is tiny, the model will likely train in a few seconds.
+    """)
+    return
+
+
+@app.cell
+def _(
+    MulticlassAccuracy,
+    dataloader_test,
+    dataloader_train,
+    device,
+    evaluate,
+    models,
+    n_classes,
+    new_head,
+    nn,
+    optim,
+    pre_trained_model,
+    train_epoch,
+):
+    tuned_model = models.inception_v3(weights=None)
+    tuned_model.load_state_dict(pre_trained_model.state_dict())
+    tuned_model = tuned_model.to(device)
+
+    # Replace the classifier heads (main + auxiliary)
+    tuned_model.fc = new_head.to(device)
+    tuned_model.AuxLogits.fc = nn.Linear(in_features=768, out_features=n_classes).to(device)
+
+    # Freeze the feature extractor
+    for param in tuned_model.parameters():
+        param.requires_grad = False
+
+    for param in tuned_model.fc.parameters():
+        param.requires_grad = True
+
+    for param in tuned_model.AuxLogits.fc.parameters():
+        param.requires_grad = True
+
+    # Define loss and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(
+        list(tuned_model.fc.parameters()) + list(tuned_model.AuxLogits.fc.parameters()),
+        lr=0.001
+    )
+
+    metric = MulticlassAccuracy(num_classes=n_classes).to(device)
+
+    # Training loop
+    num_epochs = 6
+
+    for epoch in range(1, num_epochs + 1):
+        epoch_loss, epoch_acc = train_epoch(
+            tuned_model, 
+            dataloader_train, 
+            criterion, 
+            optimizer,
+            metric,
+            device,
+            epoch=epoch,
+            num_epochs=num_epochs
+        )
+        val_loss, val_acc = evaluate(
+            tuned_model,
+            dataloader_test,
+            criterion,
+            metric,
+            device,
+        )
+        print(f"Epoch [{epoch}/{num_epochs}] Summary: "
+              f"Train Loss: {epoch_loss:.4f}, Train Acc: {100.*epoch_acc:.2f}% | "
+              f"Val Loss: {val_loss:.4f}, Val Acc: {100.*val_acc:.2f}%\n")
+
+    print("Training complete!")
+    return
 
 
 if __name__ == "__main__":

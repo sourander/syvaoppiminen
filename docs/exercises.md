@@ -86,6 +86,7 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 
 - [ ] Tehtävä: Dogs vs. Cats siirtovaikutus
 - [ ] Tehtävä: RPS-datasetin luonti webcamilla
+- [ ] Tehtävä: RPS ja Transfer Learning
 
 ## Luonnollinen kieli (700)
 

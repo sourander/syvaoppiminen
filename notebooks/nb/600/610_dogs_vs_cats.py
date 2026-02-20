@@ -592,7 +592,7 @@ def _(
         # Replace the classifier head for binary classification
         tuned_model.classifier = nn.Linear(1024, 2).to(device)
 
-        # Freeze the feature extractor (optional - only train the classifier)
+        # Freeze the feature extractor
         for param in tuned_model.features.parameters():
             param.requires_grad = False
 
