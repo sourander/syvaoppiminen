@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -35,6 +36,7 @@ def _():
     from torchvision import models
     from pathlib import Path
     from torchmetrics.classification import MulticlassAccuracy
+
     return (
         DataLoader,
         MulticlassAccuracy,
@@ -676,7 +678,9 @@ def _(mo):
 
     The model is now ready for inference!
 
-    ## TODO: Make evaluation showing the poorly classified images. Also, run the evaluation against the test data.
+    ## Your Part of the Exercise
+
+    Make evaluation showing the poorly classified images. Also, run the evaluation against the test data.
     """)
     return
 
