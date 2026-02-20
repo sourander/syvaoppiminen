@@ -1,0 +1,2698 @@
+
+<!doctype html>
+<html lang="fi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../siirtovaikutus/transferlearning/">
+      
+      
+        <link rel="next" href="../rnn/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>Luonnollinen kieli - Syväoppiminen I</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#luonnollinen-kieli" class="md-skip">
+          Hyppää sisältöön
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Ylätunniste">
+    <a href="../.." title="Syväoppiminen I" class="md-header__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Syväoppiminen I
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Luonnollinen kieli
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Hae" placeholder="Hae" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Haku">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Tyhjää" aria-label="Tyhjää" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Aloitetaan hakua
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigaatio" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Syväoppiminen I" class="md-nav__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Syväoppiminen I
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tervetuloa kurssille
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Neuroverkot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../neuroverkot/neuroverkot_101/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../neuroverkot/syvaoppiminen_FC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syvät neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Tensorit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Tensorit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tensorit/vektorointi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vektorointi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tensorit/pytorch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyTorch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Vastavirta
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Vastavirta
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vastavirta/backpropagation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vastavirta (Backprop)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Mallinnus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4. Mallinnus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/yleiskatsaus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yleiskatsaus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/datanlataus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datan lataus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/kaytannot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kouluttamisen käytännöt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Konvoluutio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5. Konvoluutio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../konvoluutio/cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konvoluutioverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    6. Siirtovaikutus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/pretrained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Koulutetun mallin käyttö
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/transferlearning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Kieli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    7. Kieli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Luonnollinen kieli
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Luonnollinen kieli
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#historia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Historia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turingin-koe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turingin koe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eliza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ELIZA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PARRY
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#myohemmat-kehitysvaiheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Myöhemmät kehitysvaiheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asiantuntijajarjestelmat-expert-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asiantuntijajärjestelmät (Expert Systems)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haasteita-vs-mlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Haasteita vs. MLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nlpn-perusteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NLP:n perusteet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NLP:n perusteet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tekstin-esikasittely-spacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tekstin esikäsittely: SpaCy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tekstin esikäsittely: SpaCy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenisointi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tokenisointi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perusmuotoistaminen-lemmatization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perusmuotoistaminen (Lemmatization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sanaluokat-pos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sanaluokat (POS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riippuvuussuhteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riippuvuussuhteet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nimettyjen-entiteettien-tunnistus-ner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nimettyjen entiteettien tunnistus (NER)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#morfologinen-analyysi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morfologinen analyysi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hukkasanat-stop-words" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hukkasanat (Stop Words)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sanavektorit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sanavektorit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sanavektorit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-hot-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⛔ One-Hot Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiheat-vektorit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiheät vektorit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tiheät vektorit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#word2vec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Word2Vec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GloVe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fasttext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fastText
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vektorien-vertailu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vektorien vertailu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vektorien vertailu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vektorien-analogiat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vektorien analogiat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samankaltaisuus-numerona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Samankaltaisuus numerona
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yhteenveto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yhteenveto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yhteenveto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1990-luku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1990-luku
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2000-luku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2000-luku
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2010-luku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2010-luku
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RNN ja jälkeläiset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Aikasarjat
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aikasarjat/ideat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tehtäväkooste
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#historia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Historia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#turingin-koe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turingin koe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eliza" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ELIZA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PARRY
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#myohemmat-kehitysvaiheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Myöhemmät kehitysvaiheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asiantuntijajarjestelmat-expert-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asiantuntijajärjestelmät (Expert Systems)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#haasteita-vs-mlp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Haasteita vs. MLP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nlpn-perusteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NLP:n perusteet
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NLP:n perusteet">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tekstin-esikasittely-spacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tekstin esikäsittely: SpaCy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tekstin esikäsittely: SpaCy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tokenisointi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tokenisointi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perusmuotoistaminen-lemmatization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perusmuotoistaminen (Lemmatization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sanaluokat-pos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sanaluokat (POS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riippuvuussuhteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riippuvuussuhteet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nimettyjen-entiteettien-tunnistus-ner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nimettyjen entiteettien tunnistus (NER)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#morfologinen-analyysi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Morfologinen analyysi
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hukkasanat-stop-words" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hukkasanat (Stop Words)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sanavektorit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sanavektorit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sanavektorit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-hot-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⛔ One-Hot Encoding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tiheat-vektorit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tiheät vektorit
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tiheät vektorit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#word2vec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Word2Vec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#glove" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GloVe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fasttext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fastText
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vektorien-vertailu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vektorien vertailu
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vektorien vertailu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vektorien-analogiat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vektorien analogiat
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#samankaltaisuus-numerona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Samankaltaisuus numerona
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yhteenveto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yhteenveto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yhteenveto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1990-luku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1990-luku
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2000-luku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2000-luku
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2010-luku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2010-luku
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="luonnollinen-kieli">Luonnollinen kieli</h1>
+<p>Tietojenkäsittelytieteissä luonnollisella kielellä tarkoitetaan kieliä kuten suomi, englanti, ranska tai japani, joita ihmiset käyttävät päivittäisessä viestinnässään. Tämä on vastakohta keinotekoisille kielille, kuten ohjelmointikielille (esim. Python, Java) tai merkintäkielille (esim. HTML, XML). Merkittävä ero näiden välillä on, että koneelle tarkoitetut kielet ovat tehty insinöörinäkökulmasta siten, että formaalit säännöt ovat muodostettu ensin. Konekieli on käyttökelpoinen vasta kun säännöt ovat tarkoin määritelty. Ihmisten käyttämät kielet ovat syntyneet päinvastoin: käyttö ensin, säännöt myöhemmin. <sup id="fnref:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+<blockquote>
+<p>"As a result, while machine-readable language is highly structured and rigorous, natural language is messy—ambiguous, chaotic, sprawling, and constantly in flux."</p>
+<p>– François Chollet ja Matt Watson <sup id="fnref3:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+</blockquote>
+<p>Termi <em>ambiguous</em> tarkoittaa, että luonnollisessa kielessä samalle asialle voi olla useita merkityksiä tai tulkintoja. Suomalaisittain kuuluisa esimerkki tästä on lyhyt lause: <mark>"Kuusi palaa"</mark> (<em>engl. the spruce is on fire / spruce returns / the number six is on fire / ... / six pieces</em>). Entäpä kuinka tulkitaan seuraava uutisotsikko:</p>
+<blockquote>
+<p>"Susi hyök­kä­si omis­ta­jan­sa kanssa pyö­rä­len­kil­lä olleen koiran kimp­puun kes­kel­lä asu­tus­ta Raa­hes­sa"</p>
+<p>– Pyhäjokiseutu 02.10.2024</p>
+</blockquote>
+<p><img alt="" src="../../images/700_gemini-susi-quote.jpg" /></p>
+<p><strong>Kuva 1:</strong> <em>Kirjaimellisesti tulkittu otsikko: "Susi hyökkäsi omistajansa kanssa pyörälenkillä olleen koiran kimppuun keskellä asutusta Raahessa.". Kuva luotu Gemini Nano Banana mallilla.</em></p>
+<p>Onko tilanne kenties ollut Kuvan 1 mukainen: susi ja hänen omistajansa olivat hyökkääjät, kun koiraraukka yritti pyöräillä karkuun? Vastaavia monitulkintaisia lauseita on Suomen Kuvalehden Jyvät &amp; Akanat -palstalla viikoittain. Tässä kaksi tuoretta esimerkkiä lisäviihteenä 5/2026 numerosta: </p>
+<blockquote>
+<p>"Nikotiinipussit muuttavat aivoja – kokenut lääkäri kertoo, miten pääset niistä pysyvästi eroon"</p>
+<p>– Iltasanomat 5.1.2026</p>
+<p>"Varkaudessa anastettiin omaisuutta marraskuussa"</p>
+<p>– Iltasanomat 7.1.2026</p>
+</blockquote>
+<p>Täten lienee selvä, että koneellinen kielen käsittely haastavaa, mutta koska kieli on ihmisten pääasiallinen viestintäväline, on luonnollisen kielen käsittely (Natural Language Processing, NLP) keskeinen osa tietojenkäsittelyä ja tekoälyä. Käytännön sovelluksia ovat esimerkiksi <strong>tekstin luokittelu</strong> (spam, no spam), <strong>konekäännökset</strong> (ranska → suomi), <strong>hakukoneet</strong> ja <strong>tekstin generointi</strong> (<em>"Olipa kerran... ?"</em>). Näiden haastavien tehtävien suhteen suuret läpimurrot ovat varsin tuoreita, mutta yritystä on kuitenkin ollut viimeisen yli 60 vuoden ajan. <sup id="fnref2:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+<h2 id="historia">Historia</h2>
+<p>Nykyisten chatbottien suuret merkkipaalut ovat syntyneet lähitulevaisuudessa, mutta NLP:llä on pitkä historia. Historia voidaan jakaa kolmeen pääkauteen: säännöpohjainen (rule-based), tilastollinen (statistical) ja syväoppimiseen perustuva (deep learning-based) NLP – joka toki on myös tilastollista.</p>
+<h3 id="turingin-koe">Turingin koe</h3>
+<p>Kaiken luonnollisen kielen käsittelyn päämäärä ei ole välttämättä matkia ihmisen älykkyyttä, mutta tämä ajatus on kulkenut matkassa alusta asti – aivan kuten muussakin tekoälyn historiassa. Alan Turing julkaisi 1950 paperin otsikolla "Computing Machinery and Intelligence", jossa hän esitteli ajatuksen <mark>Turingin kokeesta</mark> nimellä "The Imitation Game" <sup id="fnref:turing1950"><a class="footnote-ref" href="#fn:turing1950">2</a></sup>. Peli perustuu vanhaan seurapeliin, jolla salongissa on voinut viihdyttää vieraita: henkilöt A ja B istuvat erillään toisistaan, ja kolmas henkilö C esittää kysymyksiä kummallekin. A ja B ovat mies ja nainen, ja henkilön C tehtävä on päätellä kirjoitetun viestin perusteella, kumpi on kumpi. Turingin koe on sama asetelma, mutta A ja B ovat kone ja ihmminen. Jos C ei pysty luotettavasti erottamaan konetta ihmisestä, voidaan sanoa, että kone on läpäissyt Turingin kokeen. <sup id="fnref:aimarketing"><a class="footnote-ref" href="#fn:aimarketing">3</a></sup></p>
+<p>Löydät internetistä helposti tätä koetta kritisoivaa sisältöä, ja myös väitteitä, että eri mallit ovat läpäisseet kokeen. Jos haluat tutustua aihepiiriin, kannattanee tutustua vuoden 2025 artikkeliin otsikolla <em>Large Language Models Pass the Turing Test</em>, jossa on vertailtu niin ELIZAa kuin tuoreita GPT-4.5-malleja. <sup id="fnref:llmturing"><a class="footnote-ref" href="#fn:llmturing">4</a></sup></p>
+<h3 id="eliza">ELIZA</h3>
+<p>Tunnetuin varhaisista <em>chatterbot</em>-sovelluksista on ELIZA, erityisesti skripti DOCTOR, joka kehitettiin 1960-luvulla MIT:ssä. Sen loi Joseph Weizenbaum, ja se simuloitsi Carl Rogerin asiakaskeskeistä psykoterapiaa. Ohjelma on nimetty fiktiivisen Eliza Doolittle hahmon mukaan, joka esiintyy George Bernard Shaw'n näytelmässä "Pygmalion" (ja myöhemmin musikaalissa "My Fair Lady"). ELIZA käytti yksinkertaisia sääntöjä ja avainsanojen tunnistusta vastatakseen käyttäjän syötteisiin, luoden vaikutelman ymmärryksestä. Kyseessä on siis <em>pattern-matching</em>-järjestelmä. <sup id="fnref:demystifyingai"><a class="footnote-ref" href="#fn:demystifyingai">5</a></sup></p>
+<blockquote>
+<p>"There are even accounts of ELIZA’s responses being so human-like that it evoked emotional responses from people who forgot they were interacting with a computer, including Weizenbaum’s own secretary. This led to much discussion about ELIZA’s potential to pass the Turing Test, although there are no known accounts of ELIZA actually doing this."</p>
+<p>– Robert Barton ja Jerome Henry <sup id="fnref3:demystifyingai"><a class="footnote-ref" href="#fn:demystifyingai">5</a></sup></p>
+</blockquote>
+<div class="admonition tip">
+<p class="admonition-title">Kokeile!</p>
+<p>ELIZA:sta löytyy JavaScript-toteutuksia, mutta yksi näppärä tapa saada pääsy siihen on APT-paketinhallinnasta löytyvä PERL-toteutus. Sen saat käyttöön näin:</p>
+<ol>
+<li>Luo Dockerfile. Katso sisältö alta.</li>
+<li>Aja <code>docker build -t eliza .</code></li>
+<li>Aja <code>docker run -it --rm eliza</code></li>
+</ol>
+<details class="note">
+<summary>Dockerfile</summary>
+<div class="language-Dockerfile highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">FROM</span><span class="w"> </span><span class="s">ubuntu:latest</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">ENV</span><span class="w"> </span><span class="nv">DEBIAN_FRONTEND</span><span class="o">=</span>noninteractive
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>--no-install-recommends<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span>perl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span>libchatbot-eliza-perl<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span>/var/lib/apt/lists/*
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">RUN</span><span class="w"> </span>cat<span class="w"> </span>&gt;<span class="w"> </span>eliza.pl<span class="w"> </span>&lt;&lt;<span class="w"> </span><span class="s1">&#39;EOF&#39;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c">#!/usr/bin/perl</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>use<span class="w"> </span>strict<span class="p">;</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>use<span class="w"> </span>warnings<span class="p">;</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>use<span class="w"> </span>Chatbot::Eliza<span class="p">;</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>my<span class="w"> </span><span class="nv">$eliza</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Chatbot::Eliza-&gt;new<span class="p">;</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>print<span class="w"> </span><span class="s2">&quot;Eliza: Hello. How can I help you today?\n&quot;</span><span class="p">;</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="k">while</span><span class="w"> </span><span class="o">(</span><span class="m">1</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">    </span>print<span class="w"> </span><span class="s2">&quot;You: &quot;</span><span class="p">;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span>my<span class="w"> </span><span class="nv">$input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;STDIN&gt;<span class="p">;</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span>last<span class="w"> </span>unless<span class="w"> </span>defined<span class="w"> </span><span class="nv">$input</span><span class="p">;</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span>my<span class="w"> </span><span class="nv">$response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$eliza</span>-&gt;transform<span class="o">(</span><span class="nv">$input</span><span class="o">)</span><span class="p">;</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">    </span>chomp<span class="w"> </span><span class="nv">$response</span><span class="p">;</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">    </span>print<span class="w"> </span><span class="s2">&quot;Eliza: </span><span class="nv">$response</span><span class="s2">\n&quot;</span><span class="p">;</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="o">}</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>EOF
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="k">RUN</span><span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>/app/eliza.pl
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="k">ENTRYPOINT</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/eliza.pl&quot;</span><span class="p">]</span>
+</span></code></pre></div>
+</details>
+<p><img alt="ELIZA" src="../../images/700_ELIZA-cli.png" /></p>
+<p><strong>Kuva 2:</strong> <em>ELIZA vastailee opettajan murheisiin.</em></p>
+</div>
+<p>ELIZA herätti yleisön mielenkiinnon ja sen ympärille syntyi hypeä. Weizenbaum päätyi itse taistelemaan tätä hypeä vastaan, aloittaen ikään kuin ristiretken omaa ohjelmaansa vastaan. ELIZA ei tiennyt mitään psykologiasta ja oli pikemminkin Carl Rogerin terapian karikatyyri tai parodia, joka lähinnä heijastaa kysymykset takaisin käyttäjälle. <sup id="fnref:aiux"><a class="footnote-ref" href="#fn:aiux">6</a></sup></p>
+<h3 id="parry">PARRY</h3>
+<p>Toinen varhainen chatbot on PARRY, joka kehitettiin 1970-luvulla psykiatri Kenneth Colbyn Stanfordissa. Applikaatio pyrki simuloimaan skitsofreniaa sairastavan potilaan puhetta. PARRY käytti monimutkaisempia sääntöjä ja malleja kuin ELIZA, pyrkien jäljittelemään skitsofrenian oireita, kuten vainoharhaisuutta ja epäjohdonmukaista ajattelua. <sup id="fnref2:demystifyingai"><a class="footnote-ref" href="#fn:demystifyingai">5</a></sup> Ohjelman LISP-koodi on linkitettynä Wikipedia-artikkelissa ja löytyy Carnegie Mellonin arkistosta. Sen ajaminen modernilla koneella olisi haastellista, joten tyydytään kurkkaamaan ELIZA:n (DOCTOR) ja PARRY:n keskustelua, joka on dokumentoitu vuonna 1972. Keskustelun alku muotoiltuna alla: <sup id="fnref:rfc439"><a class="footnote-ref" href="#fn:rfc439">7</a></sup></p>
+<p><img alt="🧑‍⚕️" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f9d1-200d-2695-fe0f.svg" title=":health_worker:" /> <strong>DOCTOR</strong>: Good Evening. Tell me your problems.  Please terminate input with a period or a question mark.</p>
+<p><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> <strong>PARRY</strong>: People get on my nerves sometimes.</p>
+<p><img alt="🧑‍⚕️" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f9d1-200d-2695-fe0f.svg" title=":health_worker:" /> <strong>DOCTOR</strong>: I am not sure I understand you fully.</p>
+<p><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> <strong>PARRY</strong>: You should pay more attention.</p>
+<p><img alt="🧑‍⚕️" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f9d1-200d-2695-fe0f.svg" title=":health_worker:" /> <strong>DOCTOR</strong>: Suppose you should pay more attention.</p>
+<p><img alt="🤖" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f916.svg" title=":robot:" /> <strong>PARRY</strong>: You're entitled to your own opinion.</p>
+<p><img alt="🧑‍⚕️" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f9d1-200d-2695-fe0f.svg" title=":health_worker:" /> <strong>DOCTOR</strong>: What makes you think I am entitled to my own opinion?</p>
+<h3 id="myohemmat-kehitysvaiheet">Myöhemmät kehitysvaiheet</h3>
+<table>
+<thead>
+<tr>
+<th>Nimi</th>
+<th>Kehittäjä</th>
+<th>Vuosi</th>
+<th>Huomioitavaa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ELIZA</td>
+<td>Joseph Weizenbaum</td>
+<td>1966</td>
+<td>Simuloi psykoterapeuttia</td>
+</tr>
+<tr>
+<td>PARRY</td>
+<td>Kenneth Colby</td>
+<td>1972</td>
+<td>Simuloi skitsofreenikkoa</td>
+</tr>
+<tr>
+<td><a href="http://www.jabberwacky.com/">Jabberwacky</a></td>
+<td>Rollo Carpenter</td>
+<td>1988</td>
+<td>Online-julkaisu 1997</td>
+</tr>
+<tr>
+<td>MS Word AutoCorrect</td>
+<td>Microsoft</td>
+<td>1993</td>
+<td>Yksinkertainen sääntöpohjainen</td>
+</tr>
+<tr>
+<td>ALICE</td>
+<td>Richard Wallace</td>
+<td>1995</td>
+<td>Käyttää AIML-skriptauskieltä</td>
+</tr>
+<tr>
+<td>MedSpeak</td>
+<td>IBM</td>
+<td>1996</td>
+<td>Lääketieteellinen litterointi</td>
+</tr>
+<tr>
+<td>VAL</td>
+<td>BellSouth</td>
+<td>1996</td>
+<td>Puheentunnistus ja vastaus</td>
+</tr>
+<tr>
+<td>SmarterChild</td>
+<td>Robert Hoffer</td>
+<td>2001</td>
+<td>Agentti AOL ja Messengerissä</td>
+</tr>
+<tr>
+<td><a href="https://www.cleverbot.com/">Cleverbot</a></td>
+<td>Rollo Carpenter</td>
+<td>2008</td>
+<td>Jabberwackyn seuraaja</td>
+</tr>
+<tr>
+<td>Siri</td>
+<td>Adam Cheyer</td>
+<td>2011</td>
+<td>Assistentti</td>
+</tr>
+<tr>
+<td>Xiaoice</td>
+<td>Microsoft</td>
+<td>2014</td>
+<td>Empaattinen chatbot</td>
+</tr>
+<tr>
+<td>Alexa</td>
+<td>Amazon</td>
+<td>2014</td>
+<td>Assistentti</td>
+</tr>
+<tr>
+<td>Melody</td>
+<td>Andrew Ng</td>
+<td>2015</td>
+<td>Lääketieteellinen assistentti</td>
+</tr>
+</tbody>
+</table>
+<p>Taulukko on koostettu kirjoista <em>Conversational Artificial Intelligence</em> <sup id="fnref:conversational"><a class="footnote-ref" href="#fn:conversational">8</a></sup> ja <em>The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning</em>. <sup id="fnref2:aimarketing"><a class="footnote-ref" href="#fn:aimarketing">3</a></sup></p>
+<h3 id="asiantuntijajarjestelmat-expert-systems">Asiantuntijajärjestelmät (Expert Systems)</h3>
+<p>Heti alkuun suosittelen, että kannattaa <em>silmäillä</em> seuraavia videoita. Sinun ei välttämättä tarvitse katsoa pitkiä videoita kokonaan, mutta silmäilemällä näet, miten niissä käsitellyt asiantuntijajärjestelmät toimivat:</p>
+<ul>
+<li><a href="https://youtu.be/leXa7EKUPFk">MIT: 3. Reasoning: Goal Trees and Rule-Based Expert Systems</a>. 50-minuuttinen ideo, jossa Patrick Winston esittelee Genesis-ryhmän tuottamaa Genesis-ohjelmaa, joka kykenee selostaa Macbeth-kirjan tapahtumia (aivan videon lopussa). Edeltävässä osio on pohjustavaa teoriaa.</li>
+<li><a href="https://youtu.be/mzsk5_EmZq8?si=SpVnrGcKvosEw58h">URBS: Lecture 13: Building an Expert System and PyKE</a>. 50-minuuttinen luento, jossa esitellään PyKE-kirjasto ja rakennetaan asiantuntijajärjestelmä. Pitääkö ottaa sateenvarjo mukaan vai ei?</li>
+</ul>
+<p>Asiantuntijajärjestelmät ovat säännöpohjaisia järjestelmiä, jotka käyttävät tietokantaa sääntöjä ja faktoja päätöksenteon tai ongelmanratkaisun tukena.</p>
+<blockquote>
+<p>"Expert systems are computer programs designed to mimic the decision-making abilities of human experts by leveraging predefined rules and knowledge bases."</p>
+<p>– Vijay Kanabar ja Jason Wong <sup id="fnref:airevolution"><a class="footnote-ref" href="#fn:airevolution">9</a></sup></p>
+</blockquote>
+<p>Jos asiantuntijajärjestelmällä haluaa analysoida tekstin tapahtumia, tulee käyttää jonkin sortin <em>semantic parser</em> -ohjelmaa, joka muuttaa luonnollisen kielen lauseet koneen ymmärtämään muotoon. Genesiksen kohdalla tämä on START-niminen ohjelma, joka kääntää englantia Genesiksen sisäiseen esitysmuotoon. Tämä selitetään <em>A Commonsense Approach to Story Understanding</em>-artikkelissa <sup id="fnref:genesis"><a class="footnote-ref" href="#fn:genesis">10</a></sup>. <a href="https://start.csail.mit.edu/index.php">START</a> itsessään on Boris Katz:n ja InfoLab:n (MIT) kehittämä kysymyksiin vastaava hakukone, mutta Genesis käyttää sitä vain parsijana. Sisäinen kieli sisältää entiteettejä (substantiiveja), suhteita (henkilö A verbi henkilö B), funktioita ja sekvenssejä. Genesis käyttää apunaan <a href="https://conceptnet.io/">ConceptNet</a>-tietokantaa, <em>knowledge graph</em>:ia, jonka avulla voit esimerkiksi tutkia sanan <a href="https://conceptnet.io/c/en/dog">dog</a> suhteita muihin käsitteisiin. Näiden päälle ovi käyttäjä rakaentaa sääntöjä, kuten <code>if XX harms YY, YY becomes angry</code> tai <code>if XX eats food, XX becomes full</code>. Jatkossa, lause <code>Matt eats an apple</code> istuu tähän sääntöön, koska ConceptNet yhdistää <code>apple</code>-sanan <code>food</code>-käsitteeseen (<em>is type of edible fruit</em>).</p>
+<p>Toivon mukaan on tässä vaiheessa selvää, että olisi äärimmäisen haastavaa luoda modernin suuren kielimallin tasoinen asiantuntijajärjestelmä. Asiantuntijajärjestelmät olivat kovinta huutoa 80-luvulla. Modernien kielimallien kohdalla tulet kuitenkin törmäämään termeihin <em>knowledge graph</em> ja <em>ontology</em>. </p>
+<h3 id="haasteita-vs-mlp">Haasteita vs. MLP</h3>
+<p>90-luvulta alkoi selkeä siirtymä tilastollisiin menetelmiin ja perinteiseen koneoppimiseen. Tämän kurssin osalta tämä aihepiiri alkaa FC-MLP-verkoista (fully connected multilayer perceptron). Kuten on jo opittu, MLP-versiot eivät kykene tunnistamaan spatiaalisuutta. Tähän käytimme kuvien (ja äänen) kanssa konvoluutioverkkoja aiemmissa luvuissa. Lauseen voi kuvitella 1-D -spatiaaliseksi dataksi, jossa sanat ovat "pikseleitä" peräkkäin. Näin Conv1D-kerrokset soveltuvat tekstin käsittelyyn ainakin paperilla, ja niitä on siihen myös käytetty. Ongelmia, joita Conv1D-kerrokset eivät kuitenkaan ratkaise, ovat mm.:</p>
+<ol>
+<li><strong>Sanat eivät ole lukuja</strong>. Kuvissa pikselit ovat numeerisia arvoja (esim. 0–255), mutta sanat ovat kategorisia muuttujia. On ensin keksittävä tapa kääntää lauseet listaksi numeroita.</li>
+<li><strong>Lauseiden pituudet vaihtelevat</strong>. Yksi lause voi olla <mark>"Kissa istuu matolla."</mark> ja toinen <mark>"Kissa matolla istui olevaista pohtien."</mark> Konvoluutioverkot olettivat kiinteän syötteen pituuden.</li>
+<li><strong>Pitkäaikaiset riippuvuudet</strong>. Conv1D-kerrokset havaitsevat paikallisia kuvioita hyvin (esim. 2–5 peräkkäistä sanaa), mutta niiden on vaikea mallintaa pitkän kantaman riippuvuuksia. Kuvittele teos, joka alkaa sanoilla: <em>"Seuraavat 100 asiaa eivät ole totta: (1) ..."</em>.</li>
+<li><strong>Konteksti ja monet merkitykset</strong>. Sanat voivat saada merkityksensä kontekstin perusteella. Muista: "kuusi palaa".</li>
+<li><strong>Taivutusmuodot</strong>. Monet kielet sallivat sanojen taivuttamisen, eli ovat jossain määrin <em>morphologically rich</em>. Mitenpä suomen <mark>"epäjärjestelmällistyttämättömyydellänsäkäänköhän"</mark> ja <mark>"epäjärjestelmällinen"</mark> liittyvät toisiinsa?</li>
+</ol>
+<p>Todella, todella naiivi ratkaisu yllä oleviin ongelmiin keittiöfilosofin pohdinnalla olisi:</p>
+<ol>
+<li>✅ Tee sanoista lukuja One-Hot Encoding -menetelmällä.</li>
+<li>✅ Täytä lauseet nollilla (padding) niin, että kaikilla on sama pituus.</li>
+<li>⛔ ???</li>
+<li>⛔ ???</li>
+<li>⛔ ???</li>
+</ol>
+<p>Kolme viimeisintä jäisivät siis tyystin ratkaisematta – ainakin opettajan keittiöfilosofian taidoilla. Näihin ongelmiin onneksi löytyy parempia ratkaisuja, joihin pureudutaan tässä ja seuraavissa luvuissa.</p>
+<h2 id="nlpn-perusteet">NLP:n perusteet</h2>
+<h3 id="tekstin-esikasittely-spacy">Tekstin esikäsittely: SpaCy</h3>
+<p>Modernissa NLP:ssä esikäsittely on usein virtaviivaistettu valmiiden kirjastojen, kuten <a href="https://spacy.io/">SpaCy</a>:n, avulla. SpaCy ei ole ainut. Vaihtoehtoja olisivat esimerkiksi NLTK ja Gensim. SpaCy on kuitenkin suorituskykyinen ja helppokäyttöinen, joten keskitymme siihen.</p>
+<p>Kun syötät tekstiä SpaCy-putkeen (<em>engl. pipeline</em>), se suorittaa taustalla automaattisesti useita komponentteja. Tämä ei ole kielen käsittelyn kurssi, joten keskitymme pääasiassa käyttämään valmiita putkia. Yksi valmiiksi koulutettu putki on <a href="https://spacy.io/models/en">en_core_web_sm</a>. Kyseessä ei ole yksittäinen tilastollinen malli, vaan joukko NLP-komponentteja, jotka on ketjutettu yhteen. Alla on taulukko, jossa nämä ovat selitettynä auki linkkeineen, sekä tieto siitä, onko kyseinen komponentti koulutetttava tilastollinen (lue: koneoppimiseen perustuva) malli vai sääntöpohjainen menetelmä (lue: pattern matching).</p>
+<table>
+<thead>
+<tr>
+<th>Komponentti</th>
+<th>Tyyppi</th>
+<th>Tunnistaa</th>
+<th>Esim</th>
+<th>Mistä löytyy tulos?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://spacy.io/api/tokenizer">Tokenizer</a></td>
+<td>Rule</td>
+<td>N/A</td>
+<td></td>
+<td><code>Doc</code> itsessään</td>
+</tr>
+<tr>
+<td><a href="https://spacy.io/api/tok2vec">tok2vec</a></td>
+<td>ML</td>
+<td>N/A</td>
+<td></td>
+<td><code>Doc.tensor</code> tai <code>Doc[i].vector</code></td>
+</tr>
+<tr>
+<td><a href="https://spacy.io/api/tagger">tagger</a></td>
+<td>ML</td>
+<td>Sanaluokat</td>
+<td>NN (noun; apple), PRP (pronoun; they), JJ (adj; big)</td>
+<td><code>Doc[i].tag_</code></td>
+</tr>
+<tr>
+<td><a href="https://spacy.io/api/dependencyparser">parser</a></td>
+<td>ML</td>
+<td>Sanojen keskinäiset riippuvuudet</td>
+<td>nsubj (subject; she), prep (prep modifier; on)</td>
+<td><code>Doc[i].dep_</code></td>
+</tr>
+<tr>
+<td><a href="https://spacy.io/api/entityrecognizer">ner</a></td>
+<td>ML</td>
+<td>Erisnimet</td>
+<td>ORG (organization; Google)</td>
+<td><code>Doc[i].ent_type_</code></td>
+</tr>
+<tr>
+<td><a href="https://spacy.io/api/attributeruler">attributeruler</a></td>
+<td>Rule</td>
+<td>Poikkeussäännöt esim. sanaluokille</td>
+<td></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><a href="https://spacy.io/api/lemmatizer">lemmatizer</a></td>
+<td>Rule</td>
+<td>Sanan perusmuoto</td>
+<td></td>
+<td><code>Doc.lemmas</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Jos haluat tietää, mitä vaikkapa <code>PRP</code> tarkoittaa, voit tarkistaa sen <code>explain()</code>-metodilla.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;se_malli_jonka_tagger_tai_parser_sinua_kiinnostaa&quot;</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">nlp</span><span class="o">.</span><span class="n">explain</span><span class="p">(</span><span class="s2">&quot;PRP&quot;</span><span class="p">))</span>
+</span></code></pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Kannattaa tutustua dokumentaatiosta sivuihin: </p>
+<ul>
+<li><a href="https://spacy.io/usage/linguistic-features">SpaCy Linguistic Features</a>. Siellä käsitellään tarkemmin se, mikä on alla vain listattuna yhden esimerkin avulla.</li>
+<li><a href="https://spacy.io/api">SpaCy Library Architecture</a>. Tämä auttaa yllä olevan taulukon ymmärtämisessä visuaalisesti.</li>
+<li><a href="https://spacy.io/usage/training">SpaCy Training Pipelines &amp; Models</a>. Tämä dokumentti selittää, miten SpaCy-mallit on koulutettu, ja paljastaa, mikä syväoppimiskirjasto sillä on käytössä konepellin alla.</li>
+</ul>
+<p>Jos haluaisit opetella SpaCyn syvällisemmin, kuten tehdä itse omia komponentteja putkeen, voisit aloittaa kurssin <a href="https://course.spacy.io/en/">Advanced NLP with spaCy</a>. Todennäköisesti haluaisit tutustua myös <a href="https://www.youtube.com/@ExplosionAI/">YouTube: ExplosionAI-kanavaan</a>, joka on SpaCyn kehittäjän kanava, sisältäen videoita sekä SpaCyn että Prodigyn käytöstä.</p>
+</div>
+<details class="example">
+<summary>Kuinka ajaa alla olevat snippetit?</summary>
+<p>Sinulla pitää luonnollisesti olla SpaCy asennettuna (<code>uv add spacy</code>). Lisäksi sinun pitää ladata malli. Aja terminaalissa seuraava komento:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;fi-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fi_core_news_sm-3.8.0/fi_core_news_sm-3.8.0-py3-none-any.whl&quot;</span>
+</span></code></pre></div>
+<p>Tämän jälkeen käynnistä Marimo, luo uusi Notebook, ja ota malli käyttöön:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">spacy</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;fi_core_news_sm&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+</details>
+<h4 id="tokenisointi">Tokenisointi</h4>
+<p>Tekstin pilkkominen pienempiin yksiköihin, tokeneihin (sanat, välimerkit, erikoismerkit). Toisin kuin yksinkertainen <code>split(" ")</code>, älykäs tokenisoija ymmärtää esimerkiksi välimerkkien erottamisen sanoista.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">tokenized</span> <span class="o">=</span> <span class="n">nlp</span><span class="o">.</span><span class="n">make_doc</span><span class="p">(</span><span class="s2">&quot;Kissa, se    on eläin?!&quot;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokenized</span><span class="p">:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">tok</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Kissa|,|se|   |on|eläin|?|!|</span>
+</span></code></pre></div>
+<h4 id="perusmuotoistaminen-lemmatization">Perusmuotoistaminen (Lemmatization)</h4>
+<p>Sanojen palauttaminen niiden sanakirjamuotoon eli perusmuotoon (esim. "juoksi" &rarr; "juosta", "kissojen" &rarr; "kissa"). Tämä on erityisen kriittistä suomen kielen kaltaisissa morfologisesti rikkaissa kielissä sanaston koon hallitsemiseksi.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Pienet pyöreät pippurit hyppivät&quot;</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># pieni pyöreä pippuri hyppiä </span>
+</span></code></pre></div>
+<h4 id="sanaluokat-pos">Sanaluokat (POS)</h4>
+<p>Jokaiselle tokenille ennustetaan sen sanaluokka (esim. substantiivi, verbi, adjektiivi). Onko kuusi numero vai mikä? Muuttuuko sanaluokka, jos annat lauseessa kontekstia, kuten kertomalla että <em>taskussani on kuusi pientä palaa kakkua</em>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Kuusi palaa.&quot;</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">pos_</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Kuusi NUM</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># palaa VERB</span>
+</span></code></pre></div>
+<h4 id="riippuvuussuhteet">Riippuvuussuhteet</h4>
+<p>Sanojen välisten syntaktisten suhteiden analysointi (engl. <em>syntactic dependency parsing</em>) – kuka tekee, mitä tekee, kenelle tekee. Tämä auttaa ymmärtämään lauseen rakennetta pintaa syvemmältä. Tähän löytyy jopa oma visualisointityökalu:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">spacy</span><span class="w"> </span><span class="kn">import</span> <span class="n">displacy</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Susi hyökkäsi omistajansa kanssa pyörälenkillä &quot;</span> 
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="o">+</span> <span class="s2">&quot;olleen koiran kimppuun keskellä asutusta Raahessa&quot;</span><span class="p">)</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">mo</span><span class="o">.</span><span class="n">Html</span><span class="p">(</span><span class="n">displacy</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;dep&quot;</span><span class="p">))</span>
+</span></code></pre></div>
+<p><img alt="" src="../../images/700_displacy-susi-quote.png" /></p>
+<p><strong>Kuva 3:</strong> <em>Riippuvuussuhteiden visualisointi SpaCy:llä.</em></p>
+<h4 id="nimettyjen-entiteettien-tunnistus-ner">Nimettyjen entiteettien tunnistus (NER)</h4>
+<p>Errisnimien, organisaatioiden, paikkojen, päivämäärien ja rahasummien automaattinen tunnistus tekstivirrasta.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;microsoft Microsoft MiCrOSofT MICROSOFT macrohard&quot;</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">ent_type_</span><span class="p">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># microsoft == ORG</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Microsoft == ORG</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># MiCrOSofT == </span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># MICROSOFT == </span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># macrohard == </span>
+</span></code></pre></div>
+<h4 id="morfologinen-analyysi">Morfologinen analyysi</h4>
+<p>Tunnistaa taivutusmuotoja.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Pöydällä&quot;</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">morph</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Case=Ade|Number=Sing</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># eli adessiivi</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Pöydillä&quot;</span><span class="p">)</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">morph</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Case=Ade|Number=Plur</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># eli monikon adessiivi</span>
+</span></code></pre></div>
+<h4 id="hukkasanat-stop-words">Hukkasanat (Stop Words)</h4>
+<p>Hyvin yleisten ja usein merkitykseltään vähäisten sanojen (kuten "ja", "on", "että") suodattaminen pois, jotta malli voi keskittyä oleelliseen sisältöön.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Minua rassaa kun tuon niille jäätelöä, mutta kukaan ei niinku edes hymyile.&quot;</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="o">.</span><span class="n">is_stop</span> <span class="k">else</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># --- rassaa --- --- tuon --- jäätelöä , --- --- --- hymyile .</span>
+</span></code></pre></div>
+<h2 id="sanavektorit">Sanavektorit</h2>
+<div class="admonition tip">
+<p class="admonition-title">Määritelmät</p>
+<ul>
+<li><strong>Embedding</strong>: Yleinen termi, joka viittaa mihin tahansa tiheään numeeriseen esitykseen, joka säilyttää tietyn rakenteen tai suhteet alkuperäisessä datassa. Raschka:n mukaan se on <em>"a mapping from discrete objects, such as words, images, or even entire documents, to points in a continuous vector space"</em> <sup id="fnref:llmfromscratch"><a class="footnote-ref" href="#fn:llmfromscratch">11</a></sup>. Tähän liittyy ainakin satavuotinen historia, sisältäen klassiset PCA:t (Principal Component Analysis) sekä modernit ongelmat/ratkaisut kuten MDE (MinimumDistortion Embedding) sekä tietenkin alla esiteltävät neuroverkkopohjaiset menetelmät. <sup id="fnref:pymde"><a class="footnote-ref" href="#fn:pymde">12</a></sup></li>
+<li><strong>Word Embedding</strong>: Erityisesti sanojen tiheä numeerinen esitys, joka säilyttää semanttisia suhteita sanojen välillä. Esimerkiksi Word2Vec ja GloVe ovat menetelmiä, jotka luovat sanavektoreita. <sup id="fnref2:llmfromscratch"><a class="footnote-ref" href="#fn:llmfromscratch">11</a></sup></li>
+<li><strong>Word Vector</strong> eli <strong>sanavektori</strong>: Sama kuin aiempi, mutta korostaa sen vektoriluonnetta matemaattisena objektina.</li>
+</ul>
+<p>Huomaa, että on siis muitakin embedding-tyyppejä, kuten lause- tai osasana- (engl. subword) embeddingit. Pahoittelut finglishistä: en löydä hyvää käännöstä embedding-sanalle.</p>
+</div>
+<p>SpaCy laskee sanavektoreita, joten kurkataan, kuinka niihin pääsee käsiksi. SpaCy:n suomenkielisen pipelinen tapauksessa vektori on 96-ulotteinen. Esimerkiksi sanaa <code>Pizza</code> kuvaa 96 featurea. Nämä featuret on opittu tilastollisesti valtavasta määrästä tekstiä.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;Pizza on ravitsevaa.&quot;</span><span class="p">)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">:</span><span class="s2">&gt;12</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">vector</span><span class="p">[:</span><span class="mi">3</span><span class="p">]:</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; | &quot;</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;... | </span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">&gt;5.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>       Pizza:  0.49 | -5.49 | -3.25 | ... | -3.25
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>          on:  5.62 | -1.54 | -0.35 | ... | -0.35
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  ravitsevaa:  4.88 |  3.93 |  0.55 | ... |  0.55
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>           .: -0.65 | -0.54 |  6.29 | ... |  6.29
+</span></code></pre></div>
+<p>Löydät vastaavan rakenteen myös <code>doc.tensor</code>-attribuutista, joka sisältää koko lauseen vektoritensorin, jonka muoto olisi tässä tapauksessa <code>(3, 96)</code>. PyTorchissa tulet käsittelemään niitä yleisimmin tensoreina kokoa: <code>(batch_size, seq_len, embedding_dim)</code>.</p>
+<p>Mutta kuinka tähän outoon vektoriin ollaan päädytty? Tutustutaan alla eri menetelmiin, aloittaen Johdatus koneoppimiseen -kurssilta tutuksi tulleesta One-Hot Encoding -menetelmästä, edeten tiheisiin vektoreihin, joiden piirteet on opittu tilastollisesti. Seuraavassa luvussa tutustumme suurten kielimallien käyttämiin kontekstisidonnaisiin sanavektoreihin. Niiden ymmärtäminen on helpompaa, jos aloitetaan perusasioista.</p>
+<h3 id="one-hot-encoding">⛔ One-Hot Encoding</h3>
+<p>Tämän pitäisi olla sinulle tuttu konsepti Johdatus koneoppimiseen -kurssilta. Yksinkertaisesti sanottuna, One-Hot Encodin muuntaa jokaisen sanan vektoriksi, jossa on yhtä monta ulottuvuutta kuin sanakirjassa on sanoja. Vektorin arvo on 1 siinä ulottuvuudessa, joka vastaa kyseistä sanaa, ja 0 muualla. Eli siis, jos meillä on 6 sanan sanasto (<em>engl. corpus</em>): ["kissa", "koira", "auto", "talo", "puu", "vene"], niin koko sanasto olisi enkoodattuna:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">vocab</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="s2">&quot;kissa&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="s2">&quot;koira&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="s2">&quot;auto&quot;</span><span class="p">:</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="s2">&quot;talo&quot;</span><span class="p">:</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="s2">&quot;puu&quot;</span><span class="p">:</span>   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="s2">&quot;vene&quot;</span><span class="p">:</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="s2">&quot;UNK&quot;</span><span class="p">:</span>   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># Tuntematon sana</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Jos koko sanasto on siis <span class="arithmatex">\(400\,000\)</span> sanaa, jokainen sana esitetään <span class="arithmatex">\(400\,000\)</span>-ulotteisena vektorina, jossa vain yksi arvo on 1 ja loput <span class="arithmatex">\(399\,999\)</span> ovat 0. Tämä johtaa erittäin harvaan (sparse) esitykseen. Kukin vektori on orthogonaalinen toisiinsa nähden, mikä tarkoittaa, että sanojen välillä ei ole lainkaan semanttista yhteyttä. Esimerkiksi "kissa" ja "koira" ovat yhtä kaukana toisistaan kuin "kissa" ja "auto", vaikka ne ovat semanttisesti lähempänä toisiaan. Tämä metodi oli käytössä 1990-luvulla, mutta nykyisten kielimallien kohdalla sen voi unohtaa tyystin. <sup id="fnref:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup></p>
+<h3 id="tiheat-vektorit">Tiheät vektorit</h3>
+<p>Naiivi harva esitys on siis ongelmallinen. Seuraavaksi yksinkertaisin lähestymsistapa on käyttää tiheitä vektoreita, joissa jokainen sana esitetään matalammassa ulottuvuudessa (esim. 100 tai 300 ulottuvuutta). Tällaiset vektorit oppivat säilyttämään sanojen semanttisia suhteita, kuten synonyymit ja analogiat. Useita menetelmiä on kehitetty tällaisten sanavektorien luomiseksi, joista hyvät esimerkit ovat Word2Vec, GloVe ja fastText. <sup id="fnref2:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup></p>
+<p>Word2Vec ei itsessään ole algoritmi vaan pikemminkin joukko malleja, jotka oppivat sanavektoreita tilastollisesti. Mikolov esitteli alkuperäisessä artikkelissaan kaksi päämallia: Continuous Bag of Words (CBOW) ja Skip-Gram. <sup id="fnref:mikolov2013"><a class="footnote-ref" href="#fn:mikolov2013">14</a></sup> Tutustumme erityisesti CBOW:iin alla.</p>
+<p>Ennen Mikolovin artikkelia oli tyypillistä, että kukin NLP-tutkija kehitti/koulutti oman sanavektorimallinsa omaan käyttöönsä. Word2Vec:n mallit mullistivat tätä siten, että jatkossa tutkijat pystyivät hyödyntämään valmiiksi koulutettuja sanavektoreita, <em>pretrained word embeddings</em>, jotka oli koulutettu valtavilla tekstikorpuksilla (esim. Google News, Wikipedia). Näin sanavektorit muuttuivat standardoiduiksi resursseiksi, joita voitiin jakaa ja käyttää eri NLP-tehtävissä. <sup id="fnref3:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup></p>
+<h4 id="word2vec">Word2Vec</h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Vältä sekaannusta Bag of Words (BoW) -menetelmän kanssa, joka on eri asia kuin Continuous Bag of Words (CBOW). BOW on Naive Bayesin ja muiden perinteisten mallien esikäsittelymenetelmä, jossa lause esitetään sanakirjassa esiintyvien sanojen frekvensseinä ilman järjestystä.</p>
+<ul>
+<li>BoW: <ul>
+<li>Dokumentti-tason esitys, jossa lasketaan kunkin sanaston sanan esiintymiskerrat (tai muita tilastollisia esiintymisiä, kuten TF-IDF).</li>
+<li>Ei vaadi minkään sortin koulutusta.</li>
+</ul>
+</li>
+<li>CBOW: <ul>
+<li>Sanatason esitys.</li>
+<li>Koulutetaan ennustamaan sanaa sen kontekstin perusteella.</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Continuous Bag of Words (CBOW) -malli ennustaa keskimmäisen sanan ympäröivien sanojen perusteella. <sup id="fnref2:mikolov2013"><a class="footnote-ref" href="#fn:mikolov2013">14</a></sup> Käydään algoritmi läpi esimerkin avulla. Kuvitellaan lause: <mark>"Train will arrive at five"</mark>. Meidän ikkunakoko on 2, eli otamme kaksi sanaa kummaltakin puolelta keskimmäistä sanaa. Meidän haluttu <em>embedding</em> ulottuvuus on 3. Täten <em>input</em> ja <em>target</em> ovat esikäsittelyn jälkeen:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rest_of_vocab</span><span class="p">)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">X</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">n</span><span class="p">,</span>  <span class="c1"># train</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">n</span><span class="p">,</span>  <span class="c1"># will</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">n</span><span class="p">,</span>  <span class="c1"># at</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">n</span>   <span class="c1"># five</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="p">]</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">n</span>  <span class="c1"># arrive</span>
+</span></code></pre></div>
+<p>Näiden johdosta meillä on <code>Nx3</code>-kokoinen embedding matrix <code>W</code> (<code>N</code> sanaa sanastossa, 3 ulottuvuutta). Tämän matriisin <strong>jokainen rivi on sanan vektoriesitys</strong>. Tämä vektori on siis <em>embedding matrix</em>. Koulutuksen jälkeen tämä on se, mitä me haluamme käyttää sanavektoreina. Aluksi nämä arvot ovat satunnaisia. Syöte käytännössä valitsee <code>W</code>:stä neljä riviä (operaatiolla <code>X @ W</code>), jotka vastaavat tässä tapauksessa sanoja <code>train</code>, <code>will</code>, <code>at</code> ja <code>five</code>. Tämä <em>valinta</em> tapahtuu siten, että matriisin muut arvot saavat arvon nolla, jolloin vain näiden neljän sanan rivit vaikuttavat lopputulokseen.</p>
+<p>Tämä operaatio kääritään vielä summan tai keskiarvon sisään, <code>h = torch.sum(X @ W, dim=0)</code>, jolloin saadaan kolmeulotteinen vektori <code>h</code>, joka on näiden neljän sanan vektoreiden summa. Tämän jälkeen lasketaan <code>h @ W2</code>, jossa <code>W2</code> on toinen painomatriisi, joka muuntaa takaisin sanatilaan. Alla olevassa kuvassa tämä on nimeltään <span class="arithmatex">\(W'\)</span>. Tulos on vektori, jossa on <code>N</code> ulottuvuutta. Lopuksi käytetään softmaxia ja lasketaan tappio (loss) verraten ennustettua sanaa <code>y</code>:tä vastaan. Koko prosessi toistetaan valtavalla määrällä lauseita, jolloin <code>W</code> oppii säilyttämään sanojen semanttisia suhteita.</p>
+<p><img alt="" src="../../images/700_CBOW.png" /></p>
+<p><strong>Kuva 4:</strong> <em>Continuous Bag of Words (CBOW) -mallin arkkitehtuuri. Kuva on mukailtu Mikolov:n alkuperäisestä artikkelista, mutta avattu yllä olevan tekstiesimerkin mukaiseksi.</em></p>
+<p>Seuraavaksi voisimme liu'uttaa tätä ikkunaa eteenpäin lauseessa, jolloin saamme lisää <em>input</em>- ja <em>target</em>-pareja. Seuraava ikkuna voisi olla: <mark>"will arrive at five o'clock"</mark>, jolloin <code>y</code> olisi <code>at</code>. Näin jatketaan koko korpuksen läpi useita kertoja.</p>
+<p>CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet <sup id="fnref4:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup>:</p>
+<ol>
+<li><strong>Pieni ikkuna</strong>. CBOW käyttää kiinteän kokoista liukuvaa ikkunaa, joka rajoittaa kontekstin määrää. Pitkän kantaman riippuvuudet jäävät huomiotta.</li>
+<li><strong>Subword-tieto puuttuu</strong>. CBOW käsittelee sanat kokonaisina yksikköinä. Esimerkiksi substansiitivsta muodostetun adjektiivin kantasanan yhteys jää huomiotta (<code>vaara</code> vs. <code>vaarallinen</code> tai <code>intelligent</code> vs. <code>intelligence</code>).</li>
+<li><strong>Out of Vocabulary (OOV)</strong>. CBOW ei pysty käsittelemään sanoja, joita ei ole nähty koulutuksen aikana. Tämä on ongelma harvinaisille sanoille tai kirjoitusvirheille.</li>
+<li><strong>Staattisuus</strong>. Jokaisella sanalla on yksi kiinteä vektoriesitys, joka ei muutu kontekstin mukaan. Ono se kuusi nyt sitten numero vai puu?</li>
+</ol>
+<div class="admonition question">
+<p class="admonition-title">Entä Skip-gram?</p>
+<p>Skip-gram toimii päinvastoin kuin CBOW: se ennustaa kontekstisanoja annetun sanan perusteella. Eli jos meillä on sana <code>arrive</code>, Skip-gram yrittää ennustaa sanat <code>train</code>, <code>will</code>, <code>at</code> ja <code>five</code>. Arkkitehtuuri on muuten samanlainen, mutta syöte ja tavoite ovat vaihtaneet paikkaa <sup id="fnref3:mikolov2013"><a class="footnote-ref" href="#fn:mikolov2013">14</a></sup>. Skip-gram toimii erityisen hyvin harvinaisten sanojen kanssa, koska se keskittyy yksittäisiin sanoihin ja niiden konteksteihin. <sup id="fnref:nlp101"><a class="footnote-ref" href="#fn:nlp101">15</a></sup></p>
+</div>
+<h4 id="glove">GloVe</h4>
+<p>GloVe julkaistiin 2014 Stanfordissa, vuosi Word2Vec:n jälkeen. GloVe korjaa CBOW:n ensimmäisenä puutteen (ks. yltä) hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja(<em>engl. co-occurrence matrix</em>) pelkän lokaalin ikkunan sijaan. GloVe rakentaa sanavektorit siten, että sanojen vektoreiden välinen etäisyys heijastaa niiden yhteisesiintymistiheyttä koko korpuksessa: tämä tehdään tekemällä dimensiovähennys yhteisesiintymismatriisille <sup id="fnref5:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup>.</p>
+<p>Emme käsittele algoritmia tässä tarkemmin, mutta voit tutua sen verkkosivuihin <a href="https://nlp.stanford.edu/projects/glove/">GloVe: Global Vectors for Word Representation</a>. Sivuilta löytyy sekä julkaisu, kivoja kuvia, että linkki GitHub-koodiin (C-kieltä).</p>
+<h4 id="fasttext">fastText</h4>
+<p>Facebook julkaisi fastText-algoritmin vuonna 2016. Kuten sen artikkelin otsikosta, <em>"Enriching Word Vectors with Subword Information"</em>, voi päätellä, fastText ottaa huomioon sanojen sisäiset osat (subwords), kuten n-grammit. Tämä auttaa käsittelemään harvinaisia sanoja ja morfologisesti rikkaita kieliä paremmin kuin Word2Vec tai GloVe. fastText edustaa kutakuinkin seuraavaa evoluutiovaihetta sanavektoreissa <sup id="fnref:bojanowski2016"><a class="footnote-ref" href="#fn:bojanowski2016">16</a></sup>.</p>
+<p>Emme käsittele myöskään tätä algoritmia tarkemmin. Voit tutustua sen verkkosivuihin <a href="https://fasttext.cc/">fastText: Library for Efficient Text Classification and Representation Learning</a>. Sivuilta löytyy Explain Like I'm Five -video, linkki koodiin ja muuta hyödyllistä.</p>
+<p>Se, mikä meitä kiinnostaa, on että mitkä CBOW:n heikkouksista on nyt korjattu <sup id="fnref6:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup>:</p>
+<ol>
+<li>⛔ <strong>Pieni ikkuna</strong>. fastText käyttää edelleen kiinteän kokoista ikkunaa.</li>
+<li>✅ <strong>Subword-tieto</strong>. fastText jakaa sanat n-grammeihin.</li>
+<li>✅ <strong>Out of Vocabulary (OOV)</strong>. fastText voi luoda vektoreita tuntemattomille sanoille niiden n-grammien perusteella.</li>
+<li>⛔ <strong>Staattisuus</strong>. fastTextin sanavektorit ovat edelleen staattisia.</li>
+</ol>
+<h3 id="vektorien-vertailu">Vektorien vertailu</h3>
+<p>TODO! Kun sanat on muutettu numeerisiksi vektoreiksi, voimme laskea niiden välisiä etäisyyksiä selvittääksemme, mitkä sanat tai dokumentit ovat sisällöllisesti lähimpänä toisiaan.</p>
+<p>TODO! Yleisin tapa mitata kahden sanavektorin samankaltaisuutta on laskea niiden välinen kulma (kosini), joka on riippumaton itse vektorin pituudesta (skaalasta). Käytännön harjoituksissa hyödynnämme tähän Pythonin SciPy-kirjaston spatial.distance.cosine -funktiota.</p>
+<h4 id="vektorien-analogiat">Vektorien analogiat</h4>
+<blockquote>
+<p>"We now evaluate our approach on word analogy
+questions, of the form A is to B as C is to D,
+where D must be predicted by the models." </p>
+<p>— Mikolov et al., 2013 <sup id="fnref4:mikolov2013"><a class="footnote-ref" href="#fn:mikolov2013">14</a></sup></p>
+</blockquote>
+<p>Koska embedding on piirrovektori, voidaan laskea vektoreiden välisiä eroja ja summia. Tämä mahdollistaa semanttisten analogioiden löytämisen. Esimerkiksi, jos meillä on sanat <code>king</code>, <code>man</code> ja <code>woman</code>, voimme tehdä seuraavanlaista matematiikkaa:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">king_vector</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;king&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">vector</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="n">man_vector</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;man&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">vector</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="n">woman_vector</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="s2">&quot;woman&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">vector</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">queen_vector</span> <span class="o">=</span> <span class="n">king_vector</span> <span class="o">-</span> <span class="n">man_vector</span> <span class="o">+</span> <span class="n">woman_vector</span>
+</span></code></pre></div>
+<h3 id="samankaltaisuus-numerona">Samankaltaisuus numerona</h3>
+<p>Johdatus koneoppimiseen -kurssilta sinulle pitäisi olla tuttu käsite euklidinen etäisyys, joka mittaa suoraa etäisyyttä kahden vektorin välillä. Kyseessä on <em>linnuntie-etäisyys</em>. Piirrevektorin kohdalla tämä ei kuitenkaan ole paras tapa mitata samankaltaisuutta, koska se on herkkä vektoreiden normille eli pituudelle. Siksi käytetään usein kosinista samankaltaisuutta, joka mittaa vektoreiden välistä kulmaa, eikä niinkään etäisyyttä. <sup id="fnref:buildingaiagents"><a class="footnote-ref" href="#fn:buildingaiagents">17</a></sup> Ajatus itsessään on hyvin vanha. Ainakin itse sen esittelijöistä on Zellig Harris julkaisussa "Distributional Structure" vuodelta 1954. <sup id="fnref:harris1954"><a class="footnote-ref" href="#fn:harris1954">18</a></sup> PsycNetin tiivistelmä on seuraava: <em>"Harris maintains that it is possible to define a linguistic structure solely in terms of the "distributions" (= patterns of co-occurrences) of its elements. There is no parallel meaning-structure which can aid in describing formal structure. Meaning is partly a function of distribution."</em> <sup id="fnref:psycnetharris1954"><a class="footnote-ref" href="#fn:psycnetharris1954">19</a></sup></p>
+<p>Tämä <em>cosine similarity</em> on pistetulon normalisoitu versio. Se vastaa kahden vektorin välisen kulman kosinia, mistä nimi <strong>kosininen samankaltaisuus</strong> <sup id="fnref2:buildingaiagents"><a class="footnote-ref" href="#fn:buildingaiagents">17</a></sup>:</p>
+<div class="arithmatex">\[
+\text{cosine_similarity}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}
+\]</div>
+<p>Kosinilla on hyödyllisiä ominaisuuksia skaalainvarianssin lisäksi <sup id="fnref3:buildingaiagents"><a class="footnote-ref" href="#fn:buildingaiagents">17</a></sup>:</p>
+<ul>
+<li>Se on välillä -1 ja 1. <ul>
+<li>Vastakkaiset: -1</li>
+<li>Ortogonaaliset: 0</li>
+<li>Samansuuntaiset: 1</li>
+</ul>
+</li>
+<li>Se on nopea ja edullinen laskea.</li>
+<li>Se on vähemmän herkkä sanojen esiintymistiheydelle ja siten kestävämpi poikkeuksille (<em>engl. outliers</em>)</li>
+<li>Koska se on normalisoitu, sitä voidaan käyttää myös korkeaulotteisen datan kanssa.</li>
+</ul>
+<p><img alt="" src="../../images/700_cosine_scatterplot.png" /></p>
+<p><strong>Kuva 5:</strong> <em>Havainnekuva kosinisen samankaltaisuuden arvoista eri ryppäiden välillä. Punainen kolmio edustaa kahden ryppään välistä kosinikulmaa.</em></p>
+<p>Yllä olevassa kuvassa pisteet edustavat sanoja tai N-grammeja eli yleensä yhdessä esiintyvistä sanoista koostettuja kokonaisuuksia. Pisteparven <code>x</code>-akseli on <code>individual—social</code> ja <code>y</code> on <code>physical—digital</code>. </p>
+<ul>
+<li><img alt="🔵" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f535.svg" title=":blue_circle:" /> Siniset sanat ovat vahvan digitaalisia, lähes neutraaleja sosiaalisuudeltaan, kuten: <code>cloud_storage</code>, <code>database</code>, <code>encryption</code>. </li>
+<li><img alt="🟡" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f7e1.svg" title=":yellow_circle:" /> Keltaiset sanat ovat vähemmän digitaalisia, enemmän sosiaalisia, kuten: <code>social_media_app</code>, <code>group_chat</code>, <code>wikipedia</code>.</li>
+<li><img alt="🟣" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f7e3.svg" title=":purple_circle:" /> Violetit sanat ovat miedosti fyysisen puolella ja yksilöllisiä, kuten: <code>map</code>, <code>board_game_rulebook</code>, <code>print</code>. </li>
+</ul>
+<p>Jos valitsemme kustakin ryppäästä yhden sanan, voimme laskea etäisyyksiä. Saamme <code>cosine(yellow, blue) ≈ 0.5</code>. Sen sijaan <code>cosine(yellow, purple) ≈ -1.0</code>. Huomaa, että jos käyttäisimme euklidista etäisyyttä, tulos olisi hyvin eri: <code>euclid(yellow, blue) &gt; euclid(yellow, purple)</code>. Yksinkertaisessa 2-ulotteisessa kuvaajassa tämä on silmämääräisesti todistettavissa: muista, että sanavektori on esimerkiksi 300-ulotteinen vektori.</p>
+<h2 id="yhteenveto">Yhteenveto</h2>
+<p>Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti väitteisiin vuosikymmenittäin:</p>
+<h3 id="1990-luku">1990-luku</h3>
+<ul>
+<li><strong>Esiprosessointi ja sanojen tokenisointi</strong>. Tilastolliset menetelmät ovat hyvin hauraita syötteen suhteen, joten sananmuodot, hukkasanat ja muut on käsiteltävä huolellisesti. Tiedät tämän Johdatus koneoppimiseen -kurssilta. Naive Bayes luulee esimerkiksi että <code>Kissa</code> ja <code>kissa</code> ovat eri sanoja, ellet erikseen käsittele datasettiä.</li>
+<li><strong>One-Hot &amp; BoW</strong>. Sanat esitettiin eristettyinä indekseinä tai frekvensseinä sanakirjassa, jossa esiintyy aivan jokainen mallin tuntema sana. <sup id="fnref7:appliednlp"><a class="footnote-ref" href="#fn:appliednlp">13</a></sup></li>
+<li><strong>N-Gram</strong>. Ainut tapa mallintaa kontekstia oli tarkastella peräkkäisten sanojen yhdistelmiä. Kärjistetysti tietyistä sanapareista (bigram) tai -kolmikoista (trigram) laskettiin todennäköisyydet, eli vaikkapa <code>new york</code> on yksi token.</li>
+<li><strong>RNN ja LSTM</strong>. RNN oli 90-luvulla akateeminen kuriositeetti. Laskentatehoa oli todella vähän ja saatavat datasetit pieniä. Wikipediaa tai näytönohjaimia ei ollut olemassa.</li>
+</ul>
+<h3 id="2000-luku">2000-luku</h3>
+<ul>
+<li><strong>Word Embeddings</strong>. Bengio ja kollegat esittelivät sanavektorit kielimallinnukseen (tai käännöstyöhön). Sanavektori sisältää tietoa kontekstista, kuten sanojen <code>dog</code> ja <code>cat</code> samankaltaisuudesta. <sup id="fnref:bengio2003"><a class="footnote-ref" href="#fn:bengio2003">20</a></sup></li>
+</ul>
+<h3 id="2010-luku">2010-luku</h3>
+<ul>
+<li><strong>Word2Vec</strong>. Mikolov ja kollegat Googlessa esittelivät Word2Vecin (CBOW ja Skip-Gram), joka mahdollisti erittäin tehokkaan tavan oppia sanavektoreita suurista tekstikorpuksista. Huomaa sana <em>efficient</em> julkaisun otsikossa. Tämä jatkoi Bengion kehitystä. <sup id="fnref5:mikolov2013"><a class="footnote-ref" href="#fn:mikolov2013">14</a></sup></li>
+<li><strong>Kontekstisidonnaiset sanavektorit</strong>. Sanavektorit eivät ole enää staattisia, vaan ne riippuvat lauseen kontekstista.</li>
+<li><strong>Subword-tokenisointi</strong>. Koko sanan käyttö tokenina on naiivi ratkaisu. Yksittäisen kirjaimen käyttö tokenina sisältää enemmän informaatiota, mutta on epätehokas ratkaisu. Välistä löytynee siis hyvä balanssi? Byte-Pair Encoding (BPE) ja vastaavat menetelmät pyrkivät muodostamaan tokenit dynaamisesti yleisimmistä osasanoista. <sup id="fnref:bpe"><a class="footnote-ref" href="#fn:bpe">21</a></sup></li>
+<li><strong>Seq2Seq</strong>. Sutskever ja kollegat esittelivät encoder-decoder-arkkitehtuurin konekäännökseen, jossa RNN-verkko koodaa syötteen ja toinen RNN dekoodaa sen toiselle kielelle. Enkooderin ja dekooderin välissä on kiinteämittainen vektori, joka pyrkii sisältämään kaiken syötteen merkityksen. <sup id="fnref:sutskever2014"><a class="footnote-ref" href="#fn:sutskever2014">22</a></sup> Tästä jatketaan tarkemmin <a href="../rnn/">RNN ja jälkeläiset</a>-luvussa.</li>
+<li><strong>Attention</strong>. Bahdanau ja kollegat esittelivät <em>attention</em>-mekanismin, joka sallii dekooderin keskittyä eri osiin syötettä eri aikoina, parantaen merkittävästi käännösten laatua. <sup id="fnref:bahdanau2015"><a class="footnote-ref" href="#fn:bahdanau2015">23</a></sup></li>
+<li><strong>Transformers</strong>. Tästä jatketaan tarkemmin <a href="../transformers/">Transformers-luvussa</a>.</li>
+</ul>
+<h2 id="tehtavat">Tehtävät</h2>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Embeddings</p>
+<p>Avaa Marimo Notebook <code>700_embeddings.py</code> ja tutustu koodiin. Suorita koodi ja tarkastele tuloksia. Kokeile muuttaa sanoja ja nähdä, miten vektorit muuttuvat. Notebookissa muun muassa:</p>
+<ul>
+<li>Vertaillaan sanaparien etäisyyksiä (esim. <code>sielu</code> vs. <code>teräs</code>)</li>
+<li>Tutustutaan 1000 yleisimmän suomenkielisen sanan keskinäisiin etäisyyksiin: mitkä ovat lähimmät ja kaukaisimmat sanat?</li>
+<li>Tarkastellaan 2-ulotteiseen koordinaatistoon projisoituja sanavektoreita (PCA- ja t-SNE-menetelmillä)</li>
+</ul>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: SpaCY Playground</p>
+<p>Tämä tehtävä on vapaaehtoinen: tee, jos se auttaa sinua ymmmärtämään konseptit yltä.</p>
+<p>Käytä <code>701_spacy_playground.py</code>-notebookia apuna esimerkiksi yllä olevan tekstin ymmärtämiseen. Voit kopioida ja liittää koodinpätkät ja kokeilla niitä itse. Notebookissa on lähinnä vain import ja mallin lataus valmiina.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Sanavektorien vertailu</p>
+<p>Tämä tehtävä on vapaaehtoinen. Se vaatii suurehkon tiedoston lataamisen netistä, mikä voi olla rajoite joillekin.</p>
+<p>Avaa <code>702_nvidia_pretrained_glove.py</code>-notebook ja tutustu koodiin. Suorita koodi ja tarkastele tuloksia. Tämä on oiva tapa tutustua suurella datalla koulutettuihin sanavektoreihin.</p>
+</div>
+<h2 id="lahteet">Lähteet</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:dlwithpython">
+<p>Watson, M &amp; Chollet, F. <em>Deep Learning with Python, Third Edition</em>. Manning. 2025.&#160;<a class="footnote-backref" href="#fnref:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:turing1950">
+<p>Turing, A. M. <em>Computing Machinery and Intelligence.</em> Mind. 1950. https://courses.cs.umbc.edu/471/papers/turing.pdf&#160;<a class="footnote-backref" href="#fnref:turing1950" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aimarketing">
+<p>Ammerman, W. <em>The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning</em>. McGraw-Hill. 2024.&#160;<a class="footnote-backref" href="#fnref:aimarketing" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:aimarketing" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llmturing">
+<p>Jones, C.R. &amp; Benjamin, B. <em>Large Language Models Pass the Turing Test</em>. 2025. https://arxiv.org/abs/2503.23674&#160;<a class="footnote-backref" href="#fnref:llmturing" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:demystifyingai">
+<p>Barton, R. &amp; Henry, J. <em>Demystifying Generative AI: A Practical and Intuitive Introduction</em>. Addison-Wesley Professional. 2026.&#160;<a class="footnote-backref" href="#fnref:demystifyingai" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:demystifyingai" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:demystifyingai" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:aiux">
+<p>Lew, G. &amp; Schumacher, R. <em>AI and UX: Why Artificial Intelligence Needs User Experience</em>. Apress. 2020.&#160;<a class="footnote-backref" href="#fnref:aiux" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:rfc439">
+<p>Unknown. <em>PARRY Encounters the DOCTOR</em>. 1973. https://www.rfc-editor.org/rfc/rfc439.html&#160;<a class="footnote-backref" href="#fnref:rfc439" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:conversational">
+<p>Rawat, R. et. al. <em>Conversational Artificial Intelligence</em>. Wiley-Scrivener. 2024.&#160;<a class="footnote-backref" href="#fnref:conversational" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:airevolution">
+<p>Kanabar, V. &amp; Wong, J. The AI Revolution in Project Management: Elevating Productivity with Generative AI*. Pearson. 2023.&#160;<a class="footnote-backref" href="#fnref:airevolution" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:genesis">
+<p>Williams, B. <em>A Commonsense Approach to Story Understanding</em>. MIT. 2016. https://groups.csail.mit.edu/genesis/papers/2017%20Bryan%20Williams.pdf&#160;<a class="footnote-backref" href="#fnref:genesis" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:llmfromscratch">
+<p>Raschka, S. <em>Build a Large Language Model (From Scratch)</em>. Manning. 2024.&#160;<a class="footnote-backref" href="#fnref:llmfromscratch" title="Jump back to footnote 11 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:llmfromscratch" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pymde">
+<p>Akshay and pymde contributors. <em>What is an embedding?</em>. pymde docs. https://pymde.org/getting_started/#what-is-an-embedding&#160;<a class="footnote-backref" href="#fnref:pymde" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:appliednlp">
+<p>Patel, A &amp; Arasanipalai, A. <em>Applied Natural Language Processing in the Enterprise</em>. O'Reilly. 2021.&#160;<a class="footnote-backref" href="#fnref:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a><a class="footnote-backref" href="#fnref6:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a><a class="footnote-backref" href="#fnref7:appliednlp" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mikolov2013">
+<p>Mikolov, T. et. al. <em>Efficient Estimation of Word Representations in Vector Space</em>. 2013. https://arxiv.org/abs/1301.3781&#160;<a class="footnote-backref" href="#fnref:mikolov2013" title="Jump back to footnote 14 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:mikolov2013" title="Jump back to footnote 14 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:mikolov2013" title="Jump back to footnote 14 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:mikolov2013" title="Jump back to footnote 14 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:mikolov2013" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:nlp101">
+<p>Kulshreshta, R. <em>NLP 101: Word2Vec — Skip-gram and CBOW</em>. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314&#160;<a class="footnote-backref" href="#fnref:nlp101" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bojanowski2016">
+<p>Bojanowski, P. et. al. <em>Enriching Word Vectors with Subword Information</em>. 2016. https://arxiv.org/pdf/1607.04606&#160;<a class="footnote-backref" href="#fnref:bojanowski2016" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:buildingaiagents">
+<p>Raieli, S. &amp; Iuculano, G. <em>Building AI Agents with LLMs, RAG, and Knowledge Graphs</em>. Packt. 2025.&#160;<a class="footnote-backref" href="#fnref:buildingaiagents" title="Jump back to footnote 17 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:buildingaiagents" title="Jump back to footnote 17 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:buildingaiagents" title="Jump back to footnote 17 in the text">&#8617;</a></p>
+</li>
+<li id="fn:harris1954">
+<p>Harris, Z. <em>Distributional Structure</em>. Word. 1954. https://www.its.caltech.edu/~matilde/ZelligHarrisDistributionalStructure1954.pdf&#160;<a class="footnote-backref" href="#fnref:harris1954" title="Jump back to footnote 18 in the text">&#8617;</a></p>
+</li>
+<li id="fn:psycnetharris1954">
+<p>APA PsycNet. <em>Distributional Structure</em>. PsycINFO Database Record. 2016. https://psycnet.apa.org/record/1956-02807-001&#160;<a class="footnote-backref" href="#fnref:psycnetharris1954" title="Jump back to footnote 19 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bengio2003">
+<p>Bengio, Y. et. al. <em>A Neural Probabilistic Language Model</em>. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf&#160;<a class="footnote-backref" href="#fnref:bengio2003" title="Jump back to footnote 20 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bpe">
+<p>Sennrich, R. et. al. <em>Neural Machine Translation of Rare Words with Subword Units</em>. 2016. https://arxiv.org/abs/1508.07909&#160;<a class="footnote-backref" href="#fnref:bpe" title="Jump back to footnote 21 in the text">&#8617;</a></p>
+</li>
+<li id="fn:sutskever2014">
+<p>Sutskever, I. et. al. <em>Sequence to Sequence Learning with Neural Networks</em>. 2014. https://arxiv.org/abs/1409.3215&#160;<a class="footnote-backref" href="#fnref:sutskever2014" title="Jump back to footnote 22 in the text">&#8617;</a></p>
+</li>
+<li id="fn:bahdanau2015">
+<p>Bahdanau, D. et. al. <em>Neural Machine Translation by Jointly Learning to Align and Translate</em>. 2015. https://arxiv.org/abs/1409.0473&#160;<a class="footnote-backref" href="#fnref:bahdanau2015" title="Jump back to footnote 23 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 <a href="https://www.kamk.fi">Kajaanin Ammattikorkeakoulu Oy</a>. 
+Licenced under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">BY-NC-SA 4.0</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Kopioitu leikep\u00f6yd\u00e4lle", "clipboard.copy": "Kopioi leikep\u00f6yd\u00e4lle", "search.result.more.one": "1 lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.more.other": "# lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.none": "Ei t\u00e4sm\u00e4\u00e4vi\u00e4 dokumentteja", "search.result.one": "1 t\u00e4sm\u00e4\u00e4v\u00e4 dokumentti", "search.result.other": "# t\u00e4sm\u00e4\u00e4v\u00e4\u00e4 dokumenttia", "search.result.placeholder": "Kirjoita aloittaaksesi haun", "search.result.term.missing": "Puuttuu", "select.version": "Valitse versio"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

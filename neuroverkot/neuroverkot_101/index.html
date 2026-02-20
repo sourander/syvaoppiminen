@@ -1,0 +1,2114 @@
+
+<!doctype html>
+<html lang="fi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../syvaoppiminen_FC/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>Neuroverkot - Syväoppiminen I</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#neuroverkot" class="md-skip">
+          Hyppää sisältöön
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Ylätunniste">
+    <a href="../.." title="Syväoppiminen I" class="md-header__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Syväoppiminen I
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Neuroverkot
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Hae" placeholder="Hae" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Haku">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Tyhjää" aria-label="Tyhjää" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Aloitetaan hakua
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigaatio" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Syväoppiminen I" class="md-nav__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Syväoppiminen I
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tervetuloa kurssille
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Neuroverkot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#maaritelma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Määritelmä
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Määritelmä">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#koneoppimista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koneoppimista
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#epalineaarista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epälineaarista
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Historia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-or-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All or nothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dartmouth-ja-ain-synty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dartmouth ja AI:n synty
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kissakokeet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kissakokeet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perceptron" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perceptron
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-talven-alku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI-talven alku
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#80-luvun-kevat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        80-luvun kevät
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matalat-neuroverkot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matalat neuroverkot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Matalat neuroverkot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viittaus-koneoppimiseen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viittaus koneoppimiseen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maaritelma_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Määritelmä
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mita-se-tekee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mitä se tekee?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#koulutus-ja-inferenssi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koulutus ja inferenssi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Koulutus ja inferenssi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#koulutus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koulutus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inferenssi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inferenssi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mihin-kaytetaan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mihin käytetään
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../syvaoppiminen_FC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syvät neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Tensorit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Tensorit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tensorit/vektorointi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vektorointi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tensorit/pytorch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyTorch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Vastavirta
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Vastavirta
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vastavirta/backpropagation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vastavirta (Backprop)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Mallinnus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4. Mallinnus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/yleiskatsaus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yleiskatsaus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/datanlataus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datan lataus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/kaytannot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kouluttamisen käytännöt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Konvoluutio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5. Konvoluutio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../konvoluutio/cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konvoluutioverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    6. Siirtovaikutus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/pretrained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Koulutetun mallin käyttö
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/transferlearning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Kieli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    7. Kieli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/nlp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Luonnollinen kieli
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/rnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RNN ja jälkeläiset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Aikasarjat
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aikasarjat/ideat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tehtäväkooste
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#maaritelma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Määritelmä
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Määritelmä">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#koneoppimista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koneoppimista
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#epalineaarista" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epälineaarista
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#historia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Historia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Historia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-or-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All or nothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dartmouth-ja-ain-synty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dartmouth ja AI:n synty
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kissakokeet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kissakokeet
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perceptron" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perceptron
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-talven-alku" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI-talven alku
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#80-luvun-kevat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        80-luvun kevät
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matalat-neuroverkot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Matalat neuroverkot
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Matalat neuroverkot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#viittaus-koneoppimiseen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viittaus koneoppimiseen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maaritelma_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Määritelmä
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mita-se-tekee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mitä se tekee?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#koulutus-ja-inferenssi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koulutus ja inferenssi
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Koulutus ja inferenssi">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#koulutus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Koulutus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inferenssi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inferenssi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mihin-kaytetaan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mihin käytetään
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="neuroverkot">Neuroverkot</h1>
+<h2 id="maaritelma">Määritelmä</h2>
+<h3 id="koneoppimista">Koneoppimista</h3>
+<p>Neuroverkot (engl. neural networks) ovat koneoppimisen malleja, jotka saavat inspiraationsa ihmisen aivojen rakenteesta ja toiminnasta. Neuroverkot pystyvät oppimaan monimutkaisia kuvioita datasta, ja niitä käytetään laajalti erilaisissa sovelluksissa, kuten kuvantunnistuksessa, puheentunnistuksessa ja luonnollisen kielen käsittelyssä. Koneoppimisen (mukaan lukien sen alaisuuteen kuuluvan syväoppimisen) voi tiiviisti määritellä seuraavasti:</p>
+<blockquote>
+<p>"Fit a given set of data points into an appropriate function (mapping an input to an output) that picks up on the important signals in the data and ignores the noise, then make sure this function performs well on new data."</p>
+<p>— Hala Nelson <sup id="fnref3:mathforai"><a class="footnote-ref" href="#fn:mathforai">1</a></sup></p>
+</blockquote>
+<p>Kannattaa kerrata omista Johdatus koneoppimiseen -kurssin muistiinpanoista, kuinka tekoäly, koneoppiminen ja syväoppiminen liittyvät toisiinsa. Voit myös kerrata sieltä muita määritelmiä koneoppimisesta.</p>
+<p>Se, kuinka neuroverkot eroavat Johdatus koneoppimiseen -kurssin malleista, on:</p>
+<ul>
+<li>Neuroverkot pystyvät oppimaan itse piirteet (feature learning). Tämä ei tarkoita, että <em>feature engineering</em> vaihe olisi turha, mutta tätä työtä voi ulkoistaa neuroverkolle.</li>
+<li>Neuroverkot pystyvät mallintamaan monimutkaisempia, epälineaarisia suhteita datassa.</li>
+</ul>
+<h3 id="epalineaarista">Epälineaarista</h3>
+<p>Varmistetaan jo heti kurssin alussa, että on ymmärrys siitä, mitä lineaarisuus tarkoittaa tässä kontekstissa. Lineaariset kaavat tai funktiot on helppo tunnistaa siitä, että ne on helppo kirjoittaa. Piirteet esiintyvät funktiossa omassa luonnollisessa muodossaan. Funktiossa ei esiinny esimerkiksi: neliöjuuria, potensseja, logaritmisa, siniä, cosinia tai muuta selkeästi ei-lineaarista. <sup id="fnref:mathforai"><a class="footnote-ref" href="#fn:mathforai">1</a></sup> Esimerkki Pythonilla olisi:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">linear_function</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">):</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">return</span> <span class="n">w1</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">w2</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">w3</span> <span class="o">*</span> <span class="n">x3</span> <span class="o">+</span> <span class="n">w0</span>
+</span></code></pre></div>
+<p>Ei-lineaariset funktiot ovat monimutkaisempia. Syötteen ja tuloksen välillä on epälineaarinen suhde. <sup id="fnref2:mathforai"><a class="footnote-ref" href="#fn:mathforai">1</a></sup> Esimerkki Pythonilla:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">nonlinear_function</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">):</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">return</span> <span class="n">w1</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="n">w2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">/</span> <span class="n">x3</span><span class="p">)</span> <span class="o">+</span> <span class="n">w3</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span> <span class="o">+</span> <span class="n">w0</span>
+</span></code></pre></div>
+<p>Neuroverkot kykenevät mallintamaan epälineaarisia funktioita, koska ne käyttävät epälineaarisia aktivointifunktioita (kuten ReLU, sigmoid tai tanh) piilotetuissa kerroksissaan. Tämä mahdollistaa monimutkaisten kuvioiden oppimisen datasta.</p>
+<h2 id="historia">Historia</h2>
+<h3 id="all-or-nothing">All or nothing</h3>
+<p>Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1943 <strong>Warren McCulloch</strong> ja <strong>Walter Pitts</strong> julkaisivat artikkelin <em>"A Logical Calculus of the Ideas Immanent in Nervous Activity"</em>, jossa he esittivät yksinkertaisen mallin keinotekoisesta neuronista. Malli perustui "all-or-nothing" -periaatteeseen, jossa neuronin aktivaatio tapahtuu, kun syötteiden painotettu summa ylittää tietyn kynnyksen. Kyseessä olivat siis binääriset neuronit, jotka toimivat loogisina portteina. <sup id="fnref:fastaibook"><a class="footnote-ref" href="#fn:fastaibook">2</a></sup></p>
+<blockquote>
+<p>"Pitts was self-taught, and by age 12, had received an offer to study at Cambridge University with the great Bertrand Russell. He did not take up this invitation, and indeed throughout his life did not accept any offers of advanced degrees or positions of authority. Most of his famous work was done while he was homeless."</p>
+<p>— Gugger &amp; Howard, Deep Learning for Coders with fastai and PyTorch <sup id="fnref5:fastaibook"><a class="footnote-ref" href="#fn:fastaibook">2</a></sup></p>
+</blockquote>
+<h3 id="dartmouth-ja-ain-synty">Dartmouth ja AI:n synty</h3>
+<p>Vaikka McCulloch ja Pitts olivat jo 1943 luoneet teoreettisen pohjan keinotekoisille neuroneille, AI:n syntymähetki tieteenalana on kesällä 1956 Dartmouth Collegessa järjestetty työpaja <em>Dartmouth Summer Research Project</em> – ainakin yliopiston itsensä mukaan <sup id="fnref:termcoined"><a class="footnote-ref" href="#fn:termcoined">3</a></sup>. <strong>John McCarthy</strong> toimi kokoonpanijana ja muita järjestäjiä olivat <strong>Marvin Minsky</strong>, <strong>Claude Shannon</strong> ja <strong>Nathaniel Rochester</strong>.</p>
+<blockquote>
+<p>"We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire. [...] An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves."</p>
+<p>— A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence, 1955 <sup id="fnref:dartproposal"><a class="footnote-ref" href="#fn:dartproposal">4</a></sup></p>
+</blockquote>
+<p>Työpajan aivoriihissä käsiteltiin jo tuolloin monia alueita, jotka ovat edelleen keskeisiä. Työpajasta on jo yli 70 vuotta, mutta silti siihen törmää yhä: John K. Thompson esitteli Helsinki Data Week 2025:ssa tämän kesäprojektin AI:n ensimmäisenä askeleena Keynote-puheessaan.</p>
+<h3 id="kissakokeet">Kissakokeet</h3>
+<p>50-luvun lopulla <strong>David Hubel</strong> ja <strong>Torsten Wiesel</strong> tutkivat, kuinka aivokuoressa käsitellään visuaalista informaatiota. He havaitsivat, että tietyt neuronit reagoivat spesifisiin visuaalisiin ärsykkeisiin, kuten viivoihin ja reunoihin <sup id="fnref:dlillustrated"><a class="footnote-ref" href="#fn:dlillustrated">5</a></sup>. He saivat tästä Nobelin fysiologian ja lääketieteen palkinnon vuonna 1981. <sup id="fnref:nobel1981"><a class="footnote-ref" href="#fn:nobel1981">6</a></sup> Hubel ja Wiesel suorittivat kokeensa näyttämällä visuaalisia ärsykkeitä nukutetuille kissoille. Näiden 24 kissaraukan hermosolujen aktivaatiota tarkkailtiin mittalaitteilla aivokuoresta. <sup id="fnref:hubelwiesel"><a class="footnote-ref" href="#fn:hubelwiesel">7</a></sup> Lieneekö kirja (ja elokuva) Kellopeliappelsiini ottanut tästä vaikutteita?</p>
+<p>Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja yksinkertaisilla muodoilla kuten pisteillä, mutta eivät saaneet mitään vastetta. Sitten sattuma ja vahinko astuivat peliin: <em>"And then, as with many of the great discoveries, from X-rays to penicillin to the microwave oven, Hubel and Wiesel made a serendipitous observation: As they removed one of their slides from the projector, its straight edge elicited the distinctive crackle of their recording equipment to alert them that a primary visual cortex neuron was firing."</em> <sup id="fnref2:dlillustrated"><a class="footnote-ref" href="#fn:dlillustrated">5</a></sup> Nämä neuronit, joihin signaali tulee ensimmäisenä silmien suunnasta, saivat nimen "simple cells". Nämä solut kytkeytyvät edelleen monimutkaisempiin "complex cells" -soluihin, jotka reagoivat viivoihin ja reunoihin eri kulmissa. Kun näitä verkkoja kasataan useita kerroksia, meillä on syvä neuroverkko, joka pystyy tunnistamaan monimutkaisia kuvioita, kuten kasvoja, esineitä ja maisemia.</p>
+<p><img alt="alt text" src="../../images/100_hubel_wiesel_cat.png" /></p>
+<p><strong>Kuva 1:</strong> <em>Otos Hubelin ja Wieselin tutkimuksesta. Kuva näyttää, miten primaari näköaivokuori (V1) reagoi eri kohtiin verkkokalvon näkökentässä osuvista pistemäisistä valoista reseptiivisen kentän kautta.</em> <sup id="fnref2:hubelwiesel"><a class="footnote-ref" href="#fn:hubelwiesel">7</a></sup></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Aivokuori on evoluution myöhäinen kehitystuote, joka selittää nisäkkäiden monimutkaista käyttäytymistä verrattuna vanhempiin eläinryhmiin. <sup id="fnref3:dlillustrated"><a class="footnote-ref" href="#fn:dlillustrated">5</a></sup></p>
+<p>Aivoja kutsutaan "harmaaksi aineeksi", koska ulkopinta (aivokuori) on harmaata. Suurin osa aivoista on kuitenkin valkoista ainetta, joka kuljettaa tietoa pitkiä matkoja. Sen hermosolut on päällystetty valkoisella rasvaisella kalvolla, joka nopeuttaa signaalien johtumista. <sup id="fnref4:dlillustrated"><a class="footnote-ref" href="#fn:dlillustrated">5</a></sup></p>
+</div>
+<h3 id="perceptron">Perceptron</h3>
+<p>1950-luvun tapahtui samanaikaisesti myös muuta. <strong>Frank Rosenblatt</strong> jalosti McCulloch ja Pittsin ajatusta kehittäen tavan kouluttaa neuroverkkoja. Näin syntyi Mark I Perceptron, joka oli yksi ensimmäisistä neuroverkkopohjaisista malleista. <sup id="fnref2:fastaibook"><a class="footnote-ref" href="#fn:fastaibook">2</a></sup> Kyseinen malli ei ollut teoriaa vaan se saatiin toteutettua siten, että se tunnisti yksinkertaisia kuvioita, kuten neliön ja ympyrän. Voit tutustua alkuperäiseen artikkeliin lähteiden kautta löytyvästä PDF-tiedostosta. <sup id="fnref:researchtrends"><a class="footnote-ref" href="#fn:researchtrends">8</a></sup></p>
+<p><img alt="alt text" src="../../images/100_design_of_intelligent_automaton_research_trends.png" /></p>
+<p><strong>Kuva 2:</strong> <em>Lehtileike Research Trends -lehden kesän 1958 numerosta. Huomaa ingressi: "Introducing the perceptron — A machine which senses, recognizes, remembers, and responds like the human mind."</em> <sup id="fnref2:researchtrends"><a class="footnote-ref" href="#fn:researchtrends">8</a></sup></p>
+<h3 id="ai-talven-alku">AI-talven alku</h3>
+<p>MIT:n tohtori <strong>Marvin Minsky</strong> ja <strong>Seymour Papert</strong> julkaisivat vuonna 1969 kirjan <em>Perceptrons</em>, jossa he osoittivat, että yksittäinen kerros ei pysty ratkaisemaan tiettyjä ongelmia, kuten XOR-ongelmaa. Howard ja Gugger <sup id="fnref3:fastaibook"><a class="footnote-ref" href="#fn:fastaibook">2</a></sup> toteavat, että samassa Perceptrons-kirjassa esiteltiin myös ratkaisuja ongelmaan, kuten useiden kerrosten käyttö. Heidän mukaansa vain rajoitukset saivat huomiota, ja näin alkoi parin vuosikymmenen "talvi", jolloin neuroverkkojen tutkimus hiipui.</p>
+<h3 id="80-luvun-kevat">80-luvun kevät</h3>
+<p>AI-talven jälkeen alkoi taas tapahtua. 1986 <strong>David Rumelhart</strong>, <strong>James McClelland</strong> ja PDP Research Group julkaisivat moniosaisen artikkelin <em>Parallel Distributed Processing (PDP)</em>. Howard ja Gugger nostavat tämän viimeisen 50 vuoden käänteentekevimmäksi julkaisuksi. PDP:n asettamat vaatimukset, kuten "joukko prosessointiyksiköitä" ja "ulostulon funktio", ovat edelleen keskeisiä neuroverkkojen määritelmässä. Skaala on toki kasvanut: 80-luvulla verkoissa oli yleensä 2 kerrosta. Jo tällöin, 80- ja 90-luvuilla, koneoppimisella oli jo oikeita käyttötarkoituksia, mutta AI-tutkimus koki yhä tietynlaista AI-talvea. Vasta äskettäin, 2010-luvun lopulla, alkoi nykyinen AI-kevät. <sup id="fnref4:fastaibook"><a class="footnote-ref" href="#fn:fastaibook">2</a></sup> Avainsanoja tässä nykyisen kevään alussa ovat esimerkiksi AlexNet, AlphaGo, GAN, GPU.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/v0A8zNek68o?si=btx_I46lSsoSxgGa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<p><strong>Video 1:</strong> <em>Stanfordin tohtori Jay McClelland vastaa Podcastissä kysymykseen "What is Parallel Distributed Processing?" eli PDP. Videolla keskustellaan siitä, miksi ihminen muistaa helpommin hänelle esitetyn kirjaimen, jos esitetyt kirjaimet muodostavat sanan.</em></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/H0oEr40YhrQ?si=coHhJ_PINndgwQpu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<p><strong>Video 2:</strong> <em>Yann LeCun esiintyy vuonna 1989 videolla esittelemässä LeNEt 1 -verkkoa (9760 parametria), joka kykenee tunnistamaan käsinkirjoitettuja numeroita. Datasetti tunnetaan nimellä MNIST. Tämä kyseinen video on ConvNet-verkon avulla kuvanlaadultaan paranneltu versio alkuperäisestä. Videolla esiintyy siis konvoluutioverkkojen esi-isä, ja videota on korjailtu vuosikymmeniä myöhemmin sen kunnioittamiseksi.</em></p>
+<p>80-luvulla vaikuttivat myös 2024 Nobelilla palkitut John J. Hopfield ja Geoffrey Hinton. <sup id="fnref:nobel2024"><a class="footnote-ref" href="#fn:nobel2024">9</a></sup> Daniel Crevier nostaa Hopfieldin työn merkityksen esilleen esiin kirjassaan <em>AI: The Tumultuous Search for Artificial Intelligence</em>. Hän kirjoittaa, että AI-talvi loppui osaltaan 80-luvulla Hopfieldin julkaisuun, mainiten myös PDP:n sekä backpropagation-algoritmin, joihin kumpaankin liittyy Rummelhart. <sup id="fnref:tumultous"><a class="footnote-ref" href="#fn:tumultous">10</a></sup> Suomalaisena on kuitenkin hyvä huomauttaa, että backpropagation-algoritmin ensimmäisenä keksinyt lienee Seppo Linnainmaa pro gradu -työssään vuonna 1970, joskaan ei neuroverkon kontekstissa. Tästä huolimatta: <em>"As of 2020, all modern software packages for NNs (such as Google's Tensorflow) are based on Linnainmaa's method of 1970."</em> <sup id="fnref:juergen"><a class="footnote-ref" href="#fn:juergen">11</a></sup></p>
+<p><img alt="" src="../../images/100_nobel_memories_landscape.png" /></p>
+<p><strong>Kuva 3:</strong> <em>Hopfield network -mallin toimintaa graafisesti kuvattuna. Vastaava maisemassa vaeltaminen lienee Johdatus koneoppimiseen -kurssin Gradient Descent -osiosta tuttu. Kuva: ©Johan Jarnestad/The Royal Swedish Academy of Sciences</em></p>
+<h2 id="matalat-neuroverkot">Matalat neuroverkot</h2>
+<h3 id="viittaus-koneoppimiseen">Viittaus koneoppimiseen</h3>
+<p>Ennen kuin tutustumme aiheen syvään päätyyn eli syviin neuroverkkoihin (engl. deep neural networks), on hyvä tarkistella matalia neuroverkkoja (engl. shallow neural networks). Kertaa alkuun Johdatus koneoppimiseen kurssilta <a href="https://sourander.github.io/ml-perusteet/algoritmit/linear/normal_equation/">Normaaliyhtälö</a>, <a href="https://sourander.github.io/ml-perusteet/algoritmit/linear/gradient_descent/">Gradient Descent</a> sekä <a href="https://sourander.github.io/ml-perusteet/algoritmit/linear/logistic/">Logistinen regressio</a>. Kyseisellä kurssilla sinulle on kerrottu, että näissä aiheissa on pohja neuroverkkojen ymmärrykselle. Nyt on siihen paneutumisen aika.</p>
+<p>Tavallisen 1D-regressiomallin rajoituksia ovat <sup id="fnref:udlbook"><a class="footnote-ref" href="#fn:udlbook">12</a></sup>, että se voi mallintaa:</p>
+<ul>
+<li>vain viivan</li>
+<li>yhden inputin</li>
+<li>yhden outputin</li>
+</ul>
+<p>Näitä rajoituksia kierrettiin Johdatus koneoppimiseen kurssilla osin käyttämällä logistista regressiota, SGD:tä ja polynomeja. Jos jälkimmäinen ei herätä muistikuvia, kertaa scikitin dokumentaatiosta <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html">PolynomialFeatures</a>, jonka avulla muuttujista <code>[a, b]</code> voi muodostaa toisen asteen polynomifunktion <code>[a, b, a^2, ab, b^2]</code>. Malli on yhä lineaarinen parametrien suhteen, mutta muunnettu piirreavaruus mahdollistaa epälineaaristen kuvioiden mallintamisen alkuperäisessä syöteavaruudessa. Tämä ei ehkä ole tieteellisesti täysin pätevä vertaus, mutta voi auttaa: kuvittele, että piirrät <mark>logaritmiseen taulukkoon suoran viivan</mark>. Viiva on lineaarinen logaritmisessa avaruudessa, mutta alkuperäisessä mittakaavassa ("todellisuudessa") se kuvaa eksponentiaalista käyrää.</p>
+<h3 id="maaritelma_1">Määritelmä</h3>
+<p><img alt="" src="../../images/100_ShallowTerminology.svg" /></p>
+<p><strong>Kuva 4:</strong> Matala neuroverkko koostuu kerroksista: syöte (input), piilotettu (hidden) ja tuloste (output). Kerrokset yhdistävät eteenpäin suunnatut yhteydet (nuolet), joten näitä kutsutaan eteenpäin syöttäviksi verkoiksi (feed-forward networks). Kun jokainen muuttuja yhdistyy kaikkiin seuraavan kerroksen muuttujiin, kyseessä on täysin yhdistetty verkko. Yhteydet edustavat painokertoimia, piilokierroksen muuttujia kutsutaan neuroneiksi tai piiloyksikköiksi (hidden units). (CC-BY-NC-ND) <sup id="fnref2:udlbook"><a class="footnote-ref" href="#fn:udlbook">12</a></sup></p>
+<p>Yllä näkyvän kuvan verkosta <mark>tekee matalan se, että siinä on vain yksi piilokerros</mark>. Jos kerroksia olisi useita, kyseessä olisi syvä neuroverkko. Näihin tutustumme myöhemmin.</p>
+<p>Nyt pyydän sinua palaamaan takaisin Johdatus Koneoppimiseen kurssin <a href="https://sourander.github.io/ml-perusteet/algoritmit/linear/logistic/">Logistinen regressio</a> osioon. Siellä on esitelty logistinen regressio, joka on käytännössä yksi neuroni. Jos kytket syötteen useisiin neuroneihin, saat piilokerroksen. Jos kytket piilokerroksen useisiin neuroneihin, saat tulostekerroksen (output). Näin sinulla on neuroverkko luotuna. Muista, että tuloja ja lähtöjä voi olla useita.</p>
+<h3 id="mita-se-tekee">Mitä se tekee?</h3>
+<p>Käsitellään tämän otsikon alla seuraavanlaista verkkoa:</p>
+<p><img alt="" src="../../images/100_ShallowNet.svg" /></p>
+<p><strong>Kuva 5:</strong> Yksinkertainen neuroverkko, jossa on vain yksi syöte x, kolme piilotettua neuronia ja yksi tulos. Vasemmanpuoleiseen versioon on lisättynä vakiotermi (intercept, bias), joka yleensä jätetään kuvaajista pois. (CC-BY-NC-ND) <sup id="fnref3:udlbook"><a class="footnote-ref" href="#fn:udlbook">12</a></sup></p>
+<p>Kaikki kuvan nuolet ovat painoja (weights). Lineaarialgebrassa näitä kutsuttaisiin kulmakertoimiksi (slope), mutta neuroverkoissa termi on paino. Koska meillä on 1 sisääntulo ja 3 neuronia, näiden välillä on <code>1 x 3</code> eli kolme painoa. Lisäksi kutakin vakiotermiä (bias) kohden on yksi paino, joten niitä on kolme lisää. Yhteensä painoja on siis kuusi. Toivon mukaan tämä alkaa kuulostaa tutulta, kun mietit Johdatus koneoppimiseen kurssin normaaliyhtälön matriisiesitystä, joka käsiteltiin <a href="https://sourander.github.io/ml-perusteet/algoritmit/linear/hill_climbing/">Hill Climbing</a> osiossa. Kuvaa tutkimalla huomaat, että esimerkiksi <span class="arithmatex">\(\theta_{10}\)</span> ja <span class="arithmatex">\(\theta_{11}\)</span> vastaavat painoja, jotka yhdistävät syötteen <span class="arithmatex">\(x\)</span> ja vakiotermin <span class="arithmatex">\(1\)</span> piilotetun kerroksen ensimmäiseen neuroniin <span class="arithmatex">\(h_1\)</span>. Theta on siis 3x2 matriisi, joka näyttää tältä:</p>
+<div class="arithmatex">\[
+\Theta = \begin{bmatrix}
+\theta_{10} &amp; \theta_{11} \\
+\theta_{20} &amp; \theta_{21} \\
+\theta_{30} &amp; \theta_{31}
+\end{bmatrix}
+\]</div>
+<p>Eli siis <span class="arithmatex">\(h_1\)</span>, <span class="arithmatex">\(h_2\)</span> ja <span class="arithmatex">\(h_3\)</span>, tai tarkemmin niiden esiasteet (pre-activation), lasketaan seuraavasti:</p>
+<div class="arithmatex">\[
+\begin{align*}
+h_{pre1} &amp;= \theta_{10} + \theta_{11} x \\
+h_{pre2} &amp;= \theta_{20} + \theta_{21} x \\
+h_{pre3} &amp;= \theta_{30} + \theta_{31} x
+\end{align*}
+\]</div>
+<p>Yllä olevissa lukee pienellä <code>pre</code>, koska kyseessä ovat esiasteet (<em>engl. pre-activations</em>), jotka merkitään usein lyhenteellä <span class="arithmatex">\(z\)</span>, ja tunnetaan myös nimellä logitti (<em>engl. logit</em>). Näistä saa varsinaiset piilotetun yksikön aktivoinnit (activations) aktivointifunktion avulla. Käsittelemme aktivointifunktiot myöhemmin kattavammin, mutta tässä välissä riittää hyväksyä, että kunkin piilotetun kerroksen neuronin laskema arvo syötetään tyypillisesti ReLu-aktivointifunktioon, joka palauttaa nollan, jos syöte on negatiivinen, ja syötteen itsensä, jos se on positiivinen.</p>
+<p><img alt="" src="../../images/100_ShallowReLU.svg" /></p>
+<p><strong>Kuva 6:</strong> ReLu-aktivointifunktio. (CC-BY-NC-ND) <sup id="fnref4:udlbook"><a class="footnote-ref" href="#fn:udlbook">12</a></sup></p>
+<p>Kun tämä aktivointifunktio, <span class="arithmatex">\(f(z) = max(0, z)\)</span>, joka tunnetaan jatkossa pienenä sigmana (<span class="arithmatex">\(\sigma\)</span>), on otettu huomioon, piilotetun kerroksen arvot ovat siis:</p>
+<div class="arithmatex">\[
+\begin{align*}
+h_1 &amp;= \sigma(\theta_{10} + \theta_{11} x) \\
+h_2 &amp;= \sigma(\theta_{20} + \theta_{21} x) \\
+h_3 &amp;= \sigma(\theta_{30} + \theta_{31} x)
+\end{align*}
+\]</div>
+<p>Yllä olevassa kaavassa <code>x</code> on syöte, <span class="arithmatex">\(\theta\)</span> on painot ja <span class="arithmatex">\(h\)</span> on piilotetun kerroksen aktivoinnit eli varsinaiset <em>hidden unit</em> eli piiloyksiköt. Näiden lineaarinen yhdistelmä antaa tuloksen <code>y</code>:</p>
+<div class="arithmatex">\[
+y = \phi_0 + \phi_1 h_1 + \phi_2 h_2 + \phi_3 h_3
+\]</div>
+<p>Kaiken kaikkiaan mallin opittua parametrejä ovat siis:</p>
+<div class="arithmatex">\[
+\begin{align*}
+\phi_0 &amp;= \text{tuloskerroksen vakiotermi (bias)} \\
+\phi_1, \phi_2, \phi_3 &amp;= \text{tuloskerroksen painot} \\
+\theta_{10}, \theta_{20}, \theta_{30} &amp;= \text{piilotetun kerroksen muuttujien painot} \\
+\theta_{11}, \theta_{21}, \theta_{31} &amp;= \text{piilotetun kerroksen vakioiden painot}
+\end{align*}
+\]</div>
+<p>Nämä neljä vaihetta, eli esiasteet, aktivoinnit, piilokerroksen lähtö ja viimeisen kerroksen tulos näkyvät alla olevassa kuvassa.</p>
+<p><img alt="" src="../../images/100_ShallowBuildUp.svg" /></p>
+<p><strong>Kuva 7:</strong> Neuroverkon laskennan vaiheet <code>a-j</code>. Viimeisen kuvaajan varjostetussa alueessa <span class="arithmatex">\(h_2\)</span> on passiivinen (leikattu), mutta <span class="arithmatex">\(h_1\)</span> ja <span class="arithmatex">\(h_3\)</span> ovat molemmat aktiivisia. (CC-BY-NC-ND) <sup id="fnref5:udlbook"><a class="footnote-ref" href="#fn:udlbook">12</a></sup></p>
+<ul>
+<li><strong>Esiasteet (a-c)</strong>: Syöte x syötetään kolmeen lineaarifunktioon, joista jokaisella on eri y-leikkauspiste ja kulmakerroin.</li>
+<li><strong>Aktivoinnit (d-f)</strong>: Jokainen lineaarifunktio syötetään ReLU-aktivointifunktioon, joka leikkaa negatiiviset arvot nollaan.</li>
+<li><strong>Painotus (g-i)</strong>: Kolmea leikattu funktiota painotetaan (skaalataan) kertoimilla <span class="arithmatex">\(\phi_1\)</span>, <span class="arithmatex">\(\phi_2\)</span> ja <span class="arithmatex">\(\phi_3\)</span>.</li>
+<li><strong>Yhteenlasku (j)</strong>: Leikatut ja painotetut funktiot summataan yhteen ja lisätään offset-arvo <span class="arithmatex">\(\phi_0\)</span>, joka kontrolloi korkeutta.</li>
+</ul>
+<p>Huomaa, että kuvaajassa on kolme "niveltä". Tästä tulee termi <em>piecewise linear function</em> (suom. paloittain määritelty lineaarinen funktio). Mikäli ennustettava ilmiö on monimutkainen, tarvitaan useampia piilokerroksia, jotta tämä paloittain määritelty funktio saadaan taiteltua haluttuun muotoon. Alla tästä vielä havainnollistava kuva.</p>
+<p><img alt="" src="../../images/100_ShallowApproximate.svg" /></p>
+<p><strong>Kuva 8:</strong> Katkoviivalla näkyvää todellista ilmiötä voi yrittää mallintaa eri piiloverkon kokoisilla malleilla. Vasemmanpuoleinen malli on selkeästi liian yksinkertainen, oikea on tarkka (joskin kenties liian tarkka.) (CC-BY-NC-ND) <sup id="fnref6:udlbook"><a class="footnote-ref" href="#fn:udlbook">12</a></sup></p>
+<p>Jos haluat tutustua aiheeseen syvemmin, tutustu <a href="https://udlbook.github.io/udlbook/">Understanding Deep Learning</a> kirjaan, joka on ilmainen ja avoin verkossa. Kirjaan liittyvä Qatarin yliopiston kurssi löytyy myös ilmaiseksi <a href="https://youtube.com/playlist?list=PLRdABJkXXytCz19PsZ1PCQBKoZGV069k3&amp;si=8FY_GMrQn0Pi8FPv">YouTube: Deep Learning Fall 2024</a>.</p>
+<h2 id="koulutus-ja-inferenssi">Koulutus ja inferenssi</h2>
+<p>Kurssilla käsitellään neuroverkkojen koulutusta ja inferenssiä (eli mallin käyttöä). Esitellään termit jo kuitenkin tässä alkuvaiheessa, koska ne ovat keskeisiä neuroverkkojen ymmärtämisessä, ja pohjustavat vastavirta (backpropagation) algoritmia, jota käsitellään parin seuraavan osion aikana.</p>
+<p>Aiheesta löytyy myös pidempi Nvidian artikkeli, jos haluat tutustua: <a href="https://blogs.nvidia.com/blog/difference-deep-learning-training-inference-ai/">What’s the Difference Between Deep Learning Training and Inference?</a></p>
+<h3 id="koulutus">Koulutus</h3>
+<p>Koulutusvaiheessa mallille syötetään koulutusdataa. Tämä on Johdatus koneoppimisesta tuttu <code>X_train</code>-osuus datasetistä. Malli laskee ennusteet <span class="arithmatex">\(\hat{y}\)</span> ja vertaa niitä todellisiin arvoihin <span class="arithmatex">\(y\)</span>. Näiden erotus lasketaan häviöfunktiolla (loss function). Häviöfunktio palauttaa yhden luvun, joka kertoo kuinka hyvin malli suoriutui. Tämän luvun perusteella mallin parametrejä säädetään, jotta häviö pienenee. Tätä toistetaan useita kertoja, kunnes malli on oppinut halutun tason tarkkuuden. Tämän pitäisi olla kertausta Johdatus koneoppimiseen -kurssilta. Kannattaa vilkaista omia muistiinpanoja ja omaa oppimispäiväkirjaa.</p>
+<p>Neuroverkkojen koulutukseen liittyy yksi hyvinkin keskeinen ero perinteisiin malleihin verrattuna: Neuroverkot oppivat itse piirteet (feature learning). Perinteisissä malleissa piirteet piti usein valita käsin, mutta neuroverkot pystyvät oppimaan hyödylliset piirteet suoraan datasta.</p>
+<p>Koulutuksen aikana tarvittu muistin määrä riippuu monesta tekijästä. Jos haluat tutustua asiaan klikkailemalla, käy kurkkaamassa interaktiivista Hugging Facen blogikirjoitusta <a href="https://huggingface.co/blog/train_memory">Visualize and understand GPU memory in PyTorch</a>.</p>
+<h3 id="inferenssi">Inferenssi</h3>
+<p>Inferenssi on mallin käyttöä. Kun malli on koulutettu, se kirjoitetaan levylle: tai siis tarkemmin sanottuna sen parametrit tallennetaan. Jatkossa parametrit voidaan ladata käyttöön, jopa useille eri laitteille samanaikaisesti rinnakkain, ja mallia voidaan käyttää ennustamiseen. Tätä kutsutaan inferenssiksi.</p>
+<p>Neuroverkkojen inferenssi vaatii vähemmän muistia (ja laskentatehoa) kuin koulutus, koska mallin parametrejä ei enää säädetä. Malli vain suorittaa eteenpäin syöttämisen (feed-forward) laskennan. Mallia voidaan myös eri tekniikoin pienentää ilman että suorituskyky kärsii liikaa. Näitä tekniikoita ovat esimerkiksi kvantisointi (quantization), karsinta (pruning) ja <em>"tislaus tai tiivistys"</em> (distillation). Näitä käsitellään myöhemmin kurssilla ainakin pintapuolisesti. On hyvä kuitenkin jo tunnistaa, että mallin käyttökulut (inferenssi) ja koulutuskulut (training) eroavat toisistaan merkittävästi. Käytännössä voit törmätä vaikkapa <a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a>-julkaisun malliin BERT sivustolla Hugging Face siten, että osa vaatii enemmän ja osa vähemmän suorituskykyä. Alla taulukkona suuntaa-antava vertailu.</p>
+<table>
+<thead>
+<tr>
+<th>Malli</th>
+<th>n parameteria</th>
+<th>Tensor tyyppi</th>
+<th>optimoinnin taso</th>
+<th>Muistin tarve painoille</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://huggingface.co/google-bert/bert-base-uncased">bert-base-uncased</a></td>
+<td>110M</td>
+<td>float32</td>
+<td>Alkuperäinen koulutettu malli</td>
+<td>~440 MB</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/distilbert-base-uncased">distilbert-base-uncased</a></td>
+<td>66M</td>
+<td>float32</td>
+<td>40% pienempi, 60% nopeampi</td>
+<td>~264 MB</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/distilbert/distilbert-base-uncased-distilled-squad">distilbert-base-uncased-distilled-squad</a></td>
+<td>66M</td>
+<td>float32</td>
+<td>QA-tehtäviin hienosäädetty</td>
+<td>~264 MB</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/Intel/distilbert-base-uncased-distilled-squad-int8-static-inc">distilbert-base-uncased-distilled-squad-int8-static-inc</a></td>
+<td>66M</td>
+<td>int8</td>
+<td>Kvantisointi</td>
+<td>~66 MB</td>
+</tr>
+</tbody>
+</table>
+<p>Muistin tarpeen voi laskea helposti: 32-bittinen liukuluku vaatii 4 tavua muistia. Näitä on 110 miljoonaa, joten 110M * 4B = 440MB. Kvantisoinnissa mallin painot muunnetaan 8-bittisiksi kokonaisluvuiksi, jolloin muistin tarve on vain neljäsosa alkuperäisestä. Huomaa, että inferenssissä muistia tarvitsee myös muita asioita, kuten syötteet, väliarvot ja mahdolliset välimuistit. Todellisen muistin tarve voi siis olla esimerkiksi 20-50 % enemmän kuin pelkkien painojen vaatima muisti.</p>
+<h2 id="mihin-kaytetaan">Mihin käytetään</h2>
+<p>Tutustu näihin:</p>
+<ul>
+<li><a href="https://research.aimultiple.com/deep-learning-applications/">Dilmegani: Top 50 Deep Learning Use Case &amp; Case Studies</a></li>
+<li><a href="https://youtu.be/O5xeyoRL95U">Lex Fridman: Deep Learning Basics: Introduction and Overview</a> (YouTube-video)</li>
+</ul>
+<h2 id="tehtavat">Tehtävät</h2>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: TensorFlow Playground</p>
+<p>Tutustu online-työkaluun <a href="https://playground.tensorflow.org/">TensorFlow Playground</a>. Kokeile eri asetuksia ja yritä ymmärtää, miten ne vaikuttavat mallin oppimiseen, ja kuinka tämä liittyy yllä kirjoitettuun teoriaan (ja historiaan). Dokumentoi omat havaintosi oppimispäiväkirjaasi – jatka tätä dokumentointia jatkossa kaikkien tehtävien yhteydessä.</p>
+<ol>
+<li>
+<p>Mallinna työkalulla Perceptron-paperin mukainen malli. Sinulla pitäisi olla siis <span class="arithmatex">\(x_1\)</span> ja <span class="arithmatex">\(x_2\)</span> syötteinä, <mark>ei yhtään piilotettua kerrosta</mark> ja tulos. Käytä ReLU-aktivointifunktiota, vaikka se ei olekaan aivan 1958 ajan mukainen.</p>
+<p>Tunnista eri datasetit sivustolta. Ne ovat järjestyksessä:</p>
+<ul>
+<li><code>Circle</code></li>
+<li><code>Exclusive or</code> (XOR)</li>
+<li><code>Gaussian</code></li>
+<li><code>Spiral</code></li>
+</ul>
+</li>
+<li>
+<p><strong>0 piilotettua:</strong> Todista, että on mahdotonta ratkaista XOR-ongelma ilman piilotettua kerrosta. Todista Gauss mahdolliseksi.</p>
+</li>
+<li><strong>1 piilotettu:</strong> Kokeile ratkaista XOR-ongelma yhdellä piilotetulla kerroksella, jossa on 2-4 neuronia. Ratkaise myös Gauss ja Circle.</li>
+<li><strong>4 piilotettua:</strong> Kokeile ratkaista Spiral-ongelma neljällä piilotetulla kerroksella, joissa on kussakin 2-8 neuronia. Aloita pienemmästä mallista ja monimutkaista sitä vähitellen. Voi olla kannattavaa yrittää pitää inputin puolella olevat kerrokset suurempina (neuronimäärän osalta) kuin outputin puolella olevat kerrokset. Eli mallista tulee siis suppilo, joka piennee kohti outputtia.</li>
+</ol>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Quick, Draw!</p>
+<p>Pelaa erä (tai useampi) Googlen <a href="https://quickdraw.withgoogle.com/">Quick, Draw!</a> peliä.</p>
+<p>Tutustu tämän jälkeen sen taustalla olevaan dataan <a href="https://quickdraw.withgoogle.com/data">domain/data</a>.</p>
+<p>Tutustu viimeisenä vielä Kaggle-sivultolta löytyvään haasteeseen, jossa datan perusteella tulee pyrkiä tehdä mahdollisimman tarkka luokittelija: <a href="https://www.kaggle.com/competitions/quickdraw-doodle-recognition/overview">Quick, Draw! Doodle Recognition Challenge</a>.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: UDLbook Shallow</p>
+<p>Lataa PDF-muodossa koneellesi <a href="https://udlbook.github.io/udlbook/">Understanding Deep Learning</a> kirja. Tutustu sen lukuun kolme, "Shallow neural networks" ja tee lopulta seuraavat tehtävät:</p>
+<ul>
+<li><strong>Problem 3.4</strong> Draw a version of figure 3.3 where the y-intercept and slope of the third hidden unit have changed as in figure 3.14c. Assume that the remaining parameters remain the same.</li>
+<li><strong>Problem 3.11</strong> How many parameters does the model in figure 3.6 have?</li>
+</ul>
+<p>Voit käyttää ensimmäiseen tehtävään UDL-kirjan <a href="https://udlbook.github.io/udlfigures/">Interactive Figures</a>-työkalua.</p>
+<p>Saat toki ratkaista halutessasi myös muita ongelmia. Kurssilla siirrytään kuitenkin seuraavaksi teoriasta PyTorchin kautta käytäntöön.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: ANN ja eläinkunta</p>
+<p>Kannattaa tutustua Wikipedian <a href="https://en.wikipedia.org/wiki/Cerebral_cortex">Cerebral cortex</a> sekä <a href="https://en.wikipedia.org/wiki/Neuron">Neuron</a>-artikkeleihin. Aivokuoren (engl. cerebral cortex) osalta aiheeseen liittyvää sisältöä on ainakin "Layers of neocortex"-otsikkoon liittyvä teksti ja kuvat. Tämä ei ole biologian kurssi, joten silmäily riittää. Neuroverkot (ANN, Artificial Neural Network) perustuvat ideatasolla siihen, kuinka aivojen synapsien ja neuronien verkosto toimii – tai ainakin, kuinka sen kuviteltiin toimivan vielä 1900-luvun puolivälissä.</p>
+<p>Vertaa nykyisiä koneoppimismalleja eläinkunnan aivoihin. <a href="https://en.wikipedia.org/wiki/List_of_animals_by_number_of_neurons">List of animals by number of neurons</a> -lista on yksi mahdollinen lähde. Jos verrataan melko naiivisti parametrimääriä, niin mitä eläimiä seuraavat mallit vastaavat:</p>
+<table>
+<thead>
+<tr>
+<th>Malli</th>
+<th>Vuosi</th>
+<th style="text-align: right;">desimaali</th>
+<th>potenssiesitys</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LeNet-5</td>
+<td>1998</td>
+<td style="text-align: right;">60 000</td>
+<td>6.0 x 10^4</td>
+</tr>
+<tr>
+<td>AlexNet</td>
+<td>2012</td>
+<td style="text-align: right;">60 000 000</td>
+<td>6.0 x 10^7</td>
+</tr>
+<tr>
+<td>GPT-3</td>
+<td>2020</td>
+<td style="text-align: right;">175 000 000 000</td>
+<td>1.75 × 10^11</td>
+</tr>
+<tr>
+<td>Grok-1 (open source)</td>
+<td>2024</td>
+<td style="text-align: right;">314 000 000 000</td>
+<td>3.14 × 10^11</td>
+</tr>
+<tr>
+<td>GPT-4 (spekulaatio)</td>
+<td>2024</td>
+<td style="text-align: right;">1 760 000 000 000</td>
+<td>1.76 × 10^12</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Vinkki</strong>: mieti tarkkaan, kumpaa <em>"mallin parametrien määrä"</em> vastaa paremmin aivoissa: neuronien vai synapsien määrä?    </p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: BERT Large</p>
+<p>Yllä on esiteltynä BERT-mallin <code>base</code>-versio ja sen kevennetty <code>distilbert</code>-versio. Tutustu, kuinka BERT Large liittyy tähän. Kuinka monta parametria siinä on? Kuinka paljon enemmän muistia se vaatii verrattuna <code>base</code>-versioon? Miten se tai sen koulutus eroaa <code>base</code>-versiosta?</p>
+<p>Tutki samalla <a href="https://huggingface.co/">Hugging Face</a> -sivustoon, jos se ei ole sinulle ennestään tuttu. Mitä kaikkea sivustolta löytyy? Kuka sinne voi lisätä sisältöä?</p>
+</div>
+<h2 id="lahteet">Lähteet</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:mathforai">
+<p>Nelson, H. <em>Essential Math for AI</em>. O'Reilly Media. 2023.&#160;<a class="footnote-backref" href="#fnref:mathforai" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:mathforai" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:mathforai" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:fastaibook">
+<p>Gugger, J. &amp; Howard, J. <em>Deep Learning for Coders with fastai and PyTorch</em>. O'Reilly Media. 2020.&#160;<a class="footnote-backref" href="#fnref:fastaibook" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:fastaibook" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:fastaibook" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:fastaibook" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:fastaibook" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:termcoined">
+<p>Dartmouth University. <em>Artificial Intelligence Coined at Dartmouth</em>. https://home.dartmouth.edu/about/artificial-intelligence-ai-coined-dartmouth&#160;<a class="footnote-backref" href="#fnref:termcoined" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dartproposal">
+<p>McCarthy, J., Minsky, M.L., Rochester, N. &amp; Shannon, C.E. <em>A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence</em>. 1955. https://raysolomonoff.com/dartmouth/boxa/dart564props.pdf&#160;<a class="footnote-backref" href="#fnref:dartproposal" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dlillustrated">
+<p>Krohn, J., Beyleveld, G. &amp; Bassens, A. <em>Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence</em>. Addison-Wesley Professional. 2019.&#160;<a class="footnote-backref" href="#fnref:dlillustrated" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:dlillustrated" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:dlillustrated" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:dlillustrated" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:nobel1981">
+<p>The Nobel Prize. <em>Nobel Prize in Physiology or Medicine 1981</em>. https://www.nobelprize.org/prizes/medicine/1981/summary/&#160;<a class="footnote-backref" href="#fnref:nobel1981" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:hubelwiesel">
+<p>Hubel, D.H. &amp; Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455&#160;<a class="footnote-backref" href="#fnref:hubelwiesel" title="Jump back to footnote 7 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:hubelwiesel" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:researchtrends">
+<p>Rosenblatt, F. <em>The Design of an Intelligent Automaton</em>. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf&#160;<a class="footnote-backref" href="#fnref:researchtrends" title="Jump back to footnote 8 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:researchtrends" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:nobel2024">
+<p>The Nobel Prize. <em>Nobel Prize in Physics 2024</em>. https://www.nobelprize.org/prizes/physics/2024/summary/&#160;<a class="footnote-backref" href="#fnref:nobel2024" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:tumultous">
+<p>Crevier, D. <em>AI: The Tumultuous Search for Artificial Intelligence</em>. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf&#160;<a class="footnote-backref" href="#fnref:tumultous" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:juergen">
+<p>Schmidhuber, J. <em>Who Invented Backpropagation?</em>. 2014 (päivitetty 2025). https://people.idsia.ch/~juergen/who-invented-backpropagation.html&#160;<a class="footnote-backref" href="#fnref:juergen" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:udlbook">
+<p>Prince, S. <em>Understanding Deep Learning</em>. The MIT Press. 2023. https://udlbook.github.io/udlbook/&#160;<a class="footnote-backref" href="#fnref:udlbook" title="Jump back to footnote 12 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:udlbook" title="Jump back to footnote 12 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:udlbook" title="Jump back to footnote 12 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:udlbook" title="Jump back to footnote 12 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:udlbook" title="Jump back to footnote 12 in the text">&#8617;</a><a class="footnote-backref" href="#fnref6:udlbook" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 <a href="https://www.kamk.fi">Kajaanin Ammattikorkeakoulu Oy</a>. 
+Licenced under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">BY-NC-SA 4.0</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Kopioitu leikep\u00f6yd\u00e4lle", "clipboard.copy": "Kopioi leikep\u00f6yd\u00e4lle", "search.result.more.one": "1 lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.more.other": "# lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.none": "Ei t\u00e4sm\u00e4\u00e4vi\u00e4 dokumentteja", "search.result.one": "1 t\u00e4sm\u00e4\u00e4v\u00e4 dokumentti", "search.result.other": "# t\u00e4sm\u00e4\u00e4v\u00e4\u00e4 dokumenttia", "search.result.placeholder": "Kirjoita aloittaaksesi haun", "search.result.term.missing": "Puuttuu", "select.version": "Valitse versio"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

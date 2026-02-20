@@ -1,0 +1,1637 @@
+
+<!doctype html>
+<html lang="fi" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../vektorointi/">
+      
+      
+        <link rel="next" href="../../vastavirta/backpropagation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>PyTorch - Syväoppiminen I</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pytorch" class="md-skip">
+          Hyppää sisältöön
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Ylätunniste">
+    <a href="../.." title="Syväoppiminen I" class="md-header__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Syväoppiminen I
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PyTorch
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Hae" placeholder="Hae" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Haku">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Tyhjää" aria-label="Tyhjää" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Aloitetaan hakua
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigaatio" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Syväoppiminen I" class="md-nav__button md-logo" aria-label="Syväoppiminen I" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Syväoppiminen I
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tervetuloa kurssille
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Neuroverkot
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../neuroverkot/neuroverkot_101/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../neuroverkot/syvaoppiminen_FC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syvät neuroverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Tensorit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Tensorit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vektorointi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vektorointi
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyTorch
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyTorch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ai-sovelluskehysten-lyhyt-historia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI-sovelluskehysten lyhyt historia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI-sovelluskehysten lyhyt historia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#varhainen-perusta-2009-2014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Varhainen perusta (2009-2014)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keras-korkean-tason-pioneeri-2015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keras: Korkean tason pioneeri (2015)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tensorflown-lapimurto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TensorFlow:n läpimurto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-astuu-nayttamolle-2016" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyTorch astuu näyttämölle (2016)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suuri-integraatio-keras-osaksi-tensorflowta-2017-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suuri integraatio: Keras osaksi TensorFlow'ta (2017-2019)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keras-itsenaistyy-jalleen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keras itsenäistyy jälleen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nykytilanne-2024-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nykytilanne (2024-)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Vastavirta
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. Vastavirta
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vastavirta/backpropagation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vastavirta (Backprop)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Mallinnus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4. Mallinnus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/yleiskatsaus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Yleiskatsaus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/datanlataus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datan lataus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mallinnus/kaytannot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kouluttamisen käytännöt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Konvoluutio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5. Konvoluutio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../konvoluutio/cnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Konvoluutioverkot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    6. Siirtovaikutus
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/pretrained/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Koulutetun mallin käyttö
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../siirtovaikutus/transferlearning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Siirtovaikutus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Kieli
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    7. Kieli
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/nlp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Luonnollinen kieli
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/rnn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RNN ja jälkeläiset
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kieli/transformers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transformers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Aikasarjat
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aikasarjat/ideat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aikasarjat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../exercises/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tehtäväkooste
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Sisällysluettelo">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Sisällysluettelo
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ai-sovelluskehysten-lyhyt-historia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI-sovelluskehysten lyhyt historia
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI-sovelluskehysten lyhyt historia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#varhainen-perusta-2009-2014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Varhainen perusta (2009-2014)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keras-korkean-tason-pioneeri-2015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keras: Korkean tason pioneeri (2015)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tensorflown-lapimurto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TensorFlow:n läpimurto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pytorch-astuu-nayttamolle-2016" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyTorch astuu näyttämölle (2016)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suuri-integraatio-keras-osaksi-tensorflowta-2017-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suuri integraatio: Keras osaksi TensorFlow'ta (2017-2019)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keras-itsenaistyy-jalleen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keras itsenäistyy jälleen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nykytilanne-2024-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nykytilanne (2024-)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tehtavat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tehtävät
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lahteet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lähteet
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="pytorch">PyTorch</h1>
+<h2 id="ai-sovelluskehysten-lyhyt-historia">AI-sovelluskehysten lyhyt historia</h2>
+<p>Modernien syväoppimiskehysten historia koostuu nopeasta innovaatiosta ja suurten teknologiayritysten sekä avoimen lähdekoodin yhteisön kehittyvistä suhteista.</p>
+<p><img alt="" src="../../images/210_framework_timeline.png" /></p>
+<p><strong>Kuva 1:</strong> <em>Syväoppimiskehysten aikajana. Kuvaaja on koostettu alla olevan tekstin lähteiden pohjalta ja Githubin release-historiasta. Toisiinsa liittyvät kirjastot on yhdistetty väreillä: esimerkiksi JAX on sininen, kuten myös sen kirjastot Flax ja Rlax. Torch7 kattaa kaikki versiot alkuperäisestä Torchista alkaen.</em></p>
+<h3 id="varhainen-perusta-2009-2014">Varhainen perusta (2009-2014)</h3>
+<p>Matka alkaa Theanosta, joka kehitettiin noin vuonna 2009 – tai ehkä olisi mainittava, että Nvidian CUDA syntyi 2006. Ennen tätä neuroverkot kirjoitettiin käsin esimerkiksi C++:lla. François Chollet kuvailee Theanoa: <em>"the conceptual ancestor of all modern deep learning tools"</em>. Theano oli ensimmäinen kehys, joka mahdollisti automaattisen differentioinnin ja GPU-laskennan syväoppimismallien kouluttamiseen. Se sai merkittävää jalansijaa vuosina 2013–2014, kun ImageNet 2012 -kilpailu herätti laajan kiinnostuksen syväoppimiseen. <sup id="fnref:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+<p>Näihin aikoihin myös Lua-pohjainen Torch 7 ja C++-pohjainen Caffe olivat kovaa huutoa. Kyseistä kirjastoa ei ole päivitetty sitten 2017, jolloin versio 1.0 julkaistiin <sup id="fnref2:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup>. Caffe:ta hyödynsi esimerkiksi <a href="https://github.com/jrosebr1/bat-country">bat-country</a> kirjastossa, joka on Deep Dream -tyylinen kuvageneraattori. Kirjastolla voi generoida unenomaisia kuvia tavallisten valokuvien pohjalta. Miltä näyttää <em>Pelkoa ja Inhoa Las Vegasissa</em>–elokuva, jos katsoja näkee silmiä ja kasvoja sielläkin, missä niitä ei ole? Käy toki katsomassa repositoriosta esimerkkejä! Caffe2 julkaistiin Facebookin toimesta vuonna 2017, mutta se yhdistettiin myöhemmin PyTorchiin <sup id="fnref:pytorchhistory"><a class="footnote-ref" href="#fn:pytorchhistory">2</a></sup>. </p>
+<h3 id="keras-korkean-tason-pioneeri-2015">Keras: Korkean tason pioneeri (2015)</h3>
+<p>Keras lanseerattiin maaliskuussa 2015 uudenlaisena lähestymistapana syväoppimiseen. Se oli François Cholletin – eli lähteissä olevan kirjan <em>Deep Learning with Python (3rd ed.)</em> toisen kirjoittajan – kehittämä. Kuten <em>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition</em> -kirjassa kerrotaan, Chollet kehitti alkuperäisen Keras-kirjaston osana tutkimusprojektia, ja se <em>"quickly gained popularity, owing to its ease of use, flexibility, and beautiful design"</em>. <sup id="fnref:geron3rd"><a class="footnote-ref" href="#fn:geron3rd">3</a></sup></p>
+<p>Alun perin Keras suunniteltiin korkean tason rajapinnaksi Theanon päälle, ja se oli suunnattu niille muutamalle tuhannelle ihmiselle, jotka tuolloin työskentelivät syväoppimisen parissa. Filosofia oli yksinkertainen: tehdä syväoppimisesta saavutettavaa intuitiivisen ja käyttäjäystävällisen API:n avulla. <sup id="fnref3:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup> Kerasin kilpailijaina toimi tuolloin Lasagne, joka oli myös Theano-pohjainen korkean tason kirjasto <sup id="fnref:dlwithpytorch"><a class="footnote-ref" href="#fn:dlwithpytorch">4</a></sup>.</p>
+<h3 id="tensorflown-lapimurto">TensorFlow:n läpimurto</h3>
+<p>Googlen julkaisema TensorFlow, 2015, oli käänteentekevä hetki, joka toi syväoppimisen valtavirran kehittäjien tietoisuuteen. Chollet ja Watson kuvailevat, että julkaisu oli: <em>"watershed moment that precipitated deep learning in the mainstream developer zeitgeist"</em>. TensorFlow otti keskeisiä ideoita Theanosta ja lisäsi kriittisen tuen laajamittaiselle hajautetulle laskennalle. Vuoden 2016 puoliväliin mennessä puolet TensorFlow-käyttäjistä käyttivät sitä nimenomaan Kerasin avulla. <sup id="fnref4:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+<h3 id="pytorch-astuu-nayttamolle-2016">PyTorch astuu näyttämölle (2016)</h3>
+<p>Meta (silloinen Facebook) julkaisi PyTorchin syyskuussa 2016 suorana vastauksena TensorFlow'n menestykselle <sup id="fnref:geronpytorch"><a class="footnote-ref" href="#fn:geronpytorch">5</a></sup>. PyTorch peri ohjelmointityylinsä Chainer-kehykseltä ja torch-autogradilta. Jos PyTorchin suunnittelun tausta kiinnostaa, suosittelen tutustumaan <a href="https://soumith.ch/blog/2023-12-17-pytorch-design-origins.md.html">PyTorch's design origins</a>-kirjoitukseen. Sen on kirjoittanut Soumith Chintala, PyTorchin co-founder ja Torch 7:n pääkehittäjä.</p>
+<blockquote>
+<p>"In contrast, PyTorch was designed from the ground up to provide a more flexible, Pythonic approach to building neural networks". <sup id="fnref2:geronpytorch"><a class="footnote-ref" href="#fn:geronpytorch">5</a></sup></p>
+</blockquote>
+<h3 id="suuri-integraatio-keras-osaksi-tensorflowta-2017-2019">Suuri integraatio: Keras osaksi TensorFlow'ta (2017-2019)</h3>
+<p>Suuri muutos tapahtui, kun Google integroi Kerasin TensorFlow'n korkean tason rajapinnaksi. Keras valittiin virallisesti suositelluksi korkean tason rajapinnaksi, kun TensorFlow 2 julkaistiin. <sup id="fnref2:geron3rd"><a class="footnote-ref" href="#fn:geron3rd">3</a></sup></p>
+<p>Ennen tätä Keras ja TF tulivat toki jo toimeen keskenään. Tensorflow 1.1.0 julkaisun myötä (elo 2018) Keras ladattiin <code>tf.keras</code>-moduulina, mutta se piti yhä asentaa erikseen. Jo vuonna 2019 Adrian Rosebrock totesi blogissaan: <em>"As you can tell, the history between Keras and TensorFlow is long, complicated, and intertwined"</em>. <sup id="fnref:keras-vs-tf-keras"><a class="footnote-ref" href="#fn:keras-vs-tf-keras">6</a></sup></p>
+<p>TensorFlow 2.0:n julkaisuun mennessä vuonna 2019 integraatio oli valmis. Aurélien Géron toteaa:</p>
+<blockquote>
+<p>"Installing TensorFlow will automatically install Keras as well, and Keras will not work without TensorFlow installed. In short, Keras and TensorFlow fell in love and got married". <sup id="fnref4:geron3rd"><a class="footnote-ref" href="#fn:geron3rd">3</a></sup></p>
+</blockquote>
+<p>Alunperin Keras tuki useita taustajärjestelmiä (PlaidML, Theano, Microsoft Cognitive Toolkit), mutta versiosta 2.4 alkaen vain TensorFlow oli tuettu. <sup id="fnref3:geron3rd"><a class="footnote-ref" href="#fn:geron3rd">3</a></sup> Tällöin, 2020, minäkin olin yhä aktiivinen Kerasin ja Tensorflow:n käyttäjä. PyTorchin suosio oli kasvussa, mutta en löytänyt aikaa kokeilla sitä.</p>
+<h3 id="keras-itsenaistyy-jalleen">Keras itsenäistyy jälleen</h3>
+<p>Viimeisin kehitys edustaa paluuta Kerasin monen taustajärjestelmän juurille. Kuten <em>Machine Learning – Modern Computer Vision &amp; Generative AI</em> -kirjassa kuvataan:</p>
+<blockquote>
+<p>"Keras will support multiple backends including TensorFlow, JAX, and PyTorch. This is much like the original iteration of Keras which supported the backends which were popular at the time".</p>
+</blockquote>
+<p>Tämä kehitys tarkoittaa, että Keras on kulkenut täyden ympyrän – monen taustajärjestelmän kirjastosta osaksi TensorFlow'ta ja nyt takaisin tukemaan useita kehyksiä, mukaan lukien PyTorch, JAX ja TensorFlow.</p>
+<h3 id="nykytilanne-2024-">Nykytilanne (2024-)</h3>
+<p>Keras on itsenäinen ja vapaa, taas. Watson ja Chollet tiivistävät, että Python on voittanut kielikilvan seuraavaksi 15 vuodeksi. Vähintään nykyiset neljä kehystä (ks. lainaus alta) tulevat pysymään relevantteina – joskin uusia voi löytyä, kuten Applen MLX. <sup id="fnref5:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+<blockquote>
+<p>"Today, Keras, TensorFlow, PyTorch, and JAX are the top frameworks in the deep learning world." <sup id="fnref7:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup></p>
+</blockquote>
+<p>Tästä nelikosta Keras on ainut, joka ei ole täysin itsenäinen kehys. Se on korkean tason rajapinta, joka käyttää taustajärjestelmänä TensorFlow'ta, PyTorchia tai JAX:ia. Sillä voi siis kirjoittaa helppolukuista koodia, jossa on käytössä esim. Layerit näin: <code>dense = layers.Dense(64, activation="relu")</code>, mutta taustalla voi olla mikä tahansa tuettu kehys. Näitä taustakehyksiä yhdistää se, että ne kaikki toteuttavat samankaltaisia matalamman tason toiminnallisuuksia, kuten tensoreita, automaattista differentiointia, GPU-kiihdytystä ja vastavirtausta (backpropagation).</p>
+<p>Voi hyvin olla, että jos kävisit tämän kurssin vuoden päästä, me käyttäisimme Kerasia ja vuorottellisimme backendien suhteen. Tällä hetkellä tämä kurssi on kuitenkin vahvasti PyTorch-painotteinen. Saat toki kurssin aikana kokeilla kirjoittaa jonkin tehtävän Keras edellä. Kenties haluat myös kokeilla, miten jokin alkupään low level -tehtävä onnistuisi TensorFlow:n tai JAX:n avulla. Jos kysyt kielimallilta, se kyllä kääntää (ainakin yksinkertaisen) koodin kehyksestä toiseen. Miksi vuorottelisimme? Kuten Watson ja Chollet kirjoittavat <sup id="fnref6:dlwithpython"><a class="footnote-ref" href="#fn:dlwithpython">1</a></sup>, PyTorch on kiva debugata ja sillä on erityisesti Hugging Facen ajamana loistava ekosysteemi, mutta se häviää suorituskyvyssä kilpailijoille. JAX on suorituskyvyltään erinomainen, mutta sen ekosysteemi on vielä pieni. TensorFlow on suorituskyvyltään hyvä ja sillä on hyvät tuotantoon soveltuvat työkalut. Keras tarjoaa helppokäyttöisen API:n, mutta se ei ole itsenäinen kehys. Jokaisella on siis omat vahvuutensa ja heikkoutensa. Erikoistunut rauta, kuten TPU:t, saattavat myös vaikuttaa valintaan.</p>
+<p><img alt="" src="../../images/210-star-history-tf-jax-pytorch.png" /></p>
+<p><strong>Kuva 2:</strong> <em>TensorFlow, PyTorch ja JAX:n GitHub-tähtien kehitys. Kuva kaapattu joulukuussa 2025. Jos haluat nähdä ajantasaisen version, käy <a href="https://www.star-history.com/#jax-ml/jax&amp;pytorch/pytorch&amp;tensorflow/tensorflow&amp;keras-team/keras&amp;type=date&amp;legend=top-left">Star History Chart</a>-sivulla.</em></p>
+<h2 id="tehtavat">Tehtävät</h2>
+<div class="admonition tip">
+<p class="admonition-title">Muokkaa ja kokeile vapaasti!</p>
+<p>Ennen tehtävien alustamista haluan välissä haluan huomauttaa, että <strong>on täysin sallittua</strong> muokata olemassaolevia Notebookeja ja/tai luoda omia Marimo-kirjoja, joissa kokeilet PyTorchin toiminnallisuuksia.</p>
+<p><strong>Ole rohkea!</strong> Kokeile, tutki ja muokkaa. Riko ja korjaa.</p>
+<p>Dokumentoi löydöksesi oppimispäiväkirjaan.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: From NumPy to PyTorch (PyTorchNN)</p>
+<p>Avaa <code>210_numpy_to_pytorch.py</code>-tiedosto ja tutustu <code>PyTorchNN</code>-malliin. Malli on sama 2-2-1 kun aiempi <code>NumpyNNwithBCE</code>-malli, mutta toteutettu PyTorchilla. </p>
+<p>Aja koodi ja tutki mitä tapahtuu. Varmista, että ymmärrät, kuinka mikäkin rivi koodia liittyy tähän mennessä kurssilla opittuun.</p>
+<p>Keskity erityisesti PyTorch-kirjaston tensori- ja mallitoiminnallisuuksiin, joita Marimo-notebookissa käytetään.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: PyTorch Learn the Basics: Tensors</p>
+<p>Avaa <code>211_pytorch_tensors.py</code>. Huomaa, että kyseessä on PyTorchin virallinen <a href="https://docs.pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html">Learn The Basics: Tensors</a> -opas, joka on käännetty Marimo-muotoon. </p>
+<p>Jos käytät Google Colabia, voit avata alkuperäisen ohjeen.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: PyTorch Introduction to Pytorch Tensors</p>
+<p>Avaa <code>212_tensors.py</code>. Huomaa, että kyseessä on PyTorchin virallinen <a href="https://docs.pytorch.org/tutorials/beginner/introyt/tensors_deeper_tutorial.html">Introduction to PyTorch - YouTube Series: Introduction to PyTorch Tensors</a> -opas, joka on käännetty Marimo-muotoon.</p>
+<p>Myös tässä voit käyttää Google Colabia alkuperäisen ohjeen avaamiseen tai noudattaa kurssin Marimo-versiota.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Auto MPG</p>
+<p>Avaa <code>213_auto_mpg.py</code>. Notebookissa on matalan kynnyksen käyttöönotto PyTorch-mallille. Data on loppumetreille asti aiemmin tutussa Pandas DataFramessa. Seuraavilla viikoilla tutustumme paremmin esimerkiksi Dataset ja DataLoader -toiminnallisuuksiin. Keskitytään toistaiseksi mallin kouluttamiseen ja tulosten validointiin yksinkertaisella MAE-metriikalla.</p>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: Kyberviha PyTorch-mallilla</p>
+<p>Johdatus Koneoppimiseen -kurssin logistisen regression tehtävänä oli tunnistaa, onko henkilö kokenut kybervihaa viimeisen vuoden aikana.</p>
+<p>Alkuperäinen datasetti löytyy Data in Brief <a href="https://www.sciencedirect.com/science/article/pii/S2352340924003652">Digital skills among youth: A dataset from a three-wave longitudinal survey in six European countries</a>-data-artikkelista. Käytämme kuitenkin vertailun vuoksi edelliseltä kurssilta tuttua, esikäsiteltyä datasettiä. Se on ladattavissa <a href="https://huggingface.co/datasets/sourander/yskills">hf:sourander/yskills</a>-reposta.</p>
+<p>Muistanet, että tulos oli kohtalaisen heikko. Tämän harjoituksen motiviina on tutkia, ovatko neuroverkot hopealuoti, joka parantaa tuloksia merkittävästi – <mark>vai käykö kenties niin</mark>, että joudut taistella hyperparametrien kanssa saadaksesi edes jossain määrin vertailukelpoisen tuloksen.</p>
+<p>Tehtävään löytyy <code>214_cyberhate.py</code> -notebook, jota voit käyttää pohjana. Vaihtoehtoisesti voit kirjoittaa koodin alusta asti itse. Tärkeintä on, että dokumentoit oppimispäiväkirjaasi, mitä teit ja mitä opit.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Älä sukella liian syvälle hyperparametrien virittämiseen. Tässä voisi käyttää uskomattoman määrän aikaa. Jos vibe-koodaat ratkaisua, joka alkaa sisältää termejä kuten Dropout, Early Stopping, Optuna, kannattaa huomioida, että nämä tulevat tutuksi kurssin Mallinnus-osiossa myöhemmin.</p>
+</div>
+</div>
+<div class="admonition question">
+<p class="admonition-title">Tehtävä: ONNX JAX:ia näkynyt?</p>
+<p>Yllä olevasta historiasta puuttuu ONNX tyystin ja Jax on vain sivuhuomio. Tutustu Jaxiin ja ONNX:ään itsenäisesti ja kirjoita lyhyt yhteenveto oppimispäiväkirjaasi. ONNX:iin tutustutaan kenties tarkemmin myöhemmin kurssilla – ehkäpä vaikka Syväoppiminen II:ssa.</p>
+<p>On äärimmäisen suositeltavaa lisäksi käyttää Google Trendsiä ja vertailla, miten Worldwide-tasolla kehykset PyTorch, TensorFlow, Keras ja JAX ovat kehittyneet viimeisen viiden vuoden aikana. Huomaa, että tässä on kuitenkin kyse vain hakuhistoriasta. Se ei välttämättä suoraan heijasta todellista käyttöä tuotantoympäristöissä tai tutkimuksessa.</p>
+<p>💪 Jos oikein rohkea olet, ota JAX lyhyelle Hello World -tason koeajolle.</p>
+</div>
+<h2 id="lahteet">Lähteet</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:dlwithpython">
+<p>Watson, M &amp; Chollet, F. <em>Deep Learning with Python, Third Edition</em>. Manning. 2025.&#160;<a class="footnote-backref" href="#fnref:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref5:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref6:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref7:dlwithpython" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:pytorchhistory">
+<p>TensorGym. <em>The Complete History and Evolution of PyTorch | Deep Learning Framework Timeline</em>. n.d. https://tensorgym.com/blog/pytorch-history&#160;<a class="footnote-backref" href="#fnref:pytorchhistory" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:geron3rd">
+<p>Géron, A. <em>Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition</em>. O'Reilly. 2022.&#160;<a class="footnote-backref" href="#fnref:geron3rd" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:geron3rd" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:geron3rd" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:geron3rd" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:dlwithpytorch">
+<p>Stevens, E, Antiga, L &amp; Viehmann, T. <em>Deep Learning with PyTorch</em>. Manning. 2020.&#160;<a class="footnote-backref" href="#fnref:dlwithpytorch" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:geronpytorch">
+<p>Géron, A. <em>Hands-On Machine Learning with Scikit-Learn and PyTorch</em>. O'Reilly. 2025.&#160;<a class="footnote-backref" href="#fnref:geronpytorch" title="Jump back to footnote 5 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:geronpytorch" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:keras-vs-tf-keras">
+<p>Rosebrock, J. <em>Keras vs. tf.keras: What’s the difference in TensorFlow 2.0?</em> PyImageSearch Blog. https://pyimagesearch.com/2019/10/21/keras-vs-tf-keras-whats-the-difference-in-tensorflow-2-0/&#160;<a class="footnote-backref" href="#fnref:keras-vs-tf-keras" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 <a href="https://www.kamk.fi">Kajaanin Ammattikorkeakoulu Oy</a>. 
+Licenced under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">BY-NC-SA 4.0</a>
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.annotate", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Kopioitu leikep\u00f6yd\u00e4lle", "clipboard.copy": "Kopioi leikep\u00f6yd\u00e4lle", "search.result.more.one": "1 lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.more.other": "# lis\u00e4\u00e4 t\u00e4ll\u00e4 sivulla", "search.result.none": "Ei t\u00e4sm\u00e4\u00e4vi\u00e4 dokumentteja", "search.result.one": "1 t\u00e4sm\u00e4\u00e4v\u00e4 dokumentti", "search.result.other": "# t\u00e4sm\u00e4\u00e4v\u00e4\u00e4 dokumenttia", "search.result.placeholder": "Kirjoita aloittaaksesi haun", "search.result.term.missing": "Puuttuu", "select.version": "Valitse versio"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
