@@ -105,7 +105,7 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
 
 !!! question "Tehtävä: Hate Speech over Naive Bayes"
 
-    Toteuta `601_hate_speech.py`-tiedostoon puuttuvat kohdat. Tutustu skriptin toimintaan. Jos sinulla on Johdatus koneoppimiseen -kurssin muistiinpanot saatavilla, tarkista, mihin tarkkuuteen Naive Bayes -malli ylsi saman datan ja ongelman kanssa.
+    Toteuta `601_hate_speech.py`-tiedostoon puuttuvat kohdat – tunnistat ne sanasta `IMPLEMENT`. Tutustu skriptin toimintaan. Jos sinulla on Johdatus koneoppimiseen -kurssin muistiinpanot saatavilla, tarkista, mihin tarkkuuteen Naive Bayes -malli ylsi saman datan ja ongelman kanssa.
 
 !!! question "Tehtävä: MobileNetV3 käyttö"
 

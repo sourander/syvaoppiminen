@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -36,6 +37,7 @@ def _():
     from transformers import pipeline
     from time import perf_counter
     from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, roc_curve, roc_auc_score
+
     return (
         classification_report,
         confusion_matrix,
@@ -89,8 +91,14 @@ def _(mo):
 
 @app.cell
 def _(mo, pipeline):
+    # Note! The model Pipeline raises a harmless warning. Let's supress it to avoid confusion.
+    import transformers
+    transformers.logging.set_verbosity_error()
+
+    # Define Pipeline
     pipe = pipeline("text-classification", model="facebook/roberta-hate-speech-dynabench-r4-target")
 
+    # Monty Python reference
     monty = pipe("Shut your festering gob, you tit! Your type makes me puke! You vacuous, toffee-nosed, malodorous pervert!")
     mo.md(f"The Monty Python insult is **{monty[0]["label"]}** (score: {monty[0]["score"]:.3f})")
     return (pipe,)
@@ -125,7 +133,7 @@ def _(df, perf_counter, pipe):
     for out in pipe(df['tweet'].tolist(), batch_size=batch_size):
 
         # Convert to 1 if hate, otherwise 0
-        predicted = ... # IMPLEMENNT
+        predicted = ... # IMPLEMENT
 
         # Always probability of "hate"
         prob_hate = ... # IMPLEMENT

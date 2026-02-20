@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -29,6 +30,7 @@ def _():
     from pathlib import Path
     from torchvision import models
     from torchvision.io import decode_image
+
     return Path, decode_image, models, plt, requests, torch
 
 

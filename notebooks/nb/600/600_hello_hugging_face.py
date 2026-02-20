@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.18.4"
+__generated_with = "0.19.11"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -25,11 +26,14 @@ def _(mo):
 @app.cell
 def _():
     import pandas as pd
+    import torch
 
     from datasets import load_dataset
     from transformers import pipeline
     from time import perf_counter
-    return load_dataset, perf_counter, pipeline
+    from torchmetrics.classification import BinaryConfusionMatrix
+
+    return BinaryConfusionMatrix, load_dataset, perf_counter, pipeline, torch
 
 
 @app.cell(hide_code=True)
@@ -135,18 +139,18 @@ def _(mo):
 def _(df, model, perf_counter):
     for batch_size in [1, 8, 64, 256]:
         df_batch = df.copy()
-    
+
         t2_start = perf_counter()
-    
+
         # Run pipeline on all texts with batching
         results = []
         for out in model(df['text'].tolist(), batch_size=batch_size):
             predicted = 1 if out['label'] == 'POSITIVE' else 0
             results.append(predicted)
-    
+
         df_batch['predicted_label'] = results
         t2_stop = perf_counter()
-    
+
         print(f"Batch size: {batch_size}, seconds: {t2_stop-t2_start:.2f}")
     return
 
@@ -166,6 +170,30 @@ def _(df_apply, model, n):
     name= model.model.name_or_path
     acc = sum(df_apply['label']==df_apply['predicted_label'])/n*100
     print(f"Classification with {name}, accuracy: {acc:.1f}")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## And also the Confusion Matrix
+    """)
+    return
+
+
+@app.cell
+def _(BinaryConfusionMatrix, df_apply, mo, torch):
+    bcm = BinaryConfusionMatrix()
+    cm = bcm(torch.from_numpy(df_apply['predicted_label'].values), torch.from_numpy(df_apply['label'].values))
+    tn, fp, fn, tp = cm.flatten().tolist()
+
+    mo.md(f"""
+    |                      | Predicted: NEG | Predicted: POS |
+    | -------------------- | ------------------- | --------------- |
+    | **Actual: NEG**      | {tn}                | {fp}            |
+    | **Actual: POS**      | {fn}                | {tp}            |
+    """)
+
     return
 
 
