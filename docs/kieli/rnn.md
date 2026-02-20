@@ -337,7 +337,7 @@ much simpler to compute and implement"
 
     Tehtävänäsi on suorittaa Notebook ja tutustua koodiin. Kiinnitä erityisesti huomiota siihen, miten mallin oppimia embedding-vektoreita voidaan lopuksi hyödyntää etsimällä sanoille merkityksellisesti lähimpiä naapureita vektoriavaruudessa.
 
-    Malli kouluttautui opettajan Macbook Pro:lla noin 4 minuutissa.
+    Malli kouluttautui opettajan Macbook Pro:lla noin 4 minuutissa CPU:lla ja 50 sekunnissa MPS:llä.
 
     !!! tip
 
