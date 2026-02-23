@@ -72,7 +72,7 @@ def _():
 @app.cell(hide_code=True)
 def _(WebcamCapture, mo):
     dropdown = mo.ui.dropdown(
-        options=["glasses", "hat", "neither"], value="glasses", label="Label to save:"
+        options=["rock", "paper", "scissors"], value="glasses", label="Label to save:"
     )
 
     widget = mo.ui.anywidget(WebcamCapture(interval_ms=1000))
