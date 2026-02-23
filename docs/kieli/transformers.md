@@ -310,11 +310,56 @@ Aivan kuten Perplexity, myös BLEU:n käytöstä löytyy [bleu.ipynb](https://gi
 
 ### ROUGE
 
-TODO! Obvious.
+Siinä missä BLEU soveltuu konekäännösten arviointiin, ROUGE-mittari on omiaan tekstitiivistelmien laadun mittaamiseen. Mittareissa on paljon samaa, mutta niiden näkökulma on käänteinen: BLEU painottaa tarkkuutta (precision), ROUGE painottaa herkkyyyttä (recall). Nykyaikaiset ROUGE-toteutukset tosin laskevat usein näiden molempien harmonisen keskiarvon eli F1-arvon. [^ml-q-ai] Tämä on helpoin esitellä esimerkin avulla, jossa on tiivistetty elokuva Her (2013) yhteen lauseeseen:
+
+```python
+# A human reference and a candidate summary
+reference = "a solitary man builds an intimate relationship with artificially intelligent OS".split()
+candidate = "OS falls in love with an artificially intelligent man".split()
+
+# Recall
+recall = sum([1 for word in reference if word in candidate]) / len(reference)
+# ['man', 'an', 'with', 'artificially', 'intelligent', 'OS']
+# == 6 / 11
+
+# Precision
+precision = sum([1 for word in candidate if word in reference]) / len(candidate)
+# ['OS', 'with', 'an', 'artificially', 'intelligent', 'man']
+# == 6 / 9
+
+f1 = 2 * (precision * recall) / (precision + recall)
+#  = 2 * (      6/9 * 6/11  ) / (      6/9 + 6/11  )
+#  = 3/5
+#  = 60 %
+```
+
+ROUGE-mittarista on olemassa useita eri variantteja, joista yleisimmät ovat:
+
+* **ROUGE-N**: Mittaa n-grammien (esim. yksittäisten sanojen tai sanaparien) päällekkäisyyttä tuotetun tekstin ja referenssin välillä. Yllä oleva esimerkki on ROUGE-1.
+* **ROUGE-L**: Etsii pisintä yhteistä alisekvenssiä (Longest Common Subsequence), mikä huomioi sanojen oikean järjestyksen, vaikka niiden välissä olisi muita sanoja. (`entten tentten ____ __ ____ teelika __ mentten`)
+* **ROUGE-S**: Tarkastelee niin sanottuja skip-bigrammeja eli sanapareja, joiden välissä voi olla vaihteleva määrä muita sanoja (`enttten ___ __ ____ ____ tentten)`.
+
+ROUGE, aivan kuten BLEU, ei ymmärrä synonyymejä tai parafraaseja. Merkitykseltään täysin oikea mutta eri sanoilla muotoiltu tiivistelmä voi saada epäreilun huonot pisteet – tai päin vastoin. Puutteistaan huolimatta ROUGE on edelleen alan standardityökalu: *"However, it’s still worth knowing about ROUGE since, according to a study, all papers introducing new summarization models at computational linguistics conferences in 2021 used it, and 69 percent of those papers used only ROUGE."* [^ml-q-ai]
 
 ### BERTScore
 
-TODO! Obvious.
+Toisin kuin merkkijonojen täsmälliseen vastaavuuteen perustuvat mittarit – kuten BLEU ja ROUGE – BERTScore hyödyntää aiemmin mainitun BERT-mallin tuottamia embeddings-vektoreita. Tämä tekee siitä huomattavasti paremman tunnistamaan semanttista samankaltaisuutta. Metriikka voi siis pärjätä tilanteissa, joissa sama asia ilmaistaan eri sanoilla. [^ml-q-ai]
+
+BERTSscoren laskenta etenee seuraavasti:
+
+1. Aja `candidate = LLM(input)`
+2. Aja `tc = tokenize(candidate)` ja `tr = tokenize(reference)` saadaksesi embedding-vektorit kummastakin.
+3. Aja `ec = BERT(tc)` ja `er = BERT(tr)` saadaksesi tokenien embedding-vektorit.
+4. Lasketaan `cosine_similarity(ec[i], er[j])` jokaiselle kandidaattitekstin tokenille `i` ja referenssitekstin tokenille `j` eli *pairwise cosine similarity* -matriisi.
+5. Kohdistetaan jokainen `tc`-token siihen `tr`-tokeniin, jonka kanssa kosinisamankaltaisuus on suurin.
+6. Lasketaan näiden parhaiden samankaltaisuuspisteiden keskiarvo (tai F1-score), joka antaa lopullisen BERTScore-pisteen.
+7. (Vaihtoehtoisesti) lopuksi otetaan huomioon *importance weighting* eli painotetaan pisteitä tokenien tärkeyden mukaan, joka voidaan määritellä inverse document frequency (IDF) -arvoilla.
+
+Prosessi on kuvattu alkuperäisen julkaisun *Figure 1*-kuvassa. Kannattaa käydä tutustumassa kyseiseen konferenssipaperiin: [BERTScore: Evaluating Text Generation with BERT](https://arxiv.org/abs/1904.09675). Sanomatta lienee selvää, että BERTscore on laskennallisesti raskaampi kuin perinteiset mittarit. Se vaatii kokonaisen neuroverkkomallin ajamista arvioinnin aikana. BERTscore ei ole täydellinen, ja sen rinnalla on suositeltavaa käyttää myös ihmisen tekemää laadunarviointia. [^ml-q-ai] 
+
+### Muut benchmark-tyyppiset metriikat
+
+Muita, monimutkaisempia *benchmark-tyylisiä* (eli mallien vertailuun soveltuvia testejä) löytyy lisäksi useita. Näitä on listattu esimerkiksi Wikipedian [Language Model Benchmark](https://en.wikipedia.org/wiki/Language_model_benchmark)-artikkelissa. Yksi kirjoitushetkellä hyvinkin tuore vertailuanalyysiin soveltuva kysymyspatteristo on [Humanity's LAst Exam](https://lastexam.ai/), joka on merkittävästi vaikeampi kielimalleille kuin GPQA (Graduate-level Google-Proof Q&A) tai MMLU (Massive Multitask Language Understanding).
 
 ## Tehtävät
 
@@ -328,11 +373,19 @@ TODO! Obvious.
 
     Lause on lainaus [Ainola](https://fi.wikipedia.org/wiki/Ainola)-artikkelista suomenkielisestä Wikipediasta. Wikipediaa on käytetty yhtenä lähteenä käyttämämme mallin `LumiOpen/Viking-7B` koulutuksessa. Huomaa, että mallin ajaminen GPU:lla vaatii noin 16 GB VRAM:ia. CPU:lla ajettaessa et saa Out Of Memory -varoituksia, mutta malli on toki hieman hidas.
 
-!!! question "Tehtävä: ???"
+!!! question "Tehtävä: Transformers kääntäjänä"
 
     Tutustu `721_neural_machine_translation_transformer.py`-tiedostoon. Tämä on muokattu versio NVIDIA:n Learning Deep Learning -kirjan (ja videosarjan) esimerkistä. Tehtävässä koulutetaan Transformers-malli kääntämään yhdestä kielestä toiseen.
 
     20 epookin koulutus kesti opettajan Macbook:lla noin 12.5 minuuttia. Huomaa, että MPS ei ole tuettu, joten koulutus tapahtui CPU:lla. Ubuntu-koneella meni noin 1.5 minuuttia GPU:lla.
+
+!!! question "Tehtävä: microGPT"
+
+    Tämä viimeinen tehtävä on saanut innoitteensa Sumit Pandey:n Medium-artikkelista [Andrej Karpathy Just Built an Entire GPT in 243 Lines of Python](https://www.towardsdeeplearning.com/andrej-karpathy-just-built-an-entire-gpt-in-243-lines-of-python-7d66cfdfa301) sekä tietenkin itse toteutuksesta, johon Pandey viittaa. Tämä toteutus löytyy GitHub Gist-palvelusta [gist:karpathy/microgpt.py](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95).
+
+    Koodi löytyy kokonaisuutena ruuduun mahtuvana kolmen palstan ratkaisuna osoitteesta [karpathy.ai/microgpt.html](https://karpathy.ai/microgpt.html) saatetekstillä: *"The most atomic way to train and run inference for a GPT in pure, dependency-free Python. This file is the complete algorithm. Everything else is just efficiency."*
+
+    Aja `722_microgpt.py`-tiedosto ja tutustu sen sisältöön. Toivon mukaan tunnistat, että ennen kurssia et olisi ymmärtänyt koodista mitään, mutta nyt se vilisee tuttuja käsitteitä aivan ensimmäisistä luennoista tähän luentoon asti – olettaen siis, että aloitit kurssin nollatietämyksellä syväoppimisen suhteen.
 
 ## Lähteet
 

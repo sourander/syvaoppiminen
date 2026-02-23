@@ -106,7 +106,8 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 ## Transformers (999)
 
 - [ ] Tehtävä: Perplexity
-- [ ] Tehtävä: ???
+- [ ] Tehtävä: Transformers kääntäjänä
+- [ ] Tehtävä: microGPT
 
 
 ```
