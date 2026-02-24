@@ -438,7 +438,7 @@ Muita, monimutkaisempia *benchmark-tyylisiä* (eli mallien vertailuun soveltuvia
 [^transformers-def-guide]: Koenigstein, N. *Transformers: The Definitive Guide*. O'Reilly. 2026.
 [^azure-book]: Esposito, F. *Programming Large Language Models with Azure Open AI: Conversational programming and prompt engineering with LLMs*. Microsoft Press. 2024.
 [^voita2019]: Voita, E. et. al. *Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned*. 2019. https://arxiv.org/abs/1905.09418
+[^gpt]: Radford, A. et. al. *Improving Language Understanding by Generative Pre-Training*. 2019. https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+[^bert]: Devlin, J. et. al. *BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding*. 2019. https://arxiv.org/abs/1810.04805
 [^ml-q-ai]: Raschka, S. *Machine Learning Q and AI*. No Starch Press. 2024.
 [^comet]: Morgan, A. *Perplexity for LLM Evaluation*. 2024. https://www.comet.com/site/blog/perplexity-for-llm-evaluation/
-[^bert]: Devlin, J. et. al. *BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding*. 2019. https://arxiv.org/abs/1810.04805
-[^gpt]: Radford, A. et. al. *Improving Language Understanding by Generative Pre-Training*. 2019. https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
