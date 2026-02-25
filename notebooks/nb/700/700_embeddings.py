@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.19.7"
+__generated_with = "0.20.2"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -23,12 +24,14 @@ def _():
     import spacy
     import polars as pl
     import altair as alt
+    import pandas as pd
 
     from pathlib import Path
     from scipy.spatial import distance
     from sklearn.decomposition import PCA
     from sklearn.manifold import TSNE
-    return PCA, Path, TSNE, alt, distance, pl, spacy
+
+    return PCA, Path, TSNE, alt, distance, pd, pl, spacy
 
 
 @app.cell
@@ -191,7 +194,7 @@ def _(conn, embeddings, mo, query_item):
         f"""
         SELECT *
         FROM embeddings
-        ORDER BY array_distance(vec, {query_item.tolist()}::FLOAT[300])
+        ORDER BY array_cosine_distance(vec, {query_item.tolist()}::FLOAT[300])
         LIMIT 10;
         """,
         engine=conn
@@ -202,7 +205,9 @@ def _(conn, embeddings, mo, query_item):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Least similar top k
+    ## Most similar top k
+
+    Note that distance is not the similarity, but the actual distance. So small distance means that they are close.
     """)
     return
 
@@ -214,7 +219,7 @@ def _(conn, embeddings, mo):
         SELECT 
             e1.word as word1, 
             e2.word as word2,
-            array_distance(e1.vec, e2.vec) as distance
+            array_cosine_distance(e1.vec, e2.vec) as distance
         FROM embeddings e1
         CROSS JOIN embeddings e2
         WHERE e1.word < e2.word  -- Avoid duplicates and self-comparisons
@@ -229,7 +234,7 @@ def _(conn, embeddings, mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## Most similar top k
+    ## Most different top k
     """)
     return
 
@@ -241,7 +246,7 @@ def _(conn, embeddings, mo):
         SELECT 
             e1.word as word1, 
             e2.word as word2,
-            array_distance(e1.vec, e2.vec) as distance
+            array_cosine_distance(e1.vec, e2.vec) as distance
         FROM embeddings e1
         CROSS JOIN embeddings e2
         WHERE e1.word < e2.word
