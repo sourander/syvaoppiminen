@@ -38,7 +38,7 @@ Nykyisten chatbottien suuret merkkipaalut ovat syntyneet lähitulevaisuudessa, m
 
 ### Turingin koe
 
-Kaiken luonnollisen kielen käsittelyn päämäärä ei ole välttämättä matkia ihmisen älykkyyttä, mutta tämä ajatus on kulkenut matkassa alusta asti – aivan kuten muussakin tekoälyn historiassa. Alan Turing julkaisi 1950 paperin otsikolla "Computing Machinery and Intelligence", jossa hän esitteli ajatuksen ==Turingin kokeesta== nimellä "The Imitation Game" [^turing1950]. Peli perustuu vanhaan seurapeliin, jolla salongissa on voinut viihdyttää vieraita: henkilöt A ja B istuvat erillään toisistaan, ja kolmas henkilö C esittää kysymyksiä kummallekin. A ja B ovat mies ja nainen, ja henkilön C tehtävä on päätellä kirjoitetun viestin perusteella, kumpi on kumpi. Turingin koe on sama asetelma, mutta A ja B ovat kone ja ihmminen. Jos C ei pysty luotettavasti erottamaan konetta ihmisestä, voidaan sanoa, että kone on läpäissyt Turingin kokeen. [^aimarketing]
+Kaiken luonnollisen kielen käsittelyn päämäärä ei ole välttämättä matkia ihmisen älykkyyttä, mutta tämä ajatus on kulkenut matkassa alusta asti – aivan kuten muussakin tekoälyn historiassa. Alan Turing julkaisi 1950 paperin otsikolla "Computing Machinery and Intelligence", jossa hän esitteli ajatuksen ==Turingin kokeesta== nimellä "The Imitation Game" [^turing1950]. Peli perustuu vanhaan seurapeliin, jolla salongissa on voinut viihdyttää vieraita: henkilöt A ja B istuvat erillään toisistaan, ja kolmas henkilö C esittää kysymyksiä kummallekin. A ja B ovat mies ja nainen, ja henkilön C tehtävä on päätellä kirjoitetun viestin perusteella, kumpi on kumpi. Turingin koe on sama asetelma, mutta A ja B ovat kone ja ihminen. Jos C ei pysty luotettavasti erottamaan konetta ihmisestä, voidaan sanoa, että kone on läpäissyt Turingin kokeen. [^aimarketing]
 
 Löydät internetistä helposti tätä koetta kritisoivaa sisältöä, ja myös väitteitä, että eri mallit ovat läpäisseet kokeen. Jos haluat tutustua aihepiiriin, kannattanee tutustua vuoden 2025 artikkeliin otsikolla *Large Language Models Pass the Turing Test*, jossa on vertailtu niin ELIZAa kuin tuoreita GPT-4.5-malleja. [^llmturing]
 
@@ -355,7 +355,7 @@ Output:
 ```
 
 
-Löydät vastaavan rakenteen myös `doc.tensor`-attribuutista, joka sisältää koko lauseen vektoritensorin, jonka muoto olisi tässä tapauksessa `(3, 96)`. PyTorchissa tulet käsittelemään niitä yleisimmin tensoreina kokoa: `(batch_size, seq_len, embedding_dim)`.
+Löydät vastaavan rakenteen myös `doc.tensor`-attribuutista, joka sisältää koko lauseen vektoritensorin, jonka muoto olisi tässä tapauksessa `(4, 96)`. PyTorchissa tulet käsittelemään niitä yleisimmin tensoreina kokoa: `(batch_size, seq_len, embedding_dim)`.
 
 
 Mutta kuinka tähän outoon vektoriin ollaan päädytty? Tutustutaan alla eri menetelmiin, aloittaen Johdatus koneoppimiseen -kurssilta tutuksi tulleesta One-Hot Encoding -menetelmästä, edeten tiheisiin vektoreihin, joiden piirteet on opittu tilastollisesti. Seuraavassa luvussa tutustumme suurten kielimallien käyttämiin kontekstisidonnaisiin sanavektoreihin. Niiden ymmärtäminen on helpompaa, jos aloitetaan perusasioista.
@@ -427,7 +427,7 @@ CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet [^applied
 1. **Pieni ikkuna**. CBOW käyttää kiinteän kokoista liukuvaa ikkunaa, joka rajoittaa kontekstin määrää. Pitkän kantaman riippuvuudet jäävät huomiotta.
 2. **Subword-tieto puuttuu**. CBOW käsittelee sanat kokonaisina yksikköinä. Esimerkiksi substansiitivsta muodostetun adjektiivin kantasanan yhteys jää huomiotta (`vaara` vs. `vaarallinen` tai `intelligent` vs. `intelligence`).
 3. **Out of Vocabulary (OOV)**. CBOW ei pysty käsittelemään sanoja, joita ei ole nähty koulutuksen aikana. Tämä on ongelma harvinaisille sanoille tai kirjoitusvirheille.
-4. **Staattisuus**. Jokaisella sanalla on yksi kiinteä vektoriesitys, joka ei muutu kontekstin mukaan. Ono se kuusi nyt sitten numero vai puu?
+4. **Staattisuus**. Jokaisella sanalla on yksi kiinteä vektoriesitys, joka ei muutu kontekstin mukaan. Onko se kuusi nyt sitten numero vai puu?
 
 !!! question "Entä Skip-gram?" 
 
@@ -435,7 +435,7 @@ CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet [^applied
 
 #### GloVe
 
-GloVe julkaistiin 2014 Stanfordissa, vuosi Word2Vec:n jälkeen. GloVe korjaa CBOW:n ensimmäisenä puutteen (ks. yltä) hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja(*engl. co-occurrence matrix*) pelkän lokaalin ikkunan sijaan. GloVe rakentaa sanavektorit siten, että sanojen vektoreiden välinen etäisyys heijastaa niiden yhteisesiintymistiheyttä koko korpuksessa: tämä tehdään tekemällä dimensiovähennys yhteisesiintymismatriisille [^appliednlp].
+GloVe julkaistiin 2014 Stanfordissa, vuosi Word2Vec:n jälkeen. GloVe korjaa CBOW:n ensimmäisenä puutteen (ks. yltä) hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja (*engl. co-occurrence matrix*) pelkän lokaalin ikkunan sijaan. GloVe rakentaa sanavektorit siten, että sanojen vektoreiden välinen etäisyys heijastaa niiden yhteisesiintymistiheyttä koko korpuksessa: tämä tehdään tekemällä dimensiovähennys yhteisesiintymismatriisille [^appliednlp].
 
 Emme käsittele algoritmia tässä tarkemmin, mutta voit tutua sen verkkosivuihin [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/projects/glove/). Sivuilta löytyy sekä julkaisu, kivoja kuvia, että linkki GitHub-koodiin (C-kieltä).
 
@@ -453,10 +453,6 @@ Se, mikä meitä kiinnostaa, on että mitkä CBOW:n heikkouksista on nyt korjatt
 4. ⛔ **Staattisuus**. fastTextin sanavektorit ovat edelleen staattisia.
 
 ### Vektorien vertailu
-
-TODO! Kun sanat on muutettu numeerisiksi vektoreiksi, voimme laskea niiden välisiä etäisyyksiä selvittääksemme, mitkä sanat tai dokumentit ovat sisällöllisesti lähimpänä toisiaan.
-
-TODO! Yleisin tapa mitata kahden sanavektorin samankaltaisuutta on laskea niiden välinen kulma (kosini), joka on riippumaton itse vektorin pituudesta (skaalasta). Käytännön harjoituksissa hyödynnämme tähän Pythonin SciPy-kirjaston spatial.distance.cosine -funktiota.
 
 #### Vektorien analogiat
 
