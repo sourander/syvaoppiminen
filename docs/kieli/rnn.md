@@ -289,7 +289,7 @@ much simpler to compute and implement"
 
     Avaa Marimo Notebook `710_...py` ja tutustu koodiin. Kyseessä on [NLP From Scratch: Classifying Names with a Character-Level RNN](https://docs.pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html)-tutoriaali PyTorchin dokumentaatiosta, joka on käännetty Marimo-malliin sopivaksi. Suorita koodi ja tarkastele tuloksia.
 
-    Mallin koulutus vei Macbook Pro:lla MPS:ää käyttäen 12 minuuttia. CUDA-PC:llä koulutus meni 2 minuutissa.
+    Mallin koulutus vei Macbook Pro:lla MPS:ää käyttäen 12 minuuttia, mutta LSTM ja GRU kouluttautuivat kumpikin 5 minuutissa – tuntemattomista syistä. CUDA-PC:llä RNN-mallin koulutus meni 2 minuutissa.
 
 !!! question "Tehtävä: Sukunimien luokittelu Pt.2"
 
