@@ -21,7 +21,7 @@ def _(mo):
     This notebook is sourced from Nvidia's Learning Deep Learning, [LDL](https://github.com/NVDLI/LDL), repository. The repository contains code examples associated with a similarly named book and video series by Magnus Ekman (Book ISBN: 9780137470358; Video: 9780138177553)
 
     - **Original source**: [gh:NVDLI/LDL/blob/main/stand_alone/v6_6_pretrained_glove_embeddings.ipynb](https://github.com/NVDLI/LDL/blob/main/stand_alone/v6_6_pretrained_glove_embeddings.ipynb)
-    - **License**: BSD 3-Clause License
+    - **License**: MIT
     - **Copyright**: (c) 2021 NVIDIA
     - **Modifications**:
         - Stylistic changes and conversion to Marimo
