@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.2"
 app = marimo.App()
 
 
@@ -28,7 +28,8 @@ def _(mo):
     * converting it to Marimo Notebook
     * moving a lot of the documentation from in-line to Markdown cells
     * Adding some new documentation, both from lectures notes and from Pandey's post.
-    * Inference moved to function. Start letter can be given.
+    * Inference moved to a function. Start letter can be given.
+    * data is expected to be in `data/etunimet.txt` file. Longest name in this document is 15 characters, so the context size is 16 (15 + 1 for BOS).
 
     **Reason for reproduction**: Aim is to try to improve readability. Make code quicker to access for the students in a familiar Marimo format.
     """)
@@ -45,27 +46,47 @@ def _(mo):
 
 @app.cell
 def _():
-    import os 
+    allowed_characters = set('abcdefghijklmnopqrstuvwxyz-äöå')
+    return (allowed_characters,)
+
+
+@app.cell
+def _(allowed_characters):
     import math
     import random
 
+    from pathlib import Path
+
     # Let there be order among chaos
     random.seed(42)
-    localfile = './data/microgpt-names.txt'
 
-    # Let there be a Dataset `docs`: list[str] 
-    # of documents (e.g. a list of names)
-    if not os.path.exists(localfile):
-        import urllib.request
-        names_url = (
-            'https://raw.githubusercontent.com/karpathy/'
-            'makemore/988aa59/names.txt')
-        urllib.request.urlretrieve(names_url, localfile)
-    docs = [line.strip() for line in open(localfile) if line.strip()]
+    # Dataset
+    localfile = Path("data/etunimet.txt")
+    if not localfile.exists():
+        print("Download the file from https://avoindata.suomi.fi/data/fi/dataset/none")
+        print("Keep e.g. 'Miehet kaikki' and 'Naiset kaikki' sheet names.")
+
+    # Let there be a Dataset `docs`: list[str]
+    # Drop entire name if it contains any character outside a-z + '-' + 'äöå'.
+    docs = []
+    n_dropped = 0
+    for line in open(localfile):
+        name = line.strip().lower()
+        if not name:
+            continue
+        if all(c in allowed_characters for c in name):
+            docs.append(name)
+        else:
+            n_dropped += 1
+
+
+    print(f"Kept: {len(docs)}, Dropped: {n_dropped}")
+    docs = list(set(docs))
+    longest = max(docs, key=len)
+    print(f"Uniques: {len(docs)} (longest: {longest} ({len(longest)})")
     random.shuffle(docs)
-    print(f"num docs: {len(docs)}")
     print(f"first 5 lines: ", docs[:5])
-    return docs, math, random
+    return docs, longest, math, random
 
 
 @app.cell(hide_code=True)
@@ -230,12 +251,12 @@ def _(mo):
 
 
 @app.cell
-def _(Value, random, vocab_size):
-    n_layer = 1       # (1)
-    n_embd = 16       # (2)
-    block_size = 16   # (3)
-    n_head = 4                   # (4)
-    head_dim = n_embd // n_head  # (5)
+def _(Value, longest, random, vocab_size):
+    n_layer = 1                   # (1)
+    n_embd = 16                   # (2)
+    block_size = len(longest) + 1 # (3)
+    n_head = 4                    # (4)
+    head_dim = n_embd // n_head   # (5)
 
     matrix = lambda nout, nin, std=0.08: [
             [Value(random.gauss(0, std)) for _ in range(nin)
@@ -492,7 +513,7 @@ def _(
 
         # (2)
         keys, values = [[] for _ in range(n_layer)], [[] for _ in range(n_layer)]
-    
+
         losses = []
         for pos_id in range(n):
             token_id, target_id = tokens[pos_id], tokens[pos_id + 1]
@@ -501,7 +522,7 @@ def _(
             loss_t = -probs[target_id].log()
             losses.append(loss_t)
         loss = (1 / n) * sum(losses) # (3)
-    
+
         loss.backward() # (4)
 
         lr_t = learning_rate * (1 - step / num_steps) # (5)
@@ -541,7 +562,7 @@ def _(BOS, block_size, gpt, n_layer, random, softmax, uchars, vocab_size):
                 token_id = BOS
                 sample = []
                 start_pos = 0
-        
+
             for pos_id in range(start_pos, block_size):
                 logits = gpt(token_id, pos_id, keys, values)
                 probs = softmax([l / temperature for l in logits])
@@ -549,7 +570,7 @@ def _(BOS, block_size, gpt, n_layer, random, softmax, uchars, vocab_size):
                     range(vocab_size), 
                     weights=[p.data for p in probs]
                 )[0]
-            
+
                 if token_id == BOS:
                     break    
                 sample.append(uchars[token_id])
@@ -585,7 +606,7 @@ def _(inference):
 
 @app.cell
 def _(inference):
-    inference(start_letter="j")
+    inference(start_letter="j", temperature=0.8)
     return
 
 

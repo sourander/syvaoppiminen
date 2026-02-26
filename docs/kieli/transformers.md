@@ -419,9 +419,10 @@ Muita, monimutkaisempia *benchmark-tyylisiä* (eli mallien vertailuun soveltuvia
 
     Koodi löytyy kokonaisuutena ruuduun mahtuvana kolmen palstan ratkaisuna osoitteesta [karpathy.ai/microgpt.html](https://karpathy.ai/microgpt.html) saatetekstillä: *"The most atomic way to train and run inference for a GPT in pure, dependency-free Python. This file is the complete algorithm. Everything else is just efficiency."*
 
-    Aja `722_microgpt.py`-tiedosto ja tutustu sen sisältöön. Toivon mukaan tunnistat, että ennen kurssia et olisi ymmärtänyt koodista mitään, mutta nyt se vilisee tuttuja käsitteitä aivan ensimmäisistä luennoista tähän luentoon asti – olettaen siis, että aloitit kurssin nollatietämyksellä syväoppimisen suhteen.
-
-    Jos pelkkä Python alkaa tökkiä, voit tutustua myös Harvardin vastineeseen [The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/), joka on toteutettu PyTorchilla ja kommentoitu vastavaavalla tavalla (mutta kuvien kera). Myös Polo Clubin visuaalinen [Transformer Explained](https://poloclub.github.io/transformer-explainer/) voi auttaa hahmottamaan arkkitehtuuria erityisesti QKV-matriisien osalta.
+    1. Lataa `data/etunimet.txt`-tiedostoon kaikkien suomenkielisten etunimien lista [Avoin data: Väestötietojärjestelmän suomalaisten nimiaineistot](https://avoindata.suomi.fi/data/fi/dataset/none)
+    2. Aja `722_microgpt.py`-tiedosto ja tutustu sen sisältöön. 
+   
+    Toivon mukaan tunnistat, että ennen kurssia et olisi ymmärtänyt koodista mitään, mutta nyt se vilisee tuttuja käsitteitä aivan ensimmäisistä luennoista tähän luentoon asti. Jos pelkkä Python alkaa tökkiä, voit tutustua myös Harvardin vastineeseen [The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/), joka on toteutettu PyTorchilla ja kommentoitu vastavaavalla tavalla (mutta kuvien kera). Myös Polo Clubin visuaalinen [Transformer Explained](https://poloclub.github.io/transformer-explainer/) voi auttaa hahmottamaan arkkitehtuuria erityisesti QKV-matriisien osalta.
 
 ## Lähteet
 
