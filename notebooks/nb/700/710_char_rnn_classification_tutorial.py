@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.19.7"
+__generated_with = "0.20.2"
 app = marimo.App()
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -159,6 +160,7 @@ def _():
             if unicodedata.category(c) != 'Mn'
             and c in allowed_characters
         )
+
     return allowed_characters, n_letters, unicodeToAscii
 
 
@@ -215,6 +217,7 @@ def _(allowed_characters, n_letters, torch):
         for li, letter in enumerate(line):
             tensor[li][0][letterToIndex(letter)] = 1
         return tensor
+
     return (lineToTensor,)
 
 
@@ -282,7 +285,10 @@ def _(lineToTensor, torch):
                     self.data_tensors.append(lineToTensor(name))
                     self.labels.append(label)
 
-            self.labels_uniq = list(labels_set)
+            # Note! Changed from original. Sorting allows loading the 
+            # checkpointed model without mixing up the labels
+            self.labels_uniq = sorted(list(labels_set))
+
             for idx in range(len(self.labels)):
                 temp_tensor = torch.tensor(
                     [self.labels_uniq.index(self.labels[idx])], dtype=torch.long
@@ -298,6 +304,7 @@ def _(lineToTensor, torch):
             data_tensor = self.data_tensors[idx]
             label_tensor = self.labels_tensors[idx]
             return (label_tensor, data_tensor, data_label, data_item)
+
     return NamesDataset, time
 
 
@@ -356,7 +363,7 @@ def _(mo):
     Before autograd, creating a recurrent neural network in Torch involved
     cloning the parameters of a layer over several timesteps. The layers
     held hidden state and gradients which are now entirely handled by the
-    graph itself. This means you can implement a RNN in a very \"pure\" way,
+    graph itself. This means you can implement a RNN in a very "pure" way,
     as regular feed-forward layers.
 
     This CharRNN class implements an RNN with three components. First, we
@@ -367,6 +374,34 @@ def _(mo):
     significant improvement in performance, such as cuDNN-accelerated
     kernels, versus implementing each layer as a `nn.Linear`. It also
     simplifies the implementation in `forward()`.
+
+    /// Note | Old version
+
+    Older versions of the tutorial included a Module that did not utilize the RNN module, and thus are closer to the lecture material's Python loop solution in their structure. That solution is included here for reference. It is copied from commit [2dac3e4](https://github.com/pytorch/tutorials/commit/2dac3e41051684b8a9ad78263220c053bf35f5b2), file [char_rnn_classification_tutorial.py](https://github.com/pytorch/tutorials/blob/2dac3e41051684b8a9ad78263220c053bf35f5b2/intermediate_source/char_rnn_classification_tutorial.py)
+
+    ```python
+    class RNN(nn.Module):
+        def __init__(self, input_size, hidden_size, output_size):
+            super(RNN, self).__init__()
+
+            self.hidden_size = hidden_size
+
+            self.i2h = nn.Linear(input_size + hidden_size, hidden_size)
+            self.i2o = nn.Linear(input_size + hidden_size, output_size)
+            self.softmax = nn.LogSoftmax(dim=1)
+
+        def forward(self, input, hidden):
+            combined = torch.cat((input, hidden), 1)
+            hidden = self.i2h(combined)
+            output = self.i2o(combined)
+            output = self.softmax(output)
+            return output, hidden
+
+        def initHidden(self):
+            return torch.zeros(1, self.hidden_size)
+    ```
+
+    ///
     """)
     return
 
@@ -390,6 +425,7 @@ def _():
             output = self.softmax(output)
 
             return output
+
     return CharRNN, nn
 
 
@@ -416,7 +452,7 @@ def _(CharRNN, MODEL_PATH, Path, alldata, n_letters, torch):
         print("No checkpoint found - model initialized with random weights")
 
     print(rnn)
-    return (rnn,)
+    return n_hidden, rnn
 
 
 @app.cell(hide_code=True)
@@ -430,15 +466,20 @@ def _(mo):
 
 
 @app.cell
-def _(alldata, lineToTensor, rnn):
+def _(CharRNN, alldata, lineToTensor, n_hidden, n_letters):
     def label_from_output(output, output_labels):
         top_n, top_i = output.topk(1)
         label_i = top_i[0].item()
         return output_labels[label_i], label_i
 
+    # Create new model to avoid Marimo DAG from running the trained 
+    # model here
+    untrained_rnn = CharRNN(n_letters, n_hidden, len(alldata.labels_uniq))
+
     input = lineToTensor('Albert')
-    output = rnn(input) #this is equivalent to ``output = rnn.forward(input)``
-    print(output)
+    output = untrained_rnn(input) #this is equivalent to ``output = rnn.forward(input)``
+    print("Log-probabilities :", output)
+    print("Probabilities: ", output.exp())
     print(label_from_output(output, alldata.labels_uniq))
     return (label_from_output,)
 
@@ -476,7 +517,8 @@ def _(nn, time, torch):
 
     def train(rnn, training_data, n_epoch = 10, n_batch_size = 64, report_every = 50, learning_rate = 0.2, criterion = nn.NLLLoss()):
         """
-        Learn on a batch of training_data for a specified number of iterations and reporting thresholds
+        Learn on a batch of training_data for a specified number 
+        of iterations and reporting thresholds
         """
         # Keep track of losses for plotting
         current_loss = 0
@@ -491,7 +533,8 @@ def _(nn, time, torch):
             rnn.zero_grad() # clear the gradients
 
             # create some minibatches
-            # we cannot use dataloaders because each of our names is a different length
+            # we cannot use dataloaders because each of our 
+            # names is a different length
             batches = list(range(len(training_data)))
             random.shuffle(batches)
             batches = np.array_split(batches, len(batches) //n_batch_size )
@@ -518,12 +561,29 @@ def _(nn, time, torch):
             current_loss = 0
 
         return all_losses
+
     return np, train
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
+    /// Note | Old version
+
+    Above, I mentioned the older version of the PyTorch tutorial that you can access in GitHub commit history. The old solution includes an interesting solution where the optimizer is not used at all. The backpropagation is performed like this...
+
+    ```python
+    loss = criterion(output, category_tensor)
+    loss.backward()
+
+    # Add parameters' gradients to their values
+    # multiplied by learning rate
+    for p in rnn.parameters():
+        p.data.add_(p.grad.data, alpha=-learning_rate)
+    ```
+
+    ///
+
     We can now train a dataset with minibatches for a specified number of
     epochs. The number of epochs for this example is reduced to speed up the
     build. You can get better results with different parameters.
