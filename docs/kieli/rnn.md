@@ -327,7 +327,7 @@ much simpler to compute and implement"
 
     Malli hyödyntää [Sequence to Sequence](https://arxiv.org/abs/1409.3215) (seq2seq) -arkkitehtuuria, jossa kaksi RNN-verkkoa toimivat yhdessä: toinen enkoodaa syötteen ja toinen dekoodaa sen käännökseksi. Tämän lisäksi mallissa käytetään [Attention-mekanismia](https://arxiv.org/abs/1409.0473), joka antaa dekooderin keskittyä syötteen tiettyihin osiin käännöstä generoidessaan. Attention käydään läpi tarkemmin seuraavassa [Transformers](transformers.md)-osiossa, joten voit palata siltä osin tähän Notebookiin myöhemmin.
 
-    Tehtävänäsi on suorittaa Notebook, tutustua koodiin ja varmistaa, että ymmärrät Attention-mekanismin perusperiaatteen.
+    Tehtävänäsi on suorittaa Notebook, tutustua koodiin ja varmistaa, että ymmärrät attention-mekanismin perusperiaatteen. Huomaa kuitenkin, että (self-)attentioniin tutustutaan tarkemmin Transformers-osiossa. Voit palata tähän Noteobokiin attention-mekanismin osalta myöhemmin takaisin.
 
     Malli kouluttautui opettajan Macbook Pro:lla noin 8 minuutissa.
 
