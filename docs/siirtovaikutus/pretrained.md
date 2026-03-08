@@ -43,7 +43,7 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
 
 !!! question "Tehtävä: Luo Hugging Face tunnus"
 
-    Rekisteröidy Hugging Facen käyttäjäksi osoitteessa [Hugging Face](https://huggingface.co/. Suosittelen käyttämään henkilökohtaista tunnusta koulun sähköpostin sijasta. On todennäköistä, että haluat käyttää palvelua myös valmistumisen jälkeen ja yksityisissä projekteissa.
+    Rekisteröidy Hugging Facen käyttäjäksi osoitteessa [Hugging Face](https://huggingface.co/). Suosittelen käyttämään henkilökohtaista tunnusta koulun sähköpostin sijasta. On todennäköistä, että haluat käyttää palvelua myös valmistumisen jälkeen ja yksityisissä projekteissa.
 
     **Kun olet rekisteröitynyt**, sinun tulee luoda [Access Token](https://huggingface.co/settings/tokens) -avain. Avainta käytetään autentikointiin ohjelmallisesti (eli Pythonissa.) Tokenin luontiin löytyy ohjeistusta [User access tokens](https://huggingface.co/docs/hub/en/security-tokens)-dokumentaatiosta. Lyhyt ohje on kuitenkin:
 
