@@ -1,7 +1,22 @@
 import marimo
 
-__generated_with = "0.19.9"
+__generated_with = "0.20.4"
 app = marimo.App(width="medium")
+
+with app.setup:
+    import torch
+    import numpy as np
+    import torch.optim as optim
+    import matplotlib.pyplot as plt
+    import torch.nn as nn
+
+    from datetime import datetime
+    from pathlib import Path
+    from torchvision import datasets, transforms
+    from torch.utils.data import DataLoader
+    from sklearn.metrics import classification_report
+    from torch.utils.tensorboard import SummaryWriter
+    from torchmetrics.classification import MulticlassAccuracy
 
 
 @app.cell
@@ -30,39 +45,6 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
-    import torch
-    import numpy as np
-    import torch.optim as optim
-    import matplotlib.pyplot as plt
-    import torch.nn as nn
-
-    from datetime import datetime
-    from pathlib import Path
-    from torchvision import datasets, transforms
-    from torch.utils.data import DataLoader
-    from sklearn.metrics import classification_report
-    from torch.utils.tensorboard import SummaryWriter
-    from torchmetrics.classification import MulticlassAccuracy
-
-    return (
-        DataLoader,
-        MulticlassAccuracy,
-        Path,
-        SummaryWriter,
-        classification_report,
-        datasets,
-        datetime,
-        nn,
-        np,
-        optim,
-        plt,
-        torch,
-        transforms,
-    )
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
@@ -74,7 +56,7 @@ def _(mo):
 
 
 @app.cell
-def _(torch):
+def _():
     print("PyTorch version:", torch.__version__)
     print("MPS available:", torch.backends.mps.is_available())
     return
@@ -89,7 +71,7 @@ def _(mo):
 
 
 @app.cell
-def _(SummaryWriter, datetime, torch):
+def _():
     # Configuration
     USE_GPU = True  # Toggle this to False to use CPU instead
 
@@ -139,7 +121,7 @@ def _(mo):
 
 
 @app.cell
-def _(BATCH_SIZE, DataLoader, datasets, transforms):
+def _(BATCH_SIZE):
     # Define transforms
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -181,7 +163,7 @@ def _(mo):
 
 
 @app.cell
-def _(device, nn, torch, writer):
+def _(device, writer):
     class MLP(nn.Module):
         def __init__(self):
             super(MLP, self).__init__()
@@ -233,7 +215,7 @@ def _(mo):
 
 
 @app.cell
-def _(torch):
+def _():
     def train_epoch(model, train_loader, criterion, optimizer, metric, device, writer=None, epoch=None):
         """Train the model for one epoch.
 
@@ -316,14 +298,10 @@ def _(
     BATCH_SIZE,
     EPOCHS,
     LEARNING_RATE,
-    MulticlassAccuracy,
-    datetime,
     device,
     device_name,
     evaluate,
     model,
-    nn,
-    optim,
     testloader,
     train_epoch,
     trainloader,
@@ -407,7 +385,7 @@ def _(mo):
 
 
 @app.cell
-def _(Path, model, run_name, torch):
+def _(model, run_name):
     # Create models directory if it doesn't exist
     Path('models').mkdir(parents=True, exist_ok=True)
 
@@ -428,7 +406,7 @@ def _(mo):
 
 
 @app.cell
-def _(classification_report, device, model, np, testloader, torch):
+def _(device, model, testloader):
     print("[INFO] evaluating network...")
     model.eval()
 
@@ -492,7 +470,7 @@ def _(mo):
 
 
 @app.cell
-def _(EPOCHS, history, np, plt):
+def _(EPOCHS, history):
     # Option A: Plot training history from local variables using matplotlib
     plt.style.use("ggplot")
     plt.figure(figsize=(10, 6))
