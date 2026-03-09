@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.19.9"
+__generated_with = "0.20.4"
 app = marimo.App()
 
 
@@ -300,6 +300,7 @@ def _(all_categories, all_letters, n_categories, n_letters, torch):
         letter_indexes.append(n_letters - 1) # EOS
         return torch.LongTensor(letter_indexes)
 
+
     return categoryTensor, inputTensor, targetTensor
 
 
@@ -314,7 +315,14 @@ def _(mo):
 
 
 @app.cell
-def _(categoryTensor, inputTensor, randomTrainingPair, targetTensor):
+def _(
+    all_letters,
+    categoryTensor,
+    inputTensor,
+    n_letters,
+    randomTrainingPair,
+    targetTensor,
+):
     # Make category, input, and target tensors from a random category, line pair
     def randomTrainingExample():
         category, line = randomTrainingPair()
@@ -322,6 +330,33 @@ def _(categoryTensor, inputTensor, randomTrainingPair, targetTensor):
         input_line_tensor = inputTensor(line)
         target_line_tensor = targetTensor(line)
         return category_tensor, input_line_tensor, target_line_tensor
+
+
+    # ====================================
+    # NOTE! These are added by the teacher
+    #   They may help in investigating what is being fed
+    #   to the training function.
+    # ====================================
+
+    def decode_input(t):
+        """Decode the input back to human-readable form. Usage:
+
+        >>> rte = randomTrainingExample()
+        >>> decode_input(rte[1])
+        >>> 'Yamakawa'
+        """
+        return ''.join(all_letters[step[0].argmax().item()] for step in t)
+
+    def decode_target(t):
+        """Decode the target back to human-readable form. Usage:
+        >>> rte = randomTrainingExample()
+        >>> decode_input(rte[2])
+        >>> 'amakawa<EOS>'
+        """
+        return ''.join(
+            all_letters[i] if i < n_letters - 1 else '<EOS>'
+            for i in t.tolist()
+        )
 
     return (randomTrainingExample,)
 
