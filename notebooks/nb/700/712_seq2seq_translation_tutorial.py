@@ -173,13 +173,18 @@ def _(mo):
 
     ## One Hot Encoding
 
-    Similar to the character encoding used in the character-level RNN
+    /// admonition | NOTE:
+
+    One Hot Encoding must be a relic from some old version. This version actually adds Embeddings that are trained during the Encoder training as parameters.
+    ///
+
+    ~~Similar to the character encoding used in the character-level RNN
     tutorials, we will be representing each word in a language as a one-hot
     vector, or giant vector of zeros except for a single one (at the index
     of the word). Compared to the dozens of characters that might exist in a
     language, there are many many more words, so the encoding vector is much
     larger. We will however cheat a bit and trim the data to only use a few
-    thousand words per language.
+    thousand words per language.~~
 
     ```plaintext
          01    03    05  06
