@@ -191,9 +191,15 @@ def _(n_categories):
             super(RNN, self).__init__()
             self.hidden_size = hidden_size
 
-            self.i2h = nn.Linear(n_categories + input_size + hidden_size, hidden_size)
-            self.i2o = nn.Linear(n_categories + input_size + hidden_size, output_size)
-            self.o2o = nn.Linear(hidden_size + output_size, output_size)
+            self.i2h = nn.Linear(
+                n_categories + input_size + hidden_size, hidden_size
+            )
+            self.i2o = nn.Linear(
+                n_categories + input_size + hidden_size, output_size
+            )
+            self.o2o = nn.Linear(
+                hidden_size + output_size, output_size
+            )
             self.dropout = nn.Dropout(0.1)
             self.softmax = nn.LogSoftmax(dim=1)
 
@@ -253,8 +259,8 @@ def _(mo):
 
     Since we are predicting the next letter from the current letter for each
     timestep, the letter pairs are groups of consecutive letters from the
-    line - e.g. for `"ABCD<EOS>"` we would create (\"A\", \"B\"), (\"B\",
-    \"C\"), (\"C\", \"D\"), (\"D\", \"EOS\").
+    line - e.g. for `"ABCD<EOS>"` we would create ("A", "B"), ("B",
+    "C"), ("C", "D"), ("D", "EOS").
     """)
     return
 
@@ -296,7 +302,9 @@ def _(all_categories, all_letters, n_categories, n_letters, torch):
 
     # ``LongTensor`` of second letter to end (EOS) for target
     def targetTensor(line):
-        letter_indexes = [all_letters.find(line[li]) for li in range(1, len(line))]
+        letter_indexes = [
+            all_letters.find(line[li]) for li in range(1, len(line))
+        ]
         letter_indexes.append(n_letters - 1) # EOS
         return torch.LongTensor(letter_indexes)
 
@@ -452,7 +460,12 @@ def _(RNN, n_letters, nn, randomTrainingExample, time, timeSince, train):
     start = time.time()
 
     for iter in range(1, n_iters + 1):
-        output, loss = train(*randomTrainingExample(), criterion, learning_rate, rnn)
+        output, loss = train(
+            *randomTrainingExample(), 
+            criterion, 
+            learning_rate, 
+            rnn
+        )
         total_loss += loss
 
         if iter % print_every == 0:

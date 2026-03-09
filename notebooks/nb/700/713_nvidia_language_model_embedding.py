@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.4"
 app = marimo.App()
 
 
@@ -14,7 +14,7 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    # Nvidia Learning Deep Learning: Using Pretrained GloVe Embeddings
+    # Nvidia Learning Deep Learning: Language Model and Word Embeddings with PyTorch
 
     ## Attribution
 
@@ -120,6 +120,16 @@ def _():
     )
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Helper functions
+
+    There are from `utilities.py`. Separated from a massive `train_model` function.
+    """)
+    return
+
+
 @app.cell
 def _(torch):
     def train_epoch(model, device, dataloader, optimizer, loss_function, metric):
@@ -188,6 +198,14 @@ def _(torch):
     return train_epoch, validate_epoch
 
 
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Tokenizer
+    """)
+    return
+
+
 @app.cell
 def _():
     from collections import Counter
@@ -228,11 +246,16 @@ def _():
 
         def texts_to_sequences(self, texts):
             sequences = []
-            oov_idx = self.word_index.get(self.oov_token, 0) if self.oov_token else 0
+            oov_idx = self.word_index.get(
+                self.oov_token, 0
+            ) if self.oov_token else 0
             max_idx = self.num_words if self.num_words else float('inf')
+
             for text in texts:
-                words = text if isinstance(text, list) else text_to_word_sequence(text)
+                words = text if isinstance(
+                    text, list) else text_to_word_sequence(text)
                 seq = []
+
                 for w in words:
                     idx = self.word_index.get(w, oov_idx)
                     if idx < max_idx:
@@ -245,11 +268,25 @@ def _():
         def sequences_to_texts(self, sequences):
             result = []
             for seq in sequences:
-                words = [self.index_word.get(idx, self.oov_token or '') for idx in seq]
+                words = [
+                    self.index_word.get(
+                        idx, self.oov_token or ''
+                    ) for idx in seq
+                ]
                 result.append(' '.join(words))
             return result
 
     return Tokenizer, text_to_word_sequence
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    ## Training Function
+
+    This is also from `utilities.py`.
+    """)
+    return
 
 
 @app.cell
@@ -272,9 +309,15 @@ def _(DataLoader, train_epoch, validate_epoch):
             test_loss, test_metric = validate_epoch(model, device, testloader, loss_function, metric)
 
             if metric == 'acc':
-                print(f'Epoch {i+1}/{epochs} loss: {train_loss:.4f} - acc: {train_metric:0.4f} - val_loss: {test_loss:.4f} - val_acc: {test_metric:0.4f}')
+                print(f'Epoch {i+1}/{epochs} loss: {train_loss:.4f} '
+                      f'- acc: {train_metric:0.4f} - '
+                      f'val_loss: {test_loss:.4f} - '
+                      f'val_acc: {test_metric:0.4f}')
             elif metric == 'mae':
-                print(f'Epoch {i+1}/{epochs} loss: {train_loss:.4f} - mae: {train_metric:0.4f} - val_loss: {test_loss:.4f} - val_mae: {test_metric:0.4f}')
+                print(f'Epoch {i+1}/{epochs} loss: {train_loss:.4f} - '
+                      f'mae: {train_metric:0.4f} - '
+                      f'val_loss: {test_loss:.4f} - '
+                      f'val_mae: {test_metric:0.4f}')
 
         return [train_metric, test_metric]
 
@@ -296,9 +339,11 @@ def _(INPUT_FILE_NAME, WINDOW_LENGTH, WINDOW_STEP, text_to_word_sequence):
     text = file.read()
     file.close()
     text = text_to_word_sequence(text)
+
     # Make lower case and split into individual words.
     fragments = []
     targets = []
+
     # Create training examples.
     for _i in range(0, len(text) - WINDOW_LENGTH, WINDOW_STEP):
         fragments.append(text[_i:_i + WINDOW_LENGTH])
@@ -329,9 +374,12 @@ def _(MAX_WORDS, Tokenizer, fragments, np, targets, text):
     tokenizer.fit_on_texts(text)
     fragments_indexed = tokenizer.texts_to_sequences(fragments)
     targets_indexed = tokenizer.texts_to_sequences(targets)
+
     X = np.array(fragments_indexed, dtype=np.int64)
+
     # Convert to appropriate input and output formats.
     y = np.zeros(len(targets_indexed), dtype=np.int64)
+
     for _i, target_index in enumerate(targets_indexed):
         y[_i] = target_index[0]
     return X, tokenizer, y
@@ -352,8 +400,12 @@ def _(TensorDataset, X, torch, train_test_split, y):
         X, y, test_size=0.05, random_state=0)
 
     # Create Dataset objects.
-    trainset = TensorDataset(torch.from_numpy(train_X), torch.from_numpy(train_y))
-    testset = TensorDataset(torch.from_numpy(test_X), torch.from_numpy(test_y))
+    trainset = TensorDataset(
+        torch.from_numpy(train_X), torch.from_numpy(train_y)
+    )
+    testset = TensorDataset(
+        torch.from_numpy(test_X), torch.from_numpy(test_y)
+    )
     return testset, trainset
 
 
@@ -478,7 +530,7 @@ def _(
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    After training the model, we are ready to use it to do predictions. The first loop in the code snippet below feeds an initial sequence of words to the model. Note how we call get_state after each call followed by set_state, which instructs the model to use this stat instead of reseting it before each word.
+    After training the model, we are ready to use it to do predictions. The first loop in the code snippet below feeds an initial sequence of words to the model. Note how we call get_state after each call followed by set_state, which instructs the model to use this state instead of reseting it before each word.
 
     The second loop contains the autoregression logic where we identify the word that the model predicts as highest probability and then feed that as input to the model in the next timestep. To simplify the implementation, we do not do beam search this time around but simply predict the most probable word at each timestep.
 
@@ -545,20 +597,29 @@ def _(np, tokenizer, trained_model):
     next(it)
     embeddings = next(it).weight
     embeddings = embeddings.detach().clone().cpu().numpy()
-    lookup_words = ['the', 'of']
+
+    lookup_words = ['elizabeth', 'attention']
     for lookup_word in lookup_words:
         lookup_word_indexed = tokenizer.texts_to_sequences([lookup_word])
         print('words close to:', lookup_word)
+    
         lookup_embedding = embeddings[lookup_word_indexed[0]]
+    
         word_indices = {}
         for _i, embedding in enumerate(embeddings):
             distance = np.linalg.norm(embedding - lookup_embedding)
             word_indices[distance] = _i  # Calculate distances.
+    
         for distance in sorted(word_indices.keys())[:5]:
             _word_index = word_indices[distance]
             _word = tokenizer.sequences_to_texts([[_word_index]])[0]
             print(_word + ': ', distance)
         print('')  # Print sorted by distance.
+    return
+
+
+@app.cell
+def _():
     return
 
 

@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.19.11"
+__generated_with = "0.20.4"
 app = marimo.App()
 
 
@@ -535,6 +535,8 @@ def _(mo):
 @app.cell
 def _(F, MAX_LENGTH, SOS_token, device, nn, torch):
     class DecoderRNN(nn.Module):
+        """Note: This is never used. It is here only for demonstration
+        purposes"""
         def __init__(self, hidden_size, output_size):
             super(DecoderRNN, self).__init__()
             self.embedding = nn.Embedding(output_size, hidden_size)
@@ -543,7 +545,9 @@ def _(F, MAX_LENGTH, SOS_token, device, nn, torch):
 
         def forward(self, encoder_outputs, encoder_hidden, target_tensor=None):
             batch_size = encoder_outputs.size(0)
-            decoder_input = torch.empty(batch_size, 1, dtype=torch.long, device=device).fill_(SOS_token)
+            decoder_input = torch.empty(
+                batch_size, 1, dtype=torch.long, device=device
+            ).fill_(SOS_token)
             decoder_hidden = encoder_hidden
             decoder_outputs = []
 
@@ -600,13 +604,18 @@ def _(mo):
     If only the context vector is passed between the encoder and decoder,
     that single vector carries the burden of encoding the entire sentence.
 
-    Attention allows the decoder network to \"focus\" on a different part of
+    Attention allows the decoder network to "focus" on a different part of
     the encoders outputs for every step of the decoders own outputs.
     First we calculate a set of *attention weights*. These will be
     multiplied by the encoder output vectors to create a weighted
-    combination. The result (called `attn_applied` in the code) should
+    combination. The result ~~(called `attn_applied` in the code)~~ should
     contain information about that specific part of the input sequence, and
     thus help the decoder choose the right output words.
+
+    /// admonition | NOTE:
+
+    It is not called `attn_applied` in the current version. It is called `context`.
+    ///
 
     {mo.image(src="nb/700/images/712_attention_decoder.png")}
 
@@ -652,6 +661,13 @@ def _(F, MAX_LENGTH, SOS_token, device, nn, torch):
             self.Va = nn.Linear(hidden_size, 1)
 
         def forward(self, query, keys):
+            """ Note: this is called in the AttnDecoderRNN 
+            function called forward_step like this:
+
+            >>> self.attention(hidden.permute(1, 0, 2), encoder_outputs)
+
+            Where permute reshapes the tensor to required shape.
+            """
             scores = self.Va(torch.tanh(self.Wa(query) + self.Ua(keys)))
             scores = scores.squeeze(2).unsqueeze(1)
 
@@ -828,24 +844,40 @@ def _(mo):
     but it has not properly learned how to create the sentence from the
     translation in the first place.
 
-    Because of the freedom PyTorch's autograd gives us, we can randomly
+    ~~Because of the freedom PyTorch's autograd gives us, we can randomly
     choose to use teacher forcing or not with a simple if statement. Turn
-    `teacher_forcing_ratio` up to use more of it.
+    `teacher_forcing_ratio` up to use more of it.~~
+
+    /// admonition | NOTE:
+
+    There is no teacher forcing ratio variable here. The teacher forcing is hard-coded into the Decoder (both of them) so that it is 100 % on during training, 0 % no during inference.
+    ///
     """)
     return
 
 
 @app.function
-def train_epoch(dataloader, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion):
+def train_epoch(
+    dataloader, encoder, decoder, 
+    encoder_optimizer, decoder_optimizer, criterion):
+
     total_loss = 0
     for data in dataloader:
         input_tensor, target_tensor = data
         encoder_optimizer.zero_grad()
         decoder_optimizer.zero_grad()
         encoder_outputs, encoder_hidden = encoder(input_tensor)
-        decoder_outputs, _, _ = decoder(encoder_outputs, encoder_hidden, target_tensor)
-        loss = criterion(decoder_outputs.view(-1, decoder_outputs.size(-1)), target_tensor.view(-1))
+        decoder_outputs, _, _ = decoder(
+            encoder_outputs, 
+            encoder_hidden, 
+            target_tensor
+        )
+
+        loss = criterion(decoder_outputs.view(
+            -1, decoder_outputs.size(-1)), target_tensor.view(-1)
+        )
         loss.backward()
+
         encoder_optimizer.step()
         decoder_optimizer.step()
         total_loss = total_loss + loss.item()
@@ -898,31 +930,51 @@ def _(mo):
 
 
 @app.cell
-def _(nn, optim, showPlot, time, timeSince):
-    def train(train_dataloader, encoder, decoder, n_epochs, learning_rate=0.001, print_every=100, plot_every=100):
+def _(nn, optim, time, timeSince):
+    def train(train_dataloader, encoder, decoder, n_epochs, 
+              learning_rate=0.001, print_every=100, plot_every=100):
+
         start = time.time()
+
         plot_losses = []
         print_loss_total = 0
         plot_loss_total = 0  # Reset every print_every
-        encoder_optimizer = optim.Adam(encoder.parameters(), lr=learning_rate)  # Reset every plot_every
+
+        encoder_optimizer = optim.Adam(
+            encoder.parameters(), lr=learning_rate
+        )
         decoder_optimizer = optim.Adam(decoder.parameters(), lr=learning_rate)
+
         criterion = nn.NLLLoss()
+
         for epoch in range(1, n_epochs + 1):
-            loss = train_epoch(train_dataloader, encoder, decoder, encoder_optimizer, decoder_optimizer, criterion)
+            loss = train_epoch(
+                train_dataloader, encoder, decoder, 
+                encoder_optimizer, decoder_optimizer, criterion
+            )
             print_loss_total = print_loss_total + loss
             plot_loss_total = plot_loss_total + loss
+
             if epoch % print_every == 0:
                 print_loss_avg = print_loss_total / print_every
                 print_loss_total = 0
-                print('%s (%d %d%%) %.4f' % (timeSince(start, epoch / n_epochs), epoch, epoch / n_epochs * 100, print_loss_avg))
+                print('%s (%d %d%%) %.4f' % (
+                    timeSince(start, epoch / n_epochs)
+                    , epoch, epoch / n_epochs * 100, print_loss_avg)
+                 )
             if epoch % plot_every == 0:
                 plot_loss_avg = plot_loss_total / plot_every
                 plot_losses.append(plot_loss_avg)
                 plot_loss_total = 0
-        showPlot(plot_losses)
         return plot_losses
 
     return (train,)
+
+
+@app.cell
+def _(plot_losses, showPlot):
+    showPlot(plot_losses)
+    return
 
 
 @app.cell(hide_code=True)
@@ -947,7 +999,7 @@ def _():
         fig, ax = plt.subplots()
         loc = ticker.MultipleLocator(base=0.2)
         ax.yaxis.set_major_locator(loc)  # this locator puts ticks at regular intervals
-        plt.plot(points)
+        return plt.plot(points)
 
     return plt, showPlot
 
@@ -1007,7 +1059,9 @@ def _(evaluate, input_lang, output_lang, pairs, random):
             pair = random.choice(pairs)
             print('>', pair[0])
             print('=', pair[1])
-            output_words, _ = evaluate(encoder, decoder, pair[0], input_lang, output_lang)
+            output_words, _ = evaluate(
+                encoder, decoder, pair[0], input_lang, output_lang
+            )
             output_sentence = ' '.join(output_words)
             print('<', output_sentence)
             print('')
@@ -1039,7 +1093,6 @@ def _(
     Path,
     device,
     get_dataloader,
-    showPlot,
     torch,
     train,
 ):
@@ -1053,18 +1106,20 @@ def _(
         checkpoint = torch.load(MODEL_PATH, weights_only=False)
         encoder.load_state_dict(checkpoint['encoder_state_dict'])
         decoder.load_state_dict(checkpoint['decoder_state_dict'])
+        plot_losses = checkpoint['plot_losses']
         print(f"Loaded model from {MODEL_PATH}")
-        if 'plot_losses' in checkpoint:
-            showPlot(checkpoint['plot_losses'])
     else:
-        plot_losses = train(train_dataloader, encoder, decoder, 80, print_every=5, plot_every=5)
+        plot_losses = train(
+            train_dataloader, encoder, decoder, 80, 
+            print_every=5, plot_every=5
+        )
         torch.save({
             'encoder_state_dict': encoder.state_dict(),
             'decoder_state_dict': decoder.state_dict(),
             'plot_losses': plot_losses
         }, MODEL_PATH)
         print(f"Model saved to {MODEL_PATH}")
-    return decoder, encoder, input_lang_1, output_lang_1
+    return decoder, encoder, input_lang_1, output_lang_1, plot_losses
 
 
 @app.cell(hide_code=True)
