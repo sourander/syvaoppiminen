@@ -144,7 +144,9 @@ Tällaisen löydät harjoituksesta `713_nvidia_language_model_embedding.py`. Vai
 
 #### Vector-to-Sequence
 
-Tämä "one-to-many" -arkkitehtuuri ottaa syötteenään yhden vektorin, esimerkiksi kuvan piirrevektorin, ja tuottaa siitä sarjan tuloksia, mikä on yleistä esimerkiksi kuvatekstien automaattisessa generoinnissa, jossa kuvasta luodaan sanajono. [^karpathy] Toinen esimerkki voisi olla nimen generointi, jossa syötteenä on henkilön kotimaa (vektoroituna One-Hot -esityksenä) ja mallin tavoitteena on tuottaa sarja merkkejä, jotka muodostavat sukunimen. Tähän liittyy myöhemmin tehtävä.
+Tämä "one-to-many" -arkkitehtuuri ottaa syötteenään yhden vektorin, esimerkiksi kuvan piirrevektorin, ja tuottaa siitä sarjan tuloksia, mikä on yleistä esimerkiksi kuvatekstien automaattisessa generoinnissa, jossa kuvasta luodaan sanajono. [^karpathy] Toinen konseptuaalinen esimerkki on tekstin generointi aloitussyötteestä.
+
+Myöhemmin tehtävä `711_char_rnn_generation_tutorial.py` mielletään inferenssin (eli käytön) näkökulmasta usein tähän luokkaan: mallille annetaan kategoria (maa) ja aloituskirjain, joista se generoi ulos koko nimen. On kuitenkin tärkeä ymmärtää verkon todellinen mekaniikka: **koulutusvaiheessa** kyseessä on synkronoitu *many-to-many* -verkko (ks. seuraava kohta), jossa sisään syötetään sarja nimen kirjaimia, ja jokaisen kohdalla lasketaan häviö (*loss*) seuraavan kirjaimen ennusteesta. **Inferenssivaiheessa** mallia taas ajetaan autoregressiivisenä silmukkana, jolloin se lukee muodostunutta kontekstia ennustaakseen oppimansa perusteella vain yhden merkin kerrallaan.
 
 #### Sequence-to-Sequence
 
