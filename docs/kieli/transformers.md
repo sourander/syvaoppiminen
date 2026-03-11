@@ -381,15 +381,14 @@ Toisin kuin merkkijonojen täsmälliseen vastaavuuteen perustuvat mittarit – k
 
 BERTScoren laskenta etenee seuraavasti:
 
-1. Aja `candidate = LLM(input)`
-2. Aja `tc = tokenize(candidate)` ja `tr = tokenize(reference)` saadaksesi embedding-vektorit kummastakin.
-3. Aja `ec = BERT(tc)` ja `er = BERT(tr)` saadaksesi tokenien embedding-vektorit.
-4. Lasketaan `cosine_similarity(ec[i], er[j])` jokaiselle kandidaattitekstin tokenille `i` ja referenssitekstin tokenille `j` eli *pairwise cosine similarity* -matriisi.
-5. Kohdistetaan jokainen `tc`-token siihen `tr`-tokeniin, jonka kanssa kosinisamankaltaisuus on suurin.
-6. Lasketaan näiden parhaiden samankaltaisuuspisteiden keskiarvo (tai F1-score), joka antaa lopullisen BERTScore-pisteen.
-7. (Vaihtoehtoisesti) lopuksi otetaan huomioon *importance weighting* eli painotetaan pisteitä tokenien tärkeyden mukaan, joka voidaan määritellä inverse document frequency (IDF) -arvoilla.
+1. Aja `candidate = LLM(input)` (ja etsi `reference`, joka on ihmisen tuottama)
+2. Aja `cand = BERT(tokenize(candidate))` ja `ref = BERT(tokenize(reference))` saadaksesi tokenien embedding-vektorit.
+3. Lasketaan `cosine_similarity(cand[i], ref[j])` jokaiselle kandidaattitekstin tokenille `i` ja referenssitekstin tokenille `j` eli *pairwise cosine similarity* -matriisi.
+4. Kohdistetaan jokainen `cand`-token siihen `ref`-tokeniin, jonka kanssa kosinisamankaltaisuus on suurin.
+5. Lasketaan näiden parhaiden samankaltaisuuspisteiden keskiarvo (tai F1-score), joka antaa lopullisen BERTScore-pisteen.
+6. (Vaihtoehtoisesti) lopuksi otetaan huomioon *importance weighting* eli painotetaan pisteitä tokenien tärkeyden mukaan, joka voidaan määritellä inverse document frequency (IDF) -arvoilla.
 
-Prosessi on kuvattu alkuperäisen julkaisun *Figure 1*-kuvassa. Kannattaa käydä tutustumassa kyseiseen konferenssipaperiin: [BERTScore: Evaluating Text Generation with BERT](https://arxiv.org/abs/1904.09675). Sanomatta lienee selvää, että BERTscore on laskennallisesti raskaampi kuin perinteiset mittarit. Se vaatii kokonaisen neuroverkkomallin ajamista arvioinnin aikana. BERTscore ei ole täydellinen, ja sen rinnalla on suositeltavaa käyttää myös ihmisen tekemää laadunarviointia. [^ml-q-ai] 
+Prosessi on kuvattu alkuperäisen julkaisun *Figure 1*-kuvassa. Kannattaa käydä tutustumassa kyseiseen konferenssipaperiin: [BERTScore: Evaluating Text Generation with BERT](https://arxiv.org/abs/1904.09675). Sanomatta lienee selvää, että BERTscore on laskennallisesti raskaampi kuin perinteiset mittarit. Se vaatii kokonaisen neuroverkkomallin ajamista arvioinnin aikana. BERTscore ei ole täydellinen, ja sen rinnalla on suositeltavaa käyttää myös ihmisen tekemää laadunarviointia. [^ml-q-ai]
 
 ### Muut benchmark-tyyppiset metriikat
 
