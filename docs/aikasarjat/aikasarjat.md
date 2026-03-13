@@ -295,7 +295,7 @@ Ennen kuin koulutat yhtään monimutkaista mallia, rakenna vähintään yksi yks
 * **seasonal naive**: ensi maanantai = viime maanantai (eli $y_{t+7} = y_t$)
 * **moving average**: ennuste = viimeisten havaintojen keskiarvo
 
-Huomaa, että nämä ==eivät siis varsinaisesti ennusta mitään==. Jos valitsemasi *event horizon* on 7 päivää, ja ajat ennusteen sunnuntaina, niin naive baseline toimii siten, että:
+Huomaa, että nämä ==eivät siis varsinaisesti ennusta mitään==. Jos valitsemasi *forecast horizon* on 7 päivää, ja ajat ennusteen sunnuntaina, niin naive baseline toimii siten, että:
 
 * maanantain arvo on sunnuntain arvo
 * tiistain arvo on sunnuntain arvo
@@ -325,7 +325,7 @@ Exponential Smoothing -malliperhe painottaa tuoreita havaintoja vanhoja enemmän
 
 Kun aikasarja muutetaan taulukkomuotoon lag-piirteiden avulla, tavallinen lineaarinen regressio muuttuu täysin käyttökelpoiseksi ennustajaksi. Tällöin malli oppii painot esimerkiksi piirteille `lag_1`, `lag_24`, `lag_168`, `is_weekend` ja `temperature`. [^modern-ts-forecasting] Jos piirteitä on paljon, käytetään usein regularisoituja versioita, kuten Ridge- tai Lasso-regressiota.
 
-!!! tip "Regressio ja event horizon"
+!!! tip "Regressio ja forecast horizon"
 
     Huomaa, että lineaarinen regressio on luonteeltaan single-step-malli. Jos haluat ennustaa useamman askeleen päähän, sinun täytyy joko:
 
@@ -391,7 +391,7 @@ Näiden mallien koulutuksessa valitaan vähintään:
 * historiaikkunan pituus (`sequence_length`)
 * ennustehorisontti
     * single-step (many-to-one)
-    * multi-step (encoder-decoder)
+    * multi-step (many-to-many)
 * tappiofunktio, kuten MAE, MSE tai Huber
 
 ### Transformer-pohjaiset mallit
@@ -410,7 +410,7 @@ Neuroverkkojen koulutuksessa on päätettävä myös, mitä tarkalleen ennusteta
 
 ### Koulutuslooppi käytännössä
 
-Varsinainen koulutus ei poikkea mistään, mitä et olisi jo kurssin aikana nähnyt. Syötetään dataa ikkunamuodossa, lasketaan tappio, backpropagoidaan ja päivitetään painot. Ainoa ero on se, että data on järjestetty sekvensseiksi eikä yksittäisiksi riveiksi. Aivan kuten lauseita kouluttaessa, myös aikasarjojen kanssa on tärkeää pitää huolta siitä, että `y` sisältää `event_horizon`-määrän verran tulevaisuuden arvoja, ja `x_sample` sisältää `sequence_length`-määrän verran menneisyyden arvoja. Aivan kuten lauseiden kanssa, aikasarjojen kanssa nämä yksittäiset ikkunat voi syöttää malliin missä tahansa järjestyksessä, mutta train-test-jako ja backtesting on tehtävä siten, että mallin ei koskaan anneta nähdä tulevaisuuden dataa.
+Varsinainen koulutus ei poikkea mistään, mitä et olisi jo kurssin aikana nähnyt. Syötetään dataa ikkunamuodossa, lasketaan tappio, backpropagoidaan ja päivitetään painot. Ainoa ero on se, että data on järjestetty sekvensseiksi eikä yksittäisiksi riveiksi. Aivan kuten lauseita kouluttaessa, myös aikasarjojen kanssa on tärkeää pitää huolta siitä, että `y` sisältää `forecast_horizon`-määrän verran tulevaisuuden arvoja, ja `x_sample` sisältää `sequence_length`-määrän verran menneisyyden arvoja. Aivan kuten lauseiden kanssa, aikasarjojen kanssa nämä yksittäiset ikkunat voi syöttää malliin missä tahansa järjestyksessä, mutta train-test-jako ja backtesting on tehtävä siten, että mallin ei koskaan anneta nähdä tulevaisuuden dataa.
 
 ## Tehtävät
 
