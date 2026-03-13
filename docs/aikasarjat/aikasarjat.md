@@ -408,13 +408,26 @@ Neuroverkkojen koulutuksessa on päätettävä myös, mitä tarkalleen ennusteta
 
 Varsinainen koulutus ei poikkea mistään, mitä et olisi jo kurssin aikana nähnyt. Syötetään dataa ikkunamuodossa, lasketaan tappio, backpropagoidaan ja päivitetään painot. Ainoa ero on se, että data on järjestetty sekvensseiksi eikä yksittäisiksi riveiksi. Aivan kuten lauseita kouluttaessa, myös aikasarjojen kanssa on tärkeää pitää huolta siitä, että `y` sisältää `event_horizon`-määrän verran tulevaisuuden arvoja, ja `x_sample` sisältää `sequence_length`-määrän verran menneisyyden arvoja. Aivan kuten lauseiden kanssa, aikasarjojen kanssa nämä yksittäiset ikkunat voi syöttää malliin missä tahansa järjestyksessä, mutta train-test-jako ja backtesting on tehtävä siten, että mallin ei koskaan anneta nähdä tulevaisuuden dataa.
 
+## Tehtävät
+
+!!! question "Tehtävä: Metro Interstate Traffic"
+
+    Aja `800_metro_interstate_traffic.py`-notebook sekä sinällään että muokattuna. Muokkaus, mikä sinun tulee tehdä, on vaihtaa skaalausmenetelmä `StandardScaler`ista `MinMaxScaler`iin. Tarkkaile, miten se vaikuttaa suorituskykymittareihin. Tarkalleen ottaen sinun tulee muokata koodia muutamasta paikasta:
+
+    1. Lisää import
+    2. Vaihda $y$ skaalaus. $X$:ään ajettava Pipeline saa pysyä ennallaan.
+    3. Rajoita mallin output positiivisiin lukuihin. (Vinkki: ReLU)
+    4. Muokkaa TensorBoardiin tallentuvan ajon nimeä, jotta tunnistat eri ajot.
+
+    Jos haluat haastaa itseäsi, parametrisoi tämä siten, että voit vaihtaa skaalausmenetelmää yhden hyperparametrin avulla. Kun olet valmis, kokeile rohkeasti muokata myös muita hyperparametreja.
+
 
 ## Lähteet
 
 [^ml-forecasting-py]: Lazzeri, F. *Machine Learning for Time Series Forecasting with Python*. 2020. Wiley.
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^ts-cookbook]: Atwan, T. *Time Series Analysis with Python Cookbook - Second Edition*. Packt. 2026.
 [^modern-ts-forecasting]: Joseph, M. & Tackes, J. *Modern Time Series Forecasting with Python - Second Edition*. Packt. 2024.
+[^ts-cookbook]: Atwan, T. *Time Series Analysis with Python Cookbook - Second Edition*. Packt. 2026.
+[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
 [^deep-ar]: Salinas, D., Flunkert, V. & Gasthaus, J. "DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks". 2017. https://arxiv.org/abs/1704.04110
 [^smyl]: Smyl, S. "A hybrid method of exponential smoothing and recurrent neural networks for time series forecasting". 2020. https://www.sciencedirect.com/science/article/abs/pii/S0169207019301153
 [^skforecast-statistical]: Rodrigo, J. Ortiz, J. & Akay, R. *Forecasting with statistical models*. 2026. https://cienciadedatos.net/documentos/py77-forecasting-statistical-models.html
