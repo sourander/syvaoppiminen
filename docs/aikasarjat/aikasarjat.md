@@ -48,6 +48,8 @@ Kun puhutaan *ennustamisesta*, pyrimme mallintamaan aikasarjan tulevia arvoja. K
     * :three: **Sykliset vaihtelut** ovat nousuja ja laskuja, joiden ei ole kiinteää jaksoa (esim. suhdannevaihtelu).
 * :four: **Satunnaisuus** eli täysin ennustamattomat pienet tai suuret vaihtelut. Tämä on kohinaa.
 
+Nämä ovat tekstinä abstrakteja käsitteitä, joten kannattaa etsiä kuva avuksi. Voit löytyää kuvia esimerkiksi `statsmodel`-kirjaston esimerkistä [Seasonal-Trend decomposition using LOESS (STL)](https://www.statsmodels.org/stable/examples/notebooks/generated/stl_decomposition.html)
+
 ### Ennustamisen termistö
 
 Datan suhteen muita tärkeitä termejä ovat [^ml-forecasting-py]:
@@ -174,7 +176,9 @@ Idea on seuraava:
 * jos PACF:ssä näkyy selvä piikki viiveellä 1 tai 2, nämä lagit voivat olla hyödyllisiä autoregressiivisessä mallissa
 * jos ACF hiipuu hitaasti, sarjassa voi olla trendiä eikä se ehkä ole stationaarinen
 
-Taulukkomuotoisten mallien kanssa ACF ja PACF auttavat ennen kaikkea valitsemaan, mitkä viiveet kannattaa ottaa mukaan piirteinä. Jos sarjassa on vahva 24 tunnin tai 7 päivän rytmi, nämä viiveet kannattaa usein mallintaa eksplisiittisesti. Tästä on harjoituksissa Marimo Notebook, joka selventää asiaa.
+Näihin kannattaa tutustua kuvien kautta. Myös tähän löytyy `statsmodels`-kirjaston esimerkeistä valmis kuvaaja, esimerkiksi: [Autoregressive Moving Average (ARMA): Sunspots data](https://www.statsmodels.org/stable/examples/notebooks/generated/tsa_arma_0.html)
+
+Taulukkomuotoisten mallien kanssa ACF ja PACF auttavat ennen kaikkea valitsemaan, mitkä viiveet kannattaa ottaa mukaan piirteinä. Jos sarjassa on vahva 24 tunnin tai 7 päivän rytmi, nämä viiveet kannattaa usein mallintaa eksplisiittisesti.
 
 ### Lokaalit mallit
 
