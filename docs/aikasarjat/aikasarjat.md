@@ -389,9 +389,12 @@ RNN-perhe on luonnollinen valinta, kun ongelmassa on merkittäviä ajallisia rii
 Näiden mallien koulutuksessa valitaan vähintään:
 
 * historiaikkunan pituus (`sequence_length`)
-* ennustehorisontti
-    * single-step (many-to-one)
-    * multi-step (many-to-many)
+* ennustehorisontti ja datan muoto
+    * **Single-step:** ennustetaan vain seuraava aika-askel (skaalari tai vektori, riippuen muuttujien määrästä)
+    * **Multi-step:** ennustetaan useita tulevia aika-askelia yhdelle muuttujalle (vektori)
+    * **Multi-step, multi-variate:** ennustetaan useita tulevia aika-askelia useammalle kohdemuuttujalle. Kurssikirjassa [^geronpytorch] neuvotaan yksittäisten `bus` ja `rail` -muuttujien samanaikainen ennustus. Montaa ennustaessa *Encoder-Decoder* -mallit ovat tässä tehokkaita. [^multioutput]
+    * **Variable-length horizons:** syötteen tai ennusteen pituus vaihtelee dynaamisesti (ks. *"Encoder-Decoder RNNs for Bus Arrival Time
+Prediction"* [^bus-arrival])
 * tappiofunktio, kuten MAE, MSE tai Huber
 
 ### Transformer-pohjaiset mallit
@@ -435,5 +438,8 @@ Varsinainen koulutus ei poikkea mistään, mitä et olisi jo kurssin aikana näh
 [^deep-ar]: Salinas, D., Flunkert, V. & Gasthaus, J. "DeepAR: Probabilistic Forecasting with Autoregressive Recurrent Networks". 2017. https://arxiv.org/abs/1704.04110
 [^smyl]: Smyl, S. "A hybrid method of exponential smoothing and recurrent neural networks for time series forecasting". 2020. https://www.sciencedirect.com/science/article/abs/pii/S0169207019301153
 [^skforecast-statistical]: Rodrigo, J. Ortiz, J. & Akay, R. *Forecasting with statistical models*. 2026. https://cienciadedatos.net/documentos/py77-forecasting-statistical-models.html
+[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+[^multioutput]: Hartomo, K., Lopo, J & Hindriyanto, P. *Enhancing Multi-Output Time Series Forecasting with Encoder-Decoder Networks*. Journal of Information Systems Engineering and Business Intelligence. 2023. https://doi.org/10.20473/jisebi.9.2.195-213
+[^bus-arrival]: Bhutani, N., Soumen, P. & Achar, A. *Encoder-Decoder RNNs for Bus Arrival Time Prediction*. 2024. https://arxiv.org/abs/2210.01655v2
 [^transformers-def-guide]: Koenigstein, N. *Transformers: The Definitive Guide*. O'Reilly. 2026.
 [^dl-for-ts-cookbook]: Cerqueira, V. & Roque, L. *Deep Learning for Time Series Cookbook*. Packt. 2024.
