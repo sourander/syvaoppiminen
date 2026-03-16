@@ -1,9 +1,5 @@
 # Tervetuloa kurssille
 
-!!! warning
-
-    Tämä sivusto on kokonaisuudessaan työn alla. Valmistuu keväällä 2026.
-
 Tervetuloa kurssille! Tämä kurssi on jatkoa Johdatus koneoppimiseen -kursille. Kurssilla syvennytään koneoppimisen keskeiseen osa-alueeseen, syväoppimiseen (deep learning). Aiheita käydään läpi lyhyesti teoreettisesta näkökulmasta, mutta pääpaino on käytännön toteutuksissa. Viralliset oppimistavoitteet löydät OPS:sta, mutta pääpiirteittäin kurssin jälkeen:
 
 * Osaat selittää syväoppimisen keskeiset käsitteet 5-vuotiaalle.
