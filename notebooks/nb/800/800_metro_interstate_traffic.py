@@ -46,10 +46,11 @@ def _():
 
     # Hyperparameters
     LEARNING_RATE = 0.01
-    EPOCHS = 100
     BATCH_SIZE = 128
     LEARNING_RATE = 1e-4
     EPOCHS = 50
+    N_STEPS = 48  # n-hour lookback window
+    M_STEPS = 3   # forecast horizon, predict m hours ahead 
 
 
     # Device selection
@@ -62,7 +63,7 @@ def _():
     else:
         device = torch.device("cpu")
         print(f"Using device: {device}")
-    return BATCH_SIZE, EPOCHS, LEARNING_RATE, device
+    return BATCH_SIZE, EPOCHS, LEARNING_RATE, M_STEPS, N_STEPS, device
 
 
 @app.cell(hide_code=True)
@@ -571,10 +572,16 @@ class PandasMetroDataset(Dataset):
 
 
 @app.cell
-def _(DATE_test, DATE_train, X_test, X_train, y_test, y_train):
-    N_STEPS = 48  # n-hour lookback window
-    M_STEPS = 3   # forecast horizon, predict m hours ahead 
-
+def _(
+    DATE_test,
+    DATE_train,
+    M_STEPS,
+    N_STEPS,
+    X_test,
+    X_train,
+    y_test,
+    y_train,
+):
     # Initialize the datasets
     train_dataset = PandasMetroDataset(X_train, y_train, DATE_train, n_steps=N_STEPS, m_steps=M_STEPS)
     test_dataset = PandasMetroDataset(X_test, y_test, DATE_test, n_steps=N_STEPS, m_steps=M_STEPS)
@@ -755,7 +762,7 @@ def _(mo):
 
 
 @app.cell
-def _(X_train, device):
+def _(M_STEPS, X_train, device):
     class MetroModel(nn.Module):
         def __init__(self, input_size, hidden_size=64, num_layers=2, m_steps=3, dropout=0.2):
             """
@@ -798,7 +805,7 @@ def _(X_train, device):
     # We get the input_size directly from the X_train array's shape
     INPUT_SIZE = X_train.shape[1]
 
-    model = MetroModel(input_size=INPUT_SIZE, hidden_size=64, num_layers=2, m_steps=3)
+    model = MetroModel(input_size=INPUT_SIZE, hidden_size=64, num_layers=2, m_steps=M_STEPS)
     model = model.to(device)
     model
     return (model,)
