@@ -26,6 +26,17 @@ Tehtävät löytyvät kunkin osion lopusta. Lisäksi **kaikki** tehtävät ovat 
 
 Useat tehtävät viittaavat [Marimo](https://marimo.io/)-työkalulla tehtyihin notebookeihin. Kyseessä on Jupyter Notebook -työkalun seuraaja. Notebookit löydät kurssin repositoriosta polusta [gh:sourander/syvaoppiminen/notebooks](https://github.com/sourander/syvaoppiminen/tree/main/notebooks).
 
+!!! note "Ennen kuin kloonaat..."
+
+    Ennen kuin kloonaat tätä repoa, sinun tulee aktivoida Git LFS (Large File Storage), jotta saat kurssin datatiedostot ladattua. Jos olet Windowsissa ja sinulla on Git for Windows, Git LFS on jo asennettu, mutta se tulee aktivoida. Olet todennäköisesti jo tehnyt tämän Johdatus koneoppimiseen -kurssilla, mutta jos et, tai sinulla on eri tietokone käytössä, tee se nyt:
+
+    ```bash
+    # Ennen kuin kloonaat
+    git lfs install
+    ```
+
+
+
 ## Numerointi
 
 Kurssiaiheet ovat numeroitu sataluvuilla. Otetaan esimerkiksi kuvitteelliset luvut 1 ja 2:

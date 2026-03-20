@@ -26,11 +26,18 @@ notebooks/nb/100/112_dolor.py
 
 ## Using Marimo
 
-The `uv` project exists so that you can use Marimo either in Browser or using VS Code Extension for Marimo. This guide focuses on the browser usage, but there is a section about VS Code as well. Note that teacher will use it in the browser during the lessons.
+The `uv` project exists so that you can use Marimo either in Browser or using VS Code Extension for Marimo. This guide focuses on the browser usage, but there is a section about VS Code as well. Note that teacher will use it in the browser during the lessons. You **should** have the Marimo installed as being the 2nd year AI student, but if not, follow the official [Installing uv](https://docs.astral.sh/uv/getting-started/installation/) guide.
 
-Note that we are using GPU, so assuming you have a local Nvidia GPU available, you want to install:
+Note that we are using GPU, so this setup requires extra steps compared to Johdatus koneoppimiseen (ML Basics) course setup. If you have a compatible Nvidia GPU or Apple Silicon GPU, you can run Marimo locally following the guide below. If you have a different setup, like an ADM GPU, contact the teacher for help if needed.
 
 ### On Windows
+
+<details>
+<summary>Click to expand</summary>
+
+<br>
+
+Install:
 
 * Latest Nvidia Drivers
 * Docker Desktop with WSL2 backend
@@ -43,9 +50,18 @@ docker compose -f docker-compose-marimo.yml up -d
 
 After that, you can access the Marimo service at localhost:2718 and TensorBoard at port 6006. Read the [GPU support in Docker Desktop for Windows](https://docs.docker.com/desktop/features/gpu/) for more information.
 
+</details>
+
 ### On Ubuntu (native)
 
-* Latest Nvidia Drivers
+<details>
+<summary>Click to expand</summary>
+
+<br>
+
+Install:
+
+* Latest Nvidia Drivers, following a guide: [Driver Installation Guide](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html) 
 * CUDA Toolkit.
 
 Read the **Prepare Ubuntu** and **Network Repository Installation** sections from the [CUDA Installation Guide for Linux: Ubuntu](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#ubuntu) guide. After those steps, do the [Post-installation Actions](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#post-installation-actions) as well.
@@ -60,10 +76,18 @@ uv run marimo edit
 uv run tensorboard --logdir=runs
 ```
 
+</details>
+
 ### On Ubuntu (Docker)
 
-* Latest Nvidia Drivers
-* Docker Engine
+<details>
+<summary>Click to expand</summary>
+
+<br>
+Install
+
+* Latest Nvidia Drivers, following a guide: [Driver Installation Guide](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html) 
+* Docker Engine (see [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/))
 * Nvidia Container Toolkit
 
 When using Docker, you do not need to install CUDA Toolkit, since the Docker image contains it already. Read the [Installing the NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) for more information. After that, the launch command is same as on Windows:
@@ -71,6 +95,7 @@ When using Docker, you do not need to install CUDA Toolkit, since the Docker ima
 ```bash
 docker compose -f docker-compose-marimo.yml up -d
 ```
+</details>
 
 ### On macOS
 
@@ -138,139 +163,35 @@ uv run marimo edit
 ```
 </details>
 
-
-## Optional: Using Marimo VS Code Extension
-
-It is completely possibly to use Marimo right inside VS Code. However, I think that the browser experience is better in terms of usability. If you still want to use VS Code Extension, follow these steps:
-
-1. Add this to your `notebooks/.vscode/settings.json`:
-
-    ```json
-    {
-        "marimo.marimoPath": "uv run marimo",
-        // "marimo.sandbox": true // optional
-    }
-    ```
-2. Install the Marimo VS Code Extension.
-3. Open any of the Notebooks and press the Marimo icon in the top right corner.
-
-## 🤖 Using Github Copilot Pro with Marimo
-
-Assuming you have enabled your Github Copilot educational license, you can use it in the Marimo UI as well. Here is how to set it up:
-
-1. Install Github CLI (`gh`)
-2. Install extension: `gh extension install https://github.com/github/gh-models`
-3. Login: `gh auth login`
-4. Get a token: `gh auth token`
-5. Modify the `~/.config/marimo/marimo.toml` file to include your token:
-
-```toml
-[ai.models]
-chat_model = "github/gpt-4o-mini"
-
-[ai.github]
-api_key = "gho_..."
-```
-
-You can also add other models like `github/gpt-5`. To identify suitable models, run `gh models list`. You can either edit the `marimo.toml` file directly or use the Marimo settings in the Web UI. For reference, adding the `gpt-5` model would create this kind of entries in the `marimo.toml`:
-
-```toml
-[ai.models]
-displayed_models = ["github/gpt-4o-mini", "github/gpt-5-mini"]
-edit_model = "github/gpt-5-mini"
-chat_model = "github/gpt-5-mini"
-```
-
-
 ## Teacher 👨‍🏫: How to handle Solutions
 
 Some of the Notebooks contain exercises. Example solutions are in a subdirectory `solutions`. Old hack was backing them up to OneDrive using a script. New solution is using `git-crypt` to encrypt the solutions directory, so that only teachers with the decryption key can access them.
 
-Here is a guide for setup, I will most likely end up doing this on other courses too.
+Here is a guide for setup. I might move this guide to `How to Git` one day. For now, it is here.
 
-### Part A: Encrypt (macOS)
+### Prerequisites
 
-This setup is done only on one machine. I will start it on my macOS. The folloging command initializes git-crypt in the repository. The key file is created into `.git/git-crypt/keys/default`. Run this only once per repository.
+The `git-crypt` key has been originally created only on one machine and then distributed to other machines utilizing a password manager.
 
-```bash
-brew install git-crypt
-git-crypt init
-# Output: Generating key...
-```
+Here we assume that: 
 
-Modify the Git's dotiles as follows:
+1. the `.gitignore` file contains a filter that we need. Check the file in `../.gitignore` for details.
+2. the `gh-solutions.git-crypt.key` has been downloaded to `$HOME` directory.
 
-```
-# .gitattributes Add this:
-notebooks/nb/solutions/** filter=git-crypt diff=git-crypt
-
-# .gitignore Remove if exists
-notebooks/nb/solutions/
-```
-
-Finally, push to GitHub:
+The key file is copied into `.git/git-crypt/keys/default` after running the commands below. Run this only once per repository (or again if you need to clone the repository again).
 
 ```bash
-# Usual commands
-git add .gitattributes .gitignore notebooks/nb/solutions
-git commit -m "Add encrypted solutions using git-crypt"
+# Navigate to whereever the repo root is
+cd ~/Code/sourander/syvaoppiminen
 
-# Verify - list files and view one of them (should be GITCRYPT + binary data)
-git show HEAD:notebooks/nb/solutions
-git show HEAD:notebooks/nb/solutions/213_tensor_exercises.ipynb | head -n 2
-
-# Push to GitHub
-git push
-```
-
-### Part B: Pull (Ubuntu)
-
-On another machine, Ubuntu Desktop in this, I ran these commands:
-
-```bash
-# Install
-sudo apt install git-crypt
-cd syvaoppiminen
-git pull
-
-# Verify
-head -n 2 notebooks/nb/solutions/213_tensor_exercises.ipynb
-# Output: GITCRYPT + binary data
-```
-
-### Part C: Share key (macOS)
-
-Instead of GPG keys, I will be using symmetric key encryption for simplicity. These solutions can be found using LLM's anyways, so no need to overengineer this. In order to allow decryption on other machines, the key must be shared. On macOS machine, run:
-
-```bash
-# Export the repo’s symmetric key
-git-crypt export-key gh-solutions.git-crypt.key
-
-# Copy it to the Ubuntu machine
-scp gh-solutions.git-crypt.key poytakone:~
-
-# Delete local copy
-rm gh-solutions.git-crypt.key
-```
-
-### Part D: Decrypt (Ubuntu)
-
-On Ubuntu machine, run:
-
-```bash
-cd syvaoppiminen
-
-# Unlock the repo using the symmetric key
+# Unlock
 git-crypt unlock ~/gh-solutions.git-crypt.key
 
-# Verify
-head -n 2 notebooks/nb/solutions/213_tensor_exercises.ipynb
-# Output: { "cells": [ ...}
+# Remove the key
+rm ~/gh-solutions.git-crypt.key
+
+# Check
+git-crypt status -e
 ```
 
-Finally, store the key to a password manager and delete the local file: `rm ~/gh-solutions.git-crypt.key`.
-
-How does it work? After these commands, the Ubuntu PC will have exactly the same `.git/git-crypt/keys/default` file as the macOS machine. The "repo is the key" principle applies: as long as the same key file is used, the encryption and decryption will work seamlessly. The `unlock` command simply copied the key file to the correct location.
-
-
-
+This should list all files in `notebooks/nb/solutions` as encrypted.
