@@ -79,7 +79,7 @@ Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja
 
 ### Perceptron
 
-1950-luvun tapahtui samanaikaisesti myös muuta. **Frank Rosenblatt** jalosti McCulloch ja Pittsin ajatusta kehittäen tavan kouluttaa neuroverkkoja. Näin syntyi Mark I Perceptron, joka oli yksi ensimmäisistä neuroverkkopohjaisista malleista. [^fastaibook] Kyseinen malli ei ollut teoriaa vaan se saatiin toteutettua siten, että se tunnisti yksinkertaisia kuvioita, kuten neliön ja ympyrän. Voit tutustua alkuperäiseen artikkeliin lähteiden kautta löytyvästä PDF-tiedostosta. [^researchtrends]
+1950-luvun tapahtui samanaikaisesti myös muuta. **Frank Rosenblatt** jalosti McCulloch ja Pittsin ajatusta kehittäen tavan kouluttaa neuroverkkoja. Näin syntyi Mark I Perceptron, joka oli yksi ensimmäisistä neuroverkkopohjaisista malleista. [^fastaibook] Kyseinen malli ei ollut teoriaa vaan se saatiin toteutettua siten, että se tunnisti yksinkertaisia kuvioita, kuten neliön ja ympyrän. Voit tutustua alkuperäiseen artikkeliin lähteiden kautta löytyvistä PDF-tiedostoista. [^researchtrends] [^minsky1969]
 
 ![alt text](../images/100_design_of_intelligent_automaton_research_trends.png)
 
@@ -321,7 +321,8 @@ Tutustu näihin:
 [^nobel1981]: The Nobel Prize. *Nobel Prize in Physiology or Medicine 1981*. https://www.nobelprize.org/prizes/medicine/1981/summary/
 [^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
 [^researchtrends]: Rosenblatt, F. *The Design of an Intelligent Automaton*. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf
-[^rumelhart]: Rumerhart, D. & McClelland, J. *Parallel Distributed Processing*. 12th printing (1999). MIT Press. 1968.
+[^minsky1969]: Minsky, M. & Seymour, P. *Perceptrons - Expanded Edition*. 3rd printing (1988). The Science Press. 1969.
+[^rumelhart]: Rumerhart, D. & McClelland, J. *Parallel Distributed Processing*. 12th printing (1999). MIT Press. 1986.
 [^nobel2024]: The Nobel Prize. *Nobel Prize in Physics 2024*. https://www.nobelprize.org/prizes/physics/2024/summary/
 [^tumultous]: Crevier, D. *AI: The Tumultuous Search for Artificial Intelligence*. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf
 [^juergen]: Schmidhuber, J. *Who Invented Backpropagation?*. 2014 (päivitetty 2025). https://people.idsia.ch/~juergen/who-invented-backpropagation.html
