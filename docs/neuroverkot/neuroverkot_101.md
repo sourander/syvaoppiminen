@@ -45,7 +45,7 @@ Neuroverkot kykenevät mallintamaan epälineaarisia funktioita, koska ne käytt�
 
 ### All or nothing
 
-Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1943 **Warren McCulloch** ja **Walter Pitts** julkaisivat artikkelin *"A Logical Calculus of the Ideas Immanent in Nervous Activity"*, jossa he esittivät yksinkertaisen mallin keinotekoisesta neuronista. Malli perustui "all-or-nothing" -periaatteeseen, jossa neuronin aktivaatio tapahtuu, kun syötteiden painotettu summa ylittää tietyn kynnyksen. Kyseessä olivat siis binääriset neuronit, jotka toimivat loogisina portteina. [^fastaibook]
+Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1943 **Warren McCulloch** ja **Walter Pitts** julkaisivat artikkelin *"A Logical Calculus of the Ideas Immanent in Nervous Activity"*, jossa he esittivät yksinkertaisen mallin keinotekoisesta neuronista. Malli perustui "all-or-nothing" -periaatteeseen, jossa neuronin aktivaatio tapahtuu, kun syötteiden painotettu summa ylittää tietyn kynnyksen. Kyseessä olivat siis binääriset neuronit, jotka toimivat loogisina portteina. [^fastaibook] McCullh:n ja Pitts:n artikkeli ei kuitenkaan esitellyt mentelmää, joka mahdollistaisi mallin oppivan. Tätä ehdotti vuonna 1949 Donal Hebb: hermosolujen väliset yhteydet vahvistuvat, jos hermosolut aktivoituvat yhdessä. [^kämäräinen]
 
 > "Pitts was self-taught, and by age 12, had received an offer to study at Cambridge University with the great Bertrand Russell. He did not take up this invitation, and indeed throughout his life did not accept any offers of advanced degrees or positions of authority. Most of his famous work was done while he was homeless."
 > 
@@ -79,7 +79,7 @@ Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja
 
 ### Perceptron
 
-1950-luvun tapahtui samanaikaisesti myös muuta. **Frank Rosenblatt** jalosti McCulloch ja Pittsin ajatusta kehittäen tavan kouluttaa neuroverkkoja. Näin syntyi Mark I Perceptron, joka oli yksi ensimmäisistä neuroverkkopohjaisista malleista. [^fastaibook] Kyseinen malli ei ollut teoriaa vaan se saatiin toteutettua siten, että se tunnisti yksinkertaisia kuvioita, kuten neliön ja ympyrän. Voit tutustua alkuperäiseen artikkeliin lähteiden kautta löytyvästä PDF-tiedostosta. [^researchtrends]
+1950-luvun tapahtui samanaikaisesti myös muuta. **Frank Rosenblatt** jalosti McCulloch ja Pittsin ajatusta kehittäen tavan kouluttaa neuroverkkoja. Näin syntyi Mark I Perceptron, joka oli yksi ensimmäisistä neuroverkkopohjaisista malleista. [^fastaibook] Kyseinen malli ei ollut teoriaa vaan se saatiin toteutettua siten, että se tunnisti yksinkertaisia kuvioita, kuten neliön ja ympyrän. Voit tutustua alkuperäiseen artikkeliin lähteiden kautta löytyvistä PDF-tiedostoista. [^researchtrends] [^minsky1969]
 
 ![alt text](../images/100_design_of_intelligent_automaton_research_trends.png)
 
@@ -87,15 +87,15 @@ Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja
 
 ### AI-talven alku
 
-MIT:n tohtori **Marvin Minsky** ja **Seymour Papert** julkaisivat vuonna 1969 kirjan *Perceptrons*, jossa he osoittivat, että yksittäinen kerros ei pysty ratkaisemaan tiettyjä ongelmia, kuten XOR-ongelmaa. Howard ja Gugger [^fastaibook] toteavat, että samassa Perceptrons-kirjassa esiteltiin myös ratkaisuja ongelmaan, kuten useiden kerrosten käyttö. Heidän mukaansa vain rajoitukset saivat huomiota, ja näin alkoi parin vuosikymmenen "talvi", jolloin neuroverkkojen tutkimus hiipui.
+MIT:n **Marvin Minsky** ja **Seymour Papert** julkaisivat vuonna 1969 kirjan *Perceptrons*, jossa he osoittivat, että yksittäinen kerros ei pysty ratkaisemaan tiettyjä ongelmia, kuten XOR-ongelmaa. Howard ja Gugger [^fastaibook] toteavat, että samassa Perceptrons-kirjassa esiteltiin myös ratkaisuja ongelmaan, kuten useiden kerrosten käyttö. Heidän mukaansa vain rajoitukset saivat huomiota, ja näin alkoi parin vuosikymmenen "talvi", jolloin neuroverkkojen tutkimus hiipui.
 
 ### 80-luvun kevät
 
-AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClelland** ja PDP Research Group julkaisivat moniosaisen artikkelin *Parallel Distributed Processing (PDP)*. Howard ja Gugger nostavat tämän viimeisen 50 vuoden käänteentekevimmäksi julkaisuksi. PDP:n asettamat vaatimukset, kuten "joukko prosessointiyksiköitä" ja "ulostulon funktio", ovat edelleen keskeisiä neuroverkkojen määritelmässä. Skaala on toki kasvanut: 80-luvulla verkoissa oli yleensä 2 kerrosta. Jo tällöin, 80- ja 90-luvuilla, koneoppimisella oli jo oikeita käyttötarkoituksia, mutta AI-tutkimus koki yhä tietynlaista AI-talvea. Vasta äskettäin, 2010-luvun lopulla, alkoi nykyinen AI-kevät. [^fastaibook] Avainsanoja tässä nykyisen kevään alussa ovat esimerkiksi AlexNet, AlphaGo, GAN, GPU.
+AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClelland** ja PDP Research Group julkaisivat kaksiosaisin kirjan *Parallel Distributed Processing (PDP)*. Kirja on ladattavissa ainakin [Gwern.net (PDF)](https://gwern.net/doc/ai/nn/1986-rumelhart-pdp-v1.pdf)-sivustolta, mutta en tiedä, kenen luvin Gwern Branwen kirjaa jakaa. Howard ja Gugger [^fastaibook] nostavat tämän viimeisen 50 vuoden käänteentekevimmäksi julkaisuksi. PDP:n asettamat vaatimukset, kuten "joukko prosessointiyksiköitä" ja "ulostulon funktio", ovat edelleen keskeisiä neuroverkkojen määritelmässä. Jos tutustut PDP-kirjan sisältöön tämän kurssin käytyäsi, huomaat, että tässä 80-luvun kirjassa esiintyy merkittävä määrä tuttuja termejä: *hidden unit, multilayer networks, momentum, error propagation and generalized delta rule (lue: backpropagation), activation function* [^rumelhart]. Laskennan skaala on toki kasvanut: 80-luvulla verkoissa oli yleensä 2 kerrosta. Jo tällöin, 80- ja 90-luvuilla, koneoppimisella oli jo oikeita käyttötarkoituksia, mutta AI-talvi oli silti läsnä. Asiantuntijajärjestelmät ja Johdatus koneoppimiseen -kurssilta tuttu tilastollinen koneoppiminen olivat voimissaan. Vasta äskettäin, 2010-luvun aikana, alkoi nykyinen AI-kevät. [^fastaibook]. Mikäli haluat nähdä kuvaajan AI-talvista, suosittelen vierailemaan Harvardin e-kirjan Machine Learning Systems [Introduction](https://mlsysbook.ai/book/contents/core/introduction/introduction.html)-luvussa ja etsimään kuvaajan Figure 2. Avainsanoja tässä nykyisen kevään alussa ovat esimerkiksi AlexNet, AlphaGo, GAN, GPU, GPT-3.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/v0A8zNek68o?si=btx_I46lSsoSxgGa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-**Video 1:** *Stanfordin tohtori Jay McClelland vastaa Podcastissä kysymykseen "What is Parallel Distributed Processing?" eli PDP. Videolla keskustellaan siitä, miksi ihminen muistaa helpommin hänelle esitetyn kirjaimen, jos esitetyt kirjaimet muodostavat sanan.*
+**Video 1:** *Stanfordin Jay McClelland vastaa Podcastissä kysymykseen "What is Parallel Distributed Processing?" eli PDP. Videolla keskustellaan siitä, miksi ihminen muistaa helpommin hänelle esitetyn kirjaimen, jos esitetyt kirjaimet muodostavat sanan.*
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/H0oEr40YhrQ?si=coHhJ_PINndgwQpu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -314,12 +314,15 @@ Tutustu näihin:
 
 [^mathforai]: Nelson, H. *Essential Math for AI*. O'Reilly Media. 2023.
 [^fastaibook]: Gugger, J. & Howard, J. *Deep Learning for Coders with fastai and PyTorch*. O'Reilly Media. 2020.
+[^kämäräinen]: Kämäräinen, J. *Koneoppimisen perusteet*. Otatieto. 2023.
 [^termcoined]: Dartmouth University. *Artificial Intelligence Coined at Dartmouth*. https://home.dartmouth.edu/about/artificial-intelligence-ai-coined-dartmouth
 [^dartproposal]: McCarthy, J., Minsky, M.L., Rochester, N. & Shannon, C.E. *A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence*. 1955. https://raysolomonoff.com/dartmouth/boxa/dart564props.pdf
 [^dlillustrated]: Krohn, J., Beyleveld, G. & Bassens, A. *Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence*. Addison-Wesley Professional. 2019.
 [^nobel1981]: The Nobel Prize. *Nobel Prize in Physiology or Medicine 1981*. https://www.nobelprize.org/prizes/medicine/1981/summary/
 [^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
 [^researchtrends]: Rosenblatt, F. *The Design of an Intelligent Automaton*. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf
+[^minsky1969]: Minsky, M. & Seymour, P. *Perceptrons - Expanded Edition*. 3rd printing (1988). The Science Press. 1969.
+[^rumelhart]: Rumerhart, D. & McClelland, J. *Parallel Distributed Processing*. 12th printing (1999). MIT Press. 1986.
 [^nobel2024]: The Nobel Prize. *Nobel Prize in Physics 2024*. https://www.nobelprize.org/prizes/physics/2024/summary/
 [^tumultous]: Crevier, D. *AI: The Tumultuous Search for Artificial Intelligence*. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf
 [^juergen]: Schmidhuber, J. *Who Invented Backpropagation?*. 2014 (päivitetty 2025). https://people.idsia.ch/~juergen/who-invented-backpropagation.html
