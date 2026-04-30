@@ -414,9 +414,7 @@ Muita, monimutkaisempia *benchmark-tyylisiä* (eli mallien vertailuun soveltuvia
 
 !!! question "Tehtävä: microGPT"
 
-    Tämä viimeinen tehtävä on saanut innoitteensa Sumit Pandey:n Medium-artikkelista [Andrej Karpathy Just Built an Entire GPT in 243 Lines of Python](https://www.towardsdeeplearning.com/andrej-karpathy-just-built-an-entire-gpt-in-243-lines-of-python-7d66cfdfa301) sekä tietenkin itse toteutuksesta, johon Pandey viittaa. Tämä toteutus löytyy GitHub Gist-palvelusta [gist:karpathy/microgpt.py](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95).
-
-    Koodi löytyy kokonaisuutena ruuduun mahtuvana kolmen palstan ratkaisuna osoitteesta [karpathy.ai/microgpt.html](https://karpathy.ai/microgpt.html) saatetekstillä: *"The most atomic way to train and run inference for a GPT in pure, dependency-free Python. This file is the complete algorithm. Everything else is just efficiency."*
+    Tämä viimeinen tehtävä on saanut innoitteensa Sumit Pandey:n Medium-artikkelista [Andrej Karpathy Just Built an Entire GPT in 243 Lines of Python](https://www.towardsdeeplearning.com/andrej-karpathy-just-built-an-entire-gpt-in-243-lines-of-python-7d66cfdfa301) sekä tietenkin itse toteutuksesta, johon Pandey viittaa. Tämä toteutus löytyy GitHub Gist-palvelusta [gist:karpathy/microgpt.py](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) lähdekoodina ja GitHub Pages -sivuna [karpathy.github.io](https://karpathy.github.io/2026/02/12/microgpt/) oppimateriaalimuotoisena kokonaisuutena.
 
     1. Lataa `data/etunimet.txt`-tiedostoon kaikkien suomenkielisten etunimien lista [Avoin data: Väestötietojärjestelmän suomalaisten nimiaineistot](https://avoindata.suomi.fi/data/fi/dataset/none)
     2. Aja `722_microgpt.py`-tiedosto ja tutustu sen sisältöön. 
