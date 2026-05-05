@@ -1,12 +1,13 @@
 import marimo
 
-__generated_with = "0.19.2"
+__generated_with = "0.23.5"
 app = marimo.App(width="medium")
 
 
 @app.cell
 def _():
     import marimo as mo
+
     return (mo,)
 
 
@@ -33,10 +34,11 @@ def _():
     import seaborn as sns
 
     from sklearn.model_selection import train_test_split
-    from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, ConfusionMatrixDisplay
+    import sklearn.metrics as metrics
     from torch.utils.data import DataLoader, TensorDataset
 
     from huggingface_hub import hf_hub_download
+
     return (
         DataLoader,
         TensorDataset,
@@ -234,7 +236,7 @@ def _(D, X_train, device, lr, n, nn, optim):
     input_size = X_train.shape[1]
 
     # Define network architecture
-    hidden_sizes = [D.value] + n.value * [16]
+    hidden_sizes = [D.value] * n.value
     print(hidden_sizes)
 
     # Create the model
@@ -295,7 +297,7 @@ def _(torch):
 
             # Track metrics
             running_loss += loss.item() * X_batch.size(0)
-            predicted = (outputs >= 0.5).float()
+            predicted = (outputs >= 0.0).float()
             total += y_batch.size(0)
             correct += (predicted == y_batch).sum().item()
 
@@ -317,13 +319,14 @@ def _(torch):
                 loss = criterion(outputs, y_batch)
 
                 running_loss += loss.item() * X_batch.size(0)
-                predicted = (outputs >= 0.5).float()
+                predicted = (outputs >= 0.0).float()
                 total += y_batch.size(0)
                 correct += (predicted == y_batch).sum().item()
 
         epoch_loss = running_loss / total
         epoch_acc = correct / total
         return epoch_loss, epoch_acc
+
     return evaluate, train_epoch
 
 
@@ -384,6 +387,8 @@ def _(
             print(f"  Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.4f}")
             print(f"  Test Loss:  {test_loss:.4f}, Test Acc:  {test_acc:.4f}")
             print()
+
+    trained_model = model
     return (history,)
 
 
@@ -441,9 +446,9 @@ def _(mo):
     Hint: you will most likely need something that looks like:
 
     ```python
-    model.eval()
+    trained_model.eval()
     with torch.no_grad():
-        logits = model(X_test_tensor).squeeze()
+        logits = trained_model(X_test_tensor).squeeze()
         y_pred_probs = torch.sigmoid(logits).cpu().numpy()
         y_pred = (y_pred_probs >= 0.5).astype(int)
     ```
