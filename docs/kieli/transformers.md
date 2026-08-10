@@ -1,3 +1,7 @@
+---
+priority: 720
+---
+
 # Transformers
 
 Aloitetaan töksäyttämällä heti alkuun määritelmä siitä, mikä transformer on: se on [Attention is All You Need](https://arxiv.org/abs/1706.03762)-artikkelissa vuonna 2017 esitelty neuroverkkopohjainen arkkitehtuuri, joka on suunniteltu erityisesti käsittelemään kieltä, mutta arkkitehtuuri on sittemmin taipunut myös muun datan käsittelyyn. Artikkelin tiivistelmä kertoo paljon:
@@ -70,7 +74,7 @@ Tavallisen, aiemmin kurssilta tutun seq2seq RNN:n **kiinteän pituuden konteksti
 
 #### Query, Key ja Value (Q, K, V)
 
-Attention-mekanismissa käytetyt termit *Query*, *Key* ja *Value* on lainattu tiedonhaun ja tietokantojen maailmasta, joissa niitä käytetään informaation järjestämiseen ja hakemiseen. Kuten Géron kirjoittaa, nämä termit ovat modernin implementaation mukaisia termejä aiemmin esitellylle. [^geronpytorch]
+Attention-mekanismissa käytetyt termit *Query*, *Key* ja *Value* on lainattu tiedonhaun ja tietokantojen maailmasta, joissa niitä käytetään informaation järjestämiseen ja hakemiseen. Kuten Géron kirjoittaa, nämä termit ovat modernin implementaation mukaisia termejä aiemmin esitellyille käsitteille (eli dekooderin nykyiselle piilotilalle $h_t$ sekä enkooderin piilotiloille $h_s$). [^geronpytorch]
 
 ```python
 def attention(QUERY, KEY, VALUE):

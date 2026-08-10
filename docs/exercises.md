@@ -103,15 +103,15 @@ Kopioi tehtävälista leikepöydälle ja muokkaa se sinun käyttöösi sopivaksi
 - [ ] Tehtävä: Konekäännös (Seq2Seq + Attention)
 - [ ] Tehtävä: Kielimalli ja sanaulottuvuudet
 
-## Aikasarjat (800)
-
-- [ ] Tehtävä: Metro Interstate Traffic
-
-## Transformers (999)
+## Transformers (720)
 
 - [ ] Tehtävä: Perplexity
 - [ ] Tehtävä: Transformers kääntäjänä
 - [ ] Tehtävä: microGPT
+
+## Aikasarjat (800)
+
+- [ ] Tehtävä: Metro Interstate Traffic
 
 
 ```
