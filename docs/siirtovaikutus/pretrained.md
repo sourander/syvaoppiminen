@@ -10,8 +10,8 @@ Tässä osiossa käydään läpi, miten esikoulutettua mallia voidaan hyödyntä
 
 PyTorchin valmiiksi koulutettuihin malleihin pääsee käsiksi kahta reittiä:
 
-* [PyTorch Hub](https://pytorch.org/hub/) -sivuston kautta
-* `torchvision.models` -moduulin avulla
+- [PyTorch Hub](https://pytorch.org/hub/) -sivuston kautta
+- `torchvision.models` -moduulin avulla
 
 Jos tarkkoja ollaan, niin nämä reitit ovat sinänsä samat, että `torchvision.models` käyttää taustalla PyTorch Hubia. Erona on, että `torchvision.models` tarjoaa vain kuvantunnistukseen tarkoitettuja malleja, kun taas PyTorch Hubista löytyy malleja monenlaisiin tarkoituksiin, kuten luonnollisen kielen käsittelyyn (NLP) ja generatiivisiin malleihin. Jotta tämä ei olisi liian helppoa, niin monet näistä malleista ovat fyysisesti säilöttynä Hugging Facen mallivarastoon. Katso vaikka [PyTorch Hub: PyTorch-Transformers](https://docs.pytorch.org/vision/main/models)-dokumentaatio.
 
@@ -23,19 +23,19 @@ PyTorchin itsensä tarjoamien esikoulutettujen mallien lisäksi on olemassa usei
 
 > "In 2016, Clement Delangue, Julien Chamound, and Thomas Wolf launched an AI-powered chatbot for teenagers called Hugging Face. Their vision for the product was a digital friend that was entertaining enough for people to have fun talking to it"
 >
-> — [Jason Shen, 2024][^pathtopivot]
+> — Jason Shen, 2024 [^pathtopivot]
 
 Nykypäivänä Hugging Face on API-talouden ilmentymä. Sen etusivun navigaatiossa olevista osioista voi päätellä sen eri palvelut:
 
-* **Models**: Esikoulutettuja malleja (2.2M kirjoitushetkellä). 
-    * :arrow_up: Tämän tunnin aihe!
-* **Datasets**: Valmiita datakokoelmia.
-* **Spaces**: Mahdollistaa esimerkiksi Gradio‑ tai Streamlit‑pohjaisten sovellusten julkaisemisen ja jakamisen.
-* **Community**: Blog articles, Social posts, Daily papers.
-* **Docs**: dokumentaatio.
-* **Enterprise**: yrityspalvelut.
+- **Models**: Esikoulutettuja malleja (2.2M kirjoitushetkellä).
+  - :arrow_up: Tämän tunnin aihe!
+- **Datasets**: Valmiita datakokoelmia.
+- **Spaces**: Mahdollistaa esimerkiksi Gradio‑ tai Streamlit‑pohjaisten sovellusten julkaisemisen ja jakamisen.
+- **Community**: Blog articles, Social posts, Daily papers.
+- **Docs**: dokumentaatio.
+- **Enterprise**: yrityspalvelut.
 
-Sinun tulee rekisteröityä Hugging Facen käyttäjäksi, jotta voit ladata malleja ohjelmallisesti. Rekisteröityminen on ilmaista ja peruskäyttö on ilmaista. Joitakin malleja saa käyttää *vain jos* pyydät käyttöluvan sen tekijältä. Näistä käytetään termiä [Gated models](https://huggingface.co/docs/hub/en/models-gated).
+Sinun tulee rekisteröityä Hugging Facen käyttäjäksi, jotta voit ladata malleja ohjelmallisesti. Rekisteröityminen on ilmaista ja peruskäyttö on ilmaista. Joitakin malleja saa käyttää _vain jos_ pyydät käyttöluvan sen tekijältä. Näistä käytetään termiä [Gated models](https://huggingface.co/docs/hub/en/models-gated).
 
 Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.co/timm)-organisaatio Hugging Facessa, ja siihen liittyvä [timm-kirjasto](https://pypi.org/project/timm/). Tämä kirjasto tarjoaa yli 600 esikoulutettua mallia kuvantunnistukseen, mukaan lukien monet viimeisimmät arkkitehtuurit.
 
@@ -70,7 +70,7 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
     !!! warning
 
         Tässä pitää olla tarkkana kirjastojen riippuvuuksien suhteen. Tarvitsemme kirjastot `datasets` ja `huggingface_hub` myös, mutta niitä ei kannata lähtökohtaisesti asentaa erikseen. Asenna ne sen sijaan käyttäen `transformers`-kirjaston **extras**-ominaisuutta eli hakasulkeissa listatut lisäosat. Tämä varmistaa, että asennettavat versiot ovat yhteensopivia keskenään.
-        
+
         Kirjoitushetkellä minulle ei esimerkiksi ollut ollenkaan `torch`-kirjastoa asennettuna omana rivinään, koska `transformers` hoiti sen asennuksen automaattisesti (koska extrat). Nämä asennettujen pakettien suhteet selviää komennolla `uv tree`, ja vielä tarkemmin voi tutkia `uv tree --package=transformers`. Rankasti parsittu output, joka korostaa mahdollista ongelmaa, näkyy alla:
 
         ```
@@ -88,7 +88,7 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
         │   └── torchvision v0.24.1
         │       └── torch v2.9.1 (*)
         └── torchvision v0.24.1 (extra: torch-vision)
-        ``` 
+        ```
 
         Jos käyt [gh:huggingface/huggingface_hub](https://github.com/huggingface/huggingface_hub)-repossa, huomaat, että `huggingface_hub`-kirjasto on tuoreelta versioltaan (kirjoitushetkellä) `v1.2.3`. Kyseinen kirjasto on loikannut uuteen Major-versioon Oct 27. Jos asentaisit sen käsin, `uv` asentaisi tämän tuoreen version, ja **major on taaksepäin yhteensopimaon by definition**. Saisit paljon erroria. Summa summarum, käytä ison kirjaston extra-asennuksia aina kun mahdollista!
 
@@ -96,7 +96,7 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
         2. Älä vaivu *"opettajan pitäisi hoitaa nämä asiat"* -ajatteluun. Tämä on osa ohjelmistokehityksen arkea, ja on tärkeää oppia ratkaisemaan nämä ongelmat. Et todellakaan tule säästymään kirjastoriippuvuuksien kanssa painimiselta myöhemminkään urallasi.
 
     Avaa `600_hello_hugging_face.py` ja suorita se. Jos autentikointi on onnistunut, ohjelma lataa Hugging Facen `transformers`-kirjatoa käyttäen sentimenttianalyysiin soveltuvan mallin ja suorittaa ennusteen esimerkkilauseelle. Kirjoitushetkellä malli on [distilbert/distilbert-base-uncased-finetuned-sst-2-english](https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english), joka on esikoulutettu DistilBERT-malli, hienosäädetty SST-2-datalle (Stanford Sentiment Treebank). Malli on noin 270 MB kokoinen.
-    
+
     Ohjelman pitäisi tulostaa jotain seuraavan kaltaista:
 
     ```
@@ -118,11 +118,12 @@ Erityisen mielenkiintoinen on [PyTorch Image Models (timm)](https://huggingface.
     3. Muokkaa `Display Image` siten, että myös esikäsitelty kuva näytetään.
     4. Tee ennuste.
 
-    Voit kokeilla myös muita malleja, kuten ResNet- tai EfficientNet-malleja, jotka soveltuvat luokitteluun – tai jos olet rohkea, kokeile vaikka Object Detection -malleja (esim. Faster R-CNN)! Luokitteluun sopivan mallin valinnassa voi auttaa kurssikirjan Table 12-3, *Some of the pretrained models available in torchvision, sorted by size* [^geronpytorch]. 
-
+    Voit kokeilla myös muita malleja, kuten ResNet- tai EfficientNet-malleja, jotka soveltuvat luokitteluun – tai jos olet rohkea, kokeile vaikka Object Detection -malleja (esim. Faster R-CNN)! Luokitteluun sopivan mallin valinnassa voi auttaa kurssikirjan Table 12-3, *Some of the pretrained models available in torchvision, sorted by size* [^geronpytorch].
 
 ## Lähteet
 
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^pathtopivot]: Shen, J. *How Hugging Face Transformed a $4.5B AI Powerhouse [Pivot Case Study]*. The Path to Pivot. 2024. https://www.pathtopivot.com/hugging-face-pivot-case-study/
-[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+[^dlwithpython]: Watson, M & Chollet, F. _Deep Learning with Python, Third Edition_. Manning. 2025.
+
+[^pathtopivot]: Shen, J. _How Hugging Face Transformed a $4.5B AI Powerhouse (Pivot Case Study)_. The Path to Pivot. 2024. https://www.pathtopivot.com/hugging-face-pivot-case-study/
+
+[^geronpytorch]: Géron, A. _Hands-On Machine Learning with Scikit-Learn and PyTorch_. O'Reilly. 2025.

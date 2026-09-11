@@ -16,13 +16,13 @@ Prince toteaa, että matalan neuroverkkojen kyky kuvata monimutkaisia funktioita
 
 ![](../images/200_robot_uncrumpling_papers.jpg)
 
-**Kuva 1:** *Kirjassa Deep Learning with Python syvää neuroverkkoa verrataan operaatioksi, jonka tehtävä on suoristaa paperimytty. Input on paperimytty, ja näistä opitaan ne datan representaation laskokset, jotka mytyn ovat luoneet [^dlwithpython]. Kuva on ChatGPT:llä luotu.*
+**Kuva 1:** _Kirjassa Deep Learning with Python syvää neuroverkkoa verrataan operaatioksi, jonka tehtävä on suoristaa paperimytty. Input on paperimytty, ja näistä opitaan ne datan representaation laskokset, jotka mytyn ovat luoneet [^dlwithpython]. Kuva on ChatGPT:llä luotu._
 
 Syvät neuroverkot tarjoavat tähän ratkaisun: ne pystyvät tuottamaan huomattavasti enemmän lineaarisia alueita kuin matalat verkot samalla parametrimäärällä. Kerrosten määrän ja niiden neuronien määrä on siis jotakin, mitä pitää optimoida mallia suunniteltaessa. Palaamme tähän kohta tässä samassa luvussa.
 
 ### Yleiskatsaus
 
-Täysin yhdistetyt kerrokset *(engl. fully connected layers)* ovat syväoppimisen peruskomponentteja. Niissä jokainen neuroni on yhteydessä kaikkiin edellisen kerroksen neuroneihin. Tämä mahdollistaa monimutkaisempien suhteiden oppimisen syötteiden ja ulostulojen välillä. Tosielämän mallit ovat 2020-luvulla siirtyneet yhä enemmän erilaisiin konvoluutio- ja toistoverkkoihin, mutta FC-kerrokset ovat edelleen keskeisiä monissa arkkitehtuureissa. Tässä luvussa keskitymme verkkoihin, joissa on pelkkiä FC-kerroksia.
+Täysin yhdistetyt kerrokset _(engl. fully connected layers)_ ovat syväoppimisen peruskomponentteja. Niissä jokainen neuroni on yhteydessä kaikkiin edellisen kerroksen neuroneihin. Tämä mahdollistaa monimutkaisempien suhteiden oppimisen syötteiden ja ulostulojen välillä. Tosielämän mallit ovat 2020-luvulla siirtyneet yhä enemmän erilaisiin konvoluutio- ja toistoverkkoihin, mutta FC-kerrokset ovat edelleen keskeisiä monissa arkkitehtuureissa. Tässä luvussa keskitymme verkkoihin, joissa on pelkkiä FC-kerroksia.
 
 Konsepti on helppo ja tulee toivon mukaan selväksi seuraavaa kuvaa katsomalla. Huomaat, että olet toteuttanut näitä verkkoja jo edellisen luvun TensorFlow Playground -tehtävässä.
 
@@ -30,11 +30,11 @@ Kuvassa kerroksen yksi neuronit ovat $h_1$, $h_2$ ja $h_3$. Kunkin niiden tulost
 
 ![](../images/110_DeepTwoLayer.svg)
 
-**Kuva 2:** *Kaksi kerroksinen syväverkko, jossa on kaksi piilotettua kerrosta, joissa kussakin on kolme neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen. (CC-BY-NC-ND) [^udlbook]*
+**Kuva 2:** _Kaksi kerroksinen syväverkko, jossa on kaksi piilotettua kerrosta, joissa kussakin on kolme neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen. (CC-BY-NC-ND) [^udlbook]_
 
 ### Laskutoimitukset
 
-Selvyyden vuoksi käydään läpi, miten verkko toimii. Oletetaan, että syötevektori on $x = [x_1, x_2]$. Ensimmäisen piilotetun kerroksen neuronit laskevat seuraavasti: 
+Selvyyden vuoksi käydään läpi, miten verkko toimii. Oletetaan, että syötevektori on $x = [x_1, x_2]$. Ensimmäisen piilotetun kerroksen neuronit laskevat seuraavasti:
 
 $$
 \begin{align*}
@@ -87,22 +87,22 @@ h2 = torch.relu(torch.matmul(W2, h1) + b2)
 y = torch.matmul(W3, h2) + b3
 ```
 
-Huomaa, että tässä on kyseessä pelkkä *inferenssi* eli ennustaminen. Koko mallin kouluttaminen vaatii vielä paljon enemmän koodia, ja tämä esitellään kurssilla myöhemmin.
+Huomaa, että tässä on kyseessä pelkkä _inferenssi_ eli ennustaminen. Koko mallin kouluttaminen vaatii vielä paljon enemmän koodia, ja tämä esitellään kurssilla myöhemmin.
 
 ### Hyperparametrit
 
 Syväverkkojen suunnittelussa on useita hyperparametreja. Hyperparametrit ovat malliin liittyvät asetukset, jotka valitetaan ennen sen kouluttamista – eli niitä ei siis opita koulutusvaiheessa. Tässä luvussa keskitymme vain niihin hyperparametreihin, jotka liittyvät FC-verkon kokoon:
 
-* Kerrosten määrä $K$
-* Neuronien määrä kussakin kerroksessa $D_k$
-  
-Tutustumme myös muihin hyperparametreihin kurssin edetessä. Hyperparametrien *oikeita arvoja* ei voi yksinkertaisesti tarkistaa jostakin Maolin taulukkokirjasta. Ne on löydettävä kokeilemalla.
+- Kerrosten määrä $K$
+- Neuronien määrä kussakin kerroksessa $D_k$
+
+Tutustumme myös muihin hyperparametreihin kurssin edetessä. Hyperparametrien _oikeita arvoja_ ei voi yksinkertaisesti tarkistaa jostakin Maolin taulukkokirjasta. Ne on löydettävä kokeilemalla.
 
 ![](../images/110_DeepKLayer.svg)
 
-**Kuva 3:** *Syväverkko, jossa on $K$ piilotettua kerrosta, joissa kussakin on $D_k$ neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen. Tähän kuvaan on piirretty mukaan myös vakiotermit (bias) $b_k$, jotka ovat $D_k$-ulotteisia vektoreita. (CC-BY-NC-ND) [^udlbook]*
+**Kuva 3:** _Syväverkko, jossa on $K$ piilotettua kerrosta, joissa kussakin on $D_k$ neuronia. Jokainen piilotettu kerros on täysin yhdistetty (fully connected) edelliseen kerrokseen. Tähän kuvaan on piirretty mukaan myös vakiotermit (bias) $b_k$, jotka ovat $D_k$-ulotteisia vektoreita. (CC-BY-NC-ND) [^udlbook]_
 
-Huomaa, että jos meidän *budjetti* GPU-muistille sallii vain $N = 1000$ painoa, voimme valita esimerkiksi luoda $K=2$ kerrosta, joissa kummassakin $D_k = 500$ neuronia. Tai voimme tehdä $K=5$ kerrosta, joissa kussakin on $D_k = 200$ neuronia. Tai voimme luoda suppilon, jossa ensimmäisessä kerroksessa on $D_1 = 400$ neuronia, toisessa $D_2 = 300$, kolmannessa $D_3 = 200$ ja neljännessä $D_4 = 100$. Kaikki nämä vaihtoehdot käyttävät saman verran muistia, mutta niillä on erilaiset kyvyt oppia erilaisia funktioita. Jos tutkit vanhoja malleja, huomaat, että suppilo oli ennen hyvinkin suosittu arkkitehtuuri. Nykyään on tavallisempaa käyttää saman kokoisia kerroksia. Géron antaa nyrkkisäännön, että paremman hyödyn saa tyypillisesti lisäämällä kerrosten määrää kuin neuronien määrää kerroksessa. [^handson-tf]
+Huomaa, että jos meidän _budjetti_ GPU-muistille sallii vain $N = 1000$ painoa, voimme valita esimerkiksi luoda $K=2$ kerrosta, joissa kummassakin $D_k = 500$ neuronia. Tai voimme tehdä $K=5$ kerrosta, joissa kussakin on $D_k = 200$ neuronia. Tai voimme luoda suppilon, jossa ensimmäisessä kerroksessa on $D_1 = 400$ neuronia, toisessa $D_2 = 300$, kolmannessa $D_3 = 200$ ja neljännessä $D_4 = 100$. Kaikki nämä vaihtoehdot käyttävät saman verran muistia, mutta niillä on erilaiset kyvyt oppia erilaisia funktioita. Jos tutkit vanhoja malleja, huomaat, että suppilo oli ennen hyvinkin suosittu arkkitehtuuri. Nykyään on tavallisempaa käyttää saman kokoisia kerroksia. Géron antaa nyrkkisäännön, että paremman hyödyn saa tyypillisesti lisäämällä kerrosten määrää kuin neuronien määrää kerroksessa. [^handson-tf]
 
 > "A typical neural network for MNIST might have 3 hidden layers, the first with 300 neurons, the second with 200, and the third with 100. However, this practice has been largely abandoned because it seems that using the same number of neurons in all hidden layers performs just as well in most cases, or even better; plus, there is only one hyperparameter to tune, instead of one per layer. That said, depending on the dataset, it can sometimes help to make the first hidden layer bigger than the others." [^handson-tf]
 
@@ -110,13 +110,13 @@ Huomaa, että jos meidän *budjetti* GPU-muistille sallii vain $N = 1000$ painoa
 
 ### Tehtävän yleiskuvaus
 
-Aloitamme kurssin tutustumalla yksinkertaiseen syväverkkoon, joka tunnetaan nimellä monikerroksinen perceptroni (MLP, *multi-layer perceptron*). MLP on syväverkko, joka koostuu useista täysin yhdistetyistä kerroksista (FC-kerrokset), joissa on aktivointifunktio kunkin kerroksen jälkeen. Valitsemamme ongelma, tai dataset, on **MNIST**. Lyhenteen **NIST** tulee sanoista *National Institute of Standards and Technology*, joka on Yhdysvaltain hallituksen virasto. Kirjain **M** tulee sanasta *Modified*. Dataa on esiprosessoitu siten, että se on sopivassa muodossa koneoppimiseen, tehden siitä hyvän *Hello World* -esimerkin koneoppimiselle. Tyypillisessä koneoppimistehtävässä saat hyvin harvoin näin valmista dataa käsiisi: kuvat on valmiiksi rajattu, skaalattu, keskitetty ja muunnettu vektoreiksi. MNIST on kuitenkin erinomainen aloitus, koska se on pieni, helppo ymmärtää ja sillä on helppo kokeilla erilaisia malleja.
+Aloitamme kurssin tutustumalla yksinkertaiseen syväverkkoon, joka tunnetaan nimellä monikerroksinen perceptroni (MLP, _multi-layer perceptron_). MLP on syväverkko, joka koostuu useista täysin yhdistetyistä kerroksista (FC-kerrokset), joissa on aktivointifunktio kunkin kerroksen jälkeen. Valitsemamme ongelma, tai dataset, on **MNIST**. Lyhenteen **NIST** tulee sanoista _National Institute of Standards and Technology_, joka on Yhdysvaltain hallituksen virasto. Kirjain **M** tulee sanasta _Modified_. Dataa on esiprosessoitu siten, että se on sopivassa muodossa koneoppimiseen, tehden siitä hyvän _Hello World_ -esimerkin koneoppimiselle. Tyypillisessä koneoppimistehtävässä saat hyvin harvoin näin valmista dataa käsiisi: kuvat on valmiiksi rajattu, skaalattu, keskitetty ja muunnettu vektoreiksi. MNIST on kuitenkin erinomainen aloitus, koska se on pieni, helppo ymmärtää ja sillä on helppo kokeilla erilaisia malleja.
 
-MNIST-datassa on käsinkirjoitettuja numeroita (0-9), jotka on skaalattu 28x28 pikselin harmaasävykuviksi. Kuvat on esitetty alla olevassa kuvassa. PyTorchin MNNIST tarjoaa 60 000 koulutuskuvaa ja 10 000 testikuvaa. Kuvat ovat tavallisia yksikanavaisia harmaasävykuvia *PIL-formaatissa* eli niiden pikseliarvot ovat välillä `0-255`. Jos kaikki nämä kuvat lataisi yhteen tensoriin, sen koko olisi `[70000, 1, 28, 28]`.
+MNIST-datassa on käsinkirjoitettuja numeroita (0-9), jotka on skaalattu 28x28 pikselin harmaasävykuviksi. Kuvat on esitetty alla olevassa kuvassa. PyTorchin MNNIST tarjoaa 60 000 koulutuskuvaa ja 10 000 testikuvaa. Kuvat ovat tavallisia yksikanavaisia harmaasävykuvia _PIL-formaatissa_ eli niiden pikseliarvot ovat välillä `0-255`. Jos kaikki nämä kuvat lataisi yhteen tensoriin, sen koko olisi `[70000, 1, 28, 28]`.
 
 ![](../images/110_mnist_grid.png)
 
-**Kuva 4:** *MNIST-datan esimerkkikuvia. Kuvat on poimittu PyTorch:n [torchvision.datasets.MNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.MNIST.html)-luokasta.*
+**Kuva 4:** _MNIST-datan esimerkkikuvia. Kuvat on poimittu PyTorch:n [torchvision.datasets.MNIST](https://docs.pytorch.org/vision/stable/generated/torchvision.datasets.MNIST.html)-luokasta._
 
 **Tavoite on siis:** kouluttaa moniluokkainen luokittelija, joka pystyy tunnistamaan käsinkirjoitetut numerot. Tämä on 10-luokkainen luokittelutehtävä, jossa jokainen luokka vastaa yhtä numeroa (0-9). Työ on jo tehty sinun puolestasi, koska tämä on kurssin aloitus, ja sinulle ei ole vielä edes opetettu PyTorchin käyttöä. Koodi löytyy Notebookista `notebooks/nb/100/110_first_model.ipynb` tämän kurssimateriaalin repositoriota eli [gh:sourander/syvaoppiminen](https://github.com/sourander/syvaoppiminen). Aloitusluennolla sinulle on esitelty, mistä mitäkin materiaalia löytyy, ja kuinka kurssi kannattaa suorittaa.
 
@@ -126,11 +126,11 @@ MNIST-datassa on käsinkirjoitettuja numeroita (0-9), jotka on skaalattu 28x28 p
 
 ### Tulokset
 
-Aloitetaan käänteisesti tulosten esittelemisestä. Kuten on sanottu, MNIST on hyvinkin *Hello World*-tason tehtävä näin 2020-luvulla. Yksinkertainen MLP pystyy saavuttamaan yli 95 % tarkkuuden (accuracy) jo muutamassa minuutissa. Tulet huomaamaan, että vaikeampien tehtävien kanssa koulutusajat kasvavat merkittävästi, ja tarkkuudet jäävät usein vaatimattomaksi, varsinkin jos MLP-arkkitehtuuria käytetään vasarana, joka sopii tehtävään kuin tehtävään. Vasaralla viittaan sanontaan: *"it is tempting, if the only tool you have is a hammer, to treat everything as if it were a nail"* [^maslowshammer]. Tutustu alla olevaan kuvaajaan:
+Aloitetaan käänteisesti tulosten esittelemisestä. Kuten on sanottu, MNIST on hyvinkin _Hello World_-tason tehtävä näin 2020-luvulla. Yksinkertainen MLP pystyy saavuttamaan yli 95 % tarkkuuden (accuracy) jo muutamassa minuutissa. Tulet huomaamaan, että vaikeampien tehtävien kanssa koulutusajat kasvavat merkittävästi, ja tarkkuudet jäävät usein vaatimattomaksi, varsinkin jos MLP-arkkitehtuuria käytetään vasarana, joka sopii tehtävään kuin tehtävään. Vasaralla viittaan sanontaan: _"it is tempting, if the only tool you have is a hammer, to treat everything as if it were a nail"_ [^maslowshammer]. Tutustu alla olevaan kuvaajaan:
 
 ![](../images/110_mlp_mnist_training_loss_and_acc.png)
 
-**Kuva 5:** *MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta.*
+**Kuva 5:** _MNIST-datalla koulutetun mallin tarkkuus (accuracy) ja häviö (loss) koulutuksen aikana epookki epookilta._
 
 Kuvaajassa näkyy neljä käyrää: `train_loss`, `train_acc`, `val_loss` ja `val_acc`. Nämä kuvaavat mallin suoriutumista koulutusdatalla (train) ja validaatiodatalle (val). Koulutusdata on se data, jolla malli on koulutettu, ja validaatiodata on erillinen osajoukko datasta, jota ei ole käytetty mallin kouluttamiseen. Validaatiodataa käytetään mallin arviointiin koulutuksen aikana, jotta nähdään, kuinka hyvin malli yleistyy näkemättömään dataan. Ideaalitilanteessa lopullinen arviointi tehdään testidatalla, joka on täysin erillinen sekä koulutus- että validaatiodatasta. Tässä meidän yksinkertaisessa esimerkissä emme kuitenkaan tee erillistä testidataa. Eli siis kaikki 60 000 kuvaa ovat koulutusdataa ja 10 000 kuvaa ovat validaatiodataa. Hyväksymme validaatiotuloksen lopulliseksi tulokseksi.
 
@@ -155,7 +155,7 @@ Koulutuksen tulokset eri raudalla:
 | Jupyter Hub (CPU)       | 20.4 s       | 33 min 24 s        | 95.35 %             |
 | Jupyter Hub (0.33x GPU) | 20.5 s       | 34 min 10 s        | 95.33 %             |
 
-Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia. Linuxissa koodi ajetaan ilman konttia natiivissa suoritusympäristössä; Windowsissa sama kone käyttää Docker WSL 2:sta. Jupyter Hubissa koodi on ajettu tavallisena torstai-iltanapäivänä ilman tietoa siitä, onko alustalla muita samanaikaisia käyttäjiä. Verrokkina listalla on Google Colab:n ilmainen CPU runtime sekä GPU runtime (Tesla T4). 
+Macbook Pro on tarkemmalta malliltaan M2 Max (32 GB muistia). MPS (Metal Performance Shaders) on Apple Siliconin GPU-kiihdytys. PC on pöytäkone i7-12700F suorittimella, 32 GB keskusmuistilla ja NVIDIA RTX 3060 Ti -näytönohjaimella, jossa on 8 GB muistia. Linuxissa koodi ajetaan ilman konttia natiivissa suoritusympäristössä; Windowsissa sama kone käyttää Docker WSL 2:sta. Jupyter Hubissa koodi on ajettu tavallisena torstai-iltanapäivänä ilman tietoa siitä, onko alustalla muita samanaikaisia käyttäjiä. Verrokkina listalla on Google Colab:n ilmainen CPU runtime sekä GPU runtime (Tesla T4).
 
 ### Epookkien määrä
 
@@ -165,12 +165,11 @@ Alla näkyy kuvaajissa, mitä tapahtuu 100-500 epookin aikana. Kuvaajat on otett
 
 ![](../images/110_mlp_mnist_training_100to500_tensorboard.png)
 
-**Kuva 6:** *TensorBoardissa on mahdollista zoomata kuvaajaan sisään. Tässä kuvaajassa näkyy suunnilleen alue 100-500. Mallin virhe vähenee epookista 100 eteenpäin, mutta `train` ja `val` käyrät alkavat erkaantua toisistaan, mikä viittaa ylikoulutukseen.*
+**Kuva 6:** _TensorBoardissa on mahdollista zoomata kuvaajaan sisään. Tässä kuvaajassa näkyy suunnilleen alue 100-500. Mallin virhe vähenee epookista 100 eteenpäin, mutta `train` ja `val` käyrät alkavat erkaantua toisistaan, mikä viittaa ylikoulutukseen._
 
 ![](../images/110_mlp_mnist_training_400to500_acc_tensorboard.png)
 
-**Kuva 7:** *Tässä kuvaajassa on zoomattu alueelle 400-500 accuracy-käyrässä. Kuten näkyy, validaatiotarkkuus ei ole parantunut 400. epookin jälkeen, mutta koulutustarkkuus jatkaa parantumistaan. Tämä on selkeä merkki ylikoulutumisesta (overfitting). Malli käytännössä oppii ulkoa koulutusdatan.*
-
+**Kuva 7:** _Tässä kuvaajassa on zoomattu alueelle 400-500 accuracy-käyrässä. Kuten näkyy, validaatiotarkkuus ei ole parantunut 400. epookin jälkeen, mutta koulutustarkkuus jatkaa parantumistaan. Tämä on selkeä merkki ylikoulutumisesta (overfitting). Malli käytännössä oppii ulkoa koulutusdatan._
 
 ### Nostoja koodista
 
@@ -193,11 +192,11 @@ trainset = datasets.MNIST(*args, train=True, **kwargs)
 testset = datasets.MNIST(*args, train=False, **kwargs)
 ```
 
-Koodisnippetistä on pääteltävissä ainakin, kuinka MNIST-datan voi normalisoida käyttäen `Normalize()`-metodia. Normalisoinnissa annetaan kaksi argumenttia: syötteiden keskiarvo ja keskihajonta. MNIST-tapauksen kohdalla nämä ovat hyvin tunnettuna arvoja ja ne on laskettu nimenomaan training-datalla. Kyseinen [torchvision.transforms.Normalize](https://docs.pytorch.org/vision/main/generated/torchvision.transforms.Normalize.html) itsessään on Johdatus koneoppimiseen -kurssilta tuttu juttu. Se on tarkalleen ottaen sama asia kuin sklearnin `StandardScaler`: *"Normalize a tensor image with mean and standard deviation. This transform does not support PIL Image."*
+Koodisnippetistä on pääteltävissä ainakin, kuinka MNIST-datan voi normalisoida käyttäen `Normalize()`-metodia. Normalisoinnissa annetaan kaksi argumenttia: syötteiden keskiarvo ja keskihajonta. MNIST-tapauksen kohdalla nämä ovat hyvin tunnettuna arvoja ja ne on laskettu nimenomaan training-datalla. Kyseinen [torchvision.transforms.Normalize](https://docs.pytorch.org/vision/main/generated/torchvision.transforms.Normalize.html) itsessään on Johdatus koneoppimiseen -kurssilta tuttu juttu. Se on tarkalleen ottaen sama asia kuin sklearnin `StandardScaler`: _"Normalize a tensor image with mean and standard deviation. This transform does not support PIL Image."_
 
 #### Batchien lataus
 
-Datan lataus tapahtuu `DataLoader`-luokan avulla. Kyseinen luokka on iteraattori-tyylinen olio, joka on *wrapper* datan ympärille. Se mahdollistaa datan käsittelyn erissä (batches) ja se osaa sekoittaa datan (shuffle) sekä ladata dataa rinnakkaisesti useammalla säikeellä (num_workers). Alla on esimerkki koulutusdatan lataamisesta:
+Datan lataus tapahtuu `DataLoader`-luokan avulla. Kyseinen luokka on iteraattori-tyylinen olio, joka on _wrapper_ datan ympärille. Se mahdollistaa datan käsittelyn erissä (batches) ja se osaa sekoittaa datan (shuffle) sekä ladata dataa rinnakkaisesti useammalla säikeellä (num_workers). Alla on esimerkki koulutusdatan lataamisesta:
 
 ```python
 # Create data loaders
@@ -225,14 +224,14 @@ Miksi `BATCH_SIZE` on juuri 128? Alla taulukko, josta voit lukea tyypillisiä er
 | **Gradientin laatu**   | Kohinaisa, mutta ajantasainen | Tasapainoinen  | Vakaa                   |
 | **Lopputarkkuus**      | Paras?                        | Hyvä?          | Varoen hyvä?            |
 
-Yllä oleva taulukko perustuu *Revisiting Small Batch Training for Deep Neural Networks* julkaisuun [^smallbatchtraining]. Kysymysmerkit ovat minun lisä. Géron mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
+Yllä oleva taulukko perustuu _Revisiting Small Batch Training for Deep Neural Networks_ julkaisuun [^smallbatchtraining]. Kysymysmerkit ovat minun lisä. Géron mainitsee, että eräissä tutkimuksissa myös hyvinkin suuret erät (esim. 8192) ovat toimineet hyvin, kunhan oppimisnopeus aloitetaan pienestä arvosta. Oppiminen voi olla tällöin hyvinkin nopeaa. [^geronpytorch]
 
-Eräkoon valinta on hyperparametri – sanotaan usein. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin. Jos Google Researchin Tuning Playbookiin on uskominen, eräkoko ei ylipäätänsä ole hyperparametri vaan tekninen valinta: *"The batch size should not be treated as a tunable hyperparameter for validation set performance."* [^tuningplaybook] He siis käytännössä ehdottavat, että eräkoko valitaan sen perusteella, mikä parantaa thoughputtia ja koulutuksen nopeutta. Muut hyperparametrit, kuten learning rate, säädetään sitten eräkoko huomioiden.
+Eräkoon valinta on hyperparametri – sanotaan usein. Pieni erä koko voi johtaa epävakaampiin päivityksiin, mutta se voi myös auttaa mallia yleistymään paremmin. Suuremmat erät voivat hyödyntää GPU:n rinnakkaisprosessointia tehokkaammin. Jos Google Researchin Tuning Playbookiin on uskominen, eräkoko ei ylipäätänsä ole hyperparametri vaan tekninen valinta: _"The batch size should not be treated as a tunable hyperparameter for validation set performance."_ [^tuningplaybook] He siis käytännössä ehdottavat, että eräkoko valitaan sen perusteella, mikä parantaa thoughputtia ja koulutuksen nopeutta. Muut hyperparametrit, kuten learning rate, säädetään sitten eräkoko huomioiden.
 
 Selvyyden vuoksi sanottakoon vielä, että:
 
-* Batch on siis N joukko kuvia, jotka syötetään malliin kerralla. Niiden pitää mahtua muistiin.
-* Epookissa on useita askelia (**steps**). Tarkka askelten määrä riippuu kuvien määrästä ja eräkoosta. Eli `60 000 / 128 = 469` askelta per epookki. Tai `60 000 / 1 = 60 000` askelta per epookki, jos batch-koko on 1.
+- Batch on siis N joukko kuvia, jotka syötetään malliin kerralla. Niiden pitää mahtua muistiin.
+- Epookissa on useita askelia (**steps**). Tarkka askelten määrä riippuu kuvien määrästä ja eräkoosta. Eli `60 000 / 128 = 469` askelta per epookki. Tai `60 000 / 1 = 60 000` askelta per epookki, jos batch-koko on 1.
 
 #### Mallin määrittely
 
@@ -245,7 +244,7 @@ class MLP(nn.Module):
         self.fc1 = nn.Linear(784, 256)
         self.fc2 = nn.Linear(256, 128)
         self.fc3 = nn.Linear(128, 10)
-    
+
     def forward(self, x):
         x = x.view(-1, 784)
         x = torch.sigmoid(self.fc1(x))
@@ -276,7 +275,6 @@ Mieti, mitä forward-metodi tarkalleen palauttaa. Tuleeko sieltä raakatulokset 
 
 Huomaa, että MLP on luokka. Tämä mahdollistaa, että sinä voit itse lisätä luokkaan tarpeen mukaan metodeja. Ainoat pakolliset metodit ovat `__init__` ja `forward`. Kukaan ei estä sinua tekemästä esimerkiksi `def initialize_weights(self):` -metodia, joka alustaa painot haluamallasi tavalla. Mallin `super()`-kutsussa saadut metodit ja ominaisuudet selviävät PyTorchin dokumentaatiosta: [https://pytorch.org/docs/stable/generated/torch.nn.Module.html](https://pytorch.org/docs/stable/generated/torch.nn.Module.html).
 
-
 ### Termistöä
 
 Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa korvan taakse. Tässä vaiheessa kurssia lähinnä vain nimeämme kurssilla käytäviä aiheita. Syvällisempää käsittelyä seuraa PyTorchin kautta myöhemmissä luvuissa.
@@ -286,12 +284,11 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
 | Painot (weights)  | Mallin parametrit, jotka oppivat datasta. Jokaisella yhteydellä on oma painonsa. Tyypillisessä kuvaajassa nämä esitetään viivoina, joiden paksuus tai väri voi kuvata painon suuruutta. |
 | Bias              | Mallin parametrit, jotka oppivat datasta. Jokaisella neuronilla on oma bias-termi.                                                                                                      |
 | Aktivaatiofunktio | Funktio, joka lisätään neuronin ulostuloon. Aktivointifunktio tekee mallista ei-lineaarisen.                                                                                            |
-| Tappiofunktio     | Funktio, joka mittaa mallin virheen. Koulutuksen aikana pyritään minimoimaan valittu *loss function*.                                                                                   |
+| Tappiofunktio     | Funktio, joka mittaa mallin virheen. Koulutuksen aikana pyritään minimoimaan valittu _loss function_.                                                                                   |
 | Optimointi        | Prosessi, jossa mallin painot ja bias-termit päivitetään loss-funktion minimoimiseksi.                                                                                                  |
 | Epoch             | Yksi läpikäynti koko koulutusdatasta.                                                                                                                                                   |
 | Batch             | Pieni osa koulutusdatasta, joka syötetään malliin kerralla.                                                                                                                             |
 | Learning rate     | Hyperparametri, joka määrittää, kuinka suuria päivityksiä mallin painoihin ja biaseihin tehdään.                                                                                        |
-
 
 ## Tehtävät
 
@@ -334,7 +331,7 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
         pip install marimo
         marimo export ipynb 110_first_model.py -o 110_first_model.ipynb
         ```
-    
+
     3. Aja Notebook kokonaisuudessaan. Varmista, että saat mallin koulutettua ja kaikki solut ajettua.
     4. Lue koodi kokonaisuudessaan läpi! Emme ole vielä opiskelleet PyTorchin käyttöä, mutta yritä konseptitasolla ymmärtää, mitä kukin koodirivi tekee.
 
@@ -361,10 +358,16 @@ Alla on tähän asti kurssilla käytettyjä termejä, jotka tulee jo nyt laittaa
 
 ## Lähteet
 
-[^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^handson-tf]: Géron, A. *Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition*. O'Reilly Media. 2022.
+[^udlbook]: Prince, S. _Understanding Deep Learning_. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+
+[^dlwithpython]: Watson, M & Chollet, F. _Deep Learning with Python, Third Edition_. Manning. 2025.
+
+[^handson-tf]: Géron, A. _Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 3rd Edition_. O'Reilly Media. 2022.
+
 [^maslowshammer]: Wikipedia. Law of the instrument. https://en.wikipedia.org/wiki/Law_of_the_instrument
-[^smallbatchtraining]: Masters, D. & Luschi, C. *Revisiting Small Batch Training for Deep Neural Networks*. arXiv:1804.07612. 2018. https://arxiv.org/abs/1804.07612
-[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
-[^tuningplaybook]: Godbole, V., Dahl. E, Gilmer. J., Shallue, J. & Nado. Z. *Deep Learning Tuning Playbook*. Google Research. https://github.com/google-research/tuning_playbook
+
+[^smallbatchtraining]: Masters, D. & Luschi, C. _Revisiting Small Batch Training for Deep Neural Networks_. arXiv:1804.07612. 2018. https://arxiv.org/abs/1804.07612
+
+[^geronpytorch]: Géron, A. _Hands-On Machine Learning with Scikit-Learn and PyTorch_. O'Reilly. 2025.
+
+[^tuningplaybook]: Godbole, V., Dahl. E, Gilmer. J., Shallue, J. & Nado. Z. _Deep Learning Tuning Playbook_. Google Research. https://github.com/google-research/tuning_playbook

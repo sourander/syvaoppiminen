@@ -11,7 +11,7 @@ Tämä on kenties kurssin teoreettisin osuus, mutta sisältää yleistietoa, jok
 > "Mitä osaat kertoa binäärijärjestelmästä?" <br>
 > — "Öööh, taisin käyttää sitä yhdessä projektissa, vissiin."
 >
-> "Mitä osaat kertoa algoritmista nimeltään *backpropagation*?" <br>
+> "Mitä osaat kertoa algoritmista nimeltään _backpropagation_?" <br>
 > — "Öööh, taisin käyttää sitä yhdessä projektissa, vissiin."
 
 Vastavirta-algoritmi (engl. backpropagation) on keskeinen menetelmä neuroverkkojen kouluttamisessa. Se mahdollistaa virheen tehokkaan laskemisen ja painojen päivittämisen verkon eri kerroksissa. Heti alkuun täytyy sanoa, että backpropagation ei ole sama asia kuin gradient descent, vaikka nämä kaksi usein mainitaankin yhdessä. Backpropagation on menetelmä, jolla lasketaan virheiden gradientit verkon painoille, kun taas gradient descent on optimointialgoritmi, joka käyttää näitä gradientteja painojen päivittämiseen. Optimointialgoritmeja on muitakin, kuten esimerkiksi Adam ja RMSprop.
@@ -34,14 +34,14 @@ Loppupeleissä backpropagation on vain ketjusäännön soveltamista laskentaverk
 
 Ja näinhän se jälkiviisaana on. Olah nostaa kuitenkin esiin, että asia ei ollut lainkaan niin ilmeinen silloin, kun vastavirta-algoritmi (backpropagation) alun perin keksittiin. Tuohon aikaan ei ollut selvää, että juuri derivaattojen laskeminen olisi oikea tapa opettaa neuroverkkoja. Tämäkin ajatus tulee luontevaksi vasta sitten, kun ymmärtää, että derivaatat voidaan laskea tehokkaasti. Syntyy eräänlainen kehäpäätelmä: jotta ymmärtäisimme, miksi derivaatat ovat hyödyllisiä, meidän täytyy jo tietää, että niiden laskeminen on mahdollista ja tehokasta. [^colahblog]
 
-Lisäksi Olah huomauttaa, että olisi ollut helppoa tyrmätä koko lähestymistapa nopealla järkeilyllä. Ajatus neuroverkkojen opettamisesta gradienttipohjaisilla menetelmillä saattoi vaikuttaa tuomittuna epäonnistumaan: eikö optimointi jäisi jumiin lokaaleihin minimeihin? [^colahblog] 
+Lisäksi Olah huomauttaa, että olisi ollut helppoa tyrmätä koko lähestymistapa nopealla järkeilyllä. Ajatus neuroverkkojen opettamisesta gradienttipohjaisilla menetelmillä saattoi vaikuttaa tuomittuna epäonnistumaan: eikö optimointi jäisi jumiin lokaaleihin minimeihin? [^colahblog]
 
 ## Kertaus: Mikä on gradientti?
 
-Tätä aihetta on käsitelty Johdatus koneoppimiseen -kurssissa Hill Climbing ja Gradient Descent -osioissa. Jos et muista aiheesta mitään, on äärimmäisen suositeltavaa kurkata omaa oppimispäiväkirjaasi ja kerrata lyhyesti. Tarkasti ottaen meidän tulee selvittää kaksi termiä: 
+Tätä aihetta on käsitelty Johdatus koneoppimiseen -kurssissa Hill Climbing ja Gradient Descent -osioissa. Jos et muista aiheesta mitään, on äärimmäisen suositeltavaa kurkata omaa oppimispäiväkirjaasi ja kerrata lyhyesti. Tarkasti ottaen meidän tulee selvittää kaksi termiä:
 
-* osittaisderivaatta (engl. *partial derivative*)
-* gradientti (engl. *gradient*)
+- osittaisderivaatta (engl. _partial derivative_)
+- gradientti (engl. _gradient_)
 
 ### Osittaisderivaatta
 
@@ -102,8 +102,6 @@ graph LR
     h2 --> rest
 ```
 
-
-
 ## Backpropagation
 
 ### Paperilla
@@ -119,7 +117,7 @@ h_2 &= \sigma(z_2)
 \end{aligned}
 $$
 
-Yllä olevassa kaavassa $\sigma$ on aktivointifunktio, esimerkiksi sigmoid tai ReLU. Tällöin, kun haluamme laskea gradientin $w_{00}$ suhteen, meidän täytyy käyttää ketjusääntöä, koska $w_{00}$ vaikuttaa lopulliseen häviöön (loss) monen välikerroksen kautta. Watson ja Chollet kirjoittavatkin, että: 
+Yllä olevassa kaavassa $\sigma$ on aktivointifunktio, esimerkiksi sigmoid tai ReLU. Tällöin, kun haluamme laskea gradientin $w_{00}$ suhteen, meidän täytyy käyttää ketjusääntöä, koska $w_{00}$ vaikuttaa lopulliseen häviöön (loss) monen välikerroksen kautta. Watson ja Chollet kirjoittavatkin, että:
 
 > "Backpropagation is simply the application of the chain rule to a computation graph. There’s nothing more to it." [^dlwithpython]
 
@@ -149,11 +147,11 @@ Huomaa, että kohdan 2 voi tehdä käytännössä ==missä tahansa järjestykses
 
 #### Keino 2: Lopusta vaiheittain alkuun
 
-Tämä on se keino, kuinka backpropagation esitellään usein ohjelmoinnin yhteydessä kirjallisuudessa. Esimerkiksi Matt Mazurin blogissa: [A Step by Step Backpropagation Example](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/). Tämä on loogista, koska virhe *propagoituu* verkossa taaksepäin. Välivaiheissa tallennetut layerin gradientteja voidaan nimittää *deltoiksi*. Toteutuksemme laskee kunkin kerroksen virheen eli "deltan" ($dZ$). Tätä virhettä käytetään laskemaan painojen gradientit ($dW$ ja $db$).
+Tämä on se keino, kuinka backpropagation esitellään usein ohjelmoinnin yhteydessä kirjallisuudessa. Esimerkiksi Matt Mazurin blogissa: [A Step by Step Backpropagation Example](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/). Tämä on loogista, koska virhe _propagoituu_ verkossa taaksepäin. Välivaiheissa tallennetut layerin gradientteja voidaan nimittää _deltoiksi_. Toteutuksemme laskee kunkin kerroksen virheen eli "deltan" ($dZ$). Tätä virhettä käytetään laskemaan painojen gradientit ($dW$ ja $db$).
 
 1. Tee ensin forward pass ja tallenna kaikki väliarvot (aktivoinnit $A$)
 2. Käsittele lähtötason virhe ($dZ_{out}$) virhe.
-3. Laske tämän kerroksen **painojen gradientit** ($dW$) *(hyödyntäen virhettä ja edellisen tason syötettä)*
+3. Laske tämän kerroksen **painojen gradientit** ($dW$) _(hyödyntäen virhettä ja edellisen tason syötettä)_
 4. Laske **edellisen kerroksen virhe** siirtämällä nykyinen virhe painojen läpi taaksepäin ($dZ_{prev}$)
 5. Toista vaiheet 3 ja 4, kunnes kaikki kerrokset on käsitelty.
 
@@ -166,7 +164,7 @@ def backward(self, target):
     # === Lähtökerros (Layer 2) ===
     # 1. Laske virhe (dZ2)
     self.dZ2 = self.A2 - target  # (1)!
-    
+
     # 2. Laske gradientit painoille (dW2, db2)
     # Nämä tallennetaan, jotta optimize() voi käyttää niitä
     self.dW2 = self.A1.T.dot(self.dZ2)  # (2)!
@@ -198,9 +196,9 @@ def backward(self, target):
 
 ![](../images/300_NumpyNNwithBCE.png)
 
-**Kuva 1**: *Malli `NumpyNNwithBCE` Excalidraw-piirroksena. Ylemmässä kuvion puoliskossa on avattuna piilotetut kerrokset siten, että neuroni on purettu Z- ja A-osiin eli esiaktivoituun ja sigmoid-muunnettuun. Alemmassa kuviossa on tuttu esitys 2-2-1 verkosta siten, että biasit on piilotettu. Huomaa, että `X == A0`.*
+**Kuva 1**: _Malli `NumpyNNwithBCE` Excalidraw-piirroksena. Ylemmässä kuvion puoliskossa on avattuna piilotetut kerrokset siten, että neuroni on purettu Z- ja A-osiin eli esiaktivoituun ja sigmoid-muunnettuun. Alemmassa kuviossa on tuttu esitys 2-2-1 verkosta siten, että biasit on piilotettu. Huomaa, että `X == A0`._
 
-!!! note 
+!!! note
 
     Yllä olevassa koodiesimerkissä, kuten muutenkin NumpyNN:n suhteen, on oletus, että meillä on stokastinen gradientti, jossa batch size on tasan 1. Muuten dB2 ja dB1 pitäisi laskea ottamalla keskiarvo rivien yli (esim. `np.sum(self.dZ2, axis=0) / m`, missä m on batch size).
 
@@ -234,33 +232,33 @@ def backward(self, target):
         self.dW1 = self.A0.T.dot(self.dZ1) # Gradientti W1:lle
 ```
 
-Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerrokset, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodiblokki mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]. Esimerkissä käytetään yleistä ketjusääntöä, joka lasketaan myös lähtökerrokselle (output layer). Huomaa, että `output_delta` sisältää myös aktivaatiofunktion derivaatan. Tämä tarvitaan, koska käytössä on MSE-virhefunktio – aiemmassa BCE-esimerkissä tätä vaihetta ei tarvittu Sigmoid+BCE-yhdistelmän vuoksi. Termillä *delta* viitataan esiaktivaation virheeseen, joka on siis $dZ^n$-termi.
+Jos tämän haluaa kirjoittaa dynaamisesti useammalle piilotetulle kerrokselle, täytyy käyttää silmukkaa. Tällöin eri kerrokset, kuten myös aktivoinnit, kannattaisi tallentaa listoiksi. Seuraava koodiblokki mukailee Adrian Rosebrockin kirjan luvun 10 esimerkkiä [^dl4cv]. Esimerkissä käytetään yleistä ketjusääntöä, joka lasketaan myös lähtökerrokselle (output layer). Huomaa, että `output_delta` sisältää myös aktivaatiofunktion derivaatan. Tämä tarvitaan, koska käytössä on MSE-virhefunktio – aiemmassa BCE-esimerkissä tätä vaihetta ei tarvittu Sigmoid+BCE-yhdistelmän vuoksi. Termillä _delta_ viitataan esiaktivaation virheeseen, joka on siis $dZ^n$-termi.
 
 ```python
     def backprop(self, X, y):
         # Tee forward pass ja tallenna kaikki aktivoinnit
         activations = self.forward(X)
-        
+
         # 1. Laske lähtötason virhe (output layer)
         output_error = activations[-1] - y
         output_delta = output_error * self.sigmoid_deriv(activations[-1])
 
         # Deltat tulevat pinoutumaan tähän listaan
         deltas = [output_delta]
-        
+
         # 2. Propagoi gradientti taaksepäin kerros kerrokselta
         for layer_idx in np.arange(len(activations) - 2, 0, -1):
-            
+
             # hyödynnetään edellisen kerroksen deltaa (pinon päältä)
             this_delta = deltas[-1].dot(self.W[layer_idx].T)
-            
+
             # sigmoid ketjusäännöllä mukaan
             this_delta = this_delta * self.sigmoid_deriv(activations[layer_idx])
-            
+
             # lisää tämä delta pinon päälle
             deltas.append(this_delta)
-        
-        # 3. Käännä deltalista oikeaan järjestykseen. 
+
+        # 3. Käännä deltalista oikeaan järjestykseen.
         # Nyt niitä voi käyttää painojen päivittämiseen optimointialgoritmissa
         self.deltas = deltas[::-1]
 ```
@@ -321,7 +319,6 @@ tensor([[0.0500, 0.1000],
         [0.1500, 0.2000]])
 ```
 
-
 ### Autograd
 
 Käytännössä backpropagation on toteutettu syväoppimiskirjastoissa siten, että sinun ei tarvitse kirjoittaa backpropagation-koodia itse muuta kuin opiskelusyistä. Kukin Tensor huolehtii itseensä kohdistuneista operaatioista. PyTorch:n oma dokumentaatio esittelee sitä kattavasti, joten kannattaa tutustua, jos aihe kiinnostaa: [Automatic differentiation package - torch.autograd](https://docs.pytorch.org/docs/stable/autograd.html). Etsi sivulta sanaa `grad_fn`. Kun esimerkiksi teet tensorioperaation `y = a * b`, PyTorch kiinnittää tensoriin `grad_fn=<MulBackward0>`:n. Kun myöhemmin kutsut `y.backward()`, PyTorch käyttää tätä tietoa laskeakseen gradientit `a` ja `b` suhteen. Tässä tapauksessa kyseessä olisi kertolaskuun pätevä sääntö eli $\frac{d}{da}(a \cdot b) = b$ ja $\frac{d}{db}(a \cdot b) = a$.
@@ -334,20 +331,18 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
 
 2. **Asyklinen laskentagraafi (DAG)**. Laskennan täytyy muodostaa suunnattu asyklinen verkko. Jos verkossa on silmukoita (esim. RNN), ne "avataan auki" (unrolling), jotta backpropagation voidaan toteuttaa [^geronpytorch].
 
-
 !!! info "Monimutkaisemmat arkkitehtuurit"
 
     Yllä esitelty delta-sääntö ja backward-metodin toteutus toimii suoraviivaisesti tavallisissa, eteenpäin suunnatuissa neuroverkoissa (engl. feedforward, fully connected, dense), joissa jokainen neuroni on yhteydessä jokaiseen edellisen kerroksen neuroniin. Monimutkaisemmissa arkkitehtuureissa, kuten **konvoluutioverkoissa (CNN)**, gradienttien laskeminen on huomattavasti monimutkaisempaa.
 
     Onneksi autograd hoitaa kaiken tämän puolestamme!
 
-
 ## Tehtävät
 
-!!! warning "Älä panikoi!" 
+!!! warning "Älä panikoi!"
 
     Tehtävät ovat tämän kurssin teoreettisin ja mahdollisesti eniten päänvaivaa aiheuttava osio. Suhteuta aiheeseen sukeltaminen omiin voimavaroihisi: jos opettajan kirjoittamat Marimo Notebookit osoittautuvat voittamattomiksi, keskity esimerkiksi StatQuestin videoihin ja intuitiotasoon.
-    
+
     Lopulta tärkeintä on, että ymmärrät perusidean backpropagationista ja osaat käyttää sitä syväoppimiskirjastoissa, kuten PyTorchissa. Muista, että haluat vältellä olemasta tämä henkilö:
 
     > "Mitä osaat kertoa algoritmista nimeltään *backpropagation*?" <br>
@@ -421,8 +416,12 @@ Jotta takaisinvirtaus (backpropagation) on mahdollista, verkon täytyy täyttä�
 
 ## Lähteet
 
-[^colahblog]: Olah, C. *Calculus on Computational Graphs: Backpropagation*. 2015. https://colah.github.io/posts/2015-08-Backprop/
-[^essentialmath]: Nield, T. *Essential Math for Data Science*. O'Reilly. 2021.
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^dl4cv]: Rosebrock, A. *Deep Learning for Computer Vision with Python. Starter Bundle. 3rd Edition*. PyImageSearch. 2019.
-[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
+[^colahblog]: Olah, C. _Calculus on Computational Graphs: Backpropagation_. 2015. https://colah.github.io/posts/2015-08-Backprop/
+
+[^essentialmath]: Nield, T. _Essential Math for Data Science_. O'Reilly. 2021.
+
+[^dlwithpython]: Watson, M & Chollet, F. _Deep Learning with Python, Third Edition_. Manning. 2025.
+
+[^dl4cv]: Rosebrock, A. _Deep Learning for Computer Vision with Python. Starter Bundle. 3rd Edition_. PyImageSearch. 2019.
+
+[^geronpytorch]: Géron, A. _Hands-On Machine Learning with Scikit-Learn and PyTorch_. O'Reilly. 2025.

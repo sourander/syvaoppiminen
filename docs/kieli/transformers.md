@@ -7,10 +7,10 @@ priority: 720
 Aloitetaan töksäyttämällä heti alkuun määritelmä siitä, mikä transformer on: se on [Attention is All You Need](https://arxiv.org/abs/1706.03762)-artikkelissa vuonna 2017 esitelty neuroverkkopohjainen arkkitehtuuri, joka on suunniteltu erityisesti käsittelemään kieltä, mutta arkkitehtuuri on sittemmin taipunut myös muun datan käsittelyyn. Artikkelin tiivistelmä kertoo paljon:
 
 > "We propose a new simple network architecture, the Transformer,
-based solely on attention mechanisms, dispensing with recurrence and convolutions
-entirely. Experiments on two machine translation tasks show these models to
-be superior in quality while being more parallelizable and requiring significantly
-less time to train."
+> based solely on attention mechanisms, dispensing with recurrence and convolutions
+> entirely. Experiments on two machine translation tasks show these models to
+> be superior in quality while being more parallelizable and requiring significantly
+> less time to train."
 >
 > – Ashish Vaswani et. al. [^attention2017]
 
@@ -26,11 +26,11 @@ less time to train."
 
 Edellisessä luvussa opit, että LSTM ja GRU mallit paikkasivat RNN:n ongelmia, mutta eivät täysin ratkaisseet niitä. Erityisesti pitkät riippuvuudet ja kontekstin vaikutus sanan merkitykseen aiheuttivat haasteita. Palaako se kuusi vai palaako kuusi? Jääneitä ongelmia olivat siis ainakin [^buildingaiagents]:
 
-* **Kohdistus (engl. *alignment*):** Käännöksessä eri kielten sanajärjestys ja rakenteet vaativat kohdennusta. Esimerkiksi `the cat` kummatkin sanat viittaavat suomenkielisessä käännöksessä many-to-one -hengessä sanaan `kissa`.
-* **Katoavat tai räjähtävät gradientit:** Vaikka LSTM toi ratkaisuja, ongelma ei poistunut.
-* **Ei-parallelisoitavuus:** RNN:n aikaisemmat tilat vaikuttavat nykyiseen tilaan, mikä estää tehokkaan rinnakkaisprosessoinnin.
+- **Kohdistus (engl. _alignment_):** Käännöksessä eri kielten sanajärjestys ja rakenteet vaativat kohdennusta. Esimerkiksi `the cat` kummatkin sanat viittaavat suomenkielisessä käännöksessä many-to-one -hengessä sanaan `kissa`.
+- **Katoavat tai räjähtävät gradientit:** Vaikka LSTM toi ratkaisuja, ongelma ei poistunut.
+- **Ei-parallelisoitavuus:** RNN:n aikaisemmat tilat vaikuttavat nykyiseen tilaan, mikä estää tehokkaan rinnakkaisprosessoinnin.
 
-Transformer-arkkitehtuuri, esitelty vuonna 2017, mullisti tätä siten, että *attention*-mekanismilla korvattiin *recurrence* eli RNN:stä tuttu syklisyys kokonaan. [^dlwithpython] Attention ei itsessään ole uusi keksintö: voit kurkata siihen liittyvää historiaa [Attention (machine learning)](https://en.wikipedia.org/wiki/Attention_(machine_learning))-Wikipedia-artikkelista. Tutustutaan alla tarkemmin siihen, mitä *attention* on.
+Transformer-arkkitehtuuri, esitelty vuonna 2017, mullisti tätä siten, että _attention_-mekanismilla korvattiin _recurrence_ eli RNN:stä tuttu syklisyys kokonaan. [^dlwithpython] Attention ei itsessään ole uusi keksintö: voit kurkata siihen liittyvää historiaa [Attention (machine learning)](<https://en.wikipedia.org/wiki/Attention_(machine_learning)>)-Wikipedia-artikkelista. Tutustutaan alla tarkemmin siihen, mitä _attention_ on.
 
 ## Attention
 
@@ -48,18 +48,17 @@ graph LR
     class C orange;
 ```
 
-Sanan kohdalla *embedding* tai *context vector* on jo tämän kurssin harjoituksissa osoittautunut hyödylliseksi, viitaten siihen, että Zellig Harrisin *distribution hypothesis*-teorialla on paikkansa maailmassa. Entäpä kun pitää tiivistää kokonaisuus, joka on merkittävästi monimutkaisempi kuin yksittäinen sana (tai sanan osatekijä, wordpiece)? Tarkastellaan seuraavaa kaoottista virkettä:
+Sanan kohdalla _embedding_ tai _context vector_ on jo tämän kurssin harjoituksissa osoittautunut hyödylliseksi, viitaten siihen, että Zellig Harrisin _distribution hypothesis_-teorialla on paikkansa maailmassa. Entäpä kun pitää tiivistää kokonaisuus, joka on merkittävästi monimutkaisempi kuin yksittäinen sana (tai sanan osatekijä, wordpiece)? Tarkastellaan seuraavaa kaoottista virkettä:
 
 > "Nimikirjassa oleva merkintä virantoimituksesta pidättämisestä on poistettava, jos virantoimituksesta pidättämistä koskeva päätös tai virantoimituksesta pidättämisen perusteena ollut irtisanominen tai virkasuhteen purkamista koskeva päätös kumotaan taikka virkamiehen virantoimituksesta pidättämisen syynä olleessa oikeudenkäynnissä ei ole todettu syyllistyneen rangaistavaan tekoon."
 >
 > — 1322/89, § 3 [^nimikirja]
 
-Kykenetkö tulkitsemaan lauseen sisällön kertalukemalla vasemmalta oikealle, vai joudutko välillä palaamaan taaksepäin? Enkooder-dekooder-malli ja sen *context embedding* ei välttämättä juuri edusta sitä, kuinka ihminen tulkitsee tekstikokonaisuuden. Ihminen esimerkiksi silmäilee edes-takaisin ja tulkitsee yksittäisten sanojen merkityksen kontekstin valossa. ==Attention voidaan nähdä tämän prosessin mimikointina==. [^ldl]
+Kykenetkö tulkitsemaan lauseen sisällön kertalukemalla vasemmalta oikealle, vai joudutko välillä palaamaan taaksepäin? Enkooder-dekooder-malli ja sen _context embedding_ ei välttämättä juuri edusta sitä, kuinka ihminen tulkitsee tekstikokonaisuuden. Ihminen esimerkiksi silmäilee edes-takaisin ja tulkitsee yksittäisten sanojen merkityksen kontekstin valossa. ==Attention voidaan nähdä tämän prosessin mimikointina==. [^ldl]
 
 !!! tip
 
     Kyseinen lause on poimittu Kielikellon artikkelista, jossa käsitellään säädöskielen virke- ja lauserakenteen ongelmia. Käy kurkkaamassa, kuinka Kielikellon artikkelissa sama lause on selkeytetty listan avulla. [^kielikello]
-
 
 Tavallisen, aiemmin kurssilta tutun seq2seq RNN:n **kiinteän pituuden kontekstivektorista** tulee siis pullonkaula [^ml-algos-depth] [^llmfromscratch]. Attention-mekanismi tarjoaa tähän ratkaisuna **dynaamisen kontekstivektorin**, joka lasketaan uudestaan joka ikiselle dekooderin aika-askeleelle [^buildingaiagents]. Tällöin Attention Decoder voi itsenäisesti päättää, mihin se keskittää huomionsa dekoodatessaan käännöstä.
 
@@ -69,21 +68,20 @@ Tavallisen, aiemmin kurssilta tutun seq2seq RNN:n **kiinteän pituuden konteksti
 
 ![](../images/720_attention_unrolled.png)
 
-**Kuva 1:** *Kuvassa näkyy vasemmalla enkooderi-RNN ja oikealla dekooderi-RNN. Näiden välissä on attention-mekanismi, joka saa syötteenä kaikkien aika-askeleiden piilotetut tilat. Kullekin dekooderin aika-askeleelle lasketaan kohdistuspisteet (alignment scores), jotka kuvaavat sitä, kuinka hyvin dekooderin nykyinen tila vastaa kutakin enkooderin tilaa. Kohdistuspisteet voidaan laskea monella tavalla, joista yksi on pistetulo (dot product). Kosinisamankaltaisuus saadaan pistetulosta, jos vektorit normalisoidaan.* [^ldl]
-
+**Kuva 1:** _Kuvassa näkyy vasemmalla enkooderi-RNN ja oikealla dekooderi-RNN. Näiden välissä on attention-mekanismi, joka saa syötteenä kaikkien aika-askeleiden piilotetut tilat. Kullekin dekooderin aika-askeleelle lasketaan kohdistuspisteet (alignment scores), jotka kuvaavat sitä, kuinka hyvin dekooderin nykyinen tila vastaa kutakin enkooderin tilaa. Kohdistuspisteet voidaan laskea monella tavalla, joista yksi on pistetulo (dot product). Kosinisamankaltaisuus saadaan pistetulosta, jos vektorit normalisoidaan._ [^ldl]
 
 #### Query, Key ja Value (Q, K, V)
 
-Attention-mekanismissa käytetyt termit *Query*, *Key* ja *Value* on lainattu tiedonhaun ja tietokantojen maailmasta, joissa niitä käytetään informaation järjestämiseen ja hakemiseen. Kuten Géron kirjoittaa, nämä termit ovat modernin implementaation mukaisia termejä aiemmin esitellyille käsitteille (eli dekooderin nykyiselle piilotilalle $h_t$ sekä enkooderin piilotiloille $h_s$). [^geronpytorch]
+Attention-mekanismissa käytetyt termit _Query_, _Key_ ja _Value_ on lainattu tiedonhaun ja tietokantojen maailmasta, joissa niitä käytetään informaation järjestämiseen ja hakemiseen. Kuten Géron kirjoittaa, nämä termit ovat modernin implementaation mukaisia termejä aiemmin esitellyille käsitteille (eli dekooderin nykyiselle piilotilalle $h_t$ sekä enkooderin piilotiloille $h_s$). [^geronpytorch]
 
 ```python
 def attention(QUERY, KEY, VALUE):
     # Calculate alignment scores (e.g., dot product)
     scores = np.dot(QUERY, KEY.T) # (1)!
-    
+
     # Normalize scores to get attention weights
     attention_weights = softmax(scores)
-    
+
     # Compute the attention vector as a weighted sum of values
     return np.dot(attention_weights, VALUE) # (2)!
 ```
@@ -93,15 +91,15 @@ def attention(QUERY, KEY, VALUE):
 
 Intuition tasolla nämä kolme termiä voidaan ymmärtää seuraavasti:
 
-* **Query (Kysely):** Vastaa tietokantahakua. [^llmfromscratch]
-* **Key (Avain):** Toimii kuten tietokannan avain indeksoinnissa. Sekvenssin kaikilla jäsenillä on oma avain. [^llmfromscratch]
-* **Value (Arvo):**  Vastaa avain-arvo -parin varsinaista sisältöä tietokannassa. [^llmfromscratch]
-  
+- **Query (Kysely):** Vastaa tietokantahakua. [^llmfromscratch]
+- **Key (Avain):** Toimii kuten tietokannan avain indeksoinnissa. Sekvenssin kaikilla jäsenillä on oma avain. [^llmfromscratch]
+- **Value (Arvo):** Vastaa avain-arvo -parin varsinaista sisältöä tietokannassa. [^llmfromscratch]
+
 Value edustaa siis haluttua informaatiota. Kun malli on avainten perusteella päätellyt, mitkä syötteen osat ovat olennaisimpia kyselylle, se hakee hyödynnettäväksi niitä vastaavat arvot. (BY-NC-ND) [^llmfromscratch]
 
 ![](../images/720_TransformerBlockSACross.svg)
 
-**Kuva 2:** *Kuvan Q, V ja K laskelmat ovat Transformers-arkkitehtuurista, mutta sama logiikka pätee myös RNN:n enkooderi-dekooderi-arkkitehtuurissa. Huomaa, että Q, K ja V lasketaan lineaarisella projektiolla syöte-embeddingeistä. Tässä laskelma on matriisimuodossa. $N$ on input-vektorin dimensio eli sanojen määrä. $D$ on embedding-koko. Softmax ajetaan sarakekohtaisesti.* [^udlbook]
+**Kuva 2:** _Kuvan Q, V ja K laskelmat ovat Transformers-arkkitehtuurista, mutta sama logiikka pätee myös RNN:n enkooderi-dekooderi-arkkitehtuurissa. Huomaa, että Q, K ja V lasketaan lineaarisella projektiolla syöte-embeddingeistä. Tässä laskelma on matriisimuodossa. $N$ on input-vektorin dimensio eli sanojen määrä. $D$ on embedding-koko. Softmax ajetaan sarakekohtaisesti._ [^udlbook]
 
 Näillä kaikilla kolmella – Q, K, V – on erilaiset roolit, mutta niiden kaikkien laskenta on samankaltaista: ne saadaan lineaarisella projektiolla syöte-embeddingeistä. Tämä tarkoittaa, että syötteen embeddingit muunnetaan kolmeen eri avaruuteen (Q, K ja V) käyttämällä kolmea erillistä painomatriisia. Näin malli oppii erottamaan, miten se hakee tietoa (Q), miten se vertaa sitä syötteeseen (K) ja mitä tietoa se lopulta hyödyntää (V). [^transformers-def-guide]
 
@@ -109,16 +107,16 @@ Näillä kaikilla kolmella – Q, K, V – on erilaiset roolit, mutta niiden kai
 
 Alkuperäisen Attention is All you Need -julkaisun transformer-arkkitehtuuri on pähkinänkuoressa [^ldl] [^attention2017]:
 
-* Encoder-Decoder-arkkitehtuuri, jossa on attention-mekanismi.
-* ... tarkemmin multi-head self-attention.
-* Positionaalinen koodaus mallintaa sanajärjestystä.
-* Ei rekurrenssia, vaan kaikki laskelmat tehdään rinnakkain.
+- Encoder-Decoder-arkkitehtuuri, jossa on attention-mekanismi.
+- ... tarkemmin multi-head self-attention.
+- Positionaalinen koodaus mallintaa sanajärjestystä.
+- Ei rekurrenssia, vaan kaikki laskelmat tehdään rinnakkain.
 
 Tutustutaan alla sen pariin merkittävimpään osatekijään otsikko kerrallaan.
 
 ### Self-Attention
 
-Attention-mekanismin menestys on synnyttänyt useita variaatioita eri tappiofunktioita käyttäen. Näistä erityisesti *self-attention* on merkittävä, sillä se poimii informaatiota suoraan syötteestä itsestään ilman tarvetta verrata sitä mihinkään ulkoiseen tietoon. [^buildingaiagents] Toisin sanoen linkki dekooderiin katkaistaan: myös $Q$ tulee syötteestä; ei enkooderin piilotiloista.
+Attention-mekanismin menestys on synnyttänyt useita variaatioita eri tappiofunktioita käyttäen. Näistä erityisesti _self-attention_ on merkittävä, sillä se poimii informaatiota suoraan syötteestä itsestään ilman tarvetta verrata sitä mihinkään ulkoiseen tietoon. [^buildingaiagents] Toisin sanoen linkki dekooderiin katkaistaan: myös $Q$ tulee syötteestä; ei enkooderin piilotiloista.
 
 > "Self-attention is the key component of transformer architecture. A transformer is a Seq2Seq model that uses attention in the encoder as well as the decoder, thus eliminating the need for RNNs"
 >
@@ -126,9 +124,9 @@ Attention-mekanismin menestys on synnyttänyt useita variaatioita eri tappiofunk
 
 ![](../images/720_TransformerBlockSA.svg)
 
-**Kuva 3:** *Self-attention-mekanismissa sama sekvenssi toimii sekä queryn, keyn että valuen laskennan perustana. Tämä katkaisee kytköksen decoderiin. (BY-NC-ND)* [^udlbook]
+**Kuva 3:** _Self-attention-mekanismissa sama sekvenssi toimii sekä queryn, keyn että valuen laskennan perustana. Tämä katkaisee kytköksen decoderiin. (BY-NC-ND)_ [^udlbook]
 
-Self-attentionin perusajatusta voidaan havainnollistaa kirjastometaforalla. Kuvittele, että etsit kirjastosta tietoa **Marsin kolonialisointia** käsittelevää esseetä varten (*Query*). Sinun ei tarvitse lukea jokaista hyllyssä olevaa kirjaa kannesta kanteen (*Value*) löytääksesi oikean teoksen. Sen sijaan selaat kirjojen selkämyksiä ja otsikoita (*Key*) löytääksesi ne, jotka vastaavat hakua. Toisin sanoen, self-attention on menetelmä, jonka avulla malli voi etsiä kontekstista juuri sen tiedon tai "edustuksen", jota se sillä hetkellä tarvitsee. [^buildingaiagents]
+Self-attentionin perusajatusta voidaan havainnollistaa kirjastometaforalla. Kuvittele, että etsit kirjastosta tietoa **Marsin kolonialisointia** käsittelevää esseetä varten (_Query_). Sinun ei tarvitse lukea jokaista hyllyssä olevaa kirjaa kannesta kanteen (_Value_) löytääksesi oikean teoksen. Sen sijaan selaat kirjojen selkämyksiä ja otsikoita (_Key_) löytääksesi ne, jotka vastaavat hakua. Toisin sanoen, self-attention on menetelmä, jonka avulla malli voi etsiä kontekstista juuri sen tiedon tai "edustuksen", jota se sillä hetkellä tarvitsee. [^buildingaiagents]
 
 !!! danger
 
@@ -136,20 +134,20 @@ Self-attentionin perusajatusta voidaan havainnollistaa kirjastometaforalla. Kuvi
 
 ### Multi-Head Self-Attention
 
-Jos kytket samaan inputtiin monta paralleelia self-attention blokkia, sinulla on **multi-head**-ratkaisu käsissäsi. Kullakin niistä on oma $Q$, $K$ ja $V$ matriisi ja kukin oppii omat painonsa. Lopuksi lähdöt ketjutetaan (engl. concatenate) ja yhdistetään taas kerran uudella lineaarisella projisiolla – eli tarvitaan uusia koulutettavia parametreja. Kurssikirjassa multi-headin merkitystä kuvataan näin: *"Multiple heads seem to be necessary to make self-attention work well. It has been speculated that they make the self-attention network more robust to bad initializations."* [^udlbook]
+Jos kytket samaan inputtiin monta paralleelia self-attention blokkia, sinulla on **multi-head**-ratkaisu käsissäsi. Kullakin niistä on oma $Q$, $K$ ja $V$ matriisi ja kukin oppii omat painonsa. Lopuksi lähdöt ketjutetaan (engl. concatenate) ja yhdistetään taas kerran uudella lineaarisella projisiolla – eli tarvitaan uusia koulutettavia parametreja. Kurssikirjassa multi-headin merkitystä kuvataan näin: _"Multiple heads seem to be necessary to make self-attention work well. It has been speculated that they make the self-attention network more robust to bad initializations."_ [^udlbook]
 
-Voita ja kumppanit tutkivat 2019 asiaa, ja päättelivät, että *"only a small subset of heads appear to be important for the translation task. Important heads have one or more interpretable functions in the model, including attending to adjacent
-words and tracking specific syntactic relations.* [^voita2019]. Eli eri päät löytävät erilaisia tokeneiden välisiä kytköksiä, mutta kaikki niistä eivät ole välttämättä merkityksellisiä, joten mallin parametrikokoa voi pienentää *pruning*-tekniikalla: eli katkomalla päitä kuin Hercules Hydralta.
+Voita ja kumppanit tutkivat 2019 asiaa, ja päättelivät, että _"only a small subset of heads appear to be important for the translation task. Important heads have one or more interpretable functions in the model, including attending to adjacent
+words and tracking specific syntactic relations._ [^voita2019]. Eli eri päät löytävät erilaisia tokeneiden välisiä kytköksiä, mutta kaikki niistä eivät ole välttämättä merkityksellisiä, joten mallin parametrikokoa voi pienentää _pruning_-tekniikalla: eli katkomalla päitä kuin Hercules Hydralta.
 
 ![](../images/720_TransformerBlock.svg)
 
-**Kuva 4:** *Tähän mennessä vastaan tulleet osatekijät kun kytkee yhteen, ja ujuttaa väliin layer normalizationit regulaatoimaan, saamme kuvassa näkyvän transformer-blokin: multi-head self-attention, layer normalization, MLP sekä vielä yksi layer normalization. Näitä voi kytkeä peräkkäin samalla tavalla kuin vaikkapa aiemmin nähtyjä Conv2D-blokkeja. (BY-NC-ND) [^udlbook]*
+**Kuva 4:** _Tähän mennessä vastaan tulleet osatekijät kun kytkee yhteen, ja ujuttaa väliin layer normalizationit regulaatoimaan, saamme kuvassa näkyvän transformer-blokin: multi-head self-attention, layer normalization, MLP sekä vielä yksi layer normalization. Näitä voi kytkeä peräkkäin samalla tavalla kuin vaikkapa aiemmin nähtyjä Conv2D-blokkeja. (BY-NC-ND) [^udlbook]_
 
 Se, mitä tässä materiaaleissa ei käsitellä, on ==masked== multi-head self-attention, joka on osa Transformer-dekoorin rakennetta.
 
 ### Positional Encoding
 
-Transformer-arkkitehtuurissa kaikki laskennat tehdään rinnakkain, paralleelisti, mikä ajaa siihen, että RNN:n sekvenssijärjestyksen tuoma sanajärjestys kadotetaan. Ongelma ratkaistaan lisäämällä *positional encoding* kuhunkin embedding-vektoriin. Tämä encoding on vektori, joka ynnätään elementti elementiltä syötteeseen. Eli jos syötteen embedding on $e$ ja positionaalinen encoding on $p$, syötteen embedding muunnetaan $e' = e + p$. [^ldl] Tämän järjestystä kuvaavan vektorin voi joko oppia koulutuksessa tai laskea. Alkuperäisessä artikkelissa käytettiin laskukaavaa, joka hyödyntää sinin ja kosinin funktioita eri taajuuksilla. [^attention2017] Tämä kaava on poikkeaa hieman parillisten ja parittomien indeksien osalta, mutta perusidea on sama: eri taajuuksilla olevat sinit ja kosinit luovat uniikkeja positionaalisia koodeja, jotka auttavat mallia erottamaan sanojen järjestyksen. Kaava on seuraava:
+Transformer-arkkitehtuurissa kaikki laskennat tehdään rinnakkain, paralleelisti, mikä ajaa siihen, että RNN:n sekvenssijärjestyksen tuoma sanajärjestys kadotetaan. Ongelma ratkaistaan lisäämällä _positional encoding_ kuhunkin embedding-vektoriin. Tämä encoding on vektori, joka ynnätään elementti elementiltä syötteeseen. Eli jos syötteen embedding on $e$ ja positionaalinen encoding on $p$, syötteen embedding muunnetaan $e' = e + p$. [^ldl] Tämän järjestystä kuvaavan vektorin voi joko oppia koulutuksessa tai laskea. Alkuperäisessä artikkelissa käytettiin laskukaavaa, joka hyödyntää sinin ja kosinin funktioita eri taajuuksilla. [^attention2017] Tämä kaava on poikkeaa hieman parillisten ja parittomien indeksien osalta, mutta perusidea on sama: eri taajuuksilla olevat sinit ja kosinit luovat uniikkeja positionaalisia koodeja, jotka auttavat mallia erottamaan sanojen järjestyksen. Kaava on seuraava:
 
 $$
 element_{(pos, i)} = \begin{cases}
@@ -160,9 +158,9 @@ $$
 
 Jossa:
 
-* $pos$ on sanan paikka sekvenssissä (esim. 0, 1, 2, ...)
-* $i$ on embedding-vektorin elementin indeksi (esim. 0, 1, 2, ...)
-* $d$ on embedding-vektorin koko (esim. 512)
+- $pos$ on sanan paikka sekvenssissä (esim. 0, 1, 2, ...)
+- $i$ on embedding-vektorin elementin indeksi (esim. 0, 1, 2, ...)
+- $d$ on embedding-vektorin koko (esim. 512)
 
 ### Toiminta kokonaisuutena
 
@@ -170,50 +168,46 @@ Jossa:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/eMlx5fFNoYc?si=998SG9QHp6ENmjuQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-**Video 1:** *3Blue1Brownin video, Attention in transformers, step-by-step | Deep Learning Chapter 6, selventää hyvin attention-mekanismia transformer-arkkitehtuurissa*
+**Video 1:** _3Blue1Brownin video, Attention in transformers, step-by-step | Deep Learning Chapter 6, selventää hyvin attention-mekanismia transformer-arkkitehtuurissa_
 
-On äärimmäisen suositeltavaa katsoa myös soittolistan seuraava video, [How might LLMs store facts | Deep Learning Chapter 7](https://youtu.be/9-Jl0dxWQs8?si=1tflE3dKxDw7baCv), joka selventää, mihin (kenties) tieto tallentuu transformer-mallissa. Eli siis: kuinka malli kykenee jatkamaan lausetta, joka vaatii tosielämän faktatietoa, kuten *"Mika Häkkinen on kuuluisa urheilija lajissa..."*.
+On äärimmäisen suositeltavaa katsoa myös soittolistan seuraava video, [How might LLMs store facts | Deep Learning Chapter 7](https://youtu.be/9-Jl0dxWQs8?si=1tflE3dKxDw7baCv), joka selventää, mihin (kenties) tieto tallentuu transformer-mallissa. Eli siis: kuinka malli kykenee jatkamaan lausetta, joka vaatii tosielämän faktatietoa, kuten _"Mika Häkkinen on kuuluisa urheilija lajissa..."_.
 
 On syytä huomata, että vaikka Transformer ei sisällä rekursiivisia tai konvoluutiokerroksia perinteisessä mielessä, dekooderi toimii autoregressiivisesti – se tuottaa sanoja yksi kerrallaan ja syöttää edellisen tulosteen takaisin seuraavan askeleen syötteeksi. Tämä muistuttaa RNN:n takaisinkytkentää, mutta liittyy mallin käyttötapaan eikä itse arkkitehtuuriin. [^ldl]
 
-Jos arkkitehtuuria vertaa konvoluutioverkkoihin, on kiintoisaa, että vaikka Transformer ei eksplisiittisesti hyödynnä konvoluutioita, self-attention-kerrokset oppivat käytännössä usein konvoluutiomaisia operaatioita painojen jakamisen kautta. Oleellinen ero kuitenkin on, että self-attention voi kohdistua mihin tahansa syötteen kohtaan, kun taas konvoluutio rajautuu vain ytimen (engl. *kernel*) kattamiin naapuripositioihin. [^ldl]
+Jos arkkitehtuuria vertaa konvoluutioverkkoihin, on kiintoisaa, että vaikka Transformer ei eksplisiittisesti hyödynnä konvoluutioita, self-attention-kerrokset oppivat käytännössä usein konvoluutiomaisia operaatioita painojen jakamisen kautta. Oleellinen ero kuitenkin on, että self-attention voi kohdistua mihin tahansa syötteen kohtaan, kun taas konvoluutio rajautuu vain ytimen (engl. _kernel_) kattamiin naapuripositioihin. [^ldl]
 
 Lopulta tätä kokonaisuutta voi tiivistää siten, että kyseessä on yhä enkooderi-dekooderi-arkkitehtuuri, mutta rinnakkaistettavuus erottaa sen RNN-pohjaisista malleista. Alkuperäisessä julkaisussa arkkitehtuuria käytettiin nimenomaan kääntämiseen, mutta Transformer suoriutuu myös muista tehtävästä. Pelkästään kielen käsittelyssä siitä löytyy muunnelmia, kuten GPT ja BERT. [^ldl]
-
-
 
 ## Arkkitehtuurin variaatiot
 
 ### GPT
 
-GPT on OpenAI:n vuonna 2019 julkaisema malli, joka esiteltiin otsikolla *Improving Language Understanding by Generative Pre-Training* [^gpt]. Malli on *decoder only*, eli jos katsot tyypillistä Encoder-Decoder-arkkitehtuurin kuvaajaa, GPT hyödyntää vain sen oikeaa puolta eli dekooderia. GPT:ssä *masked multi-head self-attention* estää mallia “katsomasta tulevaisuuteen” koulutuksessa ja generoinnissa. Sen sijaan **encoder–decoder cross-attention** (eli “attention enkooderin yli”) puuttuu, koska enkooderia ei ole. Ekman muotoilee tämän näin: 
+GPT on OpenAI:n vuonna 2019 julkaisema malli, joka esiteltiin otsikolla _Improving Language Understanding by Generative Pre-Training_ [^gpt]. Malli on _decoder only_, eli jos katsot tyypillistä Encoder-Decoder-arkkitehtuurin kuvaajaa, GPT hyödyntää vain sen oikeaa puolta eli dekooderia. GPT:ssä _masked multi-head self-attention_ estää mallia “katsomasta tulevaisuuteen” koulutuksessa ja generoinnissa. Sen sijaan **encoder–decoder cross-attention** (eli “attention enkooderin yli”) puuttuu, koska enkooderia ei ole. Ekman muotoilee tämän näin:
 
 > "One key difference when using the decoder as a standalone language model is that there is no need to include the attention layer that attends to the intermediate representation produced by the encoder, simply because the encoder does not exist."
 >
 > — Ekman [^ldl]
 
-Termit *generative* ja *pre-training* ovat otsikossa paljon merkitsevät. Generative viittaa mallin ensisijaiseen tehtävään eli uuden tekstin generointiin (autocompletion). Pretrained viittaa siihen, että malli esikoulutetaan valtavalla datamäärällä ennustamaan seuraavaa tokenia, ja on oletus, että myöhemmin sille tehdään siirtovaikutuksena hienosäätöä (*fine tuning*). Tunnistat tämän esikoulutetun mallin esimerkiksi termistä *base*, kuten Poro2-mallissa [Llama-Poro-2-70B-base](https://huggingface.co/LumiOpen/Llama-Poro-2-70B-base). Tämä malli ei kuitenkaan ole kovin keskustelevainen. Ihmisohjeistusta noudattavan, hienosäädetyn mallin tunnistat tyypillisesti sanasta *instruct*, kuten Poro2-mallissa [Llama-Poro-2-70B-Instruct](https://huggingface.co/LumiOpen/Llama-Poro-2-70B-Instruct).
+Termit _generative_ ja _pre-training_ ovat otsikossa paljon merkitsevät. Generative viittaa mallin ensisijaiseen tehtävään eli uuden tekstin generointiin (autocompletion). Pretrained viittaa siihen, että malli esikoulutetaan valtavalla datamäärällä ennustamaan seuraavaa tokenia, ja on oletus, että myöhemmin sille tehdään siirtovaikutuksena hienosäätöä (_fine tuning_). Tunnistat tämän esikoulutetun mallin esimerkiksi termistä _base_, kuten Poro2-mallissa [Llama-Poro-2-70B-base](https://huggingface.co/LumiOpen/Llama-Poro-2-70B-base). Tämä malli ei kuitenkaan ole kovin keskustelevainen. Ihmisohjeistusta noudattavan, hienosäädetyn mallin tunnistat tyypillisesti sanasta _instruct_, kuten Poro2-mallissa [Llama-Poro-2-70B-Instruct](https://huggingface.co/LumiOpen/Llama-Poro-2-70B-Instruct).
 
-Jo aiemmin mainittu julkaisun Figure 1 [^gpt] paljastaa myös eri tehtävät, joihin GPT:tä tuunattiin. Tämä on hienosäätö siis tyypillinen *supervised learning* koulutus. Malliin kiinnitetään uusi luokittelupää, aivan kuten konvoluutioverkkojen kanssa: alkuperäinen luokittelu sisältää `n_vocabulary`-kokoisen pään, uusi sisältää halutun tehtävän mukaisen määrän, ja hienosäädö voidaan kohdistaa halutulle määrälle kerroksia lopusta alkaen [^llmfromscratch]. Tehtävä määrittää siis lähtökerroksen sekä syötteen muodon. Esimerkiksi kahden lauseen samankaltaisuutta (similarity) tunnistava malli koulutettaan antamalla syötteeksi lauseet A ja B, jotka liitetään toisiinsa erikoismerkillä (esim. `[SEP]`). Tämä ajetaan kahdesti: `A [SEP] B` ja `B [SEP] A`. Näille kahdelle ennusteelle tehdään elementtikohtainen summa ja tulos syötetään kurssilla jo monta kertaa tutuksi tulleelle lineaariselle kerrokselle. Tekstin luokittelussa malli on sen sijaan hyvinkin samanlainen kuin vaikkapa kuvien suhteen konvoluutioverkko. Teksti syötetään sisään, ulos tulee transformerin tuottama embedding, joka syötetään lineaariselle kerrokselle, joka tuottaa luokittelutuloksen. [^gpt]
+Jo aiemmin mainittu julkaisun Figure 1 [^gpt] paljastaa myös eri tehtävät, joihin GPT:tä tuunattiin. Tämä on hienosäätö siis tyypillinen _supervised learning_ koulutus. Malliin kiinnitetään uusi luokittelupää, aivan kuten konvoluutioverkkojen kanssa: alkuperäinen luokittelu sisältää `n_vocabulary`-kokoisen pään, uusi sisältää halutun tehtävän mukaisen määrän, ja hienosäädö voidaan kohdistaa halutulle määrälle kerroksia lopusta alkaen [^llmfromscratch]. Tehtävä määrittää siis lähtökerroksen sekä syötteen muodon. Esimerkiksi kahden lauseen samankaltaisuutta (similarity) tunnistava malli koulutettaan antamalla syötteeksi lauseet A ja B, jotka liitetään toisiinsa erikoismerkillä (esim. `[SEP]`). Tämä ajetaan kahdesti: `A [SEP] B` ja `B [SEP] A`. Näille kahdelle ennusteelle tehdään elementtikohtainen summa ja tulos syötetään kurssilla jo monta kertaa tutuksi tulleelle lineaariselle kerrokselle. Tekstin luokittelussa malli on sen sijaan hyvinkin samanlainen kuin vaikkapa kuvien suhteen konvoluutioverkko. Teksti syötetään sisään, ulos tulee transformerin tuottama embedding, joka syötetään lineaariselle kerrokselle, joka tuottaa luokittelutuloksen. [^gpt]
 
 GPT:n voi siis tuunata tekemään erilaisia, summaratiivisia tehtäviä, mutta se on selkeästi omalla kotikentällään, kun haasteena on tekstin generointi. Näitä tekstin summarointitehtäviä varten löytyy toinen malli, BERT, joka istuu arkkitehtuuriltaan ensisijaisesti juuri näihin tehtäviin. Siitä lisää seuraavaksi.
 
 ### BERT
 
-
-BERT-malliin kannattaa tutustua sen alkuperäisen *BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding*-julkaisun avulla. Malli on *encoder only*, päinvastoin kuin GPT, BERT hyödyntää vain tutun kuvaajan vasenta puoliskoa eli enkooderia. Termi *bidirectional* on tärkeä, ja viittaa siihen, että attention kohdistuu sekä vasemmalle että oikealle puolelle syötettä. Koulutuksessa tämä olisi sinänsä haaste, että kukin sana *näkisi itsensä*. [^bert]
+BERT-malliin kannattaa tutustua sen alkuperäisen _BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding_-julkaisun avulla. Malli on _encoder only_, päinvastoin kuin GPT, BERT hyödyntää vain tutun kuvaajan vasenta puoliskoa eli enkooderia. Termi _bidirectional_ on tärkeä, ja viittaa siihen, että attention kohdistuu sekä vasemmalle että oikealle puolelle syötettä. Koulutuksessa tämä olisi sinänsä haaste, että kukin sana _näkisi itsensä_. [^bert]
 
 > "In order to train a deep bidirectional representation, we simply mask some percentage of the input tokens at random, and then predict those masked
 > tokens. We refer to this procedure as a “masked LM” (MLM)"
 >
 > — Devlin et. al. [^bert]
 
-BERT:n esikoulutus tehdään samanaikaisesti kahta eri haastetta käyttäen: MLM ja *next-sentence prediction*. Esikoulutettu malli osaa siis täyttää puuttuvia sanoja syötteestä tai kertoa, kuuluuko lause `B` lauseen `A` perään. [^ldl]
+BERT:n esikoulutus tehdään samanaikaisesti kahta eri haastetta käyttäen: MLM ja _next-sentence prediction_. Esikoulutettu malli osaa siis täyttää puuttuvia sanoja syötteestä tai kertoa, kuuluuko lause `B` lauseen `A` perään. [^ldl]
 
-BERT hienosäädetään vastaavalla tavalla kuin GPT, mutta alkuperäisessä toteutetuksessa kaikki parametrit hienosäädetään: ei vain loppupäätä [^bert]. Kurssikirjan mukaan myös partial fine-tuning on kuitenkin myös vaihtoehto [^geronpytorch]. Hienosäätö on joka tapauksessa verrattain kevyt: *"Compared to pre-training, fine-tuning is relatively inexpensive. All of the results in the paper can be replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU, starting from the exact same pre-trained model"* [^bert]. Ennen BERT-mallia *transfer learning* tyypillisesti tarkoitti NLP:n kontekstissa embeddingin käyttöä toisessa kontekstissa. Huomioi, että BERT on tosiaan *enkooderi*. Se siis *enkoodaa* syötteen sisältämän merkityksen vektoriksi. Se tekee tämän yhdenaikaisesti ilman autoregressiota. BERT tuunataan usein tehtäviin kuten sentimenttianalyysi, roskapostiluokittelu, kahden syötelauseen yhteys toisiinsa (esim. väite pätee, ei päde, neutraali), Named Entity Recognition (NER), vastauksen erottaminen suuresta määrästä tekstiä tai muutoin tiivistää tekstiä. BERT ei siis ole suunniteltu tuottamaan tekstiä, vaan ymmärtämään sitä. [^ldl] Kaikkia tehtäviä yhdistää se, että ne erottavat informaatiota syötteestä, mutta eivät tuota uutta tekstiä.
+BERT hienosäädetään vastaavalla tavalla kuin GPT, mutta alkuperäisessä toteutetuksessa kaikki parametrit hienosäädetään: ei vain loppupäätä [^bert]. Kurssikirjan mukaan myös partial fine-tuning on kuitenkin myös vaihtoehto [^geronpytorch]. Hienosäätö on joka tapauksessa verrattain kevyt: _"Compared to pre-training, fine-tuning is relatively inexpensive. All of the results in the paper can be replicated in at most 1 hour on a single Cloud TPU, or a few hours on a GPU, starting from the exact same pre-trained model"_ [^bert]. Ennen BERT-mallia _transfer learning_ tyypillisesti tarkoitti NLP:n kontekstissa embeddingin käyttöä toisessa kontekstissa. Huomioi, että BERT on tosiaan _enkooderi_. Se siis _enkoodaa_ syötteen sisältämän merkityksen vektoriksi. Se tekee tämän yhdenaikaisesti ilman autoregressiota. BERT tuunataan usein tehtäviin kuten sentimenttianalyysi, roskapostiluokittelu, kahden syötelauseen yhteys toisiinsa (esim. väite pätee, ei päde, neutraali), Named Entity Recognition (NER), vastauksen erottaminen suuresta määrästä tekstiä tai muutoin tiivistää tekstiä. BERT ei siis ole suunniteltu tuottamaan tekstiä, vaan ymmärtämään sitä. [^ldl] Kaikkia tehtäviä yhdistää se, että ne erottavat informaatiota syötteestä, mutta eivät tuota uutta tekstiä.
 
-On suositeltavaa tutustua esimerkiksi kurssikirjan [^geronpytorch] avulla siihen, kuinka DistilBERT on koulutettu *model distillation* tekniikalla, jossa opettajamalli kouluttaa pienempää oppilasmallia. Tähän DistilBERT:iin olet jo ainakin nimen osalta törmännyt heti kurssin ensimmäisillä luennoilla. Toivon mukaan huomaat, että nyt sinulla on valmiudet ymmärtää mallin arkkitehtuuri ja koulutus, vaikka kurssin alussa olisit ollut AI-ummikko.
-
+On suositeltavaa tutustua esimerkiksi kurssikirjan [^geronpytorch] avulla siihen, kuinka DistilBERT on koulutettu _model distillation_ tekniikalla, jossa opettajamalli kouluttaa pienempää oppilasmallia. Tähän DistilBERT:iin olet jo ainakin nimen osalta törmännyt heti kurssin ensimmäisillä luennoilla. Toivon mukaan huomaat, että nyt sinulla on valmiudet ymmärtää mallin arkkitehtuuri ja koulutus, vaikka kurssin alussa olisit ollut AI-ummikko.
 
 !!! tip "Tulevaisuus?"
 
@@ -223,8 +217,8 @@ On suositeltavaa tutustua esimerkiksi kurssikirjan [^geronpytorch] avulla siihen
 
 Tekstiä tuottavien tai kääntävien mallien laadun mittaaminen on vaikeampaa kuin luokittelun, sillä "oikeita" vastauksia voi olla useita, ja siksi yksinkertainen tarkkuusprosentti (accuracy) ei riitä – tai ei ole edes määriteltävissä. Ihminen voi arvioida tuotetun tekstin laatua käsin, mutta tämä on aikaa vievää ja subjektiivista. [^ml-q-ai] Joitakin suorituskykymittareita siis tarvitaan, mutta on ymmärrettävä, että ne eivät tulkitse laatua kuten ihminen.
 
-* **Ulkoiset (engl. extrinsic)**: Mittaavat mallin suorituskykyä todellisessa tehtävässä vertaamalla mallin tuottamaa tulosta ihmisen tuottamaan referenssiin. Esimerkkejä ovat BLEU, ROUGE ja BertSCORE.
-* **Sisäiset (engl. intrinsic)**: Mittaavat mallin tuottaman tekstin sisäisten ominaisuuksien perusteella, ilman ulkoista sovellusta tai tehtävää. Tätä edustaa alla Perplexity.
+- **Ulkoiset (engl. extrinsic)**: Mittaavat mallin suorituskykyä todellisessa tehtävässä vertaamalla mallin tuottamaa tulosta ihmisen tuottamaan referenssiin. Esimerkkejä ovat BLEU, ROUGE ja BertSCORE.
+- **Sisäiset (engl. intrinsic)**: Mittaavat mallin tuottaman tekstin sisäisten ominaisuuksien perusteella, ilman ulkoista sovellusta tai tehtävää. Tätä edustaa alla Perplexity.
 
 Perplexity, sisäinen suorituskykymittari, voidaan rinnastaa luokittelussa käytettävään ristientropia-tappiofunktioon. Mitä matalampi perplexity, sitä vähemmän malli "hämmentyy" ennustaessaan seuraavaa sanaa. Se ei kuitenkaan suoraan kerro, kuinka hyvä malli on tuottamaan ihmismäistä tekstiä tietyssä tehtävässä.
 
@@ -232,7 +226,7 @@ Vastaavasti BLEU ja ROUGE ovat **ulkoisia mittareita**, jotka vertautuvat kuvant
 
 ### Perplexity
 
-Perplexity on sukua koulutuksen aikana minimoitavaan ristientropiaan (cross-entropy). Käytännössä se mittaa mallin epävarmuutta. Toisin päin sanottuna: se mittaa, kuinka yllättynyt (engl. *surprised* tai.. wait for it.. *perplexed*) malli on nähdessään oikean sanan. [^transformers-def-guide] Se on IBM:n tutkijoiden vuonna 1977 julkaisema mittari, mutta: *"Perplexity remains a primary benchmark to this day and is a popular metric for evaluating sequential neural networks (including the GPT family of models)."* [^comet]
+Perplexity on sukua koulutuksen aikana minimoitavaan ristientropiaan (cross-entropy). Käytännössä se mittaa mallin epävarmuutta. Toisin päin sanottuna: se mittaa, kuinka yllättynyt (engl. _surprised_ tai.. wait for it.. _perplexed_) malli on nähdessään oikean sanan. [^transformers-def-guide] Se on IBM:n tutkijoiden vuonna 1977 julkaisema mittari, mutta: _"Perplexity remains a primary benchmark to this day and is a popular metric for evaluating sequential neural networks (including the GPT family of models)."_ [^comet]
 
 Matemaattisesti perplexity lasketaan ennustettujen todennäköisyyksien perusteella ja normalisoidaan lauseen pituudella. Jos malli antaa oikeille sanoille korkeita todennäköisyyksiä, perplexity on matala (lähellä ykköstä). Kaava sille on seuraava: [^ml-q-ai]
 
@@ -257,7 +251,7 @@ P(w_4 | w_1, w_2, w_3) & = P(\text{"life"} | \text{"Pizza"}, \text{"may"}, \text
 \end{align*}
 $$
 
-Nämä todennäköisyydet saadaan mallin outputista (softmax). Merkintä `P(word|context)`, joka esiintyy Hugging Facen [Perplexity of fixed-length models](https://huggingface.co/docs/transformers/en/perplexity)-dokumentissa, muistuttanee sinua Naive Bayes -mallin todennäköisyyslausekkeista, kuten myös *epävarmuus* tai *entropia*. Perplexity on siis eräänlainen "käänteinen" todennäköisyys, joka mittaa mallin epävarmuutta ennustuksistaan.
+Nämä todennäköisyydet saadaan mallin outputista (softmax). Merkintä `P(word|context)`, joka esiintyy Hugging Facen [Perplexity of fixed-length models](https://huggingface.co/docs/transformers/en/perplexity)-dokumentissa, muistuttanee sinua Naive Bayes -mallin todennäköisyyslausekkeista, kuten myös _epävarmuus_ tai _entropia_. Perplexity on siis eräänlainen "käänteinen" todennäköisyys, joka mittaa mallin epävarmuutta ennustuksistaan.
 
 Suosittelen tutustumaan Machine Learning Q and AI -kirjan repositoriosta löytyvään [perplexity.ipynb](https://github.com/rasbt/MachineLearning-QandAI-book/blob/main/supplementary/q19-evaluation-llms/perplexity.ipynb)-tiedostoon, jossa on esimerkkejä siitä, kuinka perplexity lasketaan käytännössä. [^ml-q-ai]. Jos haluat selkeästi kommentoidun koodiesimerkin, katso Cometin blogilta [Perplexity for LLM Evaluation](https://www.comet.com/site/blog/perplexity-for-llm-evaluation/).
 
@@ -277,22 +271,22 @@ $$
 
 ...jossa:
 
-* $c$ on mallin tuottaman tekstin pituus
-* $r$ on referenssitekstin pituus
-* $N$ on n-grammin range (usein 4-grammi)
-* $w_n$ on painoarvo n-grammille (usein tasapainotettu, eli $w_n = \frac{1}{N}$)
-* $p_n$ on `correct_n-grams / tota_n_grams` eli mallin tuottamien n-grammien tarkkuus
+- $c$ on mallin tuottaman tekstin pituus
+- $r$ on referenssitekstin pituus
+- $N$ on n-grammin range (usein 4-grammi)
+- $w_n$ on painoarvo n-grammille (usein tasapainotettu, eli $w_n = \frac{1}{N}$)
+- $p_n$ on `correct_n-grams / tota_n_grams` eli mallin tuottamien n-grammien tarkkuus
 
 Alla Pekka Huttusen aiemmasta kurssitoteutuksesta lainattu esimerkki:
 
-* Original: Rakastan oppia uusia asioita tekoälystä.
-* Reference: I love to learn new things about AI.
-* Candidate 1: ==I love== love ==new== ==AI.==
-* Candidate 2: ==I love to learn== ride a bike ==.==
-* Candidate 3: ==I love== learning ==about== artificial intelligence ==.==
+- Original: Rakastan oppia uusia asioita tekoälystä.
+- Reference: I love to learn new things about AI.
+- Candidate 1: ==I love== love ==new== ==AI.==
+- Candidate 2: ==I love to learn== ride a bike ==.==
+- Candidate 3: ==I love== learning ==about== artificial intelligence ==.==
 
-!!! info 
-    Lukuohje: keltaisella korostetut osat ovat n-grammeja, jotka esiintyvät referenssissä. Ensimmäisen lauseen toista `love`-sanaa ei lasketa, koska se on jo laskettu ensimmäisen `love`-sanan kohdalla. Täten `len(I, love, new, AI, .`) on 5 ja `len(Candidate_1)` on 6, joten 1-grammien tarkkuus on 5/6.
+!!! info
+Lukuohje: keltaisella korostetut osat ovat n-grammeja, jotka esiintyvät referenssissä. Ensimmäisen lauseen toista `love`-sanaa ei lasketa, koska se on jo laskettu ensimmäisen `love`-sanan kohdalla. Täten `len(I, love, new, AI, .`) on 5 ja `len(Candidate_1)` on 6, joten 1-grammien tarkkuus on 5/6.
 
 | Metric     | Candidate 1 | Candidate 2 | Candidate 3 |
 | ---------- | ----------- | ----------- | ----------- |
@@ -301,7 +295,6 @@ Alla Pekka Huttusen aiemmasta kurssitoteutuksesta lainattu esimerkki:
 | 3-grams    | 0/4         | 2/6         | 0/5         |
 | 4-grams    | 0/3         | 1/5         | 0/4         |
 | length $c$ | 6           | 8           | 7           |
-
 
 ??? "Tarkemmat laskelmat (klikkaa auki)"
 
@@ -339,7 +332,6 @@ Alla Pekka Huttusen aiemmasta kurssitoteutuksesta lainattu esimerkki:
     \end{align*}
     $$
 
-
 Kyseessä on merkkijonojen vertailuun perustuva mittari. Se ei ymmärrä sanojen merkityksiä tai kielioppia. Esimerkiksi synonyymien käyttö tai sanajärjestyksen muutos voi laskea pisteitä, vaikka käännös olisi sisällöllisesti oikein. Toisaalta merkitykseltään väärä lause voi saada korkeat pisteet, jos se sisältää oikeat sanat. [^ml-q-ai]
 
 Nykykäsityksen mukaan BLEU onkin hyödyllinen työkalu ensisijaisesti mallin kehityksen seurantaan (model selection) koulutuksen aikana, jossa se toimii sujuvuuden indikaattorina. Lopulliseen laadunvarmistukseen (model evaluation) tai virheiden etsintään se ei sovellu yhtä hyvin, ja nykyään sen rinnalle tai tilalle on noussut kehittyneempiä vaihtoehtoja, kuten METEOR ja COMET.[^ml-q-ai].
@@ -373,11 +365,11 @@ f1 = 2 * (precision * recall) / (precision + recall)
 
 ROUGE-mittarista on olemassa useita eri variantteja, joista yleisimmät ovat:
 
-* **ROUGE-N**: Mittaa n-grammien (esim. yksittäisten sanojen tai sanaparien) päällekkäisyyttä tuotetun tekstin ja referenssin välillä. Yllä oleva esimerkki on ROUGE-1.
-* **ROUGE-L**: Etsii pisintä yhteistä alisekvenssiä (Longest Common Subsequence), mikä huomioi sanojen oikean järjestyksen, vaikka niiden välissä olisi muita sanoja. (`entten tentten ____ __ ____ teelika __ mentten`)
-* **ROUGE-S**: Tarkastelee niin sanottuja skip-bigrammeja eli sanapareja, joiden välissä voi olla vaihteleva määrä muita sanoja (`enttten ___ __ ____ ____ tentten)`.
+- **ROUGE-N**: Mittaa n-grammien (esim. yksittäisten sanojen tai sanaparien) päällekkäisyyttä tuotetun tekstin ja referenssin välillä. Yllä oleva esimerkki on ROUGE-1.
+- **ROUGE-L**: Etsii pisintä yhteistä alisekvenssiä (Longest Common Subsequence), mikä huomioi sanojen oikean järjestyksen, vaikka niiden välissä olisi muita sanoja. (`entten tentten ____ __ ____ teelika __ mentten`)
+- **ROUGE-S**: Tarkastelee niin sanottuja skip-bigrammeja eli sanapareja, joiden välissä voi olla vaihteleva määrä muita sanoja (`enttten ___ __ ____ ____ tentten)`.
 
-ROUGE, aivan kuten BLEU, ei ymmärrä synonyymejä tai parafraaseja. Merkitykseltään täysin oikea mutta eri sanoilla muotoiltu tiivistelmä voi saada epäreilun huonot pisteet – tai päin vastoin. Puutteistaan huolimatta ROUGE on edelleen alan standardityökalu: *"However, it’s still worth knowing about ROUGE since, according to a study, all papers introducing new summarization models at computational linguistics conferences in 2021 used it, and 69 percent of those papers used only ROUGE."* [^ml-q-ai]
+ROUGE, aivan kuten BLEU, ei ymmärrä synonyymejä tai parafraaseja. Merkitykseltään täysin oikea mutta eri sanoilla muotoiltu tiivistelmä voi saada epäreilun huonot pisteet – tai päin vastoin. Puutteistaan huolimatta ROUGE on edelleen alan standardityökalu: _"However, it’s still worth knowing about ROUGE since, according to a study, all papers introducing new summarization models at computational linguistics conferences in 2021 used it, and 69 percent of those papers used only ROUGE."_ [^ml-q-ai]
 
 ### BERTScore
 
@@ -387,16 +379,16 @@ BERTScoren laskenta etenee seuraavasti:
 
 1. Aja `candidate = LLM(input)` (ja etsi `reference`, joka on ihmisen tuottama)
 2. Aja `cand = BERT(tokenize(candidate))` ja `ref = BERT(tokenize(reference))` saadaksesi tokenien embedding-vektorit.
-3. Lasketaan `cosine_similarity(cand[i], ref[j])` jokaiselle kandidaattitekstin tokenille `i` ja referenssitekstin tokenille `j` eli *pairwise cosine similarity* -matriisi.
+3. Lasketaan `cosine_similarity(cand[i], ref[j])` jokaiselle kandidaattitekstin tokenille `i` ja referenssitekstin tokenille `j` eli _pairwise cosine similarity_ -matriisi.
 4. Kohdistetaan jokainen `cand`-token siihen `ref`-tokeniin, jonka kanssa kosinisamankaltaisuus on suurin.
 5. Lasketaan näiden parhaiden samankaltaisuuspisteiden keskiarvo (tai F1-score), joka antaa lopullisen BERTScore-pisteen.
-6. (Vaihtoehtoisesti) lopuksi otetaan huomioon *importance weighting* eli painotetaan pisteitä tokenien tärkeyden mukaan, joka voidaan määritellä inverse document frequency (IDF) -arvoilla.
+6. (Vaihtoehtoisesti) lopuksi otetaan huomioon _importance weighting_ eli painotetaan pisteitä tokenien tärkeyden mukaan, joka voidaan määritellä inverse document frequency (IDF) -arvoilla.
 
-Prosessi on kuvattu alkuperäisen julkaisun *Figure 1*-kuvassa. Kannattaa käydä tutustumassa kyseiseen konferenssipaperiin: [BERTScore: Evaluating Text Generation with BERT](https://arxiv.org/abs/1904.09675). Sanomatta lienee selvää, että BERTscore on laskennallisesti raskaampi kuin perinteiset mittarit. Se vaatii kokonaisen neuroverkkomallin ajamista arvioinnin aikana. BERTscore ei ole täydellinen, ja sen rinnalla on suositeltavaa käyttää myös ihmisen tekemää laadunarviointia. [^ml-q-ai]
+Prosessi on kuvattu alkuperäisen julkaisun _Figure 1_-kuvassa. Kannattaa käydä tutustumassa kyseiseen konferenssipaperiin: [BERTScore: Evaluating Text Generation with BERT](https://arxiv.org/abs/1904.09675). Sanomatta lienee selvää, että BERTscore on laskennallisesti raskaampi kuin perinteiset mittarit. Se vaatii kokonaisen neuroverkkomallin ajamista arvioinnin aikana. BERTscore ei ole täydellinen, ja sen rinnalla on suositeltavaa käyttää myös ihmisen tekemää laadunarviointia. [^ml-q-ai]
 
 ### Muut benchmark-tyyppiset metriikat
 
-Muita, monimutkaisempia *benchmark-tyylisiä* (eli mallien vertailuun soveltuvia testejä) löytyy lisäksi useita. Näitä on listattu esimerkiksi Wikipedian [Language Model Benchmark](https://en.wikipedia.org/wiki/Language_model_benchmark)-artikkelissa. Yksi kirjoitushetkellä hyvinkin tuore vertailuanalyysiin soveltuva kysymyspatteristo on [Humanity's Last Exam](https://lastexam.ai/), joka on merkittävästi vaikeampi kielimalleille kuin GPQA (Graduate-level Google-Proof Q&A) tai MMLU (Massive Multitask Language Understanding).
+Muita, monimutkaisempia _benchmark-tyylisiä_ (eli mallien vertailuun soveltuvia testejä) löytyy lisäksi useita. Näitä on listattu esimerkiksi Wikipedian [Language Model Benchmark](https://en.wikipedia.org/wiki/Language_model_benchmark)-artikkelissa. Yksi kirjoitushetkellä hyvinkin tuore vertailuanalyysiin soveltuva kysymyspatteristo on [Humanity's Last Exam](https://lastexam.ai/), joka on merkittävästi vaikeampi kielimalleille kuin GPQA (Graduate-level Google-Proof Q&A) tai MMLU (Massive Multitask Language Understanding).
 
 ## Tehtävät
 
@@ -421,26 +413,42 @@ Muita, monimutkaisempia *benchmark-tyylisiä* (eli mallien vertailuun soveltuvia
     Tämä viimeinen tehtävä on saanut innoitteensa Sumit Pandey:n Medium-artikkelista [Andrej Karpathy Just Built an Entire GPT in 243 Lines of Python](https://www.towardsdeeplearning.com/andrej-karpathy-just-built-an-entire-gpt-in-243-lines-of-python-7d66cfdfa301) sekä tietenkin itse toteutuksesta, johon Pandey viittaa. Tämä toteutus löytyy GitHub Gist-palvelusta [gist:karpathy/microgpt.py](https://gist.github.com/karpathy/8627fe009c40f57531cb18360106ce95) lähdekoodina ja GitHub Pages -sivuna [karpathy.github.io](https://karpathy.github.io/2026/02/12/microgpt/) oppimateriaalimuotoisena kokonaisuutena.
 
     1. Lataa `data/etunimet.txt`-tiedostoon kaikkien suomenkielisten etunimien lista [Avoin data: Väestötietojärjestelmän suomalaisten nimiaineistot](https://avoindata.suomi.fi/data/fi/dataset/none)
-    2. Aja `722_microgpt.py`-tiedosto ja tutustu sen sisältöön. 
-   
+    2. Aja `722_microgpt.py`-tiedosto ja tutustu sen sisältöön.
+
     Toivon mukaan tunnistat, että ennen kurssia et olisi ymmärtänyt koodista mitään, mutta nyt se vilisee tuttuja käsitteitä aivan ensimmäisistä luennoista tähän luentoon asti. Jos pelkkä Python alkaa tökkiä, voit tutustua myös Harvardin vastineeseen [The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/), joka on toteutettu PyTorchilla ja kommentoitu vastavaavalla tavalla (mutta kuvien kera). Myös Polo Clubin visuaalinen [Transformer Explained](https://poloclub.github.io/transformer-explainer/) voi auttaa hahmottamaan arkkitehtuuria erityisesti QKV-matriisien osalta. Toinen vastaava visualisointi on Benjamin Bycroftin [LLM Visualization](https://bbycroft.net/llm)
 
 ## Lähteet
 
-[^attention2017]: Vaswani, A. et. al. *Attention is All You Need*. 2017. https://arxiv.org/abs/1706.03762
-[^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
-[^buildingaiagents]: Raieli, S. & Iuculano, G. *Building AI Agents with LLMs, RAG, and Knowledge Graphs*. Packt. 2025.
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^ldl]: Ekman, M. *Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow*. Addison-Wesley. 2025.
-[^nimikirja]: 1322/1989. *Nimikirjan pitäminen eräistä henkilöstöryhmistä*. https://www.finlex.fi/fi/lainsaadanto/1989/1322
-[^kielikello]: Virtaniemi, A. *Kiiloja ja sokkeloita. Säädöskielen virke- ja lauserakenteen ongelmia*. 1992. https://kielikello.fi/kiiloja-ja-sokkeloita-saadoskielen-virke-ja-lauserakenteen-ongelmia/
-[^ml-algos-depth]: Smolyakov, V. *Machine Learning Algorithms in Depth*. Manning. 2025.
-[^geronpytorch]: Géron, A. *Hands-On Machine Learning with Scikit-Learn and PyTorch*. O'Reilly. 2025.
-[^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
-[^transformers-def-guide]: Koenigstein, N. *Transformers: The Definitive Guide*. O'Reilly. 2026.
-[^azure-book]: Esposito, F. *Programming Large Language Models with Azure Open AI: Conversational programming and prompt engineering with LLMs*. Microsoft Press. 2024.
-[^voita2019]: Voita, E. et. al. *Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned*. 2019. https://arxiv.org/abs/1905.09418
-[^gpt]: Radford, A. et. al. *Improving Language Understanding by Generative Pre-Training*. 2019. https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
-[^bert]: Devlin, J. et. al. *BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding*. 2019. https://arxiv.org/abs/1810.04805
-[^ml-q-ai]: Raschka, S. *Machine Learning Q and AI*. No Starch Press. 2024.
-[^comet]: Morgan, A. *Perplexity for LLM Evaluation*. 2024. https://www.comet.com/site/blog/perplexity-for-llm-evaluation/
+[^attention2017]: Vaswani, A. et. al. _Attention is All You Need_. 2017. https://arxiv.org/abs/1706.03762
+
+[^llmfromscratch]: Raschka, S. _Build a Large Language Model (From Scratch)_. Manning. 2024.
+
+[^buildingaiagents]: Raieli, S. & Iuculano, G. _Building AI Agents with LLMs, RAG, and Knowledge Graphs_. Packt. 2025.
+
+[^dlwithpython]: Watson, M & Chollet, F. _Deep Learning with Python, Third Edition_. Manning. 2025.
+
+[^ldl]: Ekman, M. _Learning Deep Learning: Theory and Practice of Neural Networks, Computer Vision, NLP, and Transformers using TensorFlow_. Addison-Wesley. 2025.
+
+[^nimikirja]: 1322/1989. _Nimikirjan pitäminen eräistä henkilöstöryhmistä_. https://www.finlex.fi/fi/lainsaadanto/1989/1322
+
+[^kielikello]: Virtaniemi, A. _Kiiloja ja sokkeloita. Säädöskielen virke- ja lauserakenteen ongelmia_. 1992. https://kielikello.fi/kiiloja-ja-sokkeloita-saadoskielen-virke-ja-lauserakenteen-ongelmia/
+
+[^ml-algos-depth]: Smolyakov, V. _Machine Learning Algorithms in Depth_. Manning. 2025.
+
+[^geronpytorch]: Géron, A. _Hands-On Machine Learning with Scikit-Learn and PyTorch_. O'Reilly. 2025.
+
+[^udlbook]: Prince, S. _Understanding Deep Learning_. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+
+[^transformers-def-guide]: Koenigstein, N. _Transformers: The Definitive Guide_. O'Reilly. 2026.
+
+[^azure-book]: Esposito, F. _Programming Large Language Models with Azure Open AI: Conversational programming and prompt engineering with LLMs_. Microsoft Press. 2024.
+
+[^voita2019]: Voita, E. et. al. _Analyzing Multi-Head Self-Attention: Specialized Heads Do the Heavy Lifting, the Rest Can Be Pruned_. 2019. https://arxiv.org/abs/1905.09418
+
+[^gpt]: Radford, A. et. al. _Improving Language Understanding by Generative Pre-Training_. 2019. https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+
+[^bert]: Devlin, J. et. al. _BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding_. 2019. https://arxiv.org/abs/1810.04805
+
+[^ml-q-ai]: Raschka, S. _Machine Learning Q and AI_. No Starch Press. 2024.
+
+[^comet]: Morgan, A. _Perplexity for LLM Evaluation_. 2024. https://www.comet.com/site/blog/perplexity-for-llm-evaluation/

@@ -8,8 +8,8 @@ priority: 410
 
 PyTorch tarjoaa `torch.utils.data`-moduulissa kaksi luokkaa, jotka helpottavat datan käsittelyä: `Dataset` ja `DataLoader`. Lisäksi löytyy esimerkiksi `TensorDataset`-luokka, josta voi olla apua harjoitellessa.
 
-* **Dataset** on luokka, joka käärii sisäänsä datan ja labelit.
-* **DataLoader** on luokka, joka käärii yllä olevan iteroitavaksi objektiksi.
+- **Dataset** on luokka, joka käärii sisäänsä datan ja labelit.
+- **DataLoader** on luokka, joka käärii yllä olevan iteroitavaksi objektiksi.
 
 ### TensorDataset
 
@@ -42,7 +42,7 @@ data, label = dataset[0]
 
 ### Tee-se-itse
 
-Yksinkertaisimmillaan `Dataset`-luokan tarvitsee toteuttaa kaksi metodia: `__len__` ja `__getitem__`, joista tosin ensimmäinen on *optional*. Jos alaviivoilla ympäröidyt funktiot ovat sinulle vieraita, niin ne ovat Pythonin erikoismetodeja, jotka vastaavat, kun objektia kutsutaan `len(dataset)`-funktiolla tai objektia yritetään viipaloida (*engl. slice*) hakasulkeilla `dataset[idx]` tai `dataset[start:stop]`.
+Yksinkertaisimmillaan `Dataset`-luokan tarvitsee toteuttaa kaksi metodia: `__len__` ja `__getitem__`, joista tosin ensimmäinen on _optional_. Jos alaviivoilla ympäröidyt funktiot ovat sinulle vieraita, niin ne ovat Pythonin erikoismetodeja, jotka vastaavat, kun objektia kutsutaan `len(dataset)`-funktiolla tai objektia yritetään viipaloida (_engl. slice_) hakasulkeilla `dataset[idx]` tai `dataset[start:stop]`.
 
 ```python
 class CustomDataset(Dataset):
@@ -57,17 +57,16 @@ class CustomDataset(Dataset):
         return self.data[idx], self.labels[idx]
 ```
 
-Luonnollisesti voit tehdä datasetistä aivan mitä tahansa. Vain ohjelmointitaitosi ovat rajana. Voit toteuttaa esimerkiksi: 
+Luonnollisesti voit tehdä datasetistä aivan mitä tahansa. Vain ohjelmointitaitosi ovat rajana. Voit toteuttaa esimerkiksi:
 
-* Etsi labelit indeksitiedostosta (`data/labels.txt`)
-* Lue kuvat kovalevyltä (`data/train.parquet`, ...)
-    * Tai kenties lataa S3:sta (jos `download=True`)
-    * Tai varoita jos tuoreempi data on saatavilla verkosta
-* Esikäsittele dataa lennossa (jos `transform`-parametri on määritelty)
-* Palauta vain jokin tietty versio/subset datasta (esim. `train=True`)
-* Parametri `obj.classes` sisältäen ihmisluettavat luokat
-* Parametri `obj.class_to_idx` määrittelee, mikä luokka vastaa mitäkin indeksiä
-
+- Etsi labelit indeksitiedostosta (`data/labels.txt`)
+- Lue kuvat kovalevyltä (`data/train.parquet`, ...)
+  - Tai kenties lataa S3:sta (jos `download=True`)
+  - Tai varoita jos tuoreempi data on saatavilla verkosta
+- Esikäsittele dataa lennossa (jos `transform`-parametri on määritelty)
+- Palauta vain jokin tietty versio/subset datasta (esim. `train=True`)
+- Parametri `obj.classes` sisältäen ihmisluettavat luokat
+- Parametri `obj.class_to_idx` määrittelee, mikä luokka vastaa mitäkin indeksiä
 
 ### Jako koulutus- ja testidatasettiin
 
@@ -75,21 +74,20 @@ Yleinen käytäntö on jakaa data koulutus- ja testidatasettiin. Tämä onnistuu
 
 ```python
 from torch.utils.data import random_split
- 
+
 ds = CustomDataset(...)
 
 total_count = len(ds)
 train_count = int(0.7 * total_count)
 val_count = int(0.15 * total_count)
- 
+
 # Varmistetaan että kaikki näytteet tulevat käyttöön
 # eli loput 15 %
-test_count = total_count - train_count - val_count  
- 
-train_ds, val_ds, test_ds = 
+test_count = total_count - train_count - val_count
+
+train_ds, val_ds, test_ds =
      random_split(ds, [train_count, val_count, test_count])
 ```
-
 
 ### DataLoader
 
@@ -119,15 +117,15 @@ torch.Size([1])
 
 ## Data ja PyTorch Vision
 
-Myös TorchVision, joka on PyTorchin virallinen lisäkirjasto kuvankäsittelyyn, tarjoaa työkaluja datan lataukseen. Oletkin jo käyttänyt `torchvision.datasets.MNIST`-datasettiä aiemmissa harjoituksissa. Näiden lisäksi TorchVision tarjoaa pohjaluokkia (ks. [Base classes for custom datasets](https://docs.pytorch.org/vision/main/datasets.html#base-classes-for-custom-datasets)), jotka ovat: `DatasetFolder` ja `ImageFolder` ja `VisionDataset`. 
+Myös TorchVision, joka on PyTorchin virallinen lisäkirjasto kuvankäsittelyyn, tarjoaa työkaluja datan lataukseen. Oletkin jo käyttänyt `torchvision.datasets.MNIST`-datasettiä aiemmissa harjoituksissa. Näiden lisäksi TorchVision tarjoaa pohjaluokkia (ks. [Base classes for custom datasets](https://docs.pytorch.org/vision/main/datasets.html#base-classes-for-custom-datasets)), jotka ovat: `DatasetFolder` ja `ImageFolder` ja `VisionDataset`.
 
 ### VisionDataset
 
 VisionDataset on Datasetin kaltainen pohjaluokka, joka tarjoaa lisätoiminnallisuutta kuvadatasetin käsittelyyn. Näistä näkyvimmät ovat:
 
-* `root`: Datasetin juurihakemisto (käytetään tulostukseen)
-* `transforms`: kutsuttava funktio, joka ottaa vastaan kuvat ja labelit ja palauttaa muokatun version niistä
-* `transform`: kutsuttava funktio, joka ottaa vastaan vain kuvan ja palauttaa muokatun version siitä
+- `root`: Datasetin juurihakemisto (käytetään tulostukseen)
+- `transforms`: kutsuttava funktio, joka ottaa vastaan kuvat ja labelit ja palauttaa muokatun version niistä
+- `transform`: kutsuttava funktio, joka ottaa vastaan vain kuvan ja palauttaa muokatun version siitä
 
 Oletkin jo käyttänyt `transforms`-ominaisuutta aiemmin:
 
@@ -173,8 +171,8 @@ Moroney vihjaa kirjassa AI and ML for Coders in PyTorch [^mlforcoders], että aa
 ```python
 # Mikä tahansa luokitusjärjestys
 custom_class_to_idx = {
-    'aasiankultakissa': 42, 
-    'aavikkoilves': 3, 
+    'aasiankultakissa': 42,
+    'aavikkoilves': 3,
     ...,
     'zorilla': 1024
 }
@@ -206,7 +204,7 @@ train_ds, val_ds = keras.utils.image_dataset_from_directory(
     image_size=image_size,
     batch_size=batch_size,
 )
-``` 
+```
 
 ### Hugging Face Datasets
 
@@ -302,13 +300,12 @@ Tämä on hieman hankalampi tapa edetä kuin suora CSV:n lukeminen Pandasilla, m
     * Lataa CIFAR10-datasetti PyTorchin `torchvision.datasets`-moduulista.
     * Tutki datan rakennetta (kuinka monta kuvaa, kuvan koko, värit, luokat).
     * Visualisoi yksi kuva
-    * Visualisoi useampi kuva ruudukossa (grid). 
+    * Visualisoi useampi kuva ruudukossa (grid).
         * Bonus: Käyttäjä voi valita luokan.
     * Luo `DataLoader`, jolla voit iteroida datan läpi mini-batcheina.
         * Visualisoi yksi mini-batch ruudukossa.
-  
-    Voit käyttää apuna `410_cifar10.py`-notebookia tai kirjoittaa koodin alusta itse.
 
+    Voit käyttää apuna `410_cifar10.py`-notebookia tai kirjoittaa koodin alusta itse.
 
 !!! question "Tehtävä: CIFAR10 Malli"
 
@@ -341,4 +338,4 @@ Tämä on hieman hankalampi tapa edetä kuin suora CSV:n lukeminen Pandasilla, m
 
 ## Lähteet
 
-[^mlforcoders]: Moroney, L. *AI and ML for Coders in PyTorch*. O'Reilly. 2025.
+[^mlforcoders]: Moroney, L. _AI and ML for Coders in PyTorch_. O'Reilly. 2025.

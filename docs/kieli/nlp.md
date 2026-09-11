@@ -10,17 +10,17 @@ Tietojenkäsittelytieteissä luonnollisella kielellä tarkoitetaan kieliä kuten
 >
 > – François Chollet ja Matt Watson [^dlwithpython]
 
-Termi *ambiguous* tarkoittaa, että luonnollisessa kielessä samalle asialle voi olla useita merkityksiä tai tulkintoja. Suomalaisittain kuuluisa esimerkki tästä on lyhyt lause: =="Kuusi palaa"== (*engl. the spruce is on fire / spruce returns / the number six is on fire / ... / six pieces*). Entäpä kuinka tulkitaan seuraava uutisotsikko:
+Termi _ambiguous_ tarkoittaa, että luonnollisessa kielessä samalle asialle voi olla useita merkityksiä tai tulkintoja. Suomalaisittain kuuluisa esimerkki tästä on lyhyt lause: =="Kuusi palaa"== (_engl. the spruce is on fire / spruce returns / the number six is on fire / ... / six pieces_). Entäpä kuinka tulkitaan seuraava uutisotsikko:
 
-> "Susi hyök­kä­si omis­ta­jan­sa kanssa pyö­rä­len­kil­lä olleen koiran kimp­puun kes­kel­lä asu­tus­ta Raa­hes­sa"
+> "Susi hyökkäsi omistajansa kanssa pyörälenkillä olleen koiran kimppuun keskellä asutusta Raahessa."
 >
 > – Pyhäjokiseutu 02.10.2024
 
 ![](../images/700_gemini-susi-quote.jpg)
 
-**Kuva 1:** *Kirjaimellisesti tulkittu otsikko: "Susi hyökkäsi omistajansa kanssa pyörälenkillä olleen koiran kimppuun keskellä asutusta Raahessa.". Kuva luotu Gemini Nano Banana mallilla.*
+**Kuva 1:** _Kirjaimellisesti tulkittu otsikko: "Susi hyökkäsi omistajansa kanssa pyörälenkillä olleen koiran kimppuun keskellä asutusta Raahessa.". Kuva luotu Gemini Nano Banana mallilla._
 
-Onko tilanne kenties ollut Kuvan 1 mukainen: susi ja hänen omistajansa olivat hyökkääjät, kun koiraraukka yritti pyöräillä karkuun? Vastaavia monitulkintaisia lauseita on Suomen Kuvalehden Jyvät & Akanat -palstalla viikoittain. Tässä kaksi tuoretta esimerkkiä lisäviihteenä 5/2026 numerosta: 
+Onko tilanne kenties ollut Kuvan 1 mukainen: susi ja hänen omistajansa olivat hyökkääjät, kun koiraraukka yritti pyöräillä karkuun? Vastaavia monitulkintaisia lauseita on Suomen Kuvalehden Jyvät & Akanat -palstalla viikoittain. Tässä kaksi tuoretta esimerkkiä lisäviihteenä 5/2026 numerosta:
 
 > "Nikotiinipussit muuttavat aivoja – kokenut lääkäri kertoo, miten pääset niistä pysyvästi eroon"
 >
@@ -30,7 +30,7 @@ Onko tilanne kenties ollut Kuvan 1 mukainen: susi ja hänen omistajansa olivat h
 >
 > – Iltasanomat 7.1.2026
 
-Täten lienee selvä, että koneellinen kielen käsittely haastavaa, mutta koska kieli on ihmisten pääasiallinen viestintäväline, on luonnollisen kielen käsittely (Natural Language Processing, NLP) keskeinen osa tietojenkäsittelyä ja tekoälyä. Käytännön sovelluksia ovat esimerkiksi **tekstin luokittelu** (spam, no spam), **konekäännökset** (ranska → suomi), **hakukoneet** ja **tekstin generointi** (*"Olipa kerran... ?"*). Näiden haastavien tehtävien suhteen suuret läpimurrot ovat varsin tuoreita, mutta yritystä on kuitenkin ollut viimeisen yli 60 vuoden ajan. [^dlwithpython]
+Täten lienee selvä, että koneellinen kielen käsittely haastavaa, mutta koska kieli on ihmisten pääasiallinen viestintäväline, on luonnollisen kielen käsittely (Natural Language Processing, NLP) keskeinen osa tietojenkäsittelyä ja tekoälyä. Käytännön sovelluksia ovat esimerkiksi **tekstin luokittelu** (spam, no spam), **konekäännökset** (ranska → suomi), **hakukoneet** ja **tekstin generointi** (_"Olipa kerran... ?"_). Näiden haastavien tehtävien suhteen suuret läpimurrot ovat varsin tuoreita, mutta yritystä on kuitenkin ollut viimeisen yli 60 vuoden ajan. [^dlwithpython]
 
 ## Historia
 
@@ -40,11 +40,11 @@ Nykyisten chatbottien suuret merkkipaalut ovat syntyneet lähitulevaisuudessa, m
 
 Kaiken luonnollisen kielen käsittelyn päämäärä ei ole välttämättä matkia ihmisen älykkyyttä, mutta tämä ajatus on kulkenut matkassa alusta asti – aivan kuten muussakin tekoälyn historiassa. Alan Turing julkaisi 1950 paperin otsikolla "Computing Machinery and Intelligence", jossa hän esitteli ajatuksen ==Turingin kokeesta== nimellä "The Imitation Game" [^turing1950]. Peli perustuu vanhaan seurapeliin, jolla salongissa on voinut viihdyttää vieraita: henkilöt A ja B istuvat erillään toisistaan, ja kolmas henkilö C esittää kysymyksiä kummallekin. A ja B ovat mies ja nainen, ja henkilön C tehtävä on päätellä kirjoitetun viestin perusteella, kumpi on kumpi. Turingin koe on sama asetelma, mutta A ja B ovat kone ja ihminen. Jos C ei pysty luotettavasti erottamaan konetta ihmisestä, voidaan sanoa, että kone on läpäissyt Turingin kokeen. [^aimarketing]
 
-Löydät internetistä helposti tätä koetta kritisoivaa sisältöä, ja myös väitteitä, että eri mallit ovat läpäisseet kokeen. Jos haluat tutustua aihepiiriin, kannattanee tutustua vuoden 2025 artikkeliin otsikolla *Large Language Models Pass the Turing Test*, jossa on vertailtu niin ELIZAa kuin tuoreita GPT-4.5-malleja. [^llmturing]
+Löydät internetistä helposti tätä koetta kritisoivaa sisältöä, ja myös väitteitä, että eri mallit ovat läpäisseet kokeen. Jos haluat tutustua aihepiiriin, kannattanee tutustua vuoden 2025 artikkeliin otsikolla _Large Language Models Pass the Turing Test_, jossa on vertailtu niin ELIZAa kuin tuoreita GPT-4.5-malleja. [^llmturing]
 
 ### ELIZA
 
-Tunnetuin varhaisista *chatterbot*-sovelluksista on ELIZA, erityisesti skripti DOCTOR, joka kehitettiin 1960-luvulla MIT:ssä. Sen loi Joseph Weizenbaum, ja se simuloitsi Carl Rogerin asiakaskeskeistä psykoterapiaa. Ohjelma on nimetty fiktiivisen Eliza Doolittle hahmon mukaan, joka esiintyy George Bernard Shaw'n näytelmässä "Pygmalion" (ja myöhemmin musikaalissa "My Fair Lady"). ELIZA käytti yksinkertaisia sääntöjä ja avainsanojen tunnistusta vastatakseen käyttäjän syötteisiin, luoden vaikutelman ymmärryksestä. Kyseessä on siis *pattern-matching*-järjestelmä. [^demystifyingai]
+Tunnetuin varhaisista _chatterbot_-sovelluksista on ELIZA, erityisesti skripti DOCTOR, joka kehitettiin 1960-luvulla MIT:ssä. Sen loi Joseph Weizenbaum, ja se simuloitsi Carl Rogerin asiakaskeskeistä psykoterapiaa. Ohjelma on nimetty fiktiivisen Eliza Doolittle hahmon mukaan, joka esiintyy George Bernard Shaw'n näytelmässä "Pygmalion" (ja myöhemmin musikaalissa "My Fair Lady"). ELIZA käytti yksinkertaisia sääntöjä ja avainsanojen tunnistusta vastatakseen käyttäjän syötteisiin, luoden vaikutelman ymmärryksestä. Kyseessä on siis _pattern-matching_-järjestelmä. [^demystifyingai]
 
 > "There are even accounts of ELIZA’s responses being so human-like that it evoked emotional responses from people who forgot they were interacting with a computer, including Weizenbaum’s own secretary. This led to much discussion about ELIZA’s potential to pass the Turing Test, although there are no known accounts of ELIZA actually doing this."
 >
@@ -109,7 +109,7 @@ ELIZA herätti yleisön mielenkiinnon ja sen ympärille syntyi hypeä. Weizenbau
 
 Toinen varhainen chatbot on PARRY, joka kehitettiin 1970-luvulla psykiatri Kenneth Colbyn Stanfordissa. Applikaatio pyrki simuloimaan skitsofreniaa sairastavan potilaan puhetta. PARRY käytti monimutkaisempia sääntöjä ja malleja kuin ELIZA, pyrkien jäljittelemään skitsofrenian oireita, kuten vainoharhaisuutta ja epäjohdonmukaista ajattelua. [^demystifyingai] Ohjelman LISP-koodi on linkitettynä Wikipedia-artikkelissa ja löytyy Carnegie Mellonin arkistosta. Sen ajaminen modernilla koneella olisi haastellista, joten tyydytään kurkkaamaan ELIZA:n (DOCTOR) ja PARRY:n keskustelua, joka on dokumentoitu vuonna 1972. Keskustelun alku muotoiltuna alla: [^rfc439]
 
-:health_worker: **DOCTOR**: Good Evening. Tell me your problems.  Please terminate input with a period or a question mark.
+:health_worker: **DOCTOR**: Good Evening. Tell me your problems. Please terminate input with a period or a question mark.
 
 :robot: **PARRY**: People get on my nerves sometimes.
 
@@ -141,16 +141,14 @@ Toinen varhainen chatbot on PARRY, joka kehitettiin 1970-luvulla psykiatri Kenne
 | Alexa                                      | Amazon            | 2014  | Assistentti                    |
 | Melody                                     | Andrew Ng         | 2015  | Lääketieteellinen assistentti  |
 
-
-Taulukko on koostettu kirjoista *Conversational Artificial Intelligence* [^conversational] ja *The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning*. [^aimarketing]
-
+Taulukko on koostettu kirjoista _Conversational Artificial Intelligence_ [^conversational] ja _The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning_. [^aimarketing]
 
 ### Asiantuntijajärjestelmät (Expert Systems)
 
-Heti alkuun suosittelen, että kannattaa *silmäillä* seuraavia videoita. Sinun ei välttämättä tarvitse katsoa pitkiä videoita kokonaan, mutta silmäilemällä näet, miten niissä käsitellyt asiantuntijajärjestelmät toimivat:
+Heti alkuun suosittelen, että kannattaa _silmäillä_ seuraavia videoita. Sinun ei välttämättä tarvitse katsoa pitkiä videoita kokonaan, mutta silmäilemällä näet, miten niissä käsitellyt asiantuntijajärjestelmät toimivat:
 
-* [MIT: 3. Reasoning: Goal Trees and Rule-Based Expert Systems](https://youtu.be/leXa7EKUPFk). 50-minuuttinen ideo, jossa Patrick Winston esittelee Genesis-ryhmän tuottamaa Genesis-ohjelmaa, joka kykenee selostaa Macbeth-kirjan tapahtumia (aivan videon lopussa). Edeltävässä osio on pohjustavaa teoriaa.
-* [URBS: Lecture 13: Building an Expert System and PyKE](https://youtu.be/mzsk5_EmZq8?si=SpVnrGcKvosEw58h). 50-minuuttinen luento, jossa esitellään PyKE-kirjasto ja rakennetaan asiantuntijajärjestelmä. Pitääkö ottaa sateenvarjo mukaan vai ei?
+- [MIT: 3. Reasoning: Goal Trees and Rule-Based Expert Systems](https://youtu.be/leXa7EKUPFk). 50-minuuttinen ideo, jossa Patrick Winston esittelee Genesis-ryhmän tuottamaa Genesis-ohjelmaa, joka kykenee selostaa Macbeth-kirjan tapahtumia (aivan videon lopussa). Edeltävässä osio on pohjustavaa teoriaa.
+- [URBS: Lecture 13: Building an Expert System and PyKE](https://youtu.be/mzsk5_EmZq8?si=SpVnrGcKvosEw58h). 50-minuuttinen luento, jossa esitellään PyKE-kirjasto ja rakennetaan asiantuntijajärjestelmä. Pitääkö ottaa sateenvarjo mukaan vai ei?
 
 Asiantuntijajärjestelmät ovat säännöpohjaisia järjestelmiä, jotka käyttävät tietokantaa sääntöjä ja faktoja päätöksenteon tai ongelmanratkaisun tukena.
 
@@ -158,9 +156,9 @@ Asiantuntijajärjestelmät ovat säännöpohjaisia järjestelmiä, jotka käytt�
 >
 > – Vijay Kanabar ja Jason Wong [^airevolution]
 
-Jos asiantuntijajärjestelmällä haluaa analysoida tekstin tapahtumia, tulee käyttää jonkin sortin *semantic parser* -ohjelmaa, joka muuttaa luonnollisen kielen lauseet koneen ymmärtämään muotoon. Genesiksen kohdalla tämä on START-niminen ohjelma, joka kääntää englantia Genesiksen sisäiseen esitysmuotoon. Tämä selitetään *A Commonsense Approach to Story Understanding*-artikkelissa [^genesis]. [START](https://start.csail.mit.edu/index.php) itsessään on Boris Katz:n ja InfoLab:n (MIT) kehittämä kysymyksiin vastaava hakukone, mutta Genesis käyttää sitä vain parsijana. Sisäinen kieli sisältää entiteettejä (substantiiveja), suhteita (henkilö A verbi henkilö B), funktioita ja sekvenssejä. Genesis käyttää apunaan [ConceptNet](https://conceptnet.io/)-tietokantaa, *knowledge graph*:ia, jonka avulla voit esimerkiksi tutkia sanan [dog](https://conceptnet.io/c/en/dog) suhteita muihin käsitteisiin. Näiden päälle voi käyttäjä rakentaa sääntöjä, kuten `if XX harms YY, YY becomes angry` tai `if XX eats food, XX becomes full`. Jatkossa, lause `Matt eats an apple` istuu tähän sääntöön, koska ConceptNet yhdistää `apple`-sanan `food`-käsitteeseen (*is type of edible fruit*).
+Jos asiantuntijajärjestelmällä haluaa analysoida tekstin tapahtumia, tulee käyttää jonkin sortin _semantic parser_ -ohjelmaa, joka muuttaa luonnollisen kielen lauseet koneen ymmärtämään muotoon. Genesiksen kohdalla tämä on START-niminen ohjelma, joka kääntää englantia Genesiksen sisäiseen esitysmuotoon. Tämä selitetään _A Commonsense Approach to Story Understanding_-artikkelissa [^genesis]. [START](https://start.csail.mit.edu/index.php) itsessään on Boris Katz:n ja InfoLab:n (MIT) kehittämä kysymyksiin vastaava hakukone, mutta Genesis käyttää sitä vain parsijana. Sisäinen kieli sisältää entiteettejä (substantiiveja), suhteita (henkilö A verbi henkilö B), funktioita ja sekvenssejä. Genesis käyttää apunaan [ConceptNet](https://conceptnet.io/)-tietokantaa, _knowledge graph_:ia, jonka avulla voit esimerkiksi tutkia sanan [dog](https://conceptnet.io/c/en/dog) suhteita muihin käsitteisiin. Näiden päälle voi käyttäjä rakentaa sääntöjä, kuten `if XX harms YY, YY becomes angry` tai `if XX eats food, XX becomes full`. Jatkossa, lause `Matt eats an apple` istuu tähän sääntöön, koska ConceptNet yhdistää `apple`-sanan `food`-käsitteeseen (_is type of edible fruit_).
 
-Toivon mukaan on tässä vaiheessa selvää, että olisi äärimmäisen haastavaa luoda modernin suuren kielimallin tasoinen asiantuntijajärjestelmä. Asiantuntijajärjestelmät olivat kovinta huutoa 80-luvulla. Modernien kielimallien kohdalla tulet kuitenkin törmäämään termeihin *knowledge graph* ja *ontology*. 
+Toivon mukaan on tässä vaiheessa selvää, että olisi äärimmäisen haastavaa luoda modernin suuren kielimallin tasoinen asiantuntijajärjestelmä. Asiantuntijajärjestelmät olivat kovinta huutoa 80-luvulla. Modernien kielimallien kohdalla tulet kuitenkin törmäämään termeihin _knowledge graph_ ja _ontology_.
 
 ### Haasteita vs. MLP
 
@@ -168,9 +166,9 @@ Toivon mukaan on tässä vaiheessa selvää, että olisi äärimmäisen haastava
 
 1. **Sanat eivät ole lukuja**. Kuvissa pikselit ovat numeerisia arvoja (esim. 0–255), mutta sanat ovat kategorisia muuttujia. On ensin keksittävä tapa kääntää lauseet listaksi numeroita.
 2. **Lauseiden pituudet vaihtelevat**. Yksi lause voi olla =="Kissa istuu matolla."== ja toinen =="Kissa matolla istui olevaista pohtien."== Konvoluutioverkot olettivat kiinteän syötteen pituuden.
-3. **Pitkäaikaiset riippuvuudet**. Conv1D-kerrokset havaitsevat paikallisia kuvioita hyvin (esim. 2–5 peräkkäistä sanaa), mutta niiden on vaikea mallintaa pitkän kantaman riippuvuuksia. Kuvittele teos, joka alkaa sanoilla: *"Seuraavat 100 asiaa eivät ole totta: (1) ..."*.
+3. **Pitkäaikaiset riippuvuudet**. Conv1D-kerrokset havaitsevat paikallisia kuvioita hyvin (esim. 2–5 peräkkäistä sanaa), mutta niiden on vaikea mallintaa pitkän kantaman riippuvuuksia. Kuvittele teos, joka alkaa sanoilla: _"Seuraavat 100 asiaa eivät ole totta: (1) ..."_.
 4. **Konteksti ja monet merkitykset**. Sanat voivat saada merkityksensä kontekstin perusteella. Muista: "kuusi palaa".
-5. **Taivutusmuodot**. Monet kielet sallivat sanojen taivuttamisen, eli ovat jossain määrin *morphologically rich*. Mitenpä suomen =="epäjärjestelmällistyttämättömyydellänsäkäänköhän"== ja =="epäjärjestelmällinen"== liittyvät toisiinsa?
+5. **Taivutusmuodot**. Monet kielet sallivat sanojen taivuttamisen, eli ovat jossain määrin _morphologically rich_. Mitenpä suomen =="epäjärjestelmällistyttämättömyydellänsäkäänköhän"== ja =="epäjärjestelmällinen"== liittyvät toisiinsa?
 
 Todella, todella naiivi ratkaisu yllä oleviin ongelmiin keittiöfilosofin pohdinnalla olisi:
 
@@ -188,7 +186,7 @@ Kolme viimeisintä jäisivät siis tyystin ratkaisematta – ainakin opettajan k
 
 Modernissa NLP:ssä esikäsittely on usein virtaviivaistettu valmiiden kirjastojen, kuten [SpaCy](https://spacy.io/):n, avulla. SpaCy ei ole ainut. Vaihtoehtoja olisivat esimerkiksi NLTK ja Gensim. SpaCy on kuitenkin suorituskykyinen ja helppokäyttöinen, joten keskitymme siihen.
 
-Kun syötät tekstiä SpaCy-putkeen (*engl. pipeline*), se suorittaa taustalla automaattisesti useita komponentteja. Tämä ei ole kielen käsittelyn kurssi, joten keskitymme pääasiassa käyttämään valmiita putkia. Yksi valmiiksi koulutettu putki on [en_core_web_sm](https://spacy.io/models/en). Kyseessä ei ole yksittäinen tilastollinen malli, vaan joukko NLP-komponentteja, jotka on ketjutettu yhteen. Alla on taulukko, jossa nämä ovat selitettynä auki linkkeineen, sekä tieto siitä, onko kyseinen komponentti koulutetttava tilastollinen (lue: koneoppimiseen perustuva) malli vai sääntöpohjainen menetelmä (lue: pattern matching).
+Kun syötät tekstiä SpaCy-putkeen (_engl. pipeline_), se suorittaa taustalla automaattisesti useita komponentteja. Tämä ei ole kielen käsittelyn kurssi, joten keskitymme pääasiassa käyttämään valmiita putkia. Yksi valmiiksi koulutettu putki on [en_core_web_sm](https://spacy.io/models/en). Kyseessä ei ole yksittäinen tilastollinen malli, vaan joukko NLP-komponentteja, jotka on ketjutettu yhteen. Alla on taulukko, jossa nämä ovat selitettynä auki linkkeineen, sekä tieto siitä, onko kyseinen komponentti koulutetttava tilastollinen (lue: koneoppimiseen perustuva) malli vai sääntöpohjainen menetelmä (lue: pattern matching).
 
 | Komponentti                                           | Tyyppi | Tunnistaa                          | Esim                                                 | Mistä löytyy tulos?              |
 | ----------------------------------------------------- | ------ | ---------------------------------- | ---------------------------------------------------- | -------------------------------- |
@@ -211,14 +209,13 @@ Kun syötät tekstiä SpaCy-putkeen (*engl. pipeline*), se suorittaa taustalla a
 
 !!! tip
 
-    Kannattaa tutustua dokumentaatiosta sivuihin: 
-    
+    Kannattaa tutustua dokumentaatiosta sivuihin:
+
     * [SpaCy Linguistic Features](https://spacy.io/usage/linguistic-features). Siellä käsitellään tarkemmin se, mikä on alla vain listattuna yhden esimerkin avulla.
     * [SpaCy Library Architecture](https://spacy.io/api). Tämä auttaa yllä olevan taulukon ymmärtämisessä visuaalisesti.
     * [SpaCy Training Pipelines & Models](https://spacy.io/usage/training). Tämä dokumentti selittää, miten SpaCy-mallit on koulutettu, ja paljastaa, mikä syväoppimiskirjasto sillä on käytössä konepellin alla.
 
     Jos haluaisit opetella SpaCyn syvällisemmin, kuten tehdä itse omia komponentteja putkeen, voisit aloittaa kurssin [Advanced NLP with spaCy](https://course.spacy.io/en/). Todennäköisesti haluaisit tutustua myös [YouTube: ExplosionAI-kanavaan](https://www.youtube.com/@ExplosionAI/), joka on SpaCyn kehittäjän kanava, sisältäen videoita sekä SpaCyn että Prodigyn käytöstä.
-
 
 ??? example "Kuinka ajaa alla olevat snippetit?"
 
@@ -237,6 +234,7 @@ Kun syötät tekstiä SpaCy-putkeen (*engl. pipeline*), se suorittaa taustalla a
     ```
 
 #### Tokenisointi
+
 Tekstin pilkkominen pienempiin yksiköihin, tokeneihin (sanat, välimerkit, erikoismerkit). Toisin kuin yksinkertainen `split(" ")`, älykäs tokenisoija ymmärtää esimerkiksi välimerkkien erottamisen sanoista.
 
 ```python
@@ -248,17 +246,19 @@ for tok in tokenized:
 ```
 
 #### Perusmuotoistaminen (Lemmatization)
+
 Sanojen palauttaminen niiden sanakirjamuotoon eli perusmuotoon (esim. "juoksi" &rarr; "juosta", "kissojen" &rarr; "kissa"). Tämä on erityisen kriittistä suomen kielen kaltaisissa morfologisesti rikkaissa kielissä sanaston koon hallitsemiseksi.
 
 ```python
 doc = nlp("Pienet pyöreät pippurit hyppivät")
 for token in doc:
   print(token.lemma_, end=" ")
-# pieni pyöreä pippuri hyppiä 
+# pieni pyöreä pippuri hyppiä
 ```
 
 #### Sanaluokat (POS)
-Jokaiselle tokenille ennustetaan sen sanaluokka (esim. substantiivi, verbi, adjektiivi). Onko kuusi numero vai mikä? Muuttuuko sanaluokka, jos annat lauseessa kontekstia, kuten kertomalla että *taskussani on kuusi pientä palaa kakkua*.
+
+Jokaiselle tokenille ennustetaan sen sanaluokka (esim. substantiivi, verbi, adjektiivi). Onko kuusi numero vai mikä? Muuttuuko sanaluokka, jos annat lauseessa kontekstia, kuten kertomalla että _taskussani on kuusi pientä palaa kakkua_.
 
 ```python
 doc = nlp("Kuusi palaa.")
@@ -269,12 +269,13 @@ for token in doc:
 ```
 
 #### Riippuvuussuhteet
-Sanojen välisten syntaktisten suhteiden analysointi (engl. *syntactic dependency parsing*) – kuka tekee, mitä tekee, kenelle tekee. Tämä auttaa ymmärtämään lauseen rakennetta pintaa syvemmältä. Tähän löytyy jopa oma visualisointityökalu:
+
+Sanojen välisten syntaktisten suhteiden analysointi (engl. _syntactic dependency parsing_) – kuka tekee, mitä tekee, kenelle tekee. Tämä auttaa ymmärtämään lauseen rakennetta pintaa syvemmältä. Tähän löytyy jopa oma visualisointityökalu:
 
 ```python
 from spacy import displacy
 
-doc = nlp("Susi hyökkäsi omistajansa kanssa pyörälenkillä " 
+doc = nlp("Susi hyökkäsi omistajansa kanssa pyörälenkillä "
 + "olleen koiran kimppuun keskellä asutusta Raahessa")
 
 mo.Html(displacy.render(doc, style="dep"))
@@ -282,9 +283,10 @@ mo.Html(displacy.render(doc, style="dep"))
 
 ![](../images/700_displacy-susi-quote.png)
 
-**Kuva 3:** *Riippuvuussuhteiden visualisointi SpaCy:llä.*
+**Kuva 3:** _Riippuvuussuhteiden visualisointi SpaCy:llä._
 
 #### Nimettyjen entiteettien tunnistus (NER)
+
 Errisnimien, organisaatioiden, paikkojen, päivämäärien ja rahasummien automaattinen tunnistus tekstivirrasta.
 
 ```python
@@ -294,12 +296,13 @@ for token in doc:
     print(token.text, "==", token.ent_type_)
 # microsoft == ORG
 # Microsoft == ORG
-# MiCrOSofT == 
-# MICROSOFT == 
-# macrohard == 
+# MiCrOSofT ==
+# MICROSOFT ==
+# macrohard ==
 ```
 
 #### Morfologinen analyysi
+
 Tunnistaa taivutusmuotoja.
 
 ```python
@@ -315,6 +318,7 @@ doc[0].morph
 ```
 
 #### Hukkasanat (Stop Words)
+
 Hyvin yleisten ja usein merkitykseltään vähäisten sanojen (kuten "ja", "on", "että") suodattaminen pois, jotta malli voi keskittyä oleelliseen sisältöön.
 
 ```python
@@ -354,15 +358,13 @@ Output:
            .: -0.65 | -0.54 |  6.29 | ... |  6.29
 ```
 
-
 Löydät vastaavan rakenteen myös `doc.tensor`-attribuutista, joka sisältää koko lauseen vektoritensorin, jonka muoto olisi tässä tapauksessa `(4, 96)`. PyTorchissa tulet käsittelemään niitä yleisimmin tensoreina kokoa: `(batch_size, seq_len, embedding_dim)`.
-
 
 Mutta kuinka tähän outoon vektoriin ollaan päädytty? Tutustutaan alla eri menetelmiin, aloittaen Johdatus koneoppimiseen -kurssilta tutuksi tulleesta One-Hot Encoding -menetelmästä, edeten tiheisiin vektoreihin, joiden piirteet on opittu tilastollisesti. Seuraavassa luvussa tutustumme suurten kielimallien käyttämiin kontekstisidonnaisiin sanavektoreihin. Niiden ymmärtäminen on helpompaa, jos aloitetaan perusasioista.
 
 ### ⛔ One-Hot Encoding
 
-Tämän pitäisi olla sinulle tuttu konsepti Johdatus koneoppimiseen -kurssilta. Yksinkertaisesti sanottuna, One-Hot Encodin muuntaa jokaisen sanan vektoriksi, jossa on yhtä monta ulottuvuutta kuin sanakirjassa on sanoja. Vektorin arvo on 1 siinä ulottuvuudessa, joka vastaa kyseistä sanaa, ja 0 muualla. Eli siis, jos meillä on 6 sanan sanasto (*engl. corpus*): ["kissa", "koira", "auto", "talo", "puu", "vene"], niin koko sanasto olisi enkoodattuna:
+Tämän pitäisi olla sinulle tuttu konsepti Johdatus koneoppimiseen -kurssilta. Yksinkertaisesti sanottuna, One-Hot Encodin muuntaa jokaisen sanan vektoriksi, jossa on yhtä monta ulottuvuutta kuin sanakirjassa on sanoja. Vektorin arvo on 1 siinä ulottuvuudessa, joka vastaa kyseistä sanaa, ja 0 muualla. Eli siis, jos meillä on 6 sanan sanasto (_engl. corpus_): ["kissa", "koira", "auto", "talo", "puu", "vene"], niin koko sanasto olisi enkoodattuna:
 
 ```python
 vocab = {
@@ -384,7 +386,7 @@ Naiivi harva esitys on siis ongelmallinen. Seuraavaksi yksinkertaisin lähestyms
 
 Word2Vec ei itsessään ole algoritmi vaan pikemminkin joukko malleja, jotka oppivat sanavektoreita tilastollisesti. Mikolov esitteli alkuperäisessä artikkelissaan kaksi päämallia: Continuous Bag of Words (CBOW) ja Skip-Gram. [^mikolov2013] Tutustumme erityisesti CBOW:iin alla.
 
-Ennen Mikolovin artikkelia oli tyypillistä, että kukin NLP-tutkija kehitti/koulutti oman sanavektorimallinsa omaan käyttöönsä. Word2Vec:n mallit mullistivat tätä siten, että jatkossa tutkijat pystyivät hyödyntämään valmiiksi koulutettuja sanavektoreita, *pretrained word embeddings*, jotka oli koulutettu valtavilla tekstikorpuksilla (esim. Google News, Wikipedia). Näin sanavektorit muuttuivat standardoiduiksi resursseiksi, joita voitiin jakaa ja käyttää eri NLP-tehtävissä. [^appliednlp]
+Ennen Mikolovin artikkelia oli tyypillistä, että kukin NLP-tutkija kehitti/koulutti oman sanavektorimallinsa omaan käyttöönsä. Word2Vec:n mallit mullistivat tätä siten, että jatkossa tutkijat pystyivät hyödyntämään valmiiksi koulutettuja sanavektoreita, _pretrained word embeddings_, jotka oli koulutettu valtavilla tekstikorpuksilla (esim. Google News, Wikipedia). Näin sanavektorit muuttuivat standardoiduiksi resursseiksi, joita voitiin jakaa ja käyttää eri NLP-tehtävissä. [^appliednlp]
 
 #### Word2Vec
 
@@ -392,14 +394,14 @@ Ennen Mikolovin artikkelia oli tyypillistä, että kukin NLP-tutkija kehitti/kou
 
     Vältä sekaannusta Bag of Words (BoW) -menetelmän kanssa, joka on eri asia kuin Continuous Bag of Words (CBOW). BOW on Naive Bayesin ja muiden perinteisten mallien esikäsittelymenetelmä, jossa lause esitetään sanakirjassa esiintyvien sanojen frekvensseinä ilman järjestystä.
 
-    * BoW: 
+    * BoW:
         * Dokumentti-tason esitys, jossa lasketaan kunkin sanaston sanan esiintymiskerrat (tai muita tilastollisia esiintymisiä, kuten TF-IDF).
         * Ei vaadi minkään sortin koulutusta.
-    * CBOW: 
+    * CBOW:
         * Sanatason esitys.
         * Koulutetaan ennustamaan sanaa sen kontekstin perusteella.
 
-Continuous Bag of Words (CBOW) -malli ennustaa keskimmäisen sanan ympäröivien sanojen perusteella. [^mikolov2013] Käydään algoritmi läpi esimerkin avulla. Kuvitellaan lause: =="Train will arrive at five"==. Meidän ikkunakoko on 2, eli otamme kaksi sanaa kummaltakin puolelta keskimmäistä sanaa. Meidän haluttu *embedding* ulottuvuus on 3. Täten *input* ja *target* ovat esikäsittelyn jälkeen:
+Continuous Bag of Words (CBOW) -malli ennustaa keskimmäisen sanan ympäröivien sanojen perusteella. [^mikolov2013] Käydään algoritmi läpi esimerkin avulla. Kuvitellaan lause: =="Train will arrive at five"==. Meidän ikkunakoko on 2, eli otamme kaksi sanaa kummaltakin puolelta keskimmäistä sanaa. Meidän haluttu _embedding_ ulottuvuus on 3. Täten _input_ ja _target_ ovat esikäsittelyn jälkeen:
 
 ```python
 n = len(rest_of_vocab)
@@ -412,15 +414,15 @@ X = [
 y = [0,0,1,0,0] + [0]*n  # arrive
 ```
 
-Näiden johdosta meillä on `Nx3`-kokoinen embedding matrix `W` (`N` sanaa sanastossa, 3 ulottuvuutta). Tämän matriisin **jokainen rivi on sanan vektoriesitys**. Tämä vektori on siis *embedding matrix*. Koulutuksen jälkeen tämä on se, mitä me haluamme käyttää sanavektoreina. Aluksi nämä arvot ovat satunnaisia. Syöte käytännössä valitsee `W`:stä neljä riviä (operaatiolla `X @ W`), jotka vastaavat tässä tapauksessa sanoja `train`, `will`, `at` ja `five`. Tämä *valinta* tapahtuu siten, että matriisin muut arvot saavat arvon nolla, jolloin vain näiden neljän sanan rivit vaikuttavat lopputulokseen.
+Näiden johdosta meillä on `Nx3`-kokoinen embedding matrix `W` (`N` sanaa sanastossa, 3 ulottuvuutta). Tämän matriisin **jokainen rivi on sanan vektoriesitys**. Tämä vektori on siis _embedding matrix_. Koulutuksen jälkeen tämä on se, mitä me haluamme käyttää sanavektoreina. Aluksi nämä arvot ovat satunnaisia. Syöte käytännössä valitsee `W`:stä neljä riviä (operaatiolla `X @ W`), jotka vastaavat tässä tapauksessa sanoja `train`, `will`, `at` ja `five`. Tämä _valinta_ tapahtuu siten, että matriisin muut arvot saavat arvon nolla, jolloin vain näiden neljän sanan rivit vaikuttavat lopputulokseen.
 
 Tämä operaatio kääritään vielä summan tai keskiarvon sisään, `h = torch.sum(X @ W, dim=0)`, jolloin saadaan kolmeulotteinen vektori `h`, joka on näiden neljän sanan vektoreiden summa. Tämän jälkeen lasketaan `h @ W2`, jossa `W2` on toinen painomatriisi, joka muuntaa takaisin sanatilaan. Alla olevassa kuvassa tämä on nimeltään $W'$. Tulos on vektori, jossa on `N` ulottuvuutta. Lopuksi käytetään softmaxia ja lasketaan tappio (loss) verraten ennustettua sanaa `y`:tä vastaan. Koko prosessi toistetaan valtavalla määrällä lauseita, jolloin `W` oppii säilyttämään sanojen semanttisia suhteita.
 
 ![](../images/700_CBOW.png)
 
-**Kuva 4:** *Continuous Bag of Words (CBOW) -mallin arkkitehtuuri. Kuva on mukailtu Mikolov:n alkuperäisestä artikkelista, mutta avattu yllä olevan tekstiesimerkin mukaiseksi.*
+**Kuva 4:** _Continuous Bag of Words (CBOW) -mallin arkkitehtuuri. Kuva on mukailtu Mikolov:n alkuperäisestä artikkelista, mutta avattu yllä olevan tekstiesimerkin mukaiseksi._
 
-Seuraavaksi voisimme liu'uttaa tätä ikkunaa eteenpäin lauseessa, jolloin saamme lisää *input*- ja *target*-pareja. Seuraava ikkuna voisi olla: =="will arrive at five o'clock"==, jolloin `y` olisi `at`. Näin jatketaan koko korpuksen läpi useita kertoja.
+Seuraavaksi voisimme liu'uttaa tätä ikkunaa eteenpäin lauseessa, jolloin saamme lisää _input_- ja _target_-pareja. Seuraava ikkuna voisi olla: =="will arrive at five o'clock"==, jolloin `y` olisi `at`. Näin jatketaan koko korpuksen läpi useita kertoja.
 
 CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet [^appliednlp]:
 
@@ -429,19 +431,19 @@ CBOW ei suinkaan ole täydellinen, vaan siinä on seuraavat heikkoudet [^applied
 3. **Out of Vocabulary (OOV)**. CBOW ei pysty käsittelemään sanoja, joita ei ole nähty koulutuksen aikana. Tämä on ongelma harvinaisille sanoille tai kirjoitusvirheille.
 4. **Staattisuus**. Jokaisella sanalla on yksi kiinteä vektoriesitys, joka ei muutu kontekstin mukaan. Onko se kuusi nyt sitten numero vai puu?
 
-!!! question "Entä Skip-gram?" 
+!!! question "Entä Skip-gram?"
 
     Skip-gram toimii päinvastoin kuin CBOW: se ennustaa kontekstisanoja annetun sanan perusteella. Eli jos meillä on sana `arrive`, Skip-gram yrittää ennustaa sanat `train`, `will`, `at` ja `five`. Arkkitehtuuri on muuten samanlainen, mutta syöte ja tavoite ovat vaihtaneet paikkaa [^mikolov2013]. Skip-gram toimii erityisen hyvin harvinaisten sanojen kanssa, koska se keskittyy yksittäisiin sanoihin ja niiden konteksteihin. [^nlp101]
 
 #### GloVe
 
-GloVe julkaistiin 2014 Stanfordissa, vuosi Word2Vec:n jälkeen. GloVe korjaa CBOW:n ensimmäisenä puutteen (ks. yltä) hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja (*engl. co-occurrence matrix*) pelkän lokaalin ikkunan sijaan. GloVe rakentaa sanavektorit siten, että sanojen vektoreiden välinen etäisyys heijastaa niiden yhteisesiintymistiheyttä koko korpuksessa: tämä tehdään tekemällä dimensiovähennys yhteisesiintymismatriisille [^appliednlp].
+GloVe julkaistiin 2014 Stanfordissa, vuosi Word2Vec:n jälkeen. GloVe korjaa CBOW:n ensimmäisenä puutteen (ks. yltä) hyödyntämällä koko korpuksen globaaleja yhteisesiintymistilastoja (_engl. co-occurrence matrix_) pelkän lokaalin ikkunan sijaan. GloVe rakentaa sanavektorit siten, että sanojen vektoreiden välinen etäisyys heijastaa niiden yhteisesiintymistiheyttä koko korpuksessa: tämä tehdään tekemällä dimensiovähennys yhteisesiintymismatriisille [^appliednlp].
 
 Emme käsittele algoritmia tässä tarkemmin, mutta voit tutua sen verkkosivuihin [GloVe: Global Vectors for Word Representation](https://nlp.stanford.edu/projects/glove/). Sivuilta löytyy sekä julkaisu, kivoja kuvia, että linkki GitHub-koodiin (C-kieltä).
 
 #### fastText
 
-Facebook julkaisi fastText-algoritmin vuonna 2016. Kuten sen artikkelin otsikosta, *"Enriching Word Vectors with Subword Information"*, voi päätellä, fastText ottaa huomioon sanojen sisäiset osat (subwords), kuten n-grammit. Tämä auttaa käsittelemään harvinaisia sanoja ja morfologisesti rikkaita kieliä paremmin kuin Word2Vec tai GloVe. fastText edustaa kutakuinkin seuraavaa evoluutiovaihetta sanavektoreissa [^bojanowski2016].
+Facebook julkaisi fastText-algoritmin vuonna 2016. Kuten sen artikkelin otsikosta, _"Enriching Word Vectors with Subword Information"_, voi päätellä, fastText ottaa huomioon sanojen sisäiset osat (subwords), kuten n-grammit. Tämä auttaa käsittelemään harvinaisia sanoja ja morfologisesti rikkaita kieliä paremmin kuin Word2Vec tai GloVe. fastText edustaa kutakuinkin seuraavaa evoluutiovaihetta sanavektoreissa [^bojanowski2016].
 
 Emme käsittele myöskään tätä algoritmia tarkemmin. Voit tutustua sen verkkosivuihin [fastText: Library for Efficient Text Classification and Representation Learning](https://fasttext.cc/). Sivuilta löytyy Explain Like I'm Five -video, linkki koodiin ja muuta hyödyllistä.
 
@@ -457,8 +459,8 @@ Se, mikä meitä kiinnostaa, on että mitkä CBOW:n heikkouksista on nyt korjatt
 #### Vektorien analogiat
 
 > "We now evaluate our approach on word analogy
-questions, of the form A is to B as C is to D,
-where D must be predicted by the models." 
+> questions, of the form A is to B as C is to D,
+> where D must be predicted by the models."
 >
 > — Mikolov et al., 2013 [^mikolov2013]
 
@@ -475,9 +477,9 @@ queen_vector = king_vector - man_vector + woman_vector
 
 ### Samankaltaisuus numerona
 
-Johdatus koneoppimiseen -kurssilta sinulle pitäisi olla tuttu käsite euklidinen etäisyys, joka mittaa suoraa etäisyyttä kahden vektorin välillä. Kyseessä on *linnuntie-etäisyys*. Piirrevektorin kohdalla tämä ei kuitenkaan ole paras tapa mitata samankaltaisuutta, koska se on herkkä vektoreiden normille eli pituudelle. Siksi käytetään usein kosinista samankaltaisuutta, joka mittaa vektoreiden välistä kulmaa, eikä niinkään etäisyyttä. [^buildingaiagents] Ajatus itsessään on hyvin vanha. Ainakin itse sen esittelijöistä on Zellig Harris julkaisussa "Distributional Structure" vuodelta 1954. [^harris1954] PsycNetin tiivistelmä on seuraava: *"Harris maintains that it is possible to define a linguistic structure solely in terms of the "distributions" (= patterns of co-occurrences) of its elements. There is no parallel meaning-structure which can aid in describing formal structure. Meaning is partly a function of distribution."* [^psycnetharris1954]
+Johdatus koneoppimiseen -kurssilta sinulle pitäisi olla tuttu käsite euklidinen etäisyys, joka mittaa suoraa etäisyyttä kahden vektorin välillä. Kyseessä on _linnuntie-etäisyys_. Piirrevektorin kohdalla tämä ei kuitenkaan ole paras tapa mitata samankaltaisuutta, koska se on herkkä vektoreiden normille eli pituudelle. Siksi käytetään usein kosinista samankaltaisuutta, joka mittaa vektoreiden välistä kulmaa, eikä niinkään etäisyyttä. [^buildingaiagents] Ajatus itsessään on hyvin vanha. Ainakin itse sen esittelijöistä on Zellig Harris julkaisussa "Distributional Structure" vuodelta 1954. [^harris1954] PsycNetin tiivistelmä on seuraava: _"Harris maintains that it is possible to define a linguistic structure solely in terms of the "distributions" (= patterns of co-occurrences) of its elements. There is no parallel meaning-structure which can aid in describing formal structure. Meaning is partly a function of distribution."_ [^psycnetharris1954]
 
-Tämä *cosine similarity* on pistetulon normalisoitu versio. Se vastaa kahden vektorin välisen kulman kosinia, mistä nimi **kosininen samankaltaisuus** [^buildingaiagents]:
+Tämä _cosine similarity_ on pistetulon normalisoitu versio. Se vastaa kahden vektorin välisen kulman kosinia, mistä nimi **kosininen samankaltaisuus** [^buildingaiagents]:
 
 $$
 \text{cosine_similarity}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}
@@ -485,23 +487,23 @@ $$
 
 Kosinilla on hyödyllisiä ominaisuuksia skaalainvarianssin lisäksi [^buildingaiagents]:
 
-* Se on välillä -1 ja 1. 
-    * Vastakkaiset: -1
-    * Ortogonaaliset: 0
-    * Samansuuntaiset: 1
-* Se on nopea ja edullinen laskea.
-* Se on vähemmän herkkä sanojen esiintymistiheydelle ja siten kestävämpi poikkeuksille (*engl. outliers*)
-* Koska se on normalisoitu, sitä voidaan käyttää myös korkeaulotteisen datan kanssa.
+- Se on välillä -1 ja 1.
+  - Vastakkaiset: -1
+  - Ortogonaaliset: 0
+  - Samansuuntaiset: 1
+- Se on nopea ja edullinen laskea.
+- Se on vähemmän herkkä sanojen esiintymistiheydelle ja siten kestävämpi poikkeuksille (_engl. outliers_)
+- Koska se on normalisoitu, sitä voidaan käyttää myös korkeaulotteisen datan kanssa.
 
 ![](../images/700_cosine_scatterplot.png)
 
-**Kuva 5:** *Havainnekuva kosinisen samankaltaisuuden arvoista eri ryppäiden välillä. Punainen kolmio edustaa kahden ryppään välistä kosinikulmaa.*
+**Kuva 5:** _Havainnekuva kosinisen samankaltaisuuden arvoista eri ryppäiden välillä. Punainen kolmio edustaa kahden ryppään välistä kosinikulmaa._
 
-Yllä olevassa kuvassa pisteet edustavat sanoja tai N-grammeja eli yleensä yhdessä esiintyvistä sanoista koostettuja kokonaisuuksia. Pisteparven `x`-akseli on `individual—social` ja `y` on `physical—digital`. 
+Yllä olevassa kuvassa pisteet edustavat sanoja tai N-grammeja eli yleensä yhdessä esiintyvistä sanoista koostettuja kokonaisuuksia. Pisteparven `x`-akseli on `individual—social` ja `y` on `physical—digital`.
 
-* :blue_circle: Siniset sanat ovat vahvan digitaalisia, lähes neutraaleja sosiaalisuudeltaan, kuten: `cloud_storage`, `database`, `encryption`. 
-* :yellow_circle: Keltaiset sanat ovat vähemmän digitaalisia, enemmän sosiaalisia, kuten: `social_media_app`, `group_chat`, `wikipedia`.
-* :purple_circle: Violetit sanat ovat miedosti fyysisen puolella ja yksilöllisiä, kuten: `map`, `board_game_rulebook`, `print`. 
+- :blue_circle: Siniset sanat ovat vahvan digitaalisia, lähes neutraaleja sosiaalisuudeltaan, kuten: `cloud_storage`, `database`, `encryption`.
+- :yellow_circle: Keltaiset sanat ovat vähemmän digitaalisia, enemmän sosiaalisia, kuten: `social_media_app`, `group_chat`, `wikipedia`.
+- :purple_circle: Violetit sanat ovat miedosti fyysisen puolella ja yksilöllisiä, kuten: `map`, `board_game_rulebook`, `print`.
 
 Jos valitsemme kustakin ryppäästä yhden sanan, voimme laskea etäisyyksiä. Saamme `cosine(yellow, blue) ≈ 0.5`. Sen sijaan `cosine(yellow, purple) ≈ -1.0`. Huomaa, että jos käyttäisimme euklidista etäisyyttä, tulos olisi hyvin eri: `euclid(yellow, blue) > euclid(yellow, purple)`. Yksinkertaisessa 2-ulotteisessa kuvaajassa tämä on silmämääräisesti todistettavissa: muista, että sanavektori on esimerkiksi 300-ulotteinen vektori.
 
@@ -511,24 +513,23 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 
 ### 1990-luku
 
-* **Esiprosessointi ja sanojen tokenisointi**. Tilastolliset menetelmät ovat hyvin hauraita syötteen suhteen, joten sananmuodot, hukkasanat ja muut on käsiteltävä huolellisesti. Tiedät tämän Johdatus koneoppimiseen -kurssilta. Naive Bayes luulee esimerkiksi että `Kissa` ja `kissa` ovat eri sanoja, ellet erikseen käsittele datasettiä.
-* **One-Hot & BoW**. Sanat esitettiin eristettyinä indekseinä tai frekvensseinä sanakirjassa, jossa esiintyy aivan jokainen mallin tuntema sana. [^appliednlp]
-* **N-Gram**. Ainut tapa mallintaa kontekstia oli tarkastella peräkkäisten sanojen yhdistelmiä. Kärjistetysti tietyistä sanapareista (bigram) tai -kolmikoista (trigram) laskettiin todennäköisyydet, eli vaikkapa `new york` on yksi token.
-* **RNN ja LSTM**. RNN oli 90-luvulla akateeminen kuriositeetti. Laskentatehoa oli todella vähän ja saatavat datasetit pieniä. Wikipediaa tai näytönohjaimia ei ollut olemassa.
+- **Esiprosessointi ja sanojen tokenisointi**. Tilastolliset menetelmät ovat hyvin hauraita syötteen suhteen, joten sananmuodot, hukkasanat ja muut on käsiteltävä huolellisesti. Tiedät tämän Johdatus koneoppimiseen -kurssilta. Naive Bayes luulee esimerkiksi että `Kissa` ja `kissa` ovat eri sanoja, ellet erikseen käsittele datasettiä.
+- **One-Hot & BoW**. Sanat esitettiin eristettyinä indekseinä tai frekvensseinä sanakirjassa, jossa esiintyy aivan jokainen mallin tuntema sana. [^appliednlp]
+- **N-Gram**. Ainut tapa mallintaa kontekstia oli tarkastella peräkkäisten sanojen yhdistelmiä. Kärjistetysti tietyistä sanapareista (bigram) tai -kolmikoista (trigram) laskettiin todennäköisyydet, eli vaikkapa `new york` on yksi token.
+- **RNN ja LSTM**. RNN oli 90-luvulla akateeminen kuriositeetti. Laskentatehoa oli todella vähän ja saatavat datasetit pieniä. Wikipediaa tai näytönohjaimia ei ollut olemassa.
 
 ### 2000-luku
 
-* **Word Embeddings**. Bengio ja kollegat esittelivät sanavektorit kielimallinnukseen (tai käännöstyöhön). Sanavektori sisältää tietoa kontekstista, kuten sanojen `dog` ja `cat` samankaltaisuudesta. [^bengio2003]
+- **Word Embeddings**. Bengio ja kollegat esittelivät sanavektorit kielimallinnukseen (tai käännöstyöhön). Sanavektori sisältää tietoa kontekstista, kuten sanojen `dog` ja `cat` samankaltaisuudesta. [^bengio2003]
 
 ### 2010-luku
 
-* **Word2Vec**. Mikolov ja kollegat Googlessa esittelivät Word2Vecin (CBOW ja Skip-Gram), joka mahdollisti erittäin tehokkaan tavan oppia sanavektoreita suurista tekstikorpuksista. Huomaa sana *efficient* julkaisun otsikossa. Tämä jatkoi Bengion kehitystä. [^mikolov2013]
-* **Kontekstisidonnaiset sanavektorit**. Sanavektorit eivät ole enää staattisia, vaan ne riippuvat lauseen kontekstista.
-* **Subword-tokenisointi**. Koko sanan käyttö tokenina on naiivi ratkaisu. Yksittäisen kirjaimen käyttö tokenina sisältää enemmän informaatiota, mutta on epätehokas ratkaisu. Välistä löytynee siis hyvä balanssi? Byte-Pair Encoding (BPE) ja vastaavat menetelmät pyrkivät muodostamaan tokenit dynaamisesti yleisimmistä osasanoista. [^bpe]
-* **Seq2Seq**. Sutskever ja kollegat esittelivät encoder-decoder-arkkitehtuurin konekäännökseen, jossa RNN-verkko koodaa syötteen ja toinen RNN dekoodaa sen toiselle kielelle. Enkooderin ja dekooderin välissä on kiinteämittainen vektori, joka pyrkii sisältämään kaiken syötteen merkityksen. [^sutskever2014] Tästä jatketaan tarkemmin [RNN ja jälkeläiset](rnn.md)-luvussa.
-* **Attention**. Bahdanau ja kollegat esittelivät *attention*-mekanismin, joka sallii dekooderin keskittyä eri osiin syötettä eri aikoina, parantaen merkittävästi käännösten laatua. [^bahdanau2015]
-* **Transformers**. Tästä jatketaan tarkemmin [Transformers-luvussa](transformers.md).
-
+- **Word2Vec**. Mikolov ja kollegat Googlessa esittelivät Word2Vecin (CBOW ja Skip-Gram), joka mahdollisti erittäin tehokkaan tavan oppia sanavektoreita suurista tekstikorpuksista. Huomaa sana _efficient_ julkaisun otsikossa. Tämä jatkoi Bengion kehitystä. [^mikolov2013]
+- **Kontekstisidonnaiset sanavektorit**. Sanavektorit eivät ole enää staattisia, vaan ne riippuvat lauseen kontekstista.
+- **Subword-tokenisointi**. Koko sanan käyttö tokenina on naiivi ratkaisu. Yksittäisen kirjaimen käyttö tokenina sisältää enemmän informaatiota, mutta on epätehokas ratkaisu. Välistä löytynee siis hyvä balanssi? Byte-Pair Encoding (BPE) ja vastaavat menetelmät pyrkivät muodostamaan tokenit dynaamisesti yleisimmistä osasanoista. [^bpe]
+- **Seq2Seq**. Sutskever ja kollegat esittelivät encoder-decoder-arkkitehtuurin konekäännökseen, jossa RNN-verkko koodaa syötteen ja toinen RNN dekoodaa sen toiselle kielelle. Enkooderin ja dekooderin välissä on kiinteämittainen vektori, joka pyrkii sisältämään kaiken syötteen merkityksen. [^sutskever2014] Tästä jatketaan tarkemmin [RNN ja jälkeläiset](rnn.md)-luvussa.
+- **Attention**. Bahdanau ja kollegat esittelivät _attention_-mekanismin, joka sallii dekooderin keskittyä eri osiin syötettä eri aikoina, parantaen merkittävästi käännösten laatua. [^bahdanau2015]
+- **Transformers**. Tästä jatketaan tarkemmin [Transformers-luvussa](transformers.md).
 
 ## Tehtävät
 
@@ -554,26 +555,48 @@ Tiivistetään yllä löydetty, ELIZA:aa ja PARRY:ä seuraava historia lyhyesti 
 
 ## Lähteet
 
-[^dlwithpython]: Watson, M & Chollet, F. *Deep Learning with Python, Third Edition*. Manning. 2025.
-[^turing1950]: Turing, A. M. *Computing Machinery and Intelligence.* Mind. 1950. https://courses.cs.umbc.edu/471/papers/turing.pdf
-[^aimarketing]: Ammerman, W. *The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning*. McGraw-Hill. 2024.
-[^llmturing]: Jones, C.R. & Benjamin, B. *Large Language Models Pass the Turing Test*. 2025. https://arxiv.org/abs/2503.23674
-[^demystifyingai]: Barton, R. & Henry, J. *Demystifying Generative AI: A Practical and Intuitive Introduction*. Addison-Wesley Professional. 2026.
-[^aiux]: Lew, G. & Schumacher, R. *AI and UX: Why Artificial Intelligence Needs User Experience*. Apress. 2020.
-[^rfc439]: Unknown. *PARRY Encounters the DOCTOR*. 1973. https://www.rfc-editor.org/rfc/rfc439.html
-[^conversational]: Rawat, R. et. al. *Conversational Artificial Intelligence*. Wiley-Scrivener. 2024.
-[^airevolution]: Kanabar, V. & Wong, J. The AI Revolution in Project Management: Elevating Productivity with Generative AI*. Pearson. 2023.
-[^genesis]: Williams, B. *A Commonsense Approach to Story Understanding*. MIT. 2016. https://groups.csail.mit.edu/genesis/papers/2017%20Bryan%20Williams.pdf
-[^llmfromscratch]: Raschka, S. *Build a Large Language Model (From Scratch)*. Manning. 2024.
-[^pymde]: Akshay and pymde contributors. *What is an embedding?*. pymde docs. https://pymde.org/getting_started/#what-is-an-embedding
-[^appliednlp]: Patel, A & Arasanipalai, A. *Applied Natural Language Processing in the Enterprise*. O'Reilly. 2021.
-[^mikolov2013]: Mikolov, T. et. al. *Efficient Estimation of Word Representations in Vector Space*. 2013. https://arxiv.org/abs/1301.3781
-[^nlp101]: Kulshreshta, R. *NLP 101: Word2Vec — Skip-gram and CBOW*. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
-[^bojanowski2016]: Bojanowski, P. et. al. *Enriching Word Vectors with Subword Information*. 2016. https://arxiv.org/pdf/1607.04606
-[^buildingaiagents]: Raieli, S. & Iuculano, G. *Building AI Agents with LLMs, RAG, and Knowledge Graphs*. Packt. 2025.
-[^harris1954]: Harris, Z. *Distributional Structure*. Word. 1954. https://www.its.caltech.edu/~matilde/ZelligHarrisDistributionalStructure1954.pdf
-[^psycnetharris1954]: APA PsycNet. *Distributional Structure*. PsycINFO Database Record. 2016. https://psycnet.apa.org/record/1956-02807-001
-[^bengio2003]: Bengio, Y. et. al. *A Neural Probabilistic Language Model*. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
-[^bpe]: Sennrich, R. et. al. *Neural Machine Translation of Rare Words with Subword Units*. 2016. https://arxiv.org/abs/1508.07909
-[^sutskever2014]: Sutskever, I. et. al. *Sequence to Sequence Learning with Neural Networks*. 2014. https://arxiv.org/abs/1409.3215
-[^bahdanau2015]: Bahdanau, D. et. al. *Neural Machine Translation by Jointly Learning to Align and Translate*. 2015. https://arxiv.org/abs/1409.0473
+[^dlwithpython]: Watson, M & Chollet, F. _Deep Learning with Python, Third Edition_. Manning. 2025.
+
+[^turing1950]: Turing, A. M. _Computing Machinery and Intelligence._ Mind. 1950. https://courses.cs.umbc.edu/471/papers/turing.pdf
+
+[^aimarketing]: Ammerman, W. _The Invisible Brand: Marketing in the Age of Automation, Big Data, and Machine Learning_. McGraw-Hill. 2024.
+
+[^llmturing]: Jones, C.R. & Benjamin, B. _Large Language Models Pass the Turing Test_. 2025. https://arxiv.org/abs/2503.23674
+
+[^demystifyingai]: Barton, R. & Henry, J. _Demystifying Generative AI: A Practical and Intuitive Introduction_. Addison-Wesley Professional. 2026.
+
+[^aiux]: Lew, G. & Schumacher, R. _AI and UX: Why Artificial Intelligence Needs User Experience_. Apress. 2020.
+
+[^rfc439]: Unknown. _PARRY Encounters the DOCTOR_. 1973. https://www.rfc-editor.org/rfc/rfc439.html
+
+[^conversational]: Rawat, R. et. al. _Conversational Artificial Intelligence_. Wiley-Scrivener. 2024.
+
+[^airevolution]: Kanabar, V. & Wong, J. The AI Revolution in Project Management: Elevating Productivity with Generative AI\*. Pearson. 2023.
+
+[^genesis]: Williams, B. _A Commonsense Approach to Story Understanding_. MIT. 2016. https://groups.csail.mit.edu/genesis/papers/2017%20Bryan%20Williams.pdf
+
+[^llmfromscratch]: Raschka, S. _Build a Large Language Model (From Scratch)_. Manning. 2024.
+
+[^pymde]: Akshay and pymde contributors. _What is an embedding?_. pymde docs. https://pymde.org/getting_started/#what-is-an-embedding
+
+[^appliednlp]: Patel, A & Arasanipalai, A. _Applied Natural Language Processing in the Enterprise_. O'Reilly. 2021.
+
+[^mikolov2013]: Mikolov, T. et. al. _Efficient Estimation of Word Representations in Vector Space_. 2013. https://arxiv.org/abs/1301.3781
+
+[^nlp101]: Kulshreshta, R. _NLP 101: Word2Vec — Skip-gram and CBOW_. Toward Data Science. 2019. https://medium.com/data-science/nlp-101-word2vec-skip-gram-and-cbow-93512ee24314
+
+[^bojanowski2016]: Bojanowski, P. et. al. _Enriching Word Vectors with Subword Information_. 2016. https://arxiv.org/pdf/1607.04606
+
+[^buildingaiagents]: Raieli, S. & Iuculano, G. _Building AI Agents with LLMs, RAG, and Knowledge Graphs_. Packt. 2025.
+
+[^harris1954]: Harris, Z. _Distributional Structure_. Word. 1954. https://www.its.caltech.edu/~matilde/ZelligHarrisDistributionalStructure1954.pdf
+
+[^psycnetharris1954]: APA PsycNet. _Distributional Structure_. PsycINFO Database Record. 2016. https://psycnet.apa.org/record/1956-02807-001
+
+[^bengio2003]: Bengio, Y. et. al. _A Neural Probabilistic Language Model_. Journal of Machine Learning Research. 2003. https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
+
+[^bpe]: Sennrich, R. et. al. _Neural Machine Translation of Rare Words with Subword Units_. 2016. https://arxiv.org/abs/1508.07909
+
+[^sutskever2014]: Sutskever, I. et. al. _Sequence to Sequence Learning with Neural Networks_. 2014. https://arxiv.org/abs/1409.3215
+
+[^bahdanau2015]: Bahdanau, D. et. al. _Neural Machine Translation by Jointly Learning to Align and Translate_. 2015. https://arxiv.org/abs/1409.0473

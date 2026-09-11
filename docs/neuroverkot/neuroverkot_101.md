@@ -11,15 +11,15 @@ priority: 100
 Neuroverkot (engl. neural networks) ovat koneoppimisen malleja, jotka saavat inspiraationsa ihmisen aivojen rakenteesta ja toiminnasta. Neuroverkot pystyvät oppimaan monimutkaisia kuvioita datasta, ja niitä käytetään laajalti erilaisissa sovelluksissa, kuten kuvantunnistuksessa, puheentunnistuksessa ja luonnollisen kielen käsittelyssä. Koneoppimisen (mukaan lukien sen alaisuuteen kuuluvan syväoppimisen) voi tiiviisti määritellä seuraavasti:
 
 > "Fit a given set of data points into an appropriate function (mapping an input to an output) that picks up on the important signals in the data and ignores the noise, then make sure this function performs well on new data."
-> 
+>
 > — Hala Nelson [^mathforai]
 
 Kannattaa kerrata omista Johdatus koneoppimiseen -kurssin muistiinpanoista, kuinka tekoäly, koneoppiminen ja syväoppiminen liittyvät toisiinsa. Voit myös kerrata sieltä muita määritelmiä koneoppimisesta.
 
 Se, kuinka neuroverkot eroavat Johdatus koneoppimiseen -kurssin malleista, on:
 
-* Neuroverkot pystyvät oppimaan itse piirteet (feature learning). Tämä ei tarkoita, että *feature engineering* vaihe olisi turha, mutta tätä työtä voi ulkoistaa neuroverkolle.
-* Neuroverkot pystyvät mallintamaan monimutkaisempia, epälineaarisia suhteita datassa.
+- Neuroverkot pystyvät oppimaan itse piirteet (feature learning). Tämä ei tarkoita, että _feature engineering_ vaihe olisi turha, mutta tätä työtä voi ulkoistaa neuroverkolle.
+- Neuroverkot pystyvät mallintamaan monimutkaisempia, epälineaarisia suhteita datassa.
 
 ### Epälineaarista
 
@@ -45,17 +45,17 @@ Neuroverkot kykenevät mallintamaan epälineaarisia funktioita, koska ne käytt�
 
 ### All or nothing
 
-Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1943 **Warren McCulloch** ja **Walter Pitts** julkaisivat artikkelin *"A Logical Calculus of the Ideas Immanent in Nervous Activity"*, jossa he esittivät yksinkertaisen mallin keinotekoisesta neuronista. Malli perustui "all-or-nothing" -periaatteeseen, jossa neuronin aktivaatio tapahtuu, kun syötteiden painotettu summa ylittää tietyn kynnyksen. Kyseessä olivat siis binääriset neuronit, jotka toimivat loogisina portteina. [^fastaibook] McCullh:n ja Pitts:n artikkeli ei kuitenkaan esitellyt mentelmää, joka mahdollistaisi mallin oppivan. Tätä ehdotti vuonna 1949 Donal Hebb: hermosolujen väliset yhteydet vahvistuvat, jos hermosolut aktivoituvat yhdessä. [^kämäräinen]
+Syväoppiminen ei suinkaan ole syntynyt ChatGPT:n myötä 2020-luvulla. Vuonna 1943 **Warren McCulloch** ja **Walter Pitts** julkaisivat artikkelin _"A Logical Calculus of the Ideas Immanent in Nervous Activity"_, jossa he esittivät yksinkertaisen mallin keinotekoisesta neuronista. Malli perustui "all-or-nothing" -periaatteeseen, jossa neuronin aktivaatio tapahtuu, kun syötteiden painotettu summa ylittää tietyn kynnyksen. Kyseessä olivat siis binääriset neuronit, jotka toimivat loogisina portteina. [^fastaibook] McCullh:n ja Pitts:n artikkeli ei kuitenkaan esitellyt mentelmää, joka mahdollistaisi mallin oppivan. Tätä ehdotti vuonna 1949 Donal Hebb: hermosolujen väliset yhteydet vahvistuvat, jos hermosolut aktivoituvat yhdessä. [^kämäräinen]
 
 > "Pitts was self-taught, and by age 12, had received an offer to study at Cambridge University with the great Bertrand Russell. He did not take up this invitation, and indeed throughout his life did not accept any offers of advanced degrees or positions of authority. Most of his famous work was done while he was homeless."
-> 
+>
 > — Gugger & Howard, Deep Learning for Coders with fastai and PyTorch [^fastaibook]
 
 ### Dartmouth ja AI:n synty
 
-Vaikka McCulloch ja Pitts olivat jo 1943 luoneet teoreettisen pohjan keinotekoisille neuroneille, AI:n syntymähetki tieteenalana on kesällä 1956 Dartmouth Collegessa järjestetty työpaja *Dartmouth Summer Research Project* – ainakin yliopiston itsensä mukaan [^termcoined]. **John McCarthy** toimi kokoonpanijana ja muita järjestäjiä olivat **Marvin Minsky**, **Claude Shannon** ja **Nathaniel Rochester**.
+Vaikka McCulloch ja Pitts olivat jo 1943 luoneet teoreettisen pohjan keinotekoisille neuroneille, AI:n syntymähetki tieteenalana on kesällä 1956 Dartmouth Collegessa järjestetty työpaja _Dartmouth Summer Research Project_ – ainakin yliopiston itsensä mukaan [^termcoined]. **John McCarthy** toimi kokoonpanijana ja muita järjestäjiä olivat **Marvin Minsky**, **Claude Shannon** ja **Nathaniel Rochester**.
 
-> "We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire. [...] An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves."
+> "We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire. (...) An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves."
 >
 > — A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence, 1955 [^dartproposal]
 
@@ -65,16 +65,16 @@ Työpajan aivoriihissä käsiteltiin jo tuolloin monia alueita, jotka ovat edell
 
 50-luvun lopulla **David Hubel** ja **Torsten Wiesel** tutkivat, kuinka aivokuoressa käsitellään visuaalista informaatiota. He havaitsivat, että tietyt neuronit reagoivat spesifisiin visuaalisiin ärsykkeisiin, kuten viivoihin ja reunoihin [^dlillustrated]. He saivat tästä Nobelin fysiologian ja lääketieteen palkinnon vuonna 1981. [^nobel1981] Hubel ja Wiesel suorittivat kokeensa näyttämällä visuaalisia ärsykkeitä nukutetuille kissoille. Näiden 24 kissaraukan hermosolujen aktivaatiota tarkkailtiin mittalaitteilla aivokuoresta. [^hubelwiesel] Lieneekö kirja (ja elokuva) Kellopeliappelsiini ottanut tästä vaikutteita?
 
-Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja yksinkertaisilla muodoilla kuten pisteillä, mutta eivät saaneet mitään vastetta. Sitten sattuma ja vahinko astuivat peliin: *"And then, as with many of the great discoveries, from X-rays to penicillin to the microwave oven, Hubel and Wiesel made a serendipitous observation: As they removed one of their slides from the projector, its straight edge elicited the distinctive crackle of their recording equipment to alert them that a primary visual cortex neuron was firing."* [^dlillustrated] Nämä neuronit, joihin signaali tulee ensimmäisenä silmien suunnasta, saivat nimen "simple cells". Nämä solut kytkeytyvät edelleen monimutkaisempiin "complex cells" -soluihin, jotka reagoivat viivoihin ja reunoihin eri kulmissa. Kun näitä verkkoja kasataan useita kerroksia, meillä on syvä neuroverkko, joka pystyy tunnistamaan monimutkaisia kuvioita, kuten kasvoja, esineitä ja maisemia.
+Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja yksinkertaisilla muodoilla kuten pisteillä, mutta eivät saaneet mitään vastetta. Sitten sattuma ja vahinko astuivat peliin: _"And then, as with many of the great discoveries, from X-rays to penicillin to the microwave oven, Hubel and Wiesel made a serendipitous observation: As they removed one of their slides from the projector, its straight edge elicited the distinctive crackle of their recording equipment to alert them that a primary visual cortex neuron was firing."_ [^dlillustrated] Nämä neuronit, joihin signaali tulee ensimmäisenä silmien suunnasta, saivat nimen "simple cells". Nämä solut kytkeytyvät edelleen monimutkaisempiin "complex cells" -soluihin, jotka reagoivat viivoihin ja reunoihin eri kulmissa. Kun näitä verkkoja kasataan useita kerroksia, meillä on syvä neuroverkko, joka pystyy tunnistamaan monimutkaisia kuvioita, kuten kasvoja, esineitä ja maisemia.
 
 ![alt text](../images/100_hubel_wiesel_cat.png)
 
-**Kuva 1:** *Otos Hubelin ja Wieselin tutkimuksesta. Kuva näyttää, miten primaari näköaivokuori (V1) reagoi eri kohtiin verkkokalvon näkökentässä osuvista pistemäisistä valoista reseptiivisen kentän kautta.* [^hubelwiesel]
+**Kuva 1:** _Otos Hubelin ja Wieselin tutkimuksesta. Kuva näyttää, miten primaari näköaivokuori (V1) reagoi eri kohtiin verkkokalvon näkökentässä osuvista pistemäisistä valoista reseptiivisen kentän kautta._ [^hubelwiesel]
 
 !!! tip
 
     Aivokuori on evoluution myöhäinen kehitystuote, joka selittää nisäkkäiden monimutkaista käyttäytymistä verrattuna vanhempiin eläinryhmiin. [^dlillustrated]
-    
+
     Aivoja kutsutaan "harmaaksi aineeksi", koska ulkopinta (aivokuori) on harmaata. Suurin osa aivoista on kuitenkin valkoista ainetta, joka kuljettaa tietoa pitkiä matkoja. Sen hermosolut on päällystetty valkoisella rasvaisella kalvolla, joka nopeuttaa signaalien johtumista. [^dlillustrated]
 
 ### Perceptron
@@ -83,29 +83,29 @@ Hubel ja Wiesel yrittivät aluksi stimuloida kissojen näköaivokuoren neuroneja
 
 ![alt text](../images/100_design_of_intelligent_automaton_research_trends.png)
 
-**Kuva 2:** *Lehtileike Research Trends -lehden kesän 1958 numerosta. Huomaa ingressi: "Introducing the perceptron — A machine which senses, recognizes, remembers, and responds like the human mind."* [^researchtrends]
+**Kuva 2:** _Lehtileike Research Trends -lehden kesän 1958 numerosta. Huomaa ingressi: "Introducing the perceptron — A machine which senses, recognizes, remembers, and responds like the human mind."_ [^researchtrends]
 
 ### AI-talven alku
 
-MIT:n **Marvin Minsky** ja **Seymour Papert** julkaisivat vuonna 1969 kirjan *Perceptrons*, jossa he osoittivat, että yksittäinen kerros ei pysty ratkaisemaan tiettyjä ongelmia, kuten XOR-ongelmaa. Howard ja Gugger [^fastaibook] toteavat, että samassa Perceptrons-kirjassa esiteltiin myös ratkaisuja ongelmaan, kuten useiden kerrosten käyttö. Heidän mukaansa vain rajoitukset saivat huomiota, ja näin alkoi parin vuosikymmenen "talvi", jolloin neuroverkkojen tutkimus hiipui.
+MIT:n **Marvin Minsky** ja **Seymour Papert** julkaisivat vuonna 1969 kirjan _Perceptrons_, jossa he osoittivat, että yksittäinen kerros ei pysty ratkaisemaan tiettyjä ongelmia, kuten XOR-ongelmaa. Howard ja Gugger [^fastaibook] toteavat, että samassa Perceptrons-kirjassa esiteltiin myös ratkaisuja ongelmaan, kuten useiden kerrosten käyttö. Heidän mukaansa vain rajoitukset saivat huomiota, ja näin alkoi parin vuosikymmenen "talvi", jolloin neuroverkkojen tutkimus hiipui.
 
 ### 80-luvun kevät
 
-AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClelland** ja PDP Research Group julkaisivat kaksiosaisin kirjan *Parallel Distributed Processing (PDP)*. Kirja on ladattavissa ainakin [Gwern.net (PDF)](https://gwern.net/doc/ai/nn/1986-rumelhart-pdp-v1.pdf)-sivustolta, mutta en tiedä, kenen luvin Gwern Branwen kirjaa jakaa. Howard ja Gugger [^fastaibook] nostavat tämän viimeisen 50 vuoden käänteentekevimmäksi julkaisuksi. PDP:n asettamat vaatimukset, kuten "joukko prosessointiyksiköitä" ja "ulostulon funktio", ovat edelleen keskeisiä neuroverkkojen määritelmässä. Jos tutustut PDP-kirjan sisältöön tämän kurssin käytyäsi, huomaat, että tässä 80-luvun kirjassa esiintyy merkittävä määrä tuttuja termejä: *hidden unit, multilayer networks, momentum, error propagation and generalized delta rule (lue: backpropagation), activation function* [^rumelhart]. Laskennan skaala on toki kasvanut: 80-luvulla verkoissa oli yleensä 2 kerrosta. Jo tällöin, 80- ja 90-luvuilla, koneoppimisella oli jo oikeita käyttötarkoituksia, mutta AI-talvi oli silti läsnä. Asiantuntijajärjestelmät ja Johdatus koneoppimiseen -kurssilta tuttu tilastollinen koneoppiminen olivat voimissaan. Vasta äskettäin, 2010-luvun aikana, alkoi nykyinen AI-kevät. [^fastaibook]. Mikäli haluat nähdä kuvaajan AI-talvista, suosittelen vierailemaan Harvardin e-kirjan Machine Learning Systems [Introduction](https://mlsysbook.ai/book/contents/core/introduction/introduction.html)-luvussa ja etsimään kuvaajan Figure 2. Avainsanoja tässä nykyisen kevään alussa ovat esimerkiksi AlexNet, AlphaGo, GAN, GPU, GPT-3.
+AI-talven jälkeen alkoi taas tapahtua. 1986 **David Rumelhart**, **James McClelland** ja PDP Research Group julkaisivat kaksiosaisin kirjan _Parallel Distributed Processing (PDP)_. Kirja on ladattavissa ainakin [Gwern.net (PDF)](https://gwern.net/doc/ai/nn/1986-rumelhart-pdp-v1.pdf)-sivustolta, mutta en tiedä, kenen luvin Gwern Branwen kirjaa jakaa. Howard ja Gugger [^fastaibook] nostavat tämän viimeisen 50 vuoden käänteentekevimmäksi julkaisuksi. PDP:n asettamat vaatimukset, kuten "joukko prosessointiyksiköitä" ja "ulostulon funktio", ovat edelleen keskeisiä neuroverkkojen määritelmässä. Jos tutustut PDP-kirjan sisältöön tämän kurssin käytyäsi, huomaat, että tässä 80-luvun kirjassa esiintyy merkittävä määrä tuttuja termejä: _hidden unit, multilayer networks, momentum, error propagation and generalized delta rule (lue: backpropagation), activation function_ [^rumelhart]. Laskennan skaala on toki kasvanut: 80-luvulla verkoissa oli yleensä 2 kerrosta. Jo tällöin, 80- ja 90-luvuilla, koneoppimisella oli jo oikeita käyttötarkoituksia, mutta AI-talvi oli silti läsnä. Asiantuntijajärjestelmät ja Johdatus koneoppimiseen -kurssilta tuttu tilastollinen koneoppiminen olivat voimissaan. Vasta äskettäin, 2010-luvun aikana, alkoi nykyinen AI-kevät. [^fastaibook]. Mikäli haluat nähdä kuvaajan AI-talvista, suosittelen vierailemaan Harvardin e-kirjan Machine Learning Systems [Introduction](https://mlsysbook.ai/book/contents/core/introduction/introduction.html)-luvussa ja etsimään kuvaajan Figure 2. Avainsanoja tässä nykyisen kevään alussa ovat esimerkiksi AlexNet, AlphaGo, GAN, GPU, GPT-3.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/v0A8zNek68o?si=btx_I46lSsoSxgGa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-**Video 1:** *Stanfordin Jay McClelland vastaa Podcastissä kysymykseen "What is Parallel Distributed Processing?" eli PDP. Videolla keskustellaan siitä, miksi ihminen muistaa helpommin hänelle esitetyn kirjaimen, jos esitetyt kirjaimet muodostavat sanan.*
+**Video 1:** _Stanfordin Jay McClelland vastaa Podcastissä kysymykseen "What is Parallel Distributed Processing?" eli PDP. Videolla keskustellaan siitä, miksi ihminen muistaa helpommin hänelle esitetyn kirjaimen, jos esitetyt kirjaimet muodostavat sanan._
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/H0oEr40YhrQ?si=coHhJ_PINndgwQpu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-**Video 2:** *Yann LeCun esiintyy vuonna 1989 videolla esittelemässä LeNEt 1 -verkkoa (9760 parametria), joka kykenee tunnistamaan käsinkirjoitettuja numeroita. Datasetti tunnetaan nimellä MNIST. Tämä kyseinen video on ConvNet-verkon avulla kuvanlaadultaan paranneltu versio alkuperäisestä. Videolla esiintyy siis konvoluutioverkkojen esi-isä, ja videota on korjailtu vuosikymmeniä myöhemmin sen kunnioittamiseksi.*
+**Video 2:** _Yann LeCun esiintyy vuonna 1989 videolla esittelemässä LeNEt 1 -verkkoa (9760 parametria), joka kykenee tunnistamaan käsinkirjoitettuja numeroita. Datasetti tunnetaan nimellä MNIST. Tämä kyseinen video on ConvNet-verkon avulla kuvanlaadultaan paranneltu versio alkuperäisestä. Videolla esiintyy siis konvoluutioverkkojen esi-isä, ja videota on korjailtu vuosikymmeniä myöhemmin sen kunnioittamiseksi._
 
-80-luvulla vaikuttivat myös 2024 Nobelilla palkitut John J. Hopfield ja Geoffrey Hinton. [^nobel2024] Hopfield network on muisti, josta voi noutaa tietoa ei-täydellisellä kyselyllä, ja sen moderni kaksonen on Attention-mekaniikka, joka on keskiössä nykyisissä kielimalleissa: tätä yhtäläisyyttä esittelee *Hopfield Networks is All You Need* -artikkeli [^hopfield-need]. Jos Hintonin lisäystä tähän etsit, tulet löytämään vaikeasti koulutettavan Boltzmann Machine -mallin. Daniel Crevier nostaa Hopfieldin työn merkityksen esilleen esiin kirjassaan *AI: The Tumultuous Search for Artificial Intelligence*. Hän kirjoittaa, että AI-talvi loppui osaltaan 80-luvulla Hopfieldin julkaisuun, mainiten myös PDP:n sekä backpropagation-algoritmin, joihin kumpaankin liittyy Rummelhart. [^tumultous] Suomalaisena on kuitenkin hyvä huomauttaa, että backpropagation-algoritmin ensimmäisenä keksinyt lienee Seppo Linnainmaa pro gradu -työssään vuonna 1970, joskaan ei neuroverkon kontekstissa. Tästä huolimatta: *"As of 2020, all modern software packages for NNs (such as Google's Tensorflow) are based on Linnainmaa's method of 1970."* [^juergen] Bolzmann Machine oli yhä vielä 2000-luvulla hyvinkin state-of-the-art. Vuonna 2006 Hinton julkaisi *A Fast Learning Algorithm for Deep Belief Networks*:n, jossa kuvataan (Restricted) Boltzmann Machineistä koostuva Deep Belief Network. Ilya Sutkever ja Tijmen Tieleman julkaisivat vuonna 2010 artikkelin *On the Convergence Properties of Contrastive Divergence*, jossa esiteltiin *contrastive divergence*-algoritmi, mikä teki näiden RBM-algoritmien kouluttamisesta käytännöllistä [^pyisgurus-belief]. Tästä kun kelaa 2 vuotta eteenpäin, niin ollaan jo AlexNet:n myötä nykyisen AI-kevään syövereissä. Nämä verkot ovat huomattavan syviä, joten painetaan tässä välissä hieman jarrua.
+80-luvulla vaikuttivat myös 2024 Nobelilla palkitut John J. Hopfield ja Geoffrey Hinton. [^nobel2024] Hopfield network on muisti, josta voi noutaa tietoa ei-täydellisellä kyselyllä, ja sen moderni kaksonen on Attention-mekaniikka, joka on keskiössä nykyisissä kielimalleissa: tätä yhtäläisyyttä esittelee _Hopfield Networks is All You Need_ -artikkeli [^hopfield-need]. Jos Hintonin lisäystä tähän etsit, tulet löytämään vaikeasti koulutettavan Boltzmann Machine -mallin. Daniel Crevier nostaa Hopfieldin työn merkityksen esilleen esiin kirjassaan _AI: The Tumultuous Search for Artificial Intelligence_. Hän kirjoittaa, että AI-talvi loppui osaltaan 80-luvulla Hopfieldin julkaisuun, mainiten myös PDP:n sekä backpropagation-algoritmin, joihin kumpaankin liittyy Rummelhart. [^tumultous] Suomalaisena on kuitenkin hyvä huomauttaa, että backpropagation-algoritmin ensimmäisenä keksinyt lienee Seppo Linnainmaa pro gradu -työssään vuonna 1970, joskaan ei neuroverkon kontekstissa. Tästä huolimatta: _"As of 2020, all modern software packages for NNs (such as Google's Tensorflow) are based on Linnainmaa's method of 1970."_ [^juergen] Bolzmann Machine oli yhä vielä 2000-luvulla hyvinkin state-of-the-art. Vuonna 2006 Hinton julkaisi _A Fast Learning Algorithm for Deep Belief Networks_:n, jossa kuvataan (Restricted) Boltzmann Machineistä koostuva Deep Belief Network. Ilya Sutkever ja Tijmen Tieleman julkaisivat vuonna 2010 artikkelin _On the Convergence Properties of Contrastive Divergence_, jossa esiteltiin _contrastive divergence_-algoritmi, mikä teki näiden RBM-algoritmien kouluttamisesta käytännöllistä [^pyisgurus-belief]. Tästä kun kelaa 2 vuotta eteenpäin, niin ollaan jo AlexNet:n myötä nykyisen AI-kevään syövereissä. Nämä verkot ovat huomattavan syviä, joten painetaan tässä välissä hieman jarrua.
 
 ![](../images/100_nobel_memories_landscape.png)
 
-**Kuva 3:** *Hopfield network -mallin toimintaa graafisesti kuvattuna. Vastaava maisemassa vaeltaminen lienee Johdatus koneoppimiseen -kurssin Gradient Descent -osiosta tuttu. Tässä arkkitehtuurissa kuva ei kuitenkaan esitä häviömaisemassa optimointia vaan retrieval-vaihetta. Kuva: ©Johan Jarnestad/The Royal Swedish Academy of Sciences*
+**Kuva 3:** _Hopfield network -mallin toimintaa graafisesti kuvattuna. Vastaava maisemassa vaeltaminen lienee Johdatus koneoppimiseen -kurssin Gradient Descent -osiosta tuttu. Tässä arkkitehtuurissa kuva ei kuitenkaan esitä häviömaisemassa optimointia vaan retrieval-vaihetta. Kuva: ©Johan Jarnestad/The Royal Swedish Academy of Sciences_
 
 ## Matalat neuroverkot
 
@@ -115,9 +115,9 @@ Ennen kuin tutustumme aiheen syvään päätyyn eli syviin neuroverkkoihin (engl
 
 Tavallisen 1D-regressiomallin rajoituksia ovat [^udlbook], että se voi mallintaa:
 
-* vain viivan
-* yhden inputin
-* yhden outputin
+- vain viivan
+- yhden inputin
+- yhden outputin
 
 Näitä rajoituksia kierrettiin Johdatus koneoppimiseen kurssilla osin käyttämällä logistista regressiota, SGD:tä ja polynomeja. Jos jälkimmäinen ei herätä muistikuvia, kertaa scikitin dokumentaatiosta [PolynomialFeatures](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html), jonka avulla muuttujista `[a, b]` voi muodostaa toisen asteen polynomifunktion `[a, b, a^2, ab, b^2]`. Malli on yhä lineaarinen parametrien suhteen, mutta muunnettu piirreavaruus mahdollistaa epälineaaristen kuvioiden mallintamisen alkuperäisessä syöteavaruudessa. Tämä ei ehkä ole tieteellisesti täysin pätevä vertaus, mutta voi auttaa: kuvittele, että piirrät ==logaritmiseen taulukkoon suoran viivan==. Viiva on lineaarinen logaritmisessa avaruudessa, mutta alkuperäisessä mittakaavassa ("todellisuudessa") se kuvaa eksponentiaalista käyrää.
 
@@ -141,8 +141,6 @@ Käsitellään tämän otsikon alla seuraavanlaista verkkoa:
 
 Kaikki kuvan nuolet ovat painoja (weights). Lineaarialgebrassa näitä kutsuttaisiin kulmakertoimiksi (slope), mutta neuroverkoissa termi on paino. Koska meillä on 1 sisääntulo ja 3 neuronia, näiden välillä on `1 x 3` eli kolme painoa. Lisäksi kutakin vakiotermiä (bias) kohden on yksi paino, joten niitä on kolme lisää. Yhteensä painoja on siis kuusi. Toivon mukaan tämä alkaa kuulostaa tutulta, kun mietit Johdatus koneoppimiseen kurssin normaaliyhtälön matriisiesitystä, joka käsiteltiin [Hill Climbing](https://sourander.github.io/ml-perusteet/algoritmit/linear/hill_climbing/) osiossa. Kuvaa tutkimalla huomaat, että esimerkiksi $\theta_{10}$ ja $\theta_{11}$ vastaavat painoja, jotka yhdistävät syötteen $x$ ja vakiotermin $1$ piilotetun kerroksen ensimmäiseen neuroniin $h_1$. Theta on siis 3x2 matriisi, joka näyttää tältä:
 
-
-
 $$
 \Theta = \begin{bmatrix}
 \theta_{10} & \theta_{11} \\
@@ -161,7 +159,7 @@ h_{pre3} &= \theta_{30} + \theta_{31} x
 \end{align*}
 $$
 
-Yllä olevissa lukee pienellä `pre`, koska kyseessä ovat esiasteet (*engl. pre-activations*), jotka merkitään usein lyhenteellä $z$, ja tunnetaan myös nimellä logitti (*engl. logit*). Näistä saa varsinaiset piilotetun yksikön aktivoinnit (activations) aktivointifunktion avulla. Käsittelemme aktivointifunktiot myöhemmin kattavammin, mutta tässä välissä riittää hyväksyä, että kunkin piilotetun kerroksen neuronin laskema arvo syötetään tyypillisesti ReLu-aktivointifunktioon, joka palauttaa nollan, jos syöte on negatiivinen, ja syötteen itsensä, jos se on positiivinen.
+Yllä olevissa lukee pienellä `pre`, koska kyseessä ovat esiasteet (_engl. pre-activations_), jotka merkitään usein lyhenteellä $z$, ja tunnetaan myös nimellä logitti (_engl. logit_). Näistä saa varsinaiset piilotetun yksikön aktivoinnit (activations) aktivointifunktion avulla. Käsittelemme aktivointifunktiot myöhemmin kattavammin, mutta tässä välissä riittää hyväksyä, että kunkin piilotetun kerroksen neuronin laskema arvo syötetään tyypillisesti ReLu-aktivointifunktioon, joka palauttaa nollan, jos syöte on negatiivinen, ja syötteen itsensä, jos se on positiivinen.
 
 ![](../images/100_ShallowReLU.svg)
 
@@ -177,7 +175,7 @@ h_3 &= \sigma(\theta_{30} + \theta_{31} x)
 \end{align*}
 $$
 
-Yllä olevassa kaavassa `x` on syöte, $\theta$ on painot ja $h$ on piilotetun kerroksen aktivoinnit eli varsinaiset *hidden unit* eli piiloyksiköt. Näiden lineaarinen yhdistelmä antaa tuloksen `y`:
+Yllä olevassa kaavassa `x` on syöte, $\theta$ on painot ja $h$ on piilotetun kerroksen aktivoinnit eli varsinaiset _hidden unit_ eli piiloyksiköt. Näiden lineaarinen yhdistelmä antaa tuloksen `y`:
 
 $$
 y = \phi_0 + \phi_1 h_1 + \phi_2 h_2 + \phi_3 h_3
@@ -200,13 +198,12 @@ Nämä neljä vaihetta, eli esiasteet, aktivoinnit, piilokerroksen lähtö ja vi
 
 **Kuva 7:** Neuroverkon laskennan vaiheet `a-j`. Viimeisen kuvaajan varjostetussa alueessa $h_2$ on passiivinen (leikattu), mutta $h_1$ ja $h_3$ ovat molemmat aktiivisia. (CC-BY-NC-ND) [^udlbook]
 
+- **Esiasteet (a-c)**: Syöte x syötetään kolmeen lineaarifunktioon, joista jokaisella on eri y-leikkauspiste ja kulmakerroin.
+- **Aktivoinnit (d-f)**: Jokainen lineaarifunktio syötetään ReLU-aktivointifunktioon, joka leikkaa negatiiviset arvot nollaan.
+- **Painotus (g-i)**: Kolmea leikattu funktiota painotetaan (skaalataan) kertoimilla $\phi_1$, $\phi_2$ ja $\phi_3$.
+- **Yhteenlasku (j)**: Leikatut ja painotetut funktiot summataan yhteen ja lisätään offset-arvo $\phi_0$, joka kontrolloi korkeutta.
 
-* **Esiasteet (a-c)**: Syöte x syötetään kolmeen lineaarifunktioon, joista jokaisella on eri y-leikkauspiste ja kulmakerroin.
-* **Aktivoinnit (d-f)**: Jokainen lineaarifunktio syötetään ReLU-aktivointifunktioon, joka leikkaa negatiiviset arvot nollaan.
-* **Painotus (g-i)**: Kolmea leikattu funktiota painotetaan (skaalataan) kertoimilla $\phi_1$, $\phi_2$ ja $\phi_3$.
-* **Yhteenlasku (j)**: Leikatut ja painotetut funktiot summataan yhteen ja lisätään offset-arvo $\phi_0$, joka kontrolloi korkeutta.
-
-Huomaa, että kuvaajassa on kolme "niveltä". Tästä tulee termi *piecewise linear function* (suom. paloittain määritelty lineaarinen funktio). Mikäli ennustettava ilmiö on monimutkainen, tarvitaan useampia piilokerroksia, jotta tämä paloittain määritelty funktio saadaan taiteltua haluttuun muotoon. Alla tästä vielä havainnollistava kuva.
+Huomaa, että kuvaajassa on kolme "niveltä". Tästä tulee termi _piecewise linear function_ (suom. paloittain määritelty lineaarinen funktio). Mikäli ennustettava ilmiö on monimutkainen, tarvitaan useampia piilokerroksia, jotta tämä paloittain määritelty funktio saadaan taiteltua haluttuun muotoon. Alla tästä vielä havainnollistava kuva.
 
 ![](../images/100_ShallowApproximate.svg)
 
@@ -232,7 +229,7 @@ Koulutuksen aikana tarvittu muistin määrä riippuu monesta tekijästä. Jos ha
 
 Inferenssi on mallin käyttöä. Kun malli on koulutettu, se kirjoitetaan levylle: tai siis tarkemmin sanottuna sen parametrit tallennetaan. Jatkossa parametrit voidaan ladata käyttöön, jopa useille eri laitteille samanaikaisesti rinnakkain, ja mallia voidaan käyttää ennustamiseen. Tätä kutsutaan inferenssiksi.
 
-Neuroverkkojen inferenssi vaatii vähemmän muistia (ja laskentatehoa) kuin koulutus, koska mallin parametrejä ei enää säädetä. Malli vain suorittaa eteenpäin syöttämisen (feed-forward) laskennan. Mallia voidaan myös eri tekniikoin pienentää ilman että suorituskyky kärsii liikaa. Näitä tekniikoita ovat esimerkiksi kvantisointi (quantization), karsinta (pruning) ja *"tislaus tai tiivistys"* (distillation). Näitä käsitellään myöhemmin kurssilla ainakin pintapuolisesti. On hyvä kuitenkin jo tunnistaa, että mallin käyttökulut (inferenssi) ja koulutuskulut (training) eroavat toisistaan merkittävästi. Käytännössä voit törmätä vaikkapa [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)-julkaisun malliin BERT sivustolla Hugging Face siten, että osa vaatii enemmän ja osa vähemmän suorituskykyä. Alla taulukkona suuntaa-antava vertailu.
+Neuroverkkojen inferenssi vaatii vähemmän muistia (ja laskentatehoa) kuin koulutus, koska mallin parametrejä ei enää säädetä. Malli vain suorittaa eteenpäin syöttämisen (feed-forward) laskennan. Mallia voidaan myös eri tekniikoin pienentää ilman että suorituskyky kärsii liikaa. Näitä tekniikoita ovat esimerkiksi kvantisointi (quantization), karsinta (pruning) ja _"tislaus tai tiivistys"_ (distillation). Näitä käsitellään myöhemmin kurssilla ainakin pintapuolisesti. On hyvä kuitenkin jo tunnistaa, että mallin käyttökulut (inferenssi) ja koulutuskulut (training) eroavat toisistaan merkittävästi. Käytännössä voit törmätä vaikkapa [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)-julkaisun malliin BERT sivustolla Hugging Face siten, että osa vaatii enemmän ja osa vähemmän suorituskykyä. Alla taulukkona suuntaa-antava vertailu.
 
 | Malli                                                                                                                                           | n parameteria | Tensor tyyppi | optimoinnin taso              | Muistin tarve painoille |
 | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------- | ----------------------------- | ----------------------- |
@@ -241,7 +238,7 @@ Neuroverkkojen inferenssi vaatii vähemmän muistia (ja laskentatehoa) kuin koul
 | [distilbert-base-uncased-distilled-squad](https://huggingface.co/distilbert/distilbert-base-uncased-distilled-squad)                            | 66M           | float32       | QA-tehtäviin hienosäädetty    | ~264 MB                 |
 | [distilbert-base-uncased-distilled-squad-int8-static-inc](https://huggingface.co/Intel/distilbert-base-uncased-distilled-squad-int8-static-inc) | 66M           | int8          | Kvantisointi                  | ~66 MB                  |
 
-Muistin tarpeen voi laskea helposti: 32-bittinen liukuluku vaatii 4 tavua muistia. Näitä on 110 miljoonaa, joten 110M * 4B = 440MB. Kvantisoinnissa mallin painot muunnetaan 8-bittisiksi kokonaisluvuiksi, jolloin muistin tarve on vain neljäsosa alkuperäisestä. Huomaa, että inferenssissä muistia tarvitsee myös muita asioita, kuten syötteet, väliarvot ja mahdolliset välimuistit. Todellisen muistin tarve voi siis olla esimerkiksi 20-50 % enemmän kuin pelkkien painojen vaatima muisti.
+Muistin tarpeen voi laskea helposti: 32-bittinen liukuluku vaatii 4 tavua muistia. Näitä on 110 miljoonaa, joten 110M \* 4B = 440MB. Kvantisoinnissa mallin painot muunnetaan 8-bittisiksi kokonaisluvuiksi, jolloin muistin tarve on vain neljäsosa alkuperäisestä. Huomaa, että inferenssissä muistia tarvitsee myös muita asioita, kuten syötteet, väliarvot ja mahdolliset välimuistit. Todellisen muistin tarve voi siis olla esimerkiksi 20-50 % enemmän kuin pelkkien painojen vaatima muisti.
 
 ## Mihin käytetään
 
@@ -257,8 +254,8 @@ Tutustu näihin:
     Tutustu online-työkaluun [TensorFlow Playground](https://playground.tensorflow.org/). Kokeile eri asetuksia ja yritä ymmärtää, miten ne vaikuttavat mallin oppimiseen, ja kuinka tämä liittyy yllä kirjoitettuun teoriaan (ja historiaan). Dokumentoi omat havaintosi oppimispäiväkirjaasi – jatka tätä dokumentointia jatkossa kaikkien tehtävien yhteydessä.
 
     1. Mallinna työkalulla Perceptron-paperin mukainen malli. Sinulla pitäisi olla siis $x_1$ ja $x_2$ syötteinä, ==ei yhtään piilotettua kerrosta== ja tulos. Käytä ReLU-aktivointifunktiota, vaikka se ei olekaan aivan 1958 ajan mukainen.
-    
-    
+
+
         Tunnista eri datasetit sivustolta. Ne ovat järjestyksessä:
 
         - `Circle`
@@ -302,7 +299,7 @@ Tutustu näihin:
     | Grok-1 (open source) | 2024  |   314 000 000 000 | 3.14 × 10^11   |
     | GPT-4 (spekulaatio)  | 2024  | 1 760 000 000 000 | 1.76 × 10^12   |
 
-    **Vinkki**: mieti tarkkaan, kumpaa *"mallin parametrien määrä"* vastaa paremmin aivoissa: neuronien vai synapsien määrä?    
+    **Vinkki**: mieti tarkkaan, kumpaa *"mallin parametrien määrä"* vastaa paremmin aivoissa: neuronien vai synapsien määrä?
 
 !!! question "Tehtävä: BERT Large"
 
@@ -312,20 +309,36 @@ Tutustu näihin:
 
 ## Lähteet
 
-[^mathforai]: Nelson, H. *Essential Math for AI*. O'Reilly Media. 2023.
-[^fastaibook]: Gugger, J. & Howard, J. *Deep Learning for Coders with fastai and PyTorch*. O'Reilly Media. 2020.
-[^kämäräinen]: Kämäräinen, J. *Koneoppimisen perusteet*. Otatieto. 2023.
-[^termcoined]: Dartmouth University. *Artificial Intelligence Coined at Dartmouth*. https://home.dartmouth.edu/about/artificial-intelligence-ai-coined-dartmouth
-[^dartproposal]: McCarthy, J., Minsky, M.L., Rochester, N. & Shannon, C.E. *A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence*. 1955. https://raysolomonoff.com/dartmouth/boxa/dart564props.pdf
-[^dlillustrated]: Krohn, J., Beyleveld, G. & Bassens, A. *Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence*. Addison-Wesley Professional. 2019.
-[^nobel1981]: The Nobel Prize. *Nobel Prize in Physiology or Medicine 1981*. https://www.nobelprize.org/prizes/medicine/1981/summary/
-[^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. *Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
-[^researchtrends]: Rosenblatt, F. *The Design of an Intelligent Automaton*. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf
-[^minsky1969]: Minsky, M. & Seymour, P. *Perceptrons - Expanded Edition*. 3rd printing (1988). The Science Press. 1969.
-[^rumelhart]: Rumerhart, D. & McClelland, J. *Parallel Distributed Processing*. 12th printing (1999). MIT Press. 1986.
-[^nobel2024]: The Nobel Prize. *Nobel Prize in Physics 2024*. https://www.nobelprize.org/prizes/physics/2024/summary/
-[^hopfield-need]: Ramsauer et al. *Hopfield Networks is All You Need*. 2020. https://arxiv.org/abs/2008.02217
-[^tumultous]: Crevier, D. *AI: The Tumultuous Search for Artificial Intelligence*. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf
-[^juergen]: Schmidhuber, J. *Who Invented Backpropagation?*. 2014 (päivitetty 2025). https://people.idsia.ch/~juergen/who-invented-backpropagation.html
-[^pyisgurus-belief]: Rosebrock, A. *PyImageSearch Gurus Course: 8.4.1 Deep Belief Network basics*. https://www.pyimagesearch.com/pyimagesearch-gurus-course/
-[^udlbook]: Prince, S. *Understanding Deep Learning*. The MIT Press. 2023. https://udlbook.github.io/udlbook/
+[^mathforai]: Nelson, H. _Essential Math for AI_. O'Reilly Media. 2023.
+
+[^fastaibook]: Gugger, J. & Howard, J. _Deep Learning for Coders with fastai and PyTorch_. O'Reilly Media. 2020.
+
+[^kämäräinen]: Kämäräinen, J. _Koneoppimisen perusteet_. Otatieto. 2023.
+
+[^termcoined]: Dartmouth University. _Artificial Intelligence Coined at Dartmouth_. https://home.dartmouth.edu/about/artificial-intelligence-ai-coined-dartmouth
+
+[^dartproposal]: McCarthy, J., Minsky, M.L., Rochester, N. & Shannon, C.E. _A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence_. 1955. https://raysolomonoff.com/dartmouth/boxa/dart564props.pdf
+
+[^dlillustrated]: Krohn, J., Beyleveld, G. & Bassens, A. _Deep Learning Illustrated: A Visual, Interactive Guide to Artificial Intelligence_. Addison-Wesley Professional. 2019.
+
+[^nobel1981]: The Nobel Prize. _Nobel Prize in Physiology or Medicine 1981_. https://www.nobelprize.org/prizes/medicine/1981/summary/
+
+[^hubelwiesel]: Hubel, D.H. & Wiesel, T.N. \*Receptive fields of single neurones in the cat's striate cortex. The Journal of Physiology, 1959. https://doi.org/10.1113/jphysiol.1968.sp008455
+
+[^researchtrends]: Rosenblatt, F. _The Design of an Intelligent Automaton_. Research Trends, Cornell Aeronautical Laboratory. Summer 1958, Issue 2. https://www.informationphilosopher.com/solutions/scientists/rosenblatt/Rosenblatt_Research_Trends.pdf
+
+[^minsky1969]: Minsky, M. & Seymour, P. _Perceptrons - Expanded Edition_. 3rd printing (1988). The Science Press. 1969.
+
+[^rumelhart]: Rumerhart, D. & McClelland, J. _Parallel Distributed Processing_. 12th printing (1999). MIT Press. 1986.
+
+[^nobel2024]: The Nobel Prize. _Nobel Prize in Physics 2024_. https://www.nobelprize.org/prizes/physics/2024/summary/
+
+[^hopfield-need]: Ramsauer et al. _Hopfield Networks is All You Need_. 2020. https://arxiv.org/abs/2008.02217
+
+[^tumultous]: Crevier, D. _AI: The Tumultuous Search for Artificial Intelligence_. Basic Books. 1993. https://www.researchgate.net/profile/Daniel-Crevier/publication/233820788_AI_The_Tumultuous_History_of_the_Search_for_Artificial_Intelligence/links/63fe3d9457495059454f87ca/AI-The-Tumultuous-History-of-the-Search-for-Artificial-Intelligence.pdf
+
+[^juergen]: Schmidhuber, J. _Who Invented Backpropagation?_. 2014 (päivitetty 2025). https://people.idsia.ch/~juergen/who-invented-backpropagation.html
+
+[^pyisgurus-belief]: Rosebrock, A. _PyImageSearch Gurus Course: 8.4.1 Deep Belief Network basics_. https://www.pyimagesearch.com/pyimagesearch-gurus-course/
+
+[^udlbook]: Prince, S. _Understanding Deep Learning_. The MIT Press. 2023. https://udlbook.github.io/udlbook/
